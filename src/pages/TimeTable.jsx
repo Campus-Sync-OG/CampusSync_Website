@@ -1,109 +1,77 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
+import { fetchTimetableByAdmissionNo } from "../api/ClientApi"; // Adjust the import path as necessary
 
-const days = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-const colors = [
-  "#97B3AE",
-  "#D2E0D3",
-  "#F0DDD6",
-  "#F2C3B9",
-  "#D6CBBF",
-  "#F0EEEA",
-];
-
-const timeSlots = [
-  "9:00 AM",
-  "9:45 AM",
-  "10:30 AM",
-  "10:45 AM",
-  "11:30 AM",
-  "12:45 PM",
-  "1:45 PM",
-  "2:30 PM",
-  "3:45 PM",
-];
-
-const schedule = {
-  Monday: [
-    "Social Studies",
-    "English",
-    "Snacks Break",
-    "Mathematics",
-    "Arts Class",
-    "Lunch Break",
-    "Science",
-    "2nd Language",
-    "Physical Education",
-  ],
-  Tuesday: [
-    "Mathematics",
-    "2nd Language",
-    "Snacks Break",
-    "Science",
-    "Physical Education",
-    "Lunch Break",
-    "English",
-    "Arts Class",
-    "Social Studies",
-  ],
-  Wednesday: [
-    "Physical Education",
-    "Mathematics",
-    "Snacks Break",
-    "Arts Class",
-    "2nd Language",
-    "Lunch Break",
-    "Social Studies",
-    "English",
-    "Science",
-  ],
-  Thursday: [
-    "English",
-    "Arts Class",
-    "Snacks Break",
-    "Social Studies",
-    "Mathematics",
-    "Lunch Break",
-    "2nd Language",
-    "Science",
-    "Arts Class",
-  ],
-  Friday: [
-    "Science",
-    "2nd Language",
-    "Snacks Break",
-    "English",
-    "Social Studies",
-    "Lunch Break",
-    "Mathematics",
-    "Social Studies",
-    "Mathematics",
-  ],
-  Saturday: [
-    "Arts Class",
-    "2nd Language",
-    "Snacks Break",
-    "Mathematics",
-    "Social Studies",
-    "Lunch Break",
-    "Science",
-    "Physical Education",
-    "English",
-  ],
-};
+const colors = ["#FFDAB9", "#E6E6FA", "#F0FFF0", "#FFFACD", "#D3D3D3", "#FFB6C1"];
 
 const Timetable = () => {
   const navigate = useNavigate();
+  const [schedule, setSchedule] = useState({});
+  const [days, setDays] = useState([]);
+  const [timeSlots, setTimeSlots] = useState([]);
+  const [admission_no, setAdmissionNo] = useState(null);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData?.unique_id) {
+      setAdmissionNo(userData.unique_id);
+    }
+  }, []);
+  console.log("Admission No:", admission_no);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetchTimetableByAdmissionNo(admission_no);
+        const { schedule } = res;
+        console.log("Fetched timetable:", schedule);
+        setSchedule(schedule);
+  
+        // Extract unique days and time slots from schedule
+        const fetchedDays = Object.keys(schedule);
+  
+        // Sort days in correct weekly order
+        const weekdayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const sortedDays = fetchedDays.sort(
+          (a, b) => weekdayOrder.indexOf(a) - weekdayOrder.indexOf(b)
+        );
+        setDays(sortedDays);
+  
+        // Extract and sort time slots with AM/PM handling
+        const fetchedTimeSlots = new Set();
+        fetchedDays.forEach(day => {
+          schedule[day].forEach(entry => {
+            fetchedTimeSlots.add(entry.time);
+          });
+        });
+  
+        const sortedTimeSlots = Array.from(fetchedTimeSlots).sort((a, b) => {
+          const toMinutes = (timeStr) => {
+            const [time, modifier] = timeStr.split(" ");
+            let [hours, minutes] = time.split(":").map(Number);
+  
+            if (modifier === "PM" && hours !== 12) hours += 12;
+            if (modifier === "AM" && hours === 12) hours = 0;
+  
+            return hours * 60 + minutes;
+          };
+  
+          return toMinutes(a) - toMinutes(b);
+        });
+  
+        setTimeSlots(sortedTimeSlots);
+      } catch (error) {
+        console.error("Failed to load timetable:", error);
+      }
+    };
+  
+    if (admission_no) {
+      fetchData();
+    }
+  }, [admission_no]);
+  
 
   return (
     <Container>
@@ -121,41 +89,40 @@ const Timetable = () => {
       <StyledTable>
         <thead>
           <tr>
-            <TimeCell>Time</TimeCell>
-            {days.map((day, idx) => (
-              <DayHeader key={day} style={{ backgroundColor: colors[idx] }}>
-                {day}
-              </DayHeader>
+            <DayHeader>Day</DayHeader>
+            {timeSlots.map((slot) => (
+              <TimeCell key={slot}>{slot}</TimeCell>
             ))}
           </tr>
         </thead>
         <tbody>
-          {timeSlots.map((slot, idx) => {
-            const isBreak =
-              schedule["Monday"][idx] === "Snacks Break" ||
-              schedule["Monday"][idx] === "Lunch Break";
-            if (isBreak) {
-              return (
-                <tr key={idx}>
-                  <TimeCell>{slot}</TimeCell>
-                  <BreakCell colSpan={6}>{schedule["Monday"][idx]}</BreakCell>
-                </tr>
-              );
-            }
-            return (
-              <tr key={idx}>
-                <TimeCell>{slot}</TimeCell>
-                {days.map((day, dayIdx) => (
+          {days.map((day, dayIdx) => (
+            <tr key={day}>
+              <DayHeader style={{ backgroundColor: colors[dayIdx % colors.length] }}>
+                {day}
+              </DayHeader>
+              {timeSlots.map((time, colIdx) => {
+                const subject =
+                  schedule[day]?.find(entry => entry.time === time)?.subject || "";
+                const isBreak = subject === "Snacks Break" || subject === "Lunch Break";
+                return (
                   <td
-                    key={`${day}-${idx}`}
-                    style={{ backgroundColor: colors[dayIdx] }}
+                    key={`${day}-${colIdx}`}
+                    style={{
+                      backgroundColor: isBreak
+                        ? "#002087"
+                        : colors[dayIdx % colors.length],
+                      color: isBreak ? "white" : "black",
+                      fontWeight: isBreak ? "bold" : "normal",
+                      textAlign: "center",
+                    }}
                   >
-                    {schedule[day][idx]}
+                    {subject}
                   </td>
-                ))}
-              </tr>
-            );
-          })}
+                );
+              })}
+            </tr>
+          ))}
         </tbody>
       </StyledTable>
     </Container>
@@ -163,7 +130,6 @@ const Timetable = () => {
 };
 
 export default Timetable;
-
 // Styled Components
 const Container = styled.div`
   padding: 20px;
