@@ -327,6 +327,14 @@ const Sidebar = () => {
                 <ChildArrow />
                 <Label expanded={true}>My Profile</Label>
               </SidebarItem>
+
+              <SidebarItem
+                to="/profile/teacher-school-info"
+                onClick={() => setMobileOpen(false)}
+              >
+                <ChildArrow />
+                <Label expanded={true}>school Info</Label>
+              </SidebarItem>
             </Dropdown>
 
             <SidebarItem
@@ -400,13 +408,13 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/teacher-notification"
+              to="/teacher-circular"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FiImage />
+              <MdBlurCircular />
               </Icon>
-              <Label expanded={true}>Notification</Label>
+              <Label expanded={true}>Circular</Label>
             </SidebarItem>
 
             <SidebarItem
