@@ -378,6 +378,13 @@ const Sidebar = () => {
                 <Label expanded={true}>Circular</Label>
               </SidebarItem>
               <SidebarItem
+                to="/school/timetable"
+                onClick={() => setMobileOpen(false)}
+              >
+                <ChildArrow />
+                <Label expanded={true}>Time Table</Label>
+              </SidebarItem>
+              <SidebarItem
                 to="/school/certificate-request"
                 onClick={() => setMobileOpen(false)}
               >
