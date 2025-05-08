@@ -303,6 +303,10 @@ const MainContent = styled.div`
   width: 100%;
   margin-top: 20px;
   gap: 30px;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
 
   @media (max-width: 1024px) {
     flex-direction: column;
