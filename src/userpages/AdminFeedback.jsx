@@ -130,7 +130,7 @@ const AdminFeedback = () => {
       <Header>
         <Title>Feedback</Title>
         <Wrapper>
-          <Link to="/principal-dashboard">
+          <Link to="/admin-dashboard">
             <Icons>
               <img src={home} alt="home" />
             </Icons>

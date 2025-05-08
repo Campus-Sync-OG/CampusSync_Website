@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
+import { useNavigate } from "react-router-dom"; // Importing useNavigate
 
 const Container = styled.div`
   padding: 20px;
@@ -138,14 +139,27 @@ const studentNames = [
 ];
 
 const Promotion = () => {
+  const navigate = useNavigate(); // Initialize the navigate hook
+
   return (
     <Container>
       <Header>
         <Title>Promotion</Title>
         <IconWrapper>
-          <IconBtn src={homeIcon} alt="Home" title="Home" />
+          {/* Home Button - Click to navigate to the dashboard */}
+          <div
+            onClick={() => navigate("/admin-dashboard")}
+            style={{ cursor: "pointer" }}
+          >
+            <IconBtn src={homeIcon} alt="Home" title="Home" />
+          </div>
+
           <Divider />
-          <IconBtn src={backIcon} alt="Back" title="Back" />
+
+          {/* Back Button - Click to navigate back */}
+          <div onClick={() => navigate(-1)} style={{ cursor: "pointer" }}>
+            <IconBtn src={backIcon} alt="Back" title="Back" />
+          </div>
         </IconWrapper>
       </Header>
 

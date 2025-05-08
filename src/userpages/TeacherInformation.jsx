@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from 'react-router-dom';
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 import { createTeacher } from "../api/ClientApi"; // Adjust the import based on your API structure
@@ -74,7 +74,7 @@ const TeacherInformation = () => {
           <ImageIcon
             src={homeIcon}
             alt="Home"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/admin-dashboard")}
           />
           <Divider />
           <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />

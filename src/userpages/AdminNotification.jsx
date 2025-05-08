@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
- 
+import { useNavigate } from "react-router-dom";
+
 const Container = styled.div`
   padding: 20px;
   background-color: white;
 `;
- 
+
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -18,49 +19,49 @@ const Header = styled.div`
   color: white;
   margin-bottom: 30px;
 `;
- 
+
 const Title = styled.h2`
   font-size: 22px;
   font-weight: bold;
 `;
- 
+
 const IconGroup = styled.div`
   display: flex;
   gap: 15px;
 `;
- 
+
 const Icon = styled.img`
   width: 24px;
   height: 24px;
   cursor: pointer;
 `;
- 
+
 const SubTitle = styled.h3`
   color: #002087;
   font-weight: 600;
   margin-bottom: 20px;
 `;
- 
+
 const FormWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
   margin-bottom: 30px;
 `;
- 
+
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
   position: relative;
 `;
- 
+
 const Label = styled.label`
   font-weight: 500;
   margin-bottom: 6px;
   color: #333;
 `;
- 
+
 const Input = styled.input`
   width: 300px;
   padding: 10px;
@@ -69,7 +70,7 @@ const Input = styled.input`
   background-color: #f1f1fa;
   outline: none;
 `;
- 
+
 const TextArea = styled.textarea`
   width: 640px;
   height: 120px;
@@ -80,13 +81,13 @@ const TextArea = styled.textarea`
   outline: none;
   resize: none;
 `;
- 
+
 const ButtonWrapper = styled.div`
   display: flex;
   gap: 15px;
   margin-top: 20px;
 `;
- 
+
 const Button = styled.button`
   padding: 10px 20px;
   font-weight: 600;
@@ -96,12 +97,12 @@ const Button = styled.button`
   background-color: ${(props) =>
     props.variant === "submit" ? "#df0043" : "#002087"};
   cursor: pointer;
- 
+
   &:hover {
     opacity: 0.9;
   }
 `;
- 
+
 const DeleteBtn = styled.button`
   position: absolute;
   top: 0;
@@ -115,33 +116,40 @@ const DeleteBtn = styled.button`
   cursor: pointer;
   font-weight: bold;
   line-height: 1;
- 
+
   &:hover {
     opacity: 0.85;
   }
 `;
- 
+
+const Divider = styled.div`
+  height: 24px;
+  width: 2px;
+  background-color: white;
+`;
+
 const AdminNotification = () => {
   const [notifications, setNotifications] = useState([
     { title: "", description: "" },
   ]);
- 
+
   const handleChange = (index, field, value) => {
     const updated = [...notifications];
     updated[index][field] = value;
     setNotifications(updated);
   };
- 
+
   const handleAddMore = () => {
     setNotifications([...notifications, { title: "", description: "" }]);
   };
- 
+
   const handleDelete = (index) => {
     const updated = [...notifications];
     updated.splice(index, 1);
     setNotifications(updated);
   };
- 
+  const navigate = useNavigate();
+
   const handleSubmit = () => {
     for (let i = 0; i < notifications.length; i++) {
       const { title, description } = notifications[i];
@@ -152,7 +160,7 @@ const AdminNotification = () => {
         return;
       }
     }
- 
+
     alert(
       "Notifications submitted:\n\n" +
         notifications
@@ -162,22 +170,33 @@ const AdminNotification = () => {
           )
           .join("\n\n")
     );
- 
+
     setNotifications([{ title: "", description: "" }]);
   };
- 
+
   return (
     <Container>
       <Header>
         <Title>Notification</Title>
         <IconGroup>
-          <Icon src={home} alt="Home" />
-          <Icon src={back} alt="Back" />
+          <Icon
+            src={home}
+            alt="Home"
+            title="Home"
+            onClick={() => navigate("/admin-dashboard")}
+          />
+          <Divider />
+          <Icon
+            src={back}
+            alt="Back"
+            title="Back"
+            onClick={() => navigate(-1)}
+          />
         </IconGroup>
       </Header>
- 
+
       <SubTitle>Add Notification</SubTitle>
- 
+
       <FormWrapper>
         {notifications.map((notification, index) => (
           <div key={index}>
@@ -197,7 +216,7 @@ const AdminNotification = () => {
                 <DeleteBtn onClick={() => handleDelete(index)}>×</DeleteBtn>
               )}
             </InputGroup>
- 
+
             <InputGroup>
               <Label>
                 Description <span style={{ color: "red" }}>*</span>
@@ -215,7 +234,7 @@ const AdminNotification = () => {
           </div>
         ))}
       </FormWrapper>
- 
+
       <ButtonWrapper>
         <Button variant="submit" onClick={handleSubmit}>
           Submit
@@ -225,5 +244,5 @@ const AdminNotification = () => {
     </Container>
   );
 };
- 
+
 export default AdminNotification;

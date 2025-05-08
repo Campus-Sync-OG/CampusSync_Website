@@ -1,3 +1,9 @@
+import React, { useState } from "react";
+import styled from "styled-components";
+import homeIcon from "../assets/images/home.png";
+import backIcon from "../assets/images/back.png";
+import { useNavigate, Link } from 'react-router-dom';
+
 const Container = styled.div`
   padding: 20px;
   font-family: "Poppins", sans-serif;
@@ -129,11 +135,6 @@ const Page = styled.div`
   font-weight: bold;
 `;
  
-import React, { useState } from "react";
-import styled from "styled-components";
-import homeIcon from "../assets/images/home.png";
-import backIcon from "../assets/images/back.png";
-import { useNavigate } from "react-router-dom";
  
 const romanClasses = [
   "I",
@@ -196,7 +197,7 @@ const StudentData = () => {
           <ImageIcon
             src={homeIcon}
             alt="Home"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/admin-dashboard")}
           />
           <VerticalDivider />
           <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />

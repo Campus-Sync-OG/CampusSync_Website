@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 20px;
@@ -132,6 +133,7 @@ const Divider = styled.div`
 `;
 
 const UserCreation = () => {
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
   const handleGenerate = (e) => {
@@ -145,9 +147,19 @@ const UserCreation = () => {
       <Header>
         <Title>Create User IDs</Title>
         <IconWrapper>
-          <IconBtn src={homeIcon} alt="Home" title="Home" />
+          <IconBtn
+            src={homeIcon}
+            alt="Home"
+            title="Home"
+            onClick={() => navigate("/admin-dashboard")}
+          />
           <Divider />
-          <IconBtn src={backIcon} alt="Back" title="Back" />
+          <IconBtn
+            src={backIcon}
+            alt="Back"
+            title="Back"
+            onClick={() => navigate(-1)}
+          />
         </IconWrapper>
       </Header>
 
