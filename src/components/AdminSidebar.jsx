@@ -378,7 +378,7 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Feedback</Label>
             </SidebarItem>
-            \
+           
             <SidebarItem
               to="/admin-usercreation"
               onClick={() => setMobileOpen(false)}
