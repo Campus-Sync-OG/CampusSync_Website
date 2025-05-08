@@ -27,10 +27,7 @@ const Academics = () => {
     navigate("/dashboard");
   };
 
-  const handleBackClick = () => {
-    console.log("Back icon clicked");
-    navigate("/dashboard");
-  };
+  const handleBackClick = () => navigate(-1);
 
   
 

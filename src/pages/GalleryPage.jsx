@@ -4,6 +4,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { FaPlay, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
@@ -24,7 +25,6 @@ const Container = styled.div`
   }
 `;
 
-
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -38,9 +38,15 @@ const Header = styled.div`
 `;
 
 const Icons = styled.div`
- display: flex;
+  display: flex;
   gap: 15px;
   cursor: pointer;
+`;
+const Divider = styled.div`
+  width: 2px;
+  height: 20px;
+  background-color: white;
+  margin: 0 10px;
 `;
 
 const Banner = styled.div`
@@ -83,7 +89,7 @@ const GalleryItem = styled.img`
   height: 100px;
   cursor: pointer;
   transition: transform 0.2s;
-  
+
   &:hover {
     transform: scale(1.05);
   }
@@ -133,12 +139,13 @@ const CloseButton = styled(FaTimes)`
 `;
 
 const IconImage = styled.img`
-width: 24px;
-height: 24px;
-cursor: pointer;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 `;
 
 const GalleryPage = () => {
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const [showPlayButton, setShowPlayButton] = useState(true);
   const [modalImage, setModalImage] = useState(null);
@@ -157,7 +164,6 @@ const GalleryPage = () => {
     "https://images.pexels.com/photos/34950/pexels-photo.jpg", // Ocean View
     "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg", // Forest Path
     "https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg", // Beach Scene
-    
   ];
 
   return (
@@ -169,16 +175,20 @@ const GalleryPage = () => {
           <Link to="/dashboard">
             <IconImage src={home} alt="home" />
           </Link>
-          <Link to="/dashboard">
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
             <IconImage src={back} alt="back" />
-          </Link>
+          </Icons>
         </Icons>
       </Header>
 
       {/* Video Banner */}
       <Banner>
         <Video ref={videoRef} controls>
-          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+          <source
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            type="video/mp4"
+          />
           Your browser does not support the video tag.
         </Video>
         <PlayButton show={showPlayButton} onClick={handlePlayVideo}>
@@ -186,18 +196,16 @@ const GalleryPage = () => {
         </PlayButton>
       </Banner>
 
-  
-
-<GalleryGrid>
-  {imageUrls.map((url, index) => (
-    <GalleryItem
-      key={index}
-      src={url}
-      alt={`Gallery Image ${index + 1}`}
-      onClick={() => setModalImage(url)}
-    />
-  ))}
-</GalleryGrid>
+      <GalleryGrid>
+        {imageUrls.map((url, index) => (
+          <GalleryItem
+            key={index}
+            src={url}
+            alt={`Gallery Image ${index + 1}`}
+            onClick={() => setModalImage(url)}
+          />
+        ))}
+      </GalleryGrid>
 
       {/* Image Modal */}
       {modalImage && (

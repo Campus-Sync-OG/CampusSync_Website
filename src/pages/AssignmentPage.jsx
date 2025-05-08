@@ -1,11 +1,11 @@
 // App.js
-import React, { useState,useEffect} from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled, { createGlobalStyle } from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
-import { getAllSubjects, getAssignmentsByAdmissionNo } from '../api/ClientApi'; // Adjust the import path as necessary
-
+import { useNavigate } from "react-router-dom";
+import { getAllSubjects, getAssignmentsByAdmissionNo } from "../api/ClientApi"; // Adjust the import path as necessary
 
 // Global style to reset box sizing and overflow
 const GlobalStyle = createGlobalStyle`
@@ -39,7 +39,6 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
 const AppContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -49,19 +48,17 @@ const AppContainer = styled.div`
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  background: linear-gradient(90deg, #002087, #002087B0, #DF0043);
+  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
   border-radius: 10px;
 `;
 
 const Header = styled.div`
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
   color: white;
   width: 100%;
-
 `;
 
 const Title = styled.h2`
@@ -72,6 +69,13 @@ const Title = styled.h2`
 const Wrapper = styled.div`
   display: flex;
   gap: 10px;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 20px;
+  background-color: white;
+  margin: 0 10px;
 `;
 
 const Icons = styled.div`
@@ -95,7 +99,7 @@ const Icons2 = styled.div`
     position: relative;
     width: 18px;
     height: 18px;
-    top:4px;
+    top: 4px;
   }
 `;
 
@@ -124,7 +128,8 @@ const AssignmentsTable = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
 
-  th, td {
+  th,
+  td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
@@ -154,6 +159,7 @@ const BackButton = styled.button`
 `;
 
 const App = () => {
+  const navigate = useNavigate();
   const [admission_no, setAdmissionNo] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [assignments, setAssignments] = useState([]);
@@ -192,8 +198,7 @@ const App = () => {
           : [];
 
         const filtered = allAssignments.filter(
-          (a) =>
-            a.subjects === subject || a.subject_name === subject
+          (a) => a.subjects === subject || a.subject_name === subject
         );
 
         console.log("Filtered assignments:", filtered);
@@ -215,11 +220,10 @@ const App = () => {
                   <img src={home} alt="home" />
                 </Icons>
               </Link>
-              <Link to="/dashboard">
-                <Icons2>
-                  <img src={back} alt="back" />
-                </Icons2>
-              </Link>
+              <Divider />
+              <Icons2 onClick={() => navigate(-1)}>
+                <img src={back} alt="back" />
+              </Icons2>
             </Wrapper>
           </Header>
         </HeaderWrapper>
@@ -239,33 +243,32 @@ const App = () => {
                   </tr>
                 </thead>
                 <tbody>
-                {Array.isArray(assignments) && assignments.length > 0 ? (
-
-                  assignments.map((item, index) => (
+                  {Array.isArray(assignments) && assignments.length > 0 ? (
+                    assignments.map((item, index) => (
                       <tr key={item.id || index}>
                         <td>{index + 1}</td>
                         <td>{item.emp_name}</td>
                         <td>
-                        <AssignmentLink>{item.title}</AssignmentLink>
-                      </td>
+                          <AssignmentLink>{item.title}</AssignmentLink>
+                        </td>
                         <td>{item.Date}</td>
                         <td>
                           {item.attachment ? (
-                          <a href={item.attachment} download>
+                            <a href={item.attachment} download>
                               <img
                                 src="https://img.icons8.com/ios-glyphs/30/000000/download--v1.png"
                                 alt="Download"
                                 style={{
-                                width: "20px",
-                                height: "20px",
-                                cursor: "pointer",
-                              }}
+                                  width: "20px",
+                                  height: "20px",
+                                  cursor: "pointer",
+                                }}
                               />
                             </a>
                           ) : (
-                          "N/A"
-                        )}
-                      </td>
+                            "N/A"
+                          )}
+                        </td>
                       </tr>
                     ))
                   ) : (
@@ -275,7 +278,9 @@ const App = () => {
                   )}
                 </tbody>
               </AssignmentsTable>
-              <BackButton onClick={() => setSelectedSubject(null)}>Back</BackButton>
+              <BackButton onClick={() => setSelectedSubject(null)}>
+                Back
+              </BackButton>
             </>
           ) : (
             <>
@@ -283,9 +288,9 @@ const App = () => {
               <SubjectsList>
                 {subjects.map((subject_name, index) => (
                   <SubjectItem
-                  key={index}
-                  onClick={() => fetchAssignments(subject_name)}
-                >
+                    key={index}
+                    onClick={() => fetchAssignments(subject_name)}
+                  >
                     {subject_name}
                   </SubjectItem>
                 ))}
