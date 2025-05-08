@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import logo from "../assets/images/logo.png";
 import defaultProfile from "../assets/images/profile.png";
-import defaultSlogo from "../assets/images/Slogo.png";
+import defaultSlogo from "../assets/images/slogo.png";
 import { FaBell, FaCaretDown, FaEllipsisV } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { FiSettings } from "react-icons/fi";
