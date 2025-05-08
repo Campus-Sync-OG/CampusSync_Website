@@ -33,7 +33,7 @@ const TeacherSchoolinfo = () => {
         </Link>
         <Logo src={profileImage} alt="logo" />
         <SchoolName>{schoolInfo?.school_name || "Loading..."}</SchoolName>
-        <Link to="/dashboard">
+        <Link to="/teacher-dashboard">
           <HomeIcon src={homeIcon} alt="Home to dashboard" />
         </Link>
       </Header>

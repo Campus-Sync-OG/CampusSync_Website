@@ -58,7 +58,7 @@ const TeacherProfile = () => {
           <NavIcon
             src={homeIcon}
             alt="Home"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/teacher-dashboard")}
           />
           <IconDivider />
           <NavIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
