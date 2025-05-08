@@ -13,6 +13,7 @@
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@react-hook/window-size": "^3.1.1",
     "axios": "^1.8.4",
+    "framer-motion": "^12.10.0",
     "jsdf": "^0.3.2",
     "jspdf": "^3.0.1",
     "jspdf-autotable": "^5.0.2",
@@ -28,7 +29,7 @@
     "react-calendar": "^5.1.0",
     "react-confetti": "^6.4.0",
     "react-dom": "^18.3.1",
-    "react-icons": "^5.4.0",
+    "react-icons": "^5.5.0",
     "react-router-dom": "^7.4.0",
     "react-toastify": "^11.0.5",
     "styled-components": "^6.1.17"
