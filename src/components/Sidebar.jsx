@@ -48,7 +48,7 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 120vh;
+  height: 100vh; /* Ensure full viewport height */
   z-index: 1000;
 
   @media (max-width: 768px) {
@@ -75,7 +75,7 @@ const MobileBackButton = styled.div`
 `;
 
 const MobileMenu = styled.div`
- display: none;
+  display: none;
 
   @media (max-width: 768px) {
     display: block;
@@ -133,23 +133,37 @@ const MobileDropdown = styled.div`
 `;
 
 const SidebarContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Always left-aligned in mobile
+  align-items: flex-start;
   padding: 1rem;
   gap: 1rem;
-  white-space: nowrap;
-  min-height: 100%; // Ensure content fills available space
-  overflow: visible !important; // Override any hidden overflow
+  overflow-y: auto; /* Vertical scroll */
   font-family: "Poppins", sans-serif;
 
-  // Mobile-specific adjustments
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #002087;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #002087;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #ff0066;
+  }
+
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
   }
 `;
-
 const MenuToggle = styled.div`
   display: flex;
   flex-direction: column;
