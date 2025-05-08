@@ -3,11 +3,11 @@ import styled from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Link } from "react-router-dom";
-import teacherImage from "../assets/images/teacher.png";
-import assignmentImage from "../assets/images/assignment1.png";
-import subjectImage from "../assets/images/subject.png";
-import timetableImage from "../assets/images/timetable.png";
-import attendanceImage from "../assets/images/attendance1.png";
+import adminImage from "../assets/images/admindashboard.png";
+import studentdataImage from "../assets/images/studentdata.png";
+import notificationImage from "../assets/images/notifi.png";
+import teacherdataImage from "../assets/images/teacherdata.png";
+import announcementImage from "../assets/images/announcement.png";
 import { FaEllipsisH } from "react-icons/fa";
 const TeacherDashboard = () => {
   const [date, setDate] = useState(new Date());
@@ -38,44 +38,44 @@ const TeacherDashboard = () => {
         <div className="text">
           <div className="dashboard-title">Dashboard</div>
           <div className="welcome-text">
-            <p>Welcome, Teacher</p>
+            <p>Welcome, Admin</p>
           </div>
           <div className="date">
             <p>{currentDate}</p>
           </div>
         </div>
-        <img className="image" src={teacherImage} alt="Welcome" />
+        <img className="image" src={adminImage} alt="Welcome" />
       </WelcomeCard>
 
       {/* Main Section with Cards & Calendar */}
       <MainContent>
         {/* 2x2 Grid Cards */}
         <CardGrid>
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#FA807D">
-              <p>Assignments</p>
-              <img src={assignmentImage} alt="Assignments" />
+          <Link to="/admin-students-data" style={{ textDecoration: "none" }}>
+            <DashboardCard color="#9865F6">
+              <p>Student Data</p>
+              <img src={studentdataImage} alt="studentdata" />
             </DashboardCard>
           </Link>
 
-          <Link to="/timetable" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#7E81EC">
-              <p>Timetable</p>
-              <img src={timetableImage} alt="Timetable" />
+          <Link to="/admin-teacher-data" style={{ textDecoration: "none" }}>
+            <DashboardCard color="#FE8906">
+              <p>Teacher Data</p>
+              <img src={teacherdataImage} alt="teacherdata" />
             </DashboardCard>
           </Link>
 
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#77EAD0">
-              <p>Subjects</p>
-              <img src={subjectImage} alt="Subjects" />
+          <Link to="/admin-notification" style={{ textDecoration: "none" }}>
+            <DashboardCard color="#D5321A">
+              <p>Notification</p>
+              <img src={notificationImage} alt="notification" />
             </DashboardCard>
           </Link>
 
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#BD7BF9">
-              <p>Attendance </p>
-              <img src={attendanceImage} alt="Attendance" />
+          <Link to="/admin-announcement" style={{ textDecoration: "none" }}>
+            <DashboardCard color="#5DC355">
+              <p>Announcement </p>
+              <img src={announcementImage} alt="Announcement" />
             </DashboardCard>
           </Link>
         </CardGrid>
@@ -120,7 +120,6 @@ const DashboardContainer = styled.div`
   align-items: center;
   margin-left: -10px;
   overflow-y: auto;
-  max-height: 90vh;
 `;
 
 const WelcomeCard = styled.div`
@@ -286,9 +285,11 @@ const DashboardCard = styled.div`
   }
 
   img {
-    width: 200px;
+    width: 190px;
     height: 180px;
     margin-left:auto;
+    margin-right:10px;
+    margin-top:10px;
 
   }
   
