@@ -256,5 +256,11 @@ export const fetchCircularsByAdmissionNo = (admission_no) =>
 export const fetchTimetableByAdmissionNo = (admission_no) =>
   api.get(`/timetable/student/${admission_no}`).then((res) => res.data);
 
+export const giveMarks = (emp_id, payload) => {
+  return api.post(`/teachers/${emp_id}/students/marks`, payload).then((res) => res.data);
+};
+
+
+
 
 export default api;
