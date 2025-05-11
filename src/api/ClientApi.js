@@ -260,6 +260,9 @@ export const giveMarks = (emp_id, payload) => {
   return api.post(`/teachers/${emp_id}/students/marks`, payload).then((res) => res.data);
 };
 
+export const createUser = ({ role, name, phone_number }) =>
+  api.post('/users/create-user', { role, name, phone_number }).then(res => res.data);
+
 
 
 
