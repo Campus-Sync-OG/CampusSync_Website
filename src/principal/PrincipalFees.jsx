@@ -162,7 +162,7 @@ const PrincipalFees = () => {
       .filter((item) =>
         selectedClass ? String(item.className) === String(selectedClass) : true
       )
-      .map((item) => item.section) // fix here
+      .map((item) => item.section_name) // fix here
   )];
 
   const filteredReceipts = receipts.filter((receipt) => {
@@ -251,7 +251,7 @@ const PrincipalFees = () => {
         >
           <option value="">Select Section</option>
           {uniqueSections.map((sec) => (
-            <option key={sec} value={sec}>
+            <option key={sec} value={sec.section_name}>
               {sec}
             </option>
           ))}

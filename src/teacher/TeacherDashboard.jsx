@@ -143,28 +143,28 @@ const TeacherDashboard = () => {
         {/* Main Section with Cards & Calendar */}
         <MainContent>
           <CardGrid>
-            <Link to="/assignments" style={{ textDecoration: "none" }}>
+            <Link to="/teacher-assignments" style={{ textDecoration: "none" }}>
               <DashboardCard color="#FA807D">
                 <p>Assignments</p>
                 <img src={assignmentImage} alt="Assignments" />
               </DashboardCard>
             </Link>
 
-            <Link to="/timetable" style={{ textDecoration: "none" }}>
+            <Link to="/teacher-timetable" style={{ textDecoration: "none" }}>
               <DashboardCard color="#7E81EC">
                 <p>Timetable</p>
                 <img src={timetableImage} alt="Timetable" />
               </DashboardCard>
             </Link>
 
-            <Link to="/assignments" style={{ textDecoration: "none" }}>
+            <Link to="/teacher-subjects" style={{ textDecoration: "none" }}>
               <DashboardCard color="#77EAD0">
                 <p>Subjects</p>
                 <img src={subjectImage} alt="Subjects" />
               </DashboardCard>
             </Link>
 
-            <Link to="/assignments" style={{ textDecoration: "none" }}>
+            <Link to="/teacher-attendance" style={{ textDecoration: "none" }}>
               <DashboardCard color="#BD7BF9">
                 <p>Attendance </p>
                 <img src={attendanceImage} alt="Attendance" />

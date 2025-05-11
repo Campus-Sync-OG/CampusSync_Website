@@ -354,7 +354,7 @@ const Sidebar = () => {
                 onClick={() => setMobileOpen(false)}
               >
                 <ChildArrow />
-                <Label expanded={true}>Calendar</Label>
+                
               </SidebarItem>
               <SidebarItem
                 to="/school/circular"

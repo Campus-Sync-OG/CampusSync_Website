@@ -51,9 +51,9 @@ const PrincipalDashboard = () => {
       <MainContent>
         {/* 2x2 Grid Cards */}
         <CardGrid>
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
+          <Link to="/principal-fees" style={{ textDecoration: "none" }}>
             <DashboardCard color="#FA807D">
-              <p>Attendance</p>
+              <p>Fees</p>
               <img src={princiattendanceImage} alt="Attendance" />
             </DashboardCard>
           </Link>
@@ -66,7 +66,7 @@ const PrincipalDashboard = () => {
           </Link>
 
           <Link
-            to="/principal-assignedsubjects"
+            to="/principal-subjects"
             style={{ textDecoration: "none" }}
           >
             <DashboardCard color="#77EAD0">

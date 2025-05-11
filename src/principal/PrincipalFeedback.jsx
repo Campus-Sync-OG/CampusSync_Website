@@ -150,7 +150,7 @@ const PrincipalFeedback = () => {
         <thead>
           <tr>
             <Th>Sl no</Th>
-            <Th>Date</Th>
+           
             <Th>Reason</Th>
           </tr>
         </thead>
@@ -159,7 +159,7 @@ const PrincipalFeedback = () => {
             feedbackList.map((item, index) => (
               <tr key={index}>
                 <Td>{item.id}</Td>
-                <Td>{item.createdAt}</Td>
+                
                 <Td>{item.message}</Td>
               </tr>
             ))

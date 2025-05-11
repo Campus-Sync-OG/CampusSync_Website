@@ -378,10 +378,22 @@ const Header = ({
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
 
   const handleViewAllNotifications = () => {
-    const role = localStorage.getItem("role");
-    if (role === "teacher") navigate("/teacher-notification");
-    else navigate("/notifications");
+    const rawRole = localStorage.getItem("role");
+    console.log("Raw role:", rawRole, typeof rawRole);
+
+    const role = rawRole?.trim().toLowerCase();
+    console.log("Normalized role:", role);
+
+    if (role === "teacher") {
+      console.log("Navigating to teacher page");
+      navigate("/teacher-notification");
+    } else {
+      console.log("Navigating to student/other notification page");
+      navigate("/notifications");
+    }
   };
+
+
 
   useEffect(() => {
     setIsPopupVisible(false);
