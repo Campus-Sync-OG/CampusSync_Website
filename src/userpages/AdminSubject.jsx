@@ -135,7 +135,8 @@ const AdminSubject = () => {
         emp_name: item.teacherName,
         class_name: item.class,
         section: item.section,
-        subjects: [item.subject1, item.subject2, item.subject3].filter(Boolean),
+       subjects: item.subjects || [],
+
         role: item.role || "",
       }));
       setSubjectData(transformed);
@@ -233,7 +234,8 @@ const AdminSubject = () => {
               <td>{item.emp_name}</td>
               <td>{item.class_name}</td>
               <td>{item.section}</td>
-              <td>{item.subjects.join(", ")}</td>
+              <td>{item.subjects}</td> {/* ← Correct way */}
+
               <td>{item.role}</td>
             </tr>
           ))}

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
@@ -114,49 +114,44 @@ const ResetButton = styled.button`
   border-radius: 6px;
   cursor: pointer;
 `;
+// Styled component for the message
+export const SuccessMessage = styled.div`
+  margin-top: 16px;
+  color: green;
+  font-weight: bold;
+  text-align: center;
+`;
 
-const classOptions = [
-  "I",
-  "II",
-  "III",
-  "IV",
-  "V",
-  "VI",
-  "VII",
-  "VIII",
-  "IX",
-  "X",
-];
 
+const studentNames = ["John Doe", "Jane Smith", "Alex Johnson"];
+const classOptions = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 const sectionOptions = ["A", "B", "C", "D"];
 
-const studentNames = [
-  "Aarav Sharma",
-  "Isha Patel",
-  "Rohan Mehta",
-  "Sneha Reddy",
-  "Aditya Verma",
-];
-
 const Promotion = () => {
-  const navigate = useNavigate(); // Initialize the navigate hook
+  const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleSave = (e) => {
+    e.preventDefault();
+
+    // Add form validation or data submission logic here if needed
+
+    setSuccessMessage("Promotion saved successfully!");
+
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
+  };
 
   return (
     <Container>
       <Header>
         <Title>Promotion</Title>
         <IconWrapper>
-          {/* Home Button - Click to navigate to the dashboard */}
-          <div
-            onClick={() => navigate("/admin-dashboard")}
-            style={{ cursor: "pointer" }}
-          >
+          <div onClick={() => navigate("/admin-dashboard")} style={{ cursor: "pointer" }}>
             <IconBtn src={homeIcon} alt="Home" title="Home" />
           </div>
-
           <Divider />
-
-          {/* Back Button - Click to navigate back */}
           <div onClick={() => navigate(-1)} style={{ cursor: "pointer" }}>
             <IconBtn src={backIcon} alt="Back" title="Back" />
           </div>
@@ -165,7 +160,7 @@ const Promotion = () => {
 
       <SectionTitle>Student Promotion</SectionTitle>
 
-      <Form>
+      <Form onSubmit={handleSave}>
         <FormGroup>
           <Label>Name *</Label>
           <Select required>
@@ -228,12 +223,16 @@ const Promotion = () => {
           <Label>Roll Number *</Label>
           <Input type="text" placeholder="" required />
         </FormGroup>
-      </Form>
 
-      <ButtonGroup>
-        <SaveButton type="submit">Save</SaveButton>
-        <ResetButton type="reset">Reset</ResetButton>
-      </ButtonGroup>
+        <ButtonGroup>
+          <SaveButton type="submit">Save</SaveButton>
+          <ResetButton type="reset">Reset</ResetButton>
+        </ButtonGroup>
+
+        {successMessage && (
+          <SuccessMessage>{successMessage}</SuccessMessage>
+        )}
+      </Form>
     </Container>
   );
 };

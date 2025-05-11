@@ -186,7 +186,7 @@ export const uploadCircular = (formData) =>
     api.get('/teachers/all').then((res) => res.data);*/
 
   export const fetchFilteredSubjects = (filters) =>
-    api.get('/users/list/teacher-subjects', { params: filters }).then((res) => res.data);
+    api.get('/users/list/teacher-subject', { params: filters }).then((res) => res.data);
 
   export const saveSubjects = async (subject_names) => {
     return api.post('/users/subjects', { subject_names }).then((res) => res.data);

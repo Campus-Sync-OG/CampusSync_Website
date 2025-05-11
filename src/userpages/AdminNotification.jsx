@@ -4,6 +4,22 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { useNavigate } from "react-router-dom";
 
+
+export const StyledSelect = styled.select`
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  background-color: #fff;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+  }
+`;
+
 const Container = styled.div`
   padding: 20px;
   background-color: white;
@@ -130,7 +146,7 @@ const Divider = styled.div`
 
 const AdminNotification = () => {
   const [notifications, setNotifications] = useState([
-    { title: "", description: "" },
+    { title: "", description: "", recipient: "" },
   ]);
 
   const handleChange = (index, field, value) => {
@@ -140,7 +156,10 @@ const AdminNotification = () => {
   };
 
   const handleAddMore = () => {
-    setNotifications([...notifications, { title: "", description: "" }]);
+    setNotifications([
+      ...notifications,
+      { title: "", description: "", recipient: "" },
+    ]);
   };
 
   const handleDelete = (index) => {
@@ -148,12 +167,13 @@ const AdminNotification = () => {
     updated.splice(index, 1);
     setNotifications(updated);
   };
+
   const navigate = useNavigate();
 
   const handleSubmit = () => {
     for (let i = 0; i < notifications.length; i++) {
-      const { title, description } = notifications[i];
-      if (!title || !description) {
+      const { title, description, recipient } = notifications[i];
+      if (!title || !description || !recipient) {
         alert(
           `Notification ${i + 1} is incomplete. Please fill in all fields.`
         );
@@ -163,15 +183,15 @@ const AdminNotification = () => {
 
     alert(
       "Notifications submitted:\n\n" +
-        notifications
-          .map(
-            (n, idx) =>
-              `#${idx + 1}\nTitle: ${n.title}\nDescription: ${n.description}`
-          )
-          .join("\n\n")
+      notifications
+        .map(
+          (n, idx) =>
+            `#${idx + 1}\nTo: ${n.recipient}\nTitle: ${n.title}\nDescription: ${n.description}`
+        )
+        .join("\n\n")
     );
 
-    setNotifications([{ title: "", description: "" }]);
+    setNotifications([{ title: "", description: "", recipient: "" }]);
   };
 
   return (
@@ -202,6 +222,24 @@ const AdminNotification = () => {
           <div key={index}>
             <InputGroup>
               <Label>
+                Send To <span style={{ color: "red" }}>*</span>
+              </Label>
+              <StyledSelect
+                value={notification.recipient}
+                onChange={(e) => handleChange(index, "recipient", e.target.value)}
+                required
+              >
+                <option value="">Select Recipient</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Student">Student</option>
+                <option value="Principal">Principal</option>
+                <option value="Parent">General</option>
+              </StyledSelect>
+
+            </InputGroup>
+
+            <InputGroup>
+              <Label>
                 Title <span style={{ color: "red" }}>*</span>
               </Label>
               <Input
@@ -209,7 +247,9 @@ const AdminNotification = () => {
                 name="title"
                 placeholder="Type here"
                 value={notification.title}
-                onChange={(e) => handleChange(index, "title", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "title", e.target.value)
+                }
                 required
               />
               {notifications.length > 1 && (

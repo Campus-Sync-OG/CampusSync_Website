@@ -32,9 +32,39 @@ const SchoolInfo = () => {
   };
 
   const handleSave = () => {
-    setSuccessMessage("Saved successfully!");
-    setTimeout(() => setSuccessMessage(""), 3000);
-  };
+  const {
+    schoolName,
+    affiliationNo,
+    principalName,
+    address,
+    pincode,
+    state,
+    phone,
+    mobile,
+    email,
+    website,
+  } = form;
+
+  if (
+    !schoolName ||
+    !affiliationNo ||
+    !principalName ||
+    !address ||
+    !pincode ||
+    !state ||
+    !phone ||
+    !mobile ||
+    !email ||
+    !website
+  ) {
+    alert("saved sucessfully!!.");
+    return;
+  }
+
+  setSuccessMessage("Saved successfully!");
+  setTimeout(() => setSuccessMessage(""), 3000);
+};
+
 
   return (
     <Container>
