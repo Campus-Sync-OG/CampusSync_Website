@@ -667,6 +667,14 @@ const App = () => {
               </PrincipalLayout>
             }
           />
+           <Route
+            path="/principal-notification"
+            element={
+              <principalLayout>
+                <NotificationPage />
+              </principalLayout>
+            }
+          />
         </Routes>
       </div>
     </Router>
