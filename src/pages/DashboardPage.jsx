@@ -266,10 +266,10 @@ const WidgetTitle = styled.div`
 
 const WidgetImage = styled.img`
   max-height: 100%;
-  max-width: 80%;
+  max-width: 75%;
   margin: 0;
   position: relative;
-  left: 90px;
+  left: 110px;
   top: 0px;
   @media (max-width: 1024px) {
     position: relative;
