@@ -20,6 +20,7 @@ const HeaderContainer = styled.header`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-wrap: nowrap;
   position: sticky;
+  font-family: "Roboto", sans-serif;
 
   @media (max-width: 768px) {
     flex-wrap: wrap;
@@ -73,6 +74,7 @@ const SchoolDetails = styled.div`
     margin: 0;
     font-size: 14px;
     color: gray;
+    font-style: italic;
   }
 
   @media (max-width: 480px) {
@@ -112,7 +114,7 @@ const SearchBarContainer = styled.div`
     padding: 8px 15px;
     padding-left: 35px;
     border: 1px solid #ccc;
-    border-radius: 20px;
+    border-radius: 5px;
     font-size: 14px;
     width: 300px;
   }

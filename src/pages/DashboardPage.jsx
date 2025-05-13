@@ -58,26 +58,36 @@ const WelcomeSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.4rem;
   width: 103%;
   flex-wrap: wrap;
   position: relative;
   z-index: -1;
 
   h2 {
-    font-size: 2.5rem;
+    font-size: 1.6rem;
     position: relative;
-    left: 10px;
+    left: 1px;
+    bottom: 35px;
+    font-weight: 40px;
+    font-family: "Poppins", sans-serif;
   }
 
   p {
     font-size: 1.5rem;
-    text-align: center;
+    text-align: left;
+    position: relative;
+    top: 15px;
+    margin: 0;
   }
 
   img {
-    width: 33%;
-    height: 30%;
+    min-width: 35%;
+    max-width: 60%;
+    min-height: 25vh;
+    max-height: 25vh;
+    position: relative;
+    top: 15px;
   }
 
   @media (max-width: 1024px) {
@@ -86,6 +96,7 @@ const WelcomeSection = styled.div`
 
     h2 {
       font-size: 1.5rem;
+      text-align: center;
     }
 
     p {
@@ -99,16 +110,39 @@ const WelcomeSection = styled.div`
 
   @media (max-width: 480px) {
     left: 31px;
+    h2 {
+      left: 100px;
+      top: 0;
+    }
+    p {
+      left: 100px;
+      text-align: center;
+    }
+    img {
+      left: 75px;
+    }
   }
   @media (max-width: 320px) {
     width: 100%;
     left: 36px;
+     h2 {
+      left: 50px;
+      top: 0;
+    }
+    p {
+      left: 50px;
+      text-align: center;
+    }
+    img {
+      left: 50px;
+    }
+    
   }
 `;
 
 const WidgetsContainer = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 3fr 1fr;
 
   @media (max-width: 1024px) {
     position: relative;
@@ -124,7 +158,8 @@ const WidgetsContainer = styled.div`
 const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
-  gap: 1.5rem 5.5rem;
+  gap: 1.2rem 5.5rem;
+  margin-top: 0;
   @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
   }
@@ -159,7 +194,7 @@ const Widget = styled.div`
   padding: 1rem;
   text-align: center;
   width: 110%;
-  height: 180px;
+  height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -200,11 +235,12 @@ const Widget = styled.div`
 
 const WidgetTitle = styled.div`
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 27;
+  font-family: "Poppins", sans-serif;
   color: #fff;
   position: relative;
   right: 100px;
-  bottom: 25px;
+  bottom: 0px;
   @media (max-width: 1024px) {
     font-size: 1rem;
     right: 40px;
@@ -230,11 +266,12 @@ const WidgetTitle = styled.div`
 `;
 
 const WidgetImage = styled.img`
-  max-height: 65%;
-  max-width: 65%;
+  max-height: 80%;
+  max-width: 80%;
+  margin: 0;
   position: relative;
-  left: 100px;
-  top: 30px;
+  left: 90px;
+  top: 15px;
   @media (max-width: 1024px) {
     position: relative;
     max-width: 85%;
@@ -243,12 +280,12 @@ const WidgetImage = styled.img`
   @media (max-width: 480px) {
     position: relative;
     left: 60px;
-    top: 25px;
+    bottom:20px;
   }
   @media (max-width: 380px) {
     position: relative;
     left: 60px;
-    top: 20px;
+    bottom:20px;
   }
   @media (max-width: 320px) {
     position: relative;
@@ -263,11 +300,11 @@ const CalendarContainer = styled.div`
   border-radius: 18px;
   padding: 1rem;
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  left: 110px;
+  left: 90px;
   @media (max-width: 1024px) {
     position: relative;
     width: 80%;

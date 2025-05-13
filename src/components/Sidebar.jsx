@@ -48,8 +48,12 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 100vh; /* Ensure full viewport height */
+  height: 85vh; /* Ensure full viewport height */
   z-index: 1000;
+
+  @media (max-width: 1024px) {
+    height: 100vh;
+  }
 
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
