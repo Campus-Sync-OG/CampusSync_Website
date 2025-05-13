@@ -125,7 +125,7 @@ const WelcomeSection = styled.div`
   @media (max-width: 320px) {
     width: 100%;
     left: 36px;
-     h2 {
+    h2 {
       left: 50px;
       top: 0;
     }
@@ -136,7 +136,6 @@ const WelcomeSection = styled.div`
     img {
       left: 50px;
     }
-    
   }
 `;
 
@@ -240,7 +239,7 @@ const WidgetTitle = styled.div`
   color: #fff;
   position: relative;
   right: 100px;
-  bottom: 0px;
+  top: 15px;
   @media (max-width: 1024px) {
     font-size: 1rem;
     right: 40px;
@@ -266,12 +265,12 @@ const WidgetTitle = styled.div`
 `;
 
 const WidgetImage = styled.img`
-  max-height: 80%;
+  max-height: 100%;
   max-width: 80%;
   margin: 0;
   position: relative;
   left: 90px;
-  top: 15px;
+  top: 0px;
   @media (max-width: 1024px) {
     position: relative;
     max-width: 85%;
@@ -280,12 +279,12 @@ const WidgetImage = styled.img`
   @media (max-width: 480px) {
     position: relative;
     left: 60px;
-    bottom:20px;
+    bottom: 20px;
   }
   @media (max-width: 380px) {
     position: relative;
     left: 60px;
-    bottom:20px;
+    bottom: 20px;
   }
   @media (max-width: 320px) {
     position: relative;
