@@ -144,6 +144,7 @@ const SidebarContent = styled.div`
   padding: 1rem;
   gap: 1rem;
   overflow-y: auto; /* Vertical scroll */
+  overflow-x: hidden;
   font-family: "Poppins", sans-serif;
 
   &::-webkit-scrollbar {
@@ -155,12 +156,13 @@ const SidebarContent = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #002087;
+    background: #ff0066;
+
     border-radius: 3px;
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background: #ff0066;
+    background: #002087;
   }
 
   @media (max-width: 768px) {
