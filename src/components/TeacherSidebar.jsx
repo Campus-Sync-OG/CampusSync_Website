@@ -51,7 +51,7 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 100vh; /* Fixed height */
+  height: 86.5vh; /* Fixed height */
   z-index: 1000;
 
   @media (max-width: 768px) {
@@ -144,7 +144,7 @@ const SidebarContent = styled.div`
   gap: 1rem;
   white-space: nowrap;
   overflow-y: auto; /* Enable vertical scrolling */
-  overflow-x: none; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Enable vertical scrolling */
   flex: 1; /* Take remaining space */
   font-family: "Poppins", sans-serif;
 
@@ -162,7 +162,7 @@ const SidebarContent = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #002087;
+    background: #ff0066;
     border-radius: 3px;
   }
 
@@ -412,7 +412,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-              <MdBlurCircular />
+                <MdBlurCircular />
               </Icon>
               <Label expanded={true}>Circular</Label>
             </SidebarItem>
