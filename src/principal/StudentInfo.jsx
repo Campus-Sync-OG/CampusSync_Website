@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { Link, useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { getStudentsByClassAndSection } from '../api/ClientApi';
+import { getAllClassSections,fetchStudents } from '../api/ClientApi';
+
 const Container = styled.div`
   padding: 2rem;
   max-height:90vh;
@@ -166,26 +167,55 @@ const StudentInfo = () => {
     section: '',
   });
   const [students, setStudents] = useState([]);
+  
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
+   const [classSections, setClassSections] = useState([]);
+  const [selectedClassSection, setSelectedClassSection] = useState([]);
 
   const handleFilterChange = (field, value) => {
     setFilters(prev => ({ ...prev, [field]: value }));
   };
 
-  const fetchStudents = async () => {
-    if (filters.class && filters.section) {
-      try {
-        const response = await getStudentsByClassAndSection(filters.class, filters.section);
-        setStudents(response || []);
-      } catch (error) {
-        console.error("Failed to fetch students:", error);
-      }
+  const getStudents = async () => {
+    try {
+      const response = await fetchStudents();
+      setStudents(response || []);
+    } catch (error) {
+      console.error("Failed to fetch students:", error);
     }
   };
 
-  const handleSearch = () => {
-    fetchStudents();
-  };
 
+  useEffect(() => {
+    getStudents();
+ 
+  }, []);
+
+    useEffect(() => {
+     const fetchClassSections = async () => {
+       try {
+         const data = await getAllClassSections();
+ 
+         // Store complete data for filtering later
+         setClassSections(data);
+ 
+         // Extract unique class names
+         const uniqueClasses = Array.from(new Set(data.map(item => item.className)))
+           .map(cls => ({ className: cls }));
+ 
+         const uniqueSections = Array.from(new Set(data.map(item => item.section_name)))
+           .map(sec => ({ section_name: sec }));
+ 
+         setClassSections(uniqueClasses); // reuse this as class list
+         setSelectedClassSection(uniqueSections);
+       } catch (error) {
+         console.error("Failed to fetch class sections:", error);
+       }
+     };
+ 
+     fetchClassSections();
+   }, []);
   const handleView = (rollNo) => {
     const encodedRoll = encodeURIComponent(rollNo);
     navigate(`/detailedinfo/${encodedRoll}`);
@@ -195,35 +225,25 @@ const StudentInfo = () => {
     return students.filter(t => {
       return (
         (!filters.student_name || t.student_name?.toLowerCase().includes(filters.student_name.toLowerCase())) &&
-        (!filters.roll_no || t.roll_no?.toString().includes(filters.roll_no.toString()))&&
-
-        (!filters.class || t.class === filters.class) &&
+        (!filters.roll_no || t.roll_no?.toString().includes(filters.roll_no.toString())) &&
+        (!filters.class || t.class.toString() === filters.class) &&
         (!filters.section || t.section === filters.section)
       );
     });
-  }, [students, filters.student_name, filters.roll_no]);
-  const romanMapping = [
-    { value: 1, label: 'I' },
-    { value: 2, label: 'II' },
-    { value: 3, label: 'III' },
-    { value: 4, label: 'IV' },
-    { value: 5, label: 'V' },
-    { value: 6, label: 'VI' },
-    { value: 7, label: 'VII' },
-    { value: 8, label: 'VIII' },
-    { value: 9, label: 'IX' },
-    { value: 10, label: 'X' }
-  ];
-  
+  }, [students, filters]);
+
+  const uniqueClasses = [...new Set(classSections.map(cs => cs.className))];
+  const availableSections = filters.class
+    ? classSections.filter(cs => cs.class.toString() === filters.class).map(cs => cs.section_name)
+    : [];
+
   return (
     <Container>
       <Header>
         <Title>Student Information</Title>
         <Wrapper>
           <Link to="/principal-dashboard">
-            <Icons>
-              <img src={home} alt="home" />
-            </Icons>
+            <Icons><img src={home} alt="home" /></Icons>
           </Link>
           <Divider />
           <Icons onClick={() => navigate(-1)}>
@@ -241,23 +261,24 @@ const StudentInfo = () => {
           placeholder="Search by Roll Number..."
           onChange={e => handleFilterChange('roll_no', e.target.value)}
         />
-        <select onChange={e => handleFilterChange('class', e.target.value)}>
-  <option value="">Select Class</option>
-  {romanMapping.map(cls => (
-    <option key={cls.value} value={cls.value}>
-      {cls.label}
-    </option>
-  ))}
-</select>
-        <select onChange={e => handleFilterChange('section', e.target.value)}>
-          <option value="">Select Section</option>
-          {['A', 'B', 'C'].map(section => (
-            <option key={section} value={section}>{section}</option>
+
+        <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+          <option value="">Select Class</option>
+          {classSections.map((cls, index) => (
+            <option key={index} value={cls.className}>{cls.className}</option>
           ))}
         </select>
-        <SearchButton onClick={handleSearch}>
-          <SearchIcon size={20} />
-          SEARCH
+
+
+        <select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
+          <option value="">Select Section</option>
+          {selectedClassSection.map((sec, index) => (
+            <option key={sec.id} value={sec.section_name}>{sec.section_name}</option>
+          ))}
+
+        </select>
+        <SearchButton onClick={getStudents}>
+          <SearchIcon size={20} /> SEARCH
         </SearchButton>
       </FilterContainer>
 
@@ -276,7 +297,7 @@ const StudentInfo = () => {
         </Thead>
         <tbody>
           {filteredData.map((student, index) => (
-            <Tr key={student.rollNo}>
+            <Tr key={student.roll_no}>
               <Td>{String(index + 1).padStart(2, '0')}</Td>
               <Td>{student.roll_no}</Td>
               <Td>{student.student_name}</Td>
@@ -284,8 +305,7 @@ const StudentInfo = () => {
               <Td>{student.section}</Td>
               <Td>{student.gender}</Td>
               <Td>{student.dob ? student.dob.slice(0, 10) : ''}</Td>
-
-              <Td style={{ color: 'hotpink', cursor: 'pointer' }} onClick={() => handleView(student.rollNo)}>View</Td>
+              <Td style={{ color: 'hotpink', cursor: 'pointer' }} onClick={() => handleView(student.roll_no)}>View</Td>
             </Tr>
           ))}
         </tbody>

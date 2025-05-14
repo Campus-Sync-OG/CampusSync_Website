@@ -107,7 +107,7 @@ const Table = styled.table`
   }
 `;
 
-const AdminSubject = () => {
+const PrincipalSubject = () => {
   const [filters, setFilters] = useState({
     emp_name: "",
     emp_id: "",
@@ -120,7 +120,7 @@ const AdminSubject = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate("/admin-addsubject");
+    navigate("/principal-dashboard");
   };
 
   const handleInputChange = (e) => {
@@ -155,7 +155,7 @@ const AdminSubject = () => {
       <Header>
         <Title>Assigned Subjects</Title>
         <Wrapper>
-          <Icons onClick={() => navigate("/admin-dashboard")}>
+          <Icons onClick={() => navigate("/principal-dashboard")}>
             <img src={home} alt="home" />
           </Icons>
           <Divider />
@@ -255,10 +255,10 @@ const AdminSubject = () => {
           cursor: "pointer",
         }}
       >
-        Back to Add Subject
+        Back to Home
       </button>
     </Container>
   );
 };
 
-export default AdminSubject;
+export default PrincipalSubject;

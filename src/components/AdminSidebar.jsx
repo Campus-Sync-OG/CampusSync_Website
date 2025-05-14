@@ -7,14 +7,21 @@ import {
   FaAngleRight,
   FaAngleLeft,
 } from "react-icons/fa6";
-import { SlBadge } from "react-icons/sl";
-import { RiCalendarEventFill } from "react-icons/ri";
-import { LiaSchoolSolid, LiaPaletteSolid } from "react-icons/lia";
+
+import { LiaPaletteSolid } from "react-icons/lia";
+import { GiTeacher } from "react-icons/gi";
+import { GrDatabase } from "react-icons/gr";
+import { RiDatabase2Line } from "react-icons/ri";
+import { RiGalleryLine } from "react-icons/ri";
+import { MdSubject } from "react-icons/md";
+import { MdOutlineFeedback } from "react-icons/md";
+
 import { HiDocumentCurrencyRupee } from "react-icons/hi2";
 import { TbFileSpreadsheet } from "react-icons/tb";
+import { FaSchool } from "react-icons/fa6";
+import { PiStudentThin } from "react-icons/pi";
 import { AiOutlineForm } from "react-icons/ai";
 import { FiImage } from "react-icons/fi";
-import { MdOutlineAssignment } from "react-icons/md";
 import { LiaCalendarCheck } from "react-icons/lia";
 import { Link } from "react-router-dom";
 
@@ -48,7 +55,7 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 165vh;
+  height: 100vh; /* Fixed height */
   z-index: 1000;
 
   @media (max-width: 768px) {
@@ -56,6 +63,7 @@ const SidebarWrapper = styled.div`
     display: none;
   }
 `;
+
 const MobileBackButton = styled.div`
   display: flex;
   align-items: center;
@@ -135,18 +143,35 @@ const MobileDropdown = styled.div`
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Always left-aligned in mobile
+  align-items: flex-start;
   padding: 1rem;
   gap: 1rem;
   white-space: nowrap;
-  min-height: 100%; // Ensure content fills available space
-  overflow: visible !important; // Override any hidden overflow
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: none; /* Enable vertical scrolling */
+  flex: 1; /* Take remaining space */
   font-family: "Poppins", sans-serif;
 
-  // Mobile-specific adjustments
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #002087;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #002087;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #002087;
   }
 `;
 
@@ -282,7 +307,7 @@ const Sidebar = () => {
           </MobileBackButton>
           <SidebarContent expanded={true}>
             <SidebarItem
-              to="/teacher-dashboard"
+              to="/admin-dashboard"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
@@ -290,78 +315,99 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Dashboard</Label>
             </SidebarItem>
-
-            <SidebarItem as="div" onClick={() => toggleDropdown("profile")}>
-              <Icon>
-                <FaRegAddressCard />
-              </Icon>
-              <Label expanded={true}>Profile</Label>
-              <DropdownIcon open={dropdown.profile} />
-            </SidebarItem>
-            <Dropdown show={dropdown.profile} expanded={true}></Dropdown>
-
             <SidebarItem
-              to="/teacher-achievement"
+              to="/admin-school-information"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <SlBadge />
+                <FaSchool />
               </Icon>
-              <Label expanded={true}>Achievement</Label>
+              <Label expanded={true}>SchoolInformation</Label>
             </SidebarItem>
-
-            <SidebarItem
-              to="/teacher-academics"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <TbFileSpreadsheet />
-              </Icon>
-              <Label expanded={true}>Academics</Label>
-            </SidebarItem>
-
             <SidebarItem
               to="/admin-teacher-information"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <TbFileSpreadsheet />
+                <GiTeacher />
               </Icon>
               <Label expanded={true}>TeacherInformation</Label>
             </SidebarItem>
-
             <SidebarItem
-              to="/teacher-assignment"
+              to="/admin-student-information"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <MdOutlineAssignment />
+                <PiStudentThin />
               </Icon>
-              <Label expanded={true}>Assignment</Label>
+              <Label expanded={true}>StudentInformation</Label>
             </SidebarItem>
-
             <SidebarItem
-              to="/studentdetails"
+              to="/admin-teacher-data"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <LiaSchoolSolid />
+                <RiDatabase2Line />
               </Icon>
-              <Label expanded={true}>My Class</Label>
+              <Label expanded={true}>Teachers data</Label>
             </SidebarItem>
-
             <SidebarItem
-              to="/teacher-timetable"
+              to="/admin-student-data"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <GrDatabase />
+              </Icon>
+              <Label expanded={true}>Students data</Label>
+            </SidebarItem>
+            <SidebarItem
+              to="/admin-gallery"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiGalleryLine />
+              </Icon>
+              <Label expanded={true}>Gallery</Label>
+            </SidebarItem>
+            <SidebarItem
+              to="/admin-feedback"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <MdOutlineFeedback />
+              </Icon>
+              <Label expanded={true}>Feedback</Label>
+            </SidebarItem>
+           
+            <SidebarItem
+              to="/admin-usercreation"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>User Creation</Label>
+            </SidebarItem>
+            <SidebarItem
+              to="/admin-timetable"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
                 <AiOutlineForm />
               </Icon>
-              <Label expanded={true}>Calander Of Events</Label>
+              <Label expanded={true}>Time Table</Label>
             </SidebarItem>
-
             <SidebarItem
-              to="/teacher-notification"
+              to="/admin-announcement"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={true}>Announcement</Label>
+            </SidebarItem>
+            <SidebarItem
+              to="/admin-notification"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
@@ -369,37 +415,15 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Notification</Label>
             </SidebarItem>
-
             <SidebarItem
-              to="/teacher-subjects"
+              to="/admin-subjects"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FiImage />
+                <MdSubject />
               </Icon>
               <Label expanded={true}>Subjects</Label>
             </SidebarItem>
-
-            <SidebarItem
-              to="/teacher-timetable"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <LiaCalendarCheck />
-              </Icon>
-              <Label expanded={true}>Time Table</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              to="/teacher-form"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={true}>Forms</Label>
-            </SidebarItem>
-
             <SidebarItem
               to="/admin-promotion"
               onClick={() => setMobileOpen(false)}
@@ -409,7 +433,6 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Promotion</Label>
             </SidebarItem>
-
             <SidebarItem
               to="/admin-addsubject"
               onClick={() => setMobileOpen(false)}
@@ -428,7 +451,6 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Subject List</Label>
             </SidebarItem>
-
             <SidebarItem to="/admin-fee" onClick={() => setMobileOpen(false)}>
               <Icon>
                 <HiDocumentCurrencyRupee />
@@ -446,7 +468,7 @@ const Sidebar = () => {
           </MenuToggle>
 
           <SidebarContent expanded={expanded}>
-            <SidebarItem to="/teacher-dashboard" expanded={expanded}>
+            <SidebarItem to="/admin-dashboard" expanded={expanded}>
               <Icon>
                 <LiaPaletteSolid />
               </Icon>
@@ -455,7 +477,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-school-information" expanded={expanded}>
               <Icon>
-                <RiCalendarEventFill />
+                <FaSchool />
               </Icon>
               <Label expanded={expanded}>School Information</Label>
             </SidebarItem>
@@ -465,26 +487,25 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <SlBadge />
+                <GiTeacher />
               </Icon>
               <Label expanded={expanded}>TeacherInformation</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-teacher-data" expanded={expanded}>
               <Icon>
-                <TbFileSpreadsheet />
+                <RiDatabase2Line />
               </Icon>
               <Label expanded={expanded}>Teachers Data</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-students-data" expanded={expanded}>
               <Icon>
-                <MdOutlineAssignment />
+                <GrDatabase />
               </Icon>
               <Label expanded={expanded}>Students Data</Label>
             </SidebarItem>
 
-            {/* My School Dropdown */}
             <SidebarItem
               as="div"
               expanded={expanded}
@@ -492,7 +513,7 @@ const Sidebar = () => {
             >
               <SidebarItem to="/admin-student-information" expanded={expanded}>
                 <Icon>
-                  <LiaSchoolSolid />
+                  <PiStudentThin />
                 </Icon>
                 <Label expanded={expanded}>Student Information</Label>
               </SidebarItem>
@@ -500,14 +521,14 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-gallery" expanded={expanded}>
               <Icon>
-                <AiOutlineForm />
+                <RiGalleryLine />
               </Icon>
               <Label expanded={expanded}>Admin Gallery</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-subjects" expanded={expanded}>
               <Icon>
-                <FiImage />
+                <MdSubject />
               </Icon>
               <Label expanded={expanded}>Subjects</Label>
             </SidebarItem>
@@ -519,13 +540,6 @@ const Sidebar = () => {
               <Label expanded={expanded}>Notification</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-form" expanded={expanded}>
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={expanded}>Forms</Label>
-            </SidebarItem>
-
             <SidebarItem to="/admin-timetable" expanded={expanded}>
               <Icon>
                 <AiOutlineForm />
@@ -535,7 +549,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-feedback" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <MdOutlineFeedback />
               </Icon>
               <Label expanded={expanded}>Feedback</Label>
             </SidebarItem>

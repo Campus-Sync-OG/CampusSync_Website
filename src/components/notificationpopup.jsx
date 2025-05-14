@@ -1,24 +1,48 @@
-import React , { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { fetchAllNotifications } from "../api/ClientApi"; 
+import { fetchAllNotifications } from "../api/ClientApi";
 
 const NotificationPopupPage = ({ onClose }) => {
   const [topTwoNotifications, setTopTwoNotifications] = useState([]);
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const loadNotifications = async () => {
-  const loggedInUser = JSON.parse(localStorage.getItem("user"));
-  const role = loggedInUser?.role; // Get the role from localStorage
+  const loadNotifications = async () => {
+    const loggedInUser = JSON.parse(localStorage.getItem("user"));
+    const role = loggedInUser?.role; // Get the role from localStorage
 
-  const all = await fetchAllNotifications(role); // Pass role to the API function
-  const topTwo = all.slice(0, 2);
-  setTopTwoNotifications(topTwo);
+    const all = await fetchAllNotifications(role); // Pass role to the API function
+    const topTwo = all.slice(0, 2);
+    setTopTwoNotifications(topTwo);
+  };
+ 
+const handleViewAllNotifications = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const rawRole = user?.role || "";
+  const role = rawRole.trim().toLowerCase();
+
+  console.log("Normalized role:", role);
+
+  if (role === "teacher") {
+    console.log("Navigating to teacher page");
+    navigate("/teacher-notification");
+  } else if (role === "student") {
+    console.log("Navigating to student page");
+    navigate("/notifications");
+  } else if (role === "principal") {
+    console.log("Navigating to principal page");
+    navigate("/principal-notification");
+  } else {
+    console.warn("Unknown role, navigating to fallback");
+    navigate("/notification");
+  }
 };
 
-useEffect(() => {
-  loadNotifications();
-}, []);
+
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
 
   return (
     <>
@@ -29,8 +53,8 @@ useEffect(() => {
           <CloseButton onClick={onClose}>×</CloseButton>
         </Header>
 
-        {topTwoNotifications.map((notif,index) => (
-          <NotificationCard key={notif.id}  bgColor={index % 2 === 0 ? "#FFF3E0": "#E3F2FD"}>
+        {topTwoNotifications.map((notif, index) => (
+          <NotificationCard key={notif.id} bgColor={index % 2 === 0 ? "#FFF3E0" : "#E3F2FD"}>
             <Icon>{notif.icon || "🔔"}</Icon>
             <Content>
               <Title>{notif.title}</Title>
@@ -39,9 +63,10 @@ useEffect(() => {
           </NotificationCard>
         ))}
 
-        <ViewAllButton onClick={() => navigate("/notifications")}>
+        <ViewAllButton onClick={handleViewAllNotifications}>
           View All
         </ViewAllButton>
+
       </Popup>
     </>
   );

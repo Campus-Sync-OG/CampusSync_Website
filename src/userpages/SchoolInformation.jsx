@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from 'react-router-dom';
 import homeIcon from "../assets/images/home.png"; // adjust the path as needed
 import backIcon from "../assets/images/back.png"; // adjust the path as needed
 
@@ -32,18 +32,50 @@ const SchoolInfo = () => {
   };
 
   const handleSave = () => {
-    setSuccessMessage("Saved successfully!");
-    setTimeout(() => setSuccessMessage(""), 3000);
-  };
+  const {
+    schoolName,
+    affiliationNo,
+    principalName,
+    address,
+    pincode,
+    state,
+    phone,
+    mobile,
+    email,
+    website,
+  } = form;
+
+  if (
+    !schoolName ||
+    !affiliationNo ||
+    !principalName ||
+    !address ||
+    !pincode ||
+    !state ||
+    !phone ||
+    !mobile ||
+    !email ||
+    !website
+  ) {
+    alert("saved sucessfully!!.");
+    return;
+  }
+
+  setSuccessMessage("Saved successfully!");
+  setTimeout(() => setSuccessMessage(""), 3000);
+};
+
 
   return (
     <Container>
       <NavContainer>
         <Title>School Information</Title>
         <IconsContainer>
-          <ImageIcon src={homeIcon} alt="Home" onClick={handleHomeClick} />
+          <Link to="/admin-dashboard">
+            <ImageIcon src={homeIcon} alt="Home" />
+          </Link>
           <Divider />
-          <ImageIcon src={backIcon} alt="Back" onClick={handleBackClick} />
+          <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
         </IconsContainer>
       </NavContainer>
 

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { createUser } from "../api/ClientApi"; // adjust path as needed
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
+
 
 const Container = styled.div`
   padding: 20px;
@@ -131,13 +134,33 @@ const Divider = styled.div`
   top: 5px;
 `;
 
-const UserCreation = () => {
-  const [showModal, setShowModal] = useState(false);
 
-  const handleGenerate = (e) => {
+
+const UserCreation = () => {
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({
+    role: "",
+    name: "",
+    phone_number: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleGenerate = async (e) => {
     e.preventDefault();
-    // Logic for ID generation can be added here
-    setShowModal(true); // Show modal
+    try {
+      await createUser(formData);
+      setShowModal(true);
+    } catch (error) {
+      console.error("User creation failed:", error);
+      alert("User creation failed");
+    }
   };
 
   return (
@@ -145,9 +168,9 @@ const UserCreation = () => {
       <Header>
         <Title>Create User IDs</Title>
         <IconWrapper>
-          <IconBtn src={homeIcon} alt="Home" title="Home" />
+          <IconBtn src={homeIcon} alt="Home" title="Home" onClick={() => navigate("/admin-dashboard")} />
           <Divider />
-          <IconBtn src={backIcon} alt="Back" title="Back" />
+          <IconBtn src={backIcon} alt="Back" title="Back" onClick={() => navigate(-1)} />
         </IconWrapper>
       </Header>
 
@@ -156,23 +179,23 @@ const UserCreation = () => {
       <Form onSubmit={handleGenerate}>
         <FormGroup>
           <Label>Roles *</Label>
-          <Select required>
+          <Select name="role" value={formData.role} onChange={handleChange} required>
             <option value="">Select</option>
-            <option value="Student">Student</option>
-            <option value="Teacher">Teacher</option>
-            <option value="Principal">Principal</option>
-            <option value="Operator">Operator</option>
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="principal">Principal</option>
+            <option value="operator">Operator</option>
           </Select>
         </FormGroup>
 
         <FormGroup>
           <Label>Name *</Label>
-          <Input type="text" placeholder="Type here" required />
+          <Input type="text" name="name" value={formData.name} onChange={handleChange} required placeholder="Type here" />
         </FormGroup>
 
         <FormGroup>
           <Label>Phone Number *</Label>
-          <Input type="tel" placeholder="Type here" required />
+          <Input type="tel" name="phone_number" value={formData.phone_number} onChange={handleChange} required placeholder="Type here" />
         </FormGroup>
 
         <ButtonGroup>
@@ -183,9 +206,7 @@ const UserCreation = () => {
       {showModal && (
         <ModalOverlay>
           <ModalBox>
-            <p>
-              <strong>ID and password is generated and sent</strong>
-            </p>
+            <p><strong>ID and password is generated and sent</strong></p>
             <CloseButton onClick={() => setShowModal(false)}>OK</CloseButton>
           </ModalBox>
         </ModalOverlay>

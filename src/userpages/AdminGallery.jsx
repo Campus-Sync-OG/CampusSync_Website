@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 20px;
@@ -80,22 +81,22 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+const IconButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
 const IconBtn = styled.img`
-  height: 30px;
-  width: 30px;
+  width: 25px;
+  height: 25px;
   cursor: pointer;
 `;
 
 const Divider = styled.div`
-  width: 1px;
-  height: 30px;
+  height: 25px;
+  width: 2px;
   background-color: white;
-  margin: 0 10px; /* Adjusted margin for better spacing */
-`;
-
-const IconButtons = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const AdminGallery = () => {
@@ -104,16 +105,16 @@ const AdminGallery = () => {
 
   const handleImageUpload = async (e) => {
     e.preventDefault();
-  
+
     for (const file of images) {
       const formData = new FormData();
       formData.append("file", file);
-  
+
       try {
         const response = await axios.post("/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-  
+
         console.log("Upload success:", response.data);
         alert("Image uploaded successfully.");
       } catch (error) {
@@ -122,20 +123,20 @@ const AdminGallery = () => {
       }
     }
   };
-  
+  const navigate = useNavigate();
 
   const handleVideoUpload = async (e) => {
     e.preventDefault();
-  
+
     for (const file of videos) {
       const formData = new FormData();
       formData.append("file", file);
-  
+
       try {
         const response = await axios.post("/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-  
+
         console.log("Video uploaded:", response.data);
         alert("Video uploaded successfully.");
       } catch (error) {
@@ -144,15 +145,23 @@ const AdminGallery = () => {
       }
     }
   };
-  
+
   return (
     <Container>
       <Header>
         <h1>Gallery</h1>
+       
         <IconButtons>
-          <IconBtn src={homeIcon} alt="Home" title="Home" />
+          <div
+            onClick={() => navigate("/admin-dashboard")}
+            style={{ cursor: "pointer" }}
+          >
+            <IconBtn src={homeIcon} alt="Home" title="Home" />
+          </div>
           <Divider />
-          <IconBtn src={backIcon} alt="Back" title="Back" />
+          <div onClick={() => navigate(-1)} style={{ cursor: "pointer" }}>
+            <IconBtn src={backIcon} alt="Back" title="Back" />
+          </div>
         </IconButtons>
       </Header>
 
@@ -169,7 +178,7 @@ const AdminGallery = () => {
           </div>
           <div>
             <label>Select Attachment *</label>
-            <input type="file" multiple onChange={ handleImageUpload} />
+            <input type="file" multiple onChange={handleImageUpload} />
             <small>
               (Select multiple photos with ctrl/Shift key) ONLY .JPG, .JPEG &
               .PNG
@@ -197,7 +206,7 @@ const AdminGallery = () => {
               type="file"
               multiple
               accept=".mp4, .4K"
-              onChange={ handleVideoUpload}
+              onChange={handleVideoUpload}
             />
             <small>
               (Select multiple photos with ctrl/Shift key) ONLY MP4, 4K

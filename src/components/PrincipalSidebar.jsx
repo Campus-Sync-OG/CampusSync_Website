@@ -430,7 +430,7 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Notification</Label>
             </SidebarItem>
 
-            <SidebarItem to="/principal-assignedsubjects" expanded={expanded}>
+            <SidebarItem to="/principal-subjects" expanded={expanded}>
               <Icon>
                 <FiImage />
               </Icon>

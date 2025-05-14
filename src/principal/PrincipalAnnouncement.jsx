@@ -162,7 +162,7 @@ const PrincipleAnnouncement = () => {
       title: formData.title,
       date: formData.date,
       message: formData.description,
-      status: "Active",
+      status: "active",
     };
 
     try {

@@ -73,9 +73,10 @@ import PrincipleAnnouncement from "./principal/PrincipalAnnouncement";
 import AdminFee from "./userpages/AdminFee";
 import SubjectList from "./userpages/SubjectList";
 import AddSubject from "./userpages/AddSubject";
-import TeacherAttendanceDownload from "./teacher/TeacherAttendanceDownload";
-
+import TeacherAttendanceDownload from "./teacher/TeacherAttendancedownload";
+import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
+import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
@@ -258,6 +259,15 @@ const App = () => {
           />
 
           <Route
+            path="/notifications"
+            element={
+              <Layout>
+                <NotificationPage />
+              </Layout>
+            }
+          />
+
+          <Route
             path="/profile/school-info"
             element={
               <Layout>
@@ -271,6 +281,14 @@ const App = () => {
             element={
               <Layout>
                 <StudentFees />
+              </Layout>
+            }
+          />
+          <Route
+            path="/student-receipt"
+            element={
+              <Layout>
+                <StudentReceiptPage />
               </Layout>
             }
           />
@@ -397,7 +415,7 @@ const App = () => {
             }
           />
           <Route
-            path="/notifications"
+            path="/teacher-notification"
             element={
               <TeacherLayout>
                 <NotificationPage />
@@ -638,6 +656,22 @@ const App = () => {
               <PrincipalLayout>
                 <ReceiptPage />
               </PrincipalLayout>
+            }
+          />
+          <Route
+            path="/principal-subjects"
+            element={
+              <PrincipalLayout>
+                <PrincipalSubject />
+              </PrincipalLayout>
+            }
+          />
+           <Route
+            path="/principal-notification"
+            element={
+              <principalLayout>
+                <NotificationPage />
+              </principalLayout>
             }
           />
         </Routes>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   createStudent,
   createParent,
@@ -36,6 +36,25 @@ const SectionTitle = styled.h2`
   color: #002e9f;
   font-size: 18px;
 `;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const VerticalDivider = styled.div`
+  height: 25px;
+  width: 2px;
+  background-color: white;
+`;
+
+const IconBtn = styled.img`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+`;
+
 
 const Row = styled.div`
   display: flex;
@@ -115,12 +134,7 @@ const PreviewImg = styled.img`
   object-fit: cover;
 `;
 
-const IconBtn = styled.img`
-  height: 30px;
-  width: 30px;
-  cursor: pointer;
-  margin-left: 15px;
-`;
+
 
 const StudentInformation = () => {
   const [formData, setFormData] = useState({
@@ -270,10 +284,18 @@ const StudentInformation = () => {
     <Container>
       <Header>
         <Title>Student Information</Title>
-        <div>
-          <IconBtn src={homeIcon} alt="Home" title="Home" />
-          <IconBtn src={backIcon} alt="Back" title="Back" />
-        </div>
+        <IconWrapper>
+          <Link to="/admin-dashboard">
+            <IconBtn src={homeIcon} alt="Home" title="Home" />
+          </Link>
+          <VerticalDivider />
+          <div
+            onClick={() => navigate(-1)}
+            style={{ display: "inline-block", cursor: "pointer" }}
+          >
+            <IconBtn src={backIcon} alt="Back" title="Back" />
+          </div>
+        </IconWrapper>
       </Header>
 
       <Form onSubmit={handleSubmit}>

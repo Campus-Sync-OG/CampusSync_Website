@@ -48,6 +48,7 @@ const [studentSection, setStudentSection] = useState("");
       fetchStudentByAdmissionNo(admission_no)
         .then((data) => {
           setStudentName(data.student_name || "N/A");
+          console.log("Student Name:", data.student_name);
           setStudentClass(data.class || "N/A");
           setStudentSection(data.section || "N/A");
         })
@@ -58,7 +59,7 @@ const [studentSection, setStudentSection] = useState("");
   }, [admission_no]);
 
   const handleViewReceipt = (receipt) => {
-    navigate("/receipt", { state: { receipt } });
+    navigate("/student-receipt", { state: { receipt } });
   };
   
 
@@ -153,6 +154,7 @@ const [studentSection, setStudentSection] = useState("");
             <Th>Payment Method</Th>
             <Th> View Fees</Th>
             <Th>Download Receipt</Th>
+            
           </tr>
         </thead>
         <tbody>

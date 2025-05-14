@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
+import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   padding: 20px;
@@ -132,6 +133,7 @@ const Announcement = () => {
   const [announcements, setAnnouncements] = useState([
     { title: "", duration: "", date: "", description: "" },
   ]);
+  const navigate = useNavigate();
 
   const handleChange = (index, e) => {
     const { name, value } = e.target;
@@ -176,9 +178,16 @@ const Announcement = () => {
       <Header>
         <Title>Announcement</Title>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <IconBtn src={homeIcon} alt="Home" title="Home" />
+
+          <div onClick={() => navigate("/admin-dashboard")} style={{ cursor: "pointer" }}>
+            <IconBtn src={homeIcon} alt="Home" title="Home" />
+          </div>
+          
           <Divider />
-          <IconBtn src={backIcon} alt="Back" title="Back" />
+      
+          <div onClick={() => navigate(-1)} style={{ cursor: "pointer" }}>
+            <IconBtn src={backIcon} alt="Back" title="Back" />
+          </div>
         </div>
       </Header>
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'https://api-school-campus-og-b5c7anguhcdhgxbu.centralindia-01.azurewebsites.net/api',
   headers: {
    
     'Content-Type': 'application/json',
@@ -186,7 +186,7 @@ export const uploadCircular = (formData) =>
     api.get('/teachers/all').then((res) => res.data);*/
 
   export const fetchFilteredSubjects = (filters) =>
-    api.get('/users/list/teacher-subjects', { params: filters }).then((res) => res.data);
+    api.get('/users/list/teacher-subject', { params: filters }).then((res) => res.data);
 
   export const saveSubjects = async (subject_names) => {
     return api.post('/users/subjects', { subject_names }).then((res) => res.data);
@@ -255,6 +255,15 @@ export const fetchCircularsByAdmissionNo = (admission_no) =>
 
 export const fetchTimetableByAdmissionNo = (admission_no) =>
   api.get(`/timetable/student/${admission_no}`).then((res) => res.data);
+
+export const giveMarks = (emp_id, payload) => {
+  return api.post(`/teachers/${emp_id}/students/marks`, payload).then((res) => res.data);
+};
+
+export const createUser = ({ role, name, phone_number }) =>
+  api.post('/users/create-user', { role, name, phone_number }).then(res => res.data);
+
+
 
 
 export default api;

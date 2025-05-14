@@ -3,11 +3,11 @@ import styled from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Link } from "react-router-dom";
-import teacherImage from "../assets/images/teacher.png";
-import assignmentImage from "../assets/images/assignment1.png";
-import subjectImage from "../assets/images/subject.png";
-import timetableImage from "../assets/images/timetable.png";
-import attendanceImage from "../assets/images/attendance1.png";
+import principalImage from "../assets/images/principaldashboard.png";
+import princiattendanceImage from "../assets/images/princiattendance.png";
+import princiacademiImage from "../assets/images/princiacademics.png";
+import princisubjectImage from "../assets/images/princisubject.png";
+import princiannouncementImage from "../assets/images/princiannouncement.png";
 import { FaEllipsisH } from "react-icons/fa";
 const PrincipalDashboard = () => {
   const [date, setDate] = useState(new Date());
@@ -38,44 +38,47 @@ const PrincipalDashboard = () => {
         <div className="text">
           <div className="dashboard-title">Dashboard</div>
           <div className="welcome-text">
-            <p>Welcome, Teacher</p>
+            <p>Welcome, Principal</p>
           </div>
           <div className="date">
             <p>{currentDate}</p>
           </div>
         </div>
-        <img className="image" src={teacherImage} alt="Welcome" />
+        <img className="image" src={principalImage} alt="Welcome" />
       </WelcomeCard>
 
       {/* Main Section with Cards & Calendar */}
       <MainContent>
         {/* 2x2 Grid Cards */}
         <CardGrid>
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
+          <Link to="/principal-fees" style={{ textDecoration: "none" }}>
             <DashboardCard color="#FA807D">
-              <p>Assignments</p>
-              <img src={assignmentImage} alt="Assignments" />
+              <p>Fees</p>
+              <img src={princiattendanceImage} alt="Attendance" />
             </DashboardCard>
           </Link>
 
-          <Link to="/timetable" style={{ textDecoration: "none" }}>
+          <Link to="/principal-academics" style={{ textDecoration: "none" }}>
             <DashboardCard color="#7E81EC">
-              <p>Timetable</p>
-              <img src={timetableImage} alt="Timetable" />
+              <p>Academics</p>
+              <img src={princiacademiImage} alt="academics" />
             </DashboardCard>
           </Link>
 
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
+          <Link
+            to="/principal-subjects"
+            style={{ textDecoration: "none" }}
+          >
             <DashboardCard color="#77EAD0">
               <p>Subjects</p>
-              <img src={subjectImage} alt="Subjects" />
+              <img src={princisubjectImage} alt="Subjects" />
             </DashboardCard>
           </Link>
 
-          <Link to="/assignments" style={{ textDecoration: "none" }}>
+          <Link to="/principal-announcement" style={{ textDecoration: "none" }}>
             <DashboardCard color="#BD7BF9">
-              <p>Attendance </p>
-              <img src={attendanceImage} alt="Attendance" />
+              <p>Announcement </p>
+              <img src={princiannouncementImage} alt="Announcement" />
             </DashboardCard>
           </Link>
         </CardGrid>
@@ -299,6 +302,7 @@ const DashboardCard = styled.div`
     text-align: left; 
     margin:0;
     font-family: 'Poppins', sans-serif;
+    color: white;
   }
   @media (max-width: 1024px) {
     gap:5px;
