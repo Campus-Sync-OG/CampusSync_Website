@@ -75,7 +75,6 @@ import SubjectList from "./userpages/SubjectList";
 import AddSubject from "./userpages/AddSubject";
 import TeacherAttendanceDownload from "./teacher/TeacherAttendancedownload";
 import PrincipalSubject from "./principal/PrincipalSubjects";
-
 import ReceiptPage from "./principal/ViewReciept";
 import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
