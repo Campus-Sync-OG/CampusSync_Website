@@ -378,7 +378,7 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Feedback</Label>
             </SidebarItem>
-           
+
             <SidebarItem
               to="/admin-usercreation"
               onClick={() => setMobileOpen(false)}
@@ -519,6 +519,13 @@ const Sidebar = () => {
               </SidebarItem>
             </SidebarItem>
 
+            <SidebarItem to="/admin-usercreation" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>UserCreation</Label>
+            </SidebarItem>
+
             <SidebarItem to="/admin-gallery" expanded={expanded}>
               <Icon>
                 <RiGalleryLine />
@@ -566,13 +573,6 @@ const Sidebar = () => {
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Promotion</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-usercreation" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>UserCreation</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-addsubject" expanded={expanded}>
