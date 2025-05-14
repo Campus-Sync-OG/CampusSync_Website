@@ -46,16 +46,32 @@ const SidebarWrapper = styled.div`
   color: white;
   border-radius: 9px;
   transition: width 0.3s ease;
-  overflow: hidden;
+  overflow-y: auto; /* Enable vertical scroll */
   position: relative;
-  height: 120vh;
+  height: 86.5vh; /* Fixed height */
   z-index: 1000;
 
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
     display: none;
   }
+
+  /* Optional: Style the scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #001a5c;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #ff0066;
+  }
 `;
+
 const MobileBackButton = styled.div`
   display: flex;
   align-items: center;
@@ -141,7 +157,7 @@ const SidebarContent = styled.div`
   white-space: nowrap;
   min-height: 100%; // Ensure content fills available space
   overflow: visible !important; // Override any hidden overflow
-    font-family: 'Poppins', sans-serif; 
+  font-family: "Poppins", sans-serif;
 
   // Mobile-specific adjustments
   @media (max-width: 768px) {
