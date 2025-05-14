@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'http://api-school-campus-og-b5c7anguhcdhgxbu.centralindia-01.azurewebsites.net/api',
+  baseURL: 'https://api-school-campus-og-b5c7anguhcdhgxbu.centralindia-01.azurewebsites.net/api',
   headers: {
    
     'Content-Type': 'application/json',
