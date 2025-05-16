@@ -1,12 +1,11 @@
 // App.js
-import React, { useState, useEffect } from 'react';
+import React, { useState,useEffect} from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { motion } from 'framer-motion';
-import { FaFlask, FaTree, FaPlus, FaBook, FaCrown, FaLightbulb } from 'react-icons/fa';
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
 import { getAllSubjects, getAssignmentsByAdmissionNo } from '../api/ClientApi'; // Adjust the import path as necessary
+
 
 // Global style to reset box sizing and overflow
 const GlobalStyle = createGlobalStyle`
@@ -18,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
 
   html, body, #root {
     width: 100%;
+   
   }
 
   /* Optional scrollbar styling */
@@ -39,7 +39,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-// Styled components
+
 const AppContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -54,12 +54,14 @@ const HeaderWrapper = styled.div`
 `;
 
 const Header = styled.div`
+
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
   color: white;
   width: 100%;
+
 `;
 
 const Title = styled.h2`
@@ -93,7 +95,7 @@ const Icons2 = styled.div`
     position: relative;
     width: 18px;
     height: 18px;
-    top: 4px;
+    top:4px;
   }
 `;
 
@@ -101,70 +103,61 @@ const Content = styled.div`
   padding: 20px;
 `;
 
-const SubjectsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+const SubjectsList = styled.ul`
+  list-style: none;
+  padding: 0;
 `;
 
-const SubjectCard = styled.div`
-  position: relative;
-  width: 150px;
-  height: 100px;
+const SubjectItem = styled.li`
+  padding: 10px;
+  margin: 5px 0;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-  text-align: center;
-  line-height: 100px;
   cursor: pointer;
-  overflow: hidden;
+
   &:hover {
-    background-color: #e0f7fa;
+    background: #f0f0f0;
   }
 `;
 
-const IconContainer = styled(motion.div)`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 24px;
-  color: #00796b;
+const AssignmentsTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
 `;
 
-const AnimatedIcon = ({ icon: Icon }) => {
-  return (
-    <IconContainer
-      animate={{
-        y: [0, -10, 0],
-        rotate: [0, 10, -10, 0],
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      }}
-    >
-      <Icon />
-    </IconContainer>
-  );
-};
+const AssignmentLink = styled.span`
+  color: red;
+  cursor: pointer;
 
-const subjectIcons = {
-  Biology: FaTree,
-  Science: FaFlask,
-  Maths: FaPlus,
-  English: FaBook,
-  Social: FaCrown,
-  GK: FaLightbulb,
-  // Add more subjects and corresponding icons as needed
-};
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const BackButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 15px;
+  background: #8e2de2;
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #4a00e0;
+  }
+`;
 
 const App = () => {
   const [admission_no, setAdmissionNo] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
-  const [hoveredSubject, setHoveredSubject] = useState(null);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -246,32 +239,33 @@ const App = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(assignments) && assignments.length > 0 ? (
-                    assignments.map((item, index) => (
+                {Array.isArray(assignments) && assignments.length > 0 ? (
+
+                  assignments.map((item, index) => (
                       <tr key={item.id || index}>
                         <td>{index + 1}</td>
                         <td>{item.emp_name}</td>
                         <td>
-                          <AssignmentLink>{item.title}</AssignmentLink>
-                        </td>
+                        <AssignmentLink>{item.title}</AssignmentLink>
+                      </td>
                         <td>{item.Date}</td>
                         <td>
                           {item.attachment ? (
-                            <a href={item.attachment} download>
+                          <a href={item.attachment} download>
                               <img
                                 src="https://img.icons8.com/ios-glyphs/30/000000/download--v1.png"
                                 alt="Download"
                                 style={{
-                                  width: "20px",
-                                  height: "20px",
-                                  cursor: "pointer",
-                                }}
+                                width: "20px",
+                                height: "20px",
+                                cursor: "pointer",
+                              }}
                               />
                             </a>
                           ) : (
-                            "N/A"
-                          )}
-                        </td>
+                          "N/A"
+                        )}
+                      </td>
                       </tr>
                     ))
                   ) : (
@@ -286,24 +280,16 @@ const App = () => {
           ) : (
             <>
               <h2>Subjects</h2>
-              <SubjectsContainer>
-                {subjects.map((subject) => {
-                  const IconComponent = subjectIcons[subject];
-                  return (
-                    <SubjectCard
-                      key={subject}
-                      onMouseEnter={() => setHoveredSubject(subject)}
-                      onMouseLeave={() => setHoveredSubject(null)}
-                      onClick={() => fetchAssignments(subject)}
-                    >
-                      {subject}
-                      {hoveredSubject === subject && IconComponent && (
-                        <AnimatedIcon icon={IconComponent} />
-                      )}
-                    </SubjectCard>
-                  );
-                })}
-              </SubjectsContainer>
+              <SubjectsList>
+                {subjects.map((subject_name, index) => (
+                  <SubjectItem
+                  key={index}
+                  onClick={() => fetchAssignments(subject_name)}
+                >
+                    {subject_name}
+                  </SubjectItem>
+                ))}
+              </SubjectsList>
             </>
           )}
         </Content>
