@@ -43,7 +43,7 @@ const SchoolPage = () => {
         <InfoContainer>
           <InfoRow><InfoLabel>School Name</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.school_name}</InfoValue></InfoRow>
           <InfoRow><InfoLabel>Address</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.address}</InfoValue></InfoRow>
-          <InfoRow><InfoLabel>Phone Number</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.phone}</InfoValue></InfoRow>
+          <InfoRow><InfoLabel>Phone Number</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.phone_number}</InfoValue></InfoRow>
           <InfoRow><InfoLabel>Email</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.email}</InfoValue></InfoRow>
           <InfoRow><InfoLabel>Website</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.website}</InfoValue></InfoRow>
           <InfoRow><InfoLabel>Established Year</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.established_year}</InfoValue></InfoRow>
