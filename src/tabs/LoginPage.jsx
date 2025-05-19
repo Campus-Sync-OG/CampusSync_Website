@@ -202,8 +202,10 @@ const IconWrapper = styled.div`
     @media (max-width: 320px) {
       img {
         width: 100px !important;
-        height: 120px !important;
-
+        height: 115px !important;
+         position: relative;
+        right:10px;
+        bottom:5px;
       }
     }
   `}
@@ -237,7 +239,7 @@ const IconWrapper = styled.div`
     `
      position:relative;
     top:8px;
-    @media (max-width: 460px) {
+    @media (max-width: 480px) {
       img {
         width: 100px !important;
         height: 120px !important;
@@ -245,12 +247,15 @@ const IconWrapper = styled.div`
         right:10px;
         bottom:20px;
       }
-    @media (max-width: 320px) {
+    }
+      @media (max-width: 320px) {
       img {
         width: 100px !important;
-        height: 120px !important;
-      }
-    }
+        height: 125px !important;
+        position: relative;
+        right:10px;
+        bottom:17px;
+}}
   `}
 `;
 
@@ -267,7 +272,7 @@ const LoginPage = () => {
 
   const handleRoleClick = (role) => {
     localStorage.setItem("selectedRole", role); // ✅ Save selected role
-  
+
     switch (role) {
       case "admin":
         navigate("/admin-login");
@@ -285,7 +290,6 @@ const LoginPage = () => {
         break;
     }
   };
-  
 
   return (
     <>
