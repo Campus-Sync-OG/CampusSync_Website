@@ -18,7 +18,7 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 90vh;
+  max-height: 80vh;
   scroll-behavior: smooth;
   position: relative;
   right: 80px;
@@ -92,11 +92,16 @@ const WelcomeSection = styled.div`
 
   @media (max-width: 1024px) {
     position: relative;
-    left: 10px;
+    left: 20px;
 
     h2 {
       font-size: 1.5rem;
       text-align: center;
+    }
+
+    img {
+      min-height: 22vh;
+      max-height: 22vh;
     }
 
     p {
@@ -145,7 +150,7 @@ const WidgetsContainer = styled.div`
 
   @media (max-width: 1024px) {
     position: relative;
-    right: 20px;
+    right: 10px;
   }
 
   @media (max-width: 768px) {
@@ -160,25 +165,29 @@ const CardGrid = styled.div`
   gap: 1.2rem 5.5rem;
   margin-top: 0;
   @media (max-width: 1024px) {
-    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1.7rem 5.5rem;
+    position: relative;
+    right: 10px;
+    bottom: 10px;
   }
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
     gap: 25px 105px;
     position: relative;
-    right: 13px;
+    right: 24px;
   }
 
   @media (max-width: 480px) {
-    left: 2px;
+    right: 6px;
     gap: 15px 105px;
   }
   @media (max-width: 380px) {
-    left: 30px;
+    left: 20px;
   }
   @media (max-width: 320px) {
     gap: 15px 105px;
-    left: 50px;
+    left: 35px;
   }
 `;
 
@@ -243,9 +252,11 @@ const WidgetTitle = styled.div`
   @media (max-width: 1024px) {
     font-size: 1rem;
     right: 40px;
+    top: -10px;
   }
   @media (max-width: 768px) {
-    right: 50px;
+    right: 110px;
+    top: 10px;
   }
   @media (max-width: 480px) {
     position: relative;
@@ -309,6 +320,7 @@ const CalendarContainer = styled.div`
     width: 80%;
     height: 95%;
     left: 130px;
+    bottom: 10px;
   }
   @media (max-width: 768px) {
     position: relative;
@@ -321,12 +333,12 @@ const CalendarContainer = styled.div`
   }
   @media (max-width: 380px) {
     position: relative;
-    left: 66px;
+    left: 60px;
     width: 100%;
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 85px;
+    left: 75px;
     width: 90%;
   }
 `;
