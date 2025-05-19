@@ -377,15 +377,16 @@ const CalendarSection = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     margin-top: 15px;
+    margin-left: 35px;
   }
-  @media (max-width: 426px) {
+  @media (max-width: 480px) {
     width: 90%;
-    margin-left: 10px;
+    margin-left: 35px;
     margin-right: 15px;
     margin-top: 0;
   }
   @media (max-width: 376px) {
-    margin-left: 0;
+    margin-left: 45px;
   }
   @media (max-width: 320px) {
     margin-left: 40px;
