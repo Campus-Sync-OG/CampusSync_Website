@@ -51,7 +51,7 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 120vh;
+  height: 86.5vh; /* Fixed height */
   z-index: 1000;
 
   @media (max-width: 768px) {
@@ -59,6 +59,7 @@ const SidebarWrapper = styled.div`
     display: none;
   }
 `;
+
 const MobileBackButton = styled.div`
   display: flex;
   align-items: center;
@@ -138,18 +139,35 @@ const MobileDropdown = styled.div`
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Always left-aligned in mobile
+  align-items: flex-start;
   padding: 1rem;
   gap: 1rem;
   white-space: nowrap;
-  min-height: 100%; // Ensure content fills available space
-  overflow: visible !important; // Override any hidden overflow
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Enable vertical scrolling */
+  flex: 1; /* Take remaining space */
   font-family: "Poppins", sans-serif;
 
-  // Mobile-specific adjustments
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #002087;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ff0066;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #002087;
   }
 `;
 
@@ -309,6 +327,14 @@ const Sidebar = () => {
                 <ChildArrow />
                 <Label expanded={true}>My Profile</Label>
               </SidebarItem>
+
+              <SidebarItem
+                to="/profile/teacher-school-info"
+                onClick={() => setMobileOpen(false)}
+              >
+                <ChildArrow />
+                <Label expanded={true}>school Info</Label>
+              </SidebarItem>
             </Dropdown>
 
             <SidebarItem
@@ -382,13 +408,13 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/teacher-notification"
+              to="/teacher-circular"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FiImage />
+                <MdBlurCircular />
               </Icon>
-              <Label expanded={true}>Notification</Label>
+              <Label expanded={true}>Circular</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -463,7 +489,10 @@ const Sidebar = () => {
                 <Label expanded={expanded}>My Profile</Label>
               </SidebarItem>
 
-              <SidebarItem to="/profile/teacher-school-info" expanded={expanded}>
+              <SidebarItem
+                to="/profile/teacher-school-info"
+                expanded={expanded}
+              >
                 <ChildArrow />
                 <Label expanded={expanded}>School Info</Label>
               </SidebarItem>

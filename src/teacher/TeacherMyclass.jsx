@@ -3,9 +3,11 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { getStudentsByClassAndSection, getAllClassSections } from "../api/ClientApi"; // adjust path if needed
-
-
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import {
+  getStudentsByClassAndSection,
+  getAllClassSections,
+} from "../api/ClientApi"; // adjust path if needed
 
 // Styled Components for the page
 const StudentListContainer = styled.div`
@@ -143,8 +145,6 @@ const Table = styled.table`
   }
 `;
 
-
-
 const TeacherMyclass = () => {
   const [students, setStudents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -152,6 +152,7 @@ const TeacherMyclass = () => {
   const [searchSection, setSearchSection] = useState("");
   const [classSections, setClassSections] = useState([]);
 
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     const fetchClassSections = async () => {
@@ -166,12 +167,14 @@ const TeacherMyclass = () => {
     fetchClassSections();
   }, []);
 
-
   useEffect(() => {
     const fetchFilteredStudents = async () => {
       try {
         if (searchClass && searchSection) {
-          const data = await getStudentsByClassAndSection(searchClass, searchSection);
+          const data = await getStudentsByClassAndSection(
+            searchClass,
+            searchSection
+          );
           setStudents(data);
         } else {
           setStudents([]);
@@ -191,14 +194,17 @@ const TeacherMyclass = () => {
     return matchesNameOrRoll;
   });
 
-  const uniqueClasses = [...new Set(classSections.map(cs => cs.className))];
-  const filteredSections = [...new Set(
-    classSections.filter(cs => cs.className === searchClass).map(cs => cs.section_name)
-  )];
-  
+  const uniqueClasses = [...new Set(classSections.map((cs) => cs.className))];
+  const filteredSections = [
+    ...new Set(
+      classSections
+        .filter((cs) => cs.className === searchClass)
+        .map((cs) => cs.section_name)
+    ),
+  ];
+
   const handleEdit = (id) => console.log("Edit student:", id);
   const handleDelete = (id) => console.log("Delete student:", id);
-  // triggers fetch on class/section change
 
   return (
     <StudentListContainer>
@@ -209,13 +215,13 @@ const TeacherMyclass = () => {
           <NavIcon
             src={home}
             alt="Home"
-            onClick={() => console.log("Home Clicked")}
+            onClick={() => navigate("/teacher-dashboard")} // Use navigate to go to the home page
           />
           <IconDivider />
           <NavIcon
             src={back}
             alt="Back"
-            onClick={() => console.log("Back Clicked")}
+            onClick={() => navigate(-1)} // Use navigate(-1) to go back to the previous page
           />
         </NavIconsContainer>
       </NavigationContainer>
@@ -255,7 +261,6 @@ const TeacherMyclass = () => {
             </option>
           ))}
         </select>
-
       </HeadingRow>
 
       {/* Table */}
@@ -306,7 +311,6 @@ const TeacherMyclass = () => {
             )}
           </tbody>
         </Table>
-
       </TableWrapper>
     </StudentListContainer>
   );
