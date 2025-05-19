@@ -355,6 +355,16 @@ const PrincipalSidebar = () => {
             </SidebarItem>
 
             <SidebarItem
+              to="/Principal-gallery"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={true}>Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem
               to="/principal-addnotification"
               onClick={() => setMobileOpen(false)}
             >
@@ -365,7 +375,7 @@ const PrincipalSidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/principal-assignedsubjects"
+              to="/principal-subjects"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
