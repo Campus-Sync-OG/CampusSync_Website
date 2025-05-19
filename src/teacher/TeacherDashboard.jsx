@@ -354,7 +354,7 @@ const CardGrid = styled.div`
 
 const DashboardCard = styled.div`
   background: ${(props) => props.color || "#ffffff"};
-  color: black;
+   color: white; 
   border-radius: 10px;
   padding: 20px;
   text-align:left;
@@ -477,6 +477,7 @@ const CalendarCard = styled.div`
     margin-bottom: 8px;
     align-text: left;
     font-family: "Poppins", sans-serif;
+     color: white; 
   }
   @media (max-width: 768px) {
     width: 100%;
