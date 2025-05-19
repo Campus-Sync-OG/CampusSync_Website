@@ -64,7 +64,7 @@ const Logo = styled.img`
     right: 45px;
   }
   @media (max-width: 320px) {
-    margin-right: 57px;
+    margin-right: 7px;
   }
 `;
 
@@ -120,7 +120,7 @@ const SchoolDetails = styled.div`
   }
   @media (max-width: 320px) {
     position: relative;
-    right: 70px;
+    right: 50px;
   }
 `;
 
