@@ -192,12 +192,13 @@ export default TeacherDashboard;
 const DashboardContainer = styled.div`
   flex: 1;
   width: 100%;
-  padding: 20px;
+  // padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-left: -10px;
-  overflow-y: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
   max-height: 90vh;
 `;
 
@@ -206,6 +207,8 @@ const WelcomeCard = styled.div`
   color: white;
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
+  margin-left: 20px;
   padding: 20px;
   border-radius: 27px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -301,7 +304,8 @@ const MainContent = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 0px;
+  margin-left: 10px;
   gap: 30px;
   flex-wrap: nowrap;
   overflow-x: hidden;
@@ -323,7 +327,7 @@ const CardGrid = styled.div`
   width: 100%;
   gap: 10px;
   //max-width:650px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   padding: 10px;
 
   @media (max-width: 1024px) {
@@ -359,7 +363,7 @@ const DashboardCard = styled.div`
   justify-content: space-between;
   transition: transform 0.2s;
   cursor: pointer;
-  height: 170px;
+  height: 150px;
   width:85%;
   gap:10px;
   margin:10px;
@@ -369,7 +373,7 @@ const DashboardCard = styled.div`
 
   img {
     width: 200px;
-    height: 180px;
+    height: 170px;
     margin-left:auto;
 
   }
@@ -465,8 +469,9 @@ const CalendarCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0;
-  height: 420px;
+  margin-top: 2px;
+  margin-right: 30px;
+  height: 380px;
 
   h3 {
     margin-bottom: 8px;

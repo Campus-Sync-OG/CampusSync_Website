@@ -100,7 +100,7 @@ const TeacherLayout = ({ children }) => {
       <Header />
       <div style={{ display: "flex", flex: 1, height: "100vh" }}>
         <TeacherSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "5px" }}>
           {children}
         </div>
       </div>
