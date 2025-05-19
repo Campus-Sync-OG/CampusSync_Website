@@ -315,7 +315,7 @@ const PrincipalSidebar = () => {
           </MobileBackButton>
           <SidebarContent expanded={true}>
             <SidebarItem
-              to="/teacher-dashboard"
+              to="/principal-dashboard"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
