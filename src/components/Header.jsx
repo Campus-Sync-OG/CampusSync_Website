@@ -50,6 +50,10 @@ const Logo = styled.img`
   margin-right: 18px;
   filter: brightness(0) saturate(100%) invert(17%) sepia(86%) saturate(7470%)
     hue-rotate(345deg) brightness(99%) contrast(104%);
+
+  @media (max-width: 320px) {
+    margin-right: 57px;
+  }
 `;
 
 const Divider = styled.div`
@@ -85,6 +89,11 @@ const SchoolDetails = styled.div`
     p {
       font-size: 12px;
     }
+  }
+
+  @media (max-width: 320px) {
+    position: relative;
+    right: 70px;
   }
 `;
 
@@ -150,7 +159,8 @@ const SearchBarContainer = styled.div`
 
   @media (max-width: 320px) {
     width: 100px;
-    left: 100px;
+    left: 70px;
+    top: 0px;
     input {
       width: 80px;
       height: 20px;
@@ -187,8 +197,8 @@ const NotificationButton = styled.div`
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 100px;
-    top: 10px;
+    left: 79px;
+    top: 0px;
   }
 `;
 
@@ -212,9 +222,9 @@ const DividerRight = styled.div`
     left: 25px;
   }
   @media (max-width: 320px) {
-    top: 10px;
+    top: 0px;
     position: relative;
-    left: 50px;
+    left: 42px;
   }
 `;
 
@@ -300,8 +310,8 @@ const MenuButton = styled.div`
   @media (max-width: 320px) {
     display: block;
     position: relative;
-    top: 13px;
-    right: -20px;
+    top: 5px;
+    left: 10px;
   }
 `;
 

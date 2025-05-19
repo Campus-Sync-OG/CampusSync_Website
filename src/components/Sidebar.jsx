@@ -97,6 +97,11 @@ const MobileMenu = styled.div`
       height: 40px; // Increase icon size
     }
   }
+
+  @media (max-width: 320px) {
+    top: 96px;
+    left: 12px;
+  }
 `;
 
 const MobileDropdown = styled.div`
