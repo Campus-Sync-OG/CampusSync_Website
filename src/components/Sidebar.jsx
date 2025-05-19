@@ -98,6 +98,10 @@ const MobileMenu = styled.div`
     }
   }
 
+  @media (max-width: 480px) {
+    top: 90px;
+    left: 12px;
+  }
   @media (max-width: 380px) {
     top: 90px;
     left: 12px;

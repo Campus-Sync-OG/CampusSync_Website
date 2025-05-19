@@ -51,6 +51,10 @@ const Logo = styled.img`
   filter: brightness(0) saturate(100%) invert(17%) sepia(86%) saturate(7470%)
     hue-rotate(345deg) brightness(99%) contrast(104%);
 
+  @media (max-width: 480px) {
+    position: relative;
+    right: 45px;
+  }
   @media (max-width: 380px) {
     position: relative;
     right: 45px;
@@ -66,6 +70,10 @@ const Divider = styled.div`
   background-color: #e91e63;
   margin: 0 15px;
 
+  @media (max-width: 480px) {
+    position: relative;
+    right: 60px;
+  }
   @media (max-width: 380px) {
     position: relative;
     right: 60px;
@@ -91,6 +99,8 @@ const SchoolDetails = styled.div`
   }
 
   @media (max-width: 480px) {
+    position: relative;
+    right: 40px;
     h1 {
       font-size: 16px;
     }
@@ -162,10 +172,11 @@ const SearchBarContainer = styled.div`
   }
 
   @media (max-width: 480px) {
-    width: 110px;
+    width: 130px;
     left: 100px;
+    top: 5px;
     input {
-      width: 100px;
+      width: 80px;
       height: 20px;
     }
   }
@@ -209,8 +220,8 @@ const NotificationButton = styled.div`
   }
   @media (max-width: 480px) {
     position: relative;
-    left: 80px;
-    top: 10px;
+    left: 83px;
+    top: 3px;
   }
   @media (max-width: 380px) {
     position: relative;
@@ -237,6 +248,11 @@ const DividerRight = styled.div`
   @media (max-width: 768px) {
     top: 10px;
     position: relative;
+  }
+  @media (max-width: 480px) {
+    top: 5px;
+    position: relative;
+    left: 36px;
   }
   @media (max-width: 380px) {
     top: 5px;
@@ -321,7 +337,7 @@ const MenuButton = styled.div`
     display: block;
     position: relative;
     top: 10px;
-    right: 50px;
+    right: 0px;
   }
   @media (max-width: 380px) {
     display: block;
