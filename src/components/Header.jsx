@@ -20,6 +20,7 @@ const HeaderContainer = styled.header`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-wrap: nowrap;
   position: sticky;
+  font-family: "Roboto", sans-serif;
 
   @media (max-width: 768px) {
     flex-wrap: wrap;
@@ -49,6 +50,22 @@ const Logo = styled.img`
   margin-right: 18px;
   filter: brightness(0) saturate(100%) invert(17%) sepia(86%) saturate(7470%)
     hue-rotate(345deg) brightness(99%) contrast(104%);
+
+  @media (max-width: 768px) {
+    position: relative;
+    right: 15px;
+  }
+  @media (max-width: 480px) {
+    position: relative;
+    right: 45px;
+  }
+  @media (max-width: 380px) {
+    position: relative;
+    right: 45px;
+  }
+  @media (max-width: 320px) {
+    margin-right: 7px;
+  }
 `;
 
 const Divider = styled.div`
@@ -56,6 +73,15 @@ const Divider = styled.div`
   width: 2px;
   background-color: #e91e63;
   margin: 0 15px;
+
+  @media (max-width: 480px) {
+    position: relative;
+    right: 60px;
+  }
+  @media (max-width: 380px) {
+    position: relative;
+    right: 60px;
+  }
 `;
 
 const SchoolDetails = styled.div`
@@ -73,9 +99,12 @@ const SchoolDetails = styled.div`
     margin: 0;
     font-size: 14px;
     color: gray;
+    font-style: italic;
   }
 
   @media (max-width: 480px) {
+    position: relative;
+    right: 40px;
     h1 {
       font-size: 16px;
     }
@@ -83,6 +112,15 @@ const SchoolDetails = styled.div`
     p {
       font-size: 12px;
     }
+  }
+
+  @media (max-width: 380px) {
+    position: relative;
+    right: 40px;
+  }
+  @media (max-width: 320px) {
+    position: relative;
+    right: 50px;
   }
 `;
 
@@ -112,7 +150,7 @@ const SearchBarContainer = styled.div`
     padding: 8px 15px;
     padding-left: 35px;
     border: 1px solid #ccc;
-    border-radius: 20px;
+    border-radius: 5px;
     font-size: 14px;
     width: 300px;
   }
@@ -130,25 +168,36 @@ const SearchBarContainer = styled.div`
   @media (max-width: 768px) {
     width: 100px;
     left: 130px;
-    top: 10px;
+    top: 5px;
     input {
-      width: 200px;
+      width: 300px;
       height: 20px;
     }
   }
 
   @media (max-width: 480px) {
-    width: 110px;
+    width: 130px;
     left: 100px;
+    top: 5px;
     input {
-      width: 100px;
+      width: 80px;
       height: 20px;
     }
   }
 
+  @media (max-width: 380px) {
+    width: 100px;
+    left: 80px;
+    top: 5px;
+    input {
+      width: 80px;
+      height: 20px;
+    }
+  }
   @media (max-width: 320px) {
     width: 100px;
-    left: 100px;
+    left: 70px;
+    top: 0px;
     input {
       width: 80px;
       height: 20px;
@@ -170,23 +219,23 @@ const NotificationButton = styled.div`
 
   @media (max-width: 768px) {
     position: relative;
-    left: 170px;
-    top: 10px;
+    left: 233px;
+    top: 3px;
   }
   @media (max-width: 480px) {
     position: relative;
-    left: 80px;
-    top: 10px;
+    left: 83px;
+    top: 3px;
   }
   @media (max-width: 380px) {
     position: relative;
-    left: 90px;
-    top: 10px;
+    left: 83px;
+    top: 3px;
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 100px;
-    top: 10px;
+    left: 79px;
+    top: 0px;
   }
 `;
 
@@ -201,18 +250,24 @@ const DividerRight = styled.div`
   background-color: rgb(233, 30, 30);
   margin: 0 15px;
   @media (max-width: 768px) {
-    top: 10px;
+    top: 5px;
     position: relative;
+    left: 76px;
+  }
+  @media (max-width: 480px) {
+    top: 5px;
+    position: relative;
+    left: 36px;
   }
   @media (max-width: 380px) {
-    top: 10px;
+    top: 5px;
     position: relative;
-    left: 25px;
+    left: 36px;
   }
   @media (max-width: 320px) {
-    top: 10px;
+    top: 0px;
     position: relative;
-    left: 50px;
+    left: 42px;
   }
 `;
 
@@ -280,26 +335,26 @@ const MenuButton = styled.div`
   @media (max-width: 768px) {
     display: block;
     position: relative;
-    top: 10px;
-    right: 160px;
+    top: 8px;
+    right: 70px;
   }
   @media (max-width: 480px) {
     display: block;
     position: relative;
     top: 10px;
-    right: 50px;
+    right: 0px;
   }
   @media (max-width: 380px) {
     display: block;
     position: relative;
-    top: 13px;
-    right: 20px;
+    top: 10px;
+    right: 0px;
   }
   @media (max-width: 320px) {
     display: block;
     position: relative;
-    top: 13px;
-    right: -20px;
+    top: 5px;
+    left: 10px;
   }
 `;
 

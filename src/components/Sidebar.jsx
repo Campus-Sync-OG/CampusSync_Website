@@ -48,8 +48,12 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 120vh;
+  height: 85vh; /* Ensure full viewport height */
   z-index: 1000;
+
+  @media (max-width: 1024px) {
+    height: 100vh;
+  }
 
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
@@ -75,13 +79,13 @@ const MobileBackButton = styled.div`
 `;
 
 const MobileMenu = styled.div`
- display: none;
+  display: none;
 
   @media (max-width: 768px) {
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
     top: 88px; // Changed from -110px to position properly
-    left: 58px;
+    left: 30px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
     z-index: 1001;
@@ -92,6 +96,19 @@ const MobileMenu = styled.div`
       width: 40px; // Increase icon size
       height: 40px; // Increase icon size
     }
+  }
+
+  @media (max-width: 480px) {
+    top: 90px;
+    left: 12px;
+  }
+  @media (max-width: 380px) {
+    top: 90px;
+    left: 12px;
+  }
+  @media (max-width: 320px) {
+    top: 96px;
+    left: 12px;
   }
 `;
 
@@ -133,23 +150,39 @@ const MobileDropdown = styled.div`
 `;
 
 const SidebarContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Always left-aligned in mobile
+  align-items: flex-start;
   padding: 1rem;
   gap: 1rem;
-  white-space: nowrap;
-  min-height: 100%; // Ensure content fills available space
-  overflow: visible !important; // Override any hidden overflow
+  overflow-y: auto; /* Vertical scroll */
+  overflow-x: hidden;
   font-family: "Poppins", sans-serif;
 
-  // Mobile-specific adjustments
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #002087;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ff0066;
+
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #002087;
+  }
+
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
   }
 `;
-
 const MenuToggle = styled.div`
   display: flex;
   flex-direction: column;
@@ -362,6 +395,13 @@ const Sidebar = () => {
               >
                 <ChildArrow />
                 <Label expanded={true}>Circular</Label>
+              </SidebarItem>
+              <SidebarItem
+                to="/school/timetable"
+                onClick={() => setMobileOpen(false)}
+              >
+                <ChildArrow />
+                <Label expanded={true}>Time Table</Label>
               </SidebarItem>
               <SidebarItem
                 to="/school/certificate-request"

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { submitAchievement, getAllClassSections } from "../api/ClientApi";
 
 const Achievement = () => {
+  const handleBackClick = () => navigate(-1);
   const [formData, setFormData] = useState({
     currentClass: "",
     section: "",
@@ -71,7 +72,7 @@ const Achievement = () => {
   };
 
   const handleHomeClick = () => navigate("/dashboard");
-  const handleBackClick = () => navigate("/dashboard");
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
   

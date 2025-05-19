@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { submitFeedback } from "../api/ClientApi";
+import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
@@ -19,12 +20,11 @@ const Container = styled.div`
   /* Hide scrollbar */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
-  
+
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari */
   }
 `;
-
 
 const Header = styled.div`
   display: flex;
@@ -44,6 +44,13 @@ const Title = styled.h2`
 const IconWrapper = styled.div`
   display: flex;
   gap: 15px;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 20px;
+  background-color: white;
+  margin: 0 10px;
 `;
 
 const IconImage = styled.img`
@@ -144,22 +151,36 @@ const ErrorText = styled.p`
   text-align: center;
 `;
 
-
 const SuccessText = styled.p`
   color: green;
 `;
 
-
 export default function FeedbackForm() {
+  const navigate = useNavigate();
   const [feedbackText, setFeedbackText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   const tableData = [
-    { id: 1, title: "Annual day 2024 experience feedback", link: "www.forms.a23.com", status: "Not Filled" },
-    { id: 2, title: "Dance Club membership form", link: "www.forms.a23.com", status: "Filled" },
-    { id: 3, title: "National olympiad participation", link: "www.forms.a23.com", status: "Filled" },
+    {
+      id: 1,
+      title: "Annual day 2024 experience feedback",
+      link: "www.forms.a23.com",
+      status: "Not Filled",
+    },
+    {
+      id: 2,
+      title: "Dance Club membership form",
+      link: "www.forms.a23.com",
+      status: "Filled",
+    },
+    {
+      id: 3,
+      title: "National olympiad participation",
+      link: "www.forms.a23.com",
+      status: "Filled",
+    },
   ];
 
   const handleSubmit = async () => {
@@ -175,7 +196,7 @@ export default function FeedbackForm() {
       await submitFeedback(payload);
 
       setSuccessMsg("Feedback submitted successfully!");
-      setFeedbackText("");  // Reset the feedback text after submission
+      setFeedbackText(""); // Reset the feedback text after submission
     } catch (error) {
       setErrorMsg("Failed to submit feedback. Please try again.");
       console.error("Feedback Error:", error);
@@ -192,9 +213,10 @@ export default function FeedbackForm() {
           <Link to="/dashboard">
             <IconImage src={home} alt="home" />
           </Link>
-          <Link to="/dashboard">
+          <Divider />
+          <div onClick={() => navigate(-1)}>
             <IconImage src={back} alt="back" />
-          </Link>
+          </div>
         </IconWrapper>
       </Header>
 
