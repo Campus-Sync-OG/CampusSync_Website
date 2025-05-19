@@ -128,7 +128,7 @@ const PrincipalLayout = ({ children }) => {
       <Header />
       <div style={{ display: "flex", flex: 1, height: "100vh" }}>
         <PrincipalSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
+        <div style={{ flex: 1, overflowY: "auto", padding: "1px" }}>
           {children}
         </div>
       </div>

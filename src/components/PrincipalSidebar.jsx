@@ -51,6 +51,10 @@ const SidebarWrapper = styled.div`
   height: 86.5vh; /* Fixed height */
   z-index: 1000;
 
+  @media (max-width: 1024px) {
+   height: 92vh;
+
+  }
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
     display: none;
@@ -97,7 +101,7 @@ const MobileMenu = styled.div`
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
     top: 88px; // Changed from -110px to position properly
-    left: 58px;
+    left: 28px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
     z-index: 1001;
@@ -108,6 +112,19 @@ const MobileMenu = styled.div`
       width: 40px; // Increase icon size
       height: 40px; // Increase icon size
     }
+  }
+  
+  @media (max-width: 480px) {
+    display: block;
+    position: absolute; // Changed from relative to fixed for better positioning
+    top: 85px; // Changed from -110px to position properly
+    left: 8px;
+  }
+  @media (max-width: 320px) {
+    display: block;
+    position: absolute; // Changed from relative to fixed for better positioning
+    top: 98px; // Changed from -110px to position properly
+    left: 8px;
   }
 `;
 
