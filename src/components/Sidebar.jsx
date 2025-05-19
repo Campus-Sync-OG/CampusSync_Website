@@ -85,7 +85,7 @@ const MobileMenu = styled.div`
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
     top: 88px; // Changed from -110px to position properly
-    left: 58px;
+    left: 30px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
     z-index: 1001;

@@ -51,6 +51,10 @@ const Logo = styled.img`
   filter: brightness(0) saturate(100%) invert(17%) sepia(86%) saturate(7470%)
     hue-rotate(345deg) brightness(99%) contrast(104%);
 
+  @media (max-width: 768px) {
+    position: relative;
+    right: 15px;
+  }
   @media (max-width: 480px) {
     position: relative;
     right: 45px;
@@ -164,9 +168,9 @@ const SearchBarContainer = styled.div`
   @media (max-width: 768px) {
     width: 100px;
     left: 130px;
-    top: 10px;
+    top: 5px;
     input {
-      width: 200px;
+      width: 300px;
       height: 20px;
     }
   }
@@ -215,8 +219,8 @@ const NotificationButton = styled.div`
 
   @media (max-width: 768px) {
     position: relative;
-    left: 170px;
-    top: 10px;
+    left: 233px;
+    top: 3px;
   }
   @media (max-width: 480px) {
     position: relative;
@@ -246,8 +250,9 @@ const DividerRight = styled.div`
   background-color: rgb(233, 30, 30);
   margin: 0 15px;
   @media (max-width: 768px) {
-    top: 10px;
+    top: 5px;
     position: relative;
+    left: 76px;
   }
   @media (max-width: 480px) {
     top: 5px;
@@ -330,8 +335,8 @@ const MenuButton = styled.div`
   @media (max-width: 768px) {
     display: block;
     position: relative;
-    top: 10px;
-    right: 160px;
+    top: 8px;
+    right: 70px;
   }
   @media (max-width: 480px) {
     display: block;
