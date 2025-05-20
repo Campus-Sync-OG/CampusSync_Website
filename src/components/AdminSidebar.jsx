@@ -57,7 +57,7 @@ const SidebarWrapper = styled.div`
   position: relative;
   height: 86.5vh; /* Fixed height */
   z-index: 1000;
-   /* Optional: Style the scrollbar */
+  /* Optional: Style the scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -115,6 +115,18 @@ const MobileMenu = styled.div`
       height: 40px; // Increase icon size
     }
   }
+  @media (max-width: 768px) {
+    left: 30px;
+    top: 90px;
+  }
+  @media (max-width: 380px) {
+    left: 10px;
+    top: 90px;
+  }
+  @media (max-width: 320px) {
+    left: 10px;
+    top: 98px;
+  }
 `;
 
 const MobileDropdown = styled.div`
@@ -154,7 +166,7 @@ const MobileDropdown = styled.div`
 `;
 
 const SidebarContent = styled.div`
-   display: flex;
+  display: flex;
   flex-direction: column;
   align-items: flex-start; // Always left-aligned in mobile
   padding: 1rem;
@@ -169,7 +181,6 @@ const SidebarContent = styled.div`
     padding: 0.5rem;
     gap: 0.8rem;
   }
-
 `;
 
 const MenuToggle = styled.div`
