@@ -515,7 +515,7 @@ const Sidebar = () => {
               <Icon>
                 <SlBadge />
               </Icon>
-              <Label expanded={true}>Achievement</Label>
+              <Label expanded={expanded}>Achievement</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-academics" expanded={expanded}>
