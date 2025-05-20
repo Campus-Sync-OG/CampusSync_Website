@@ -114,12 +114,11 @@ export default TeacherDashboard;
 const DashboardContainer = styled.div`
   flex: 1;
   width: 100%;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: -10px;
   overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 const WelcomeCard = styled.div`
@@ -221,8 +220,7 @@ const WelcomeCard = styled.div`
 const MainContent = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  margin-top: 20px;
+  width: 98%;
   gap: 30px;
 
   @media (max-width: 1024px) {
@@ -239,9 +237,7 @@ const CardGrid = styled.div`
   grid-template-columns: repeat(2, 1fr);
   width: 100%;
   gap: 10px;
-  //max-width:650px;
   margin-bottom: 10px;
-  padding: 10px;
 
   @media (max-width: 1024px) {
     width: 100%;
@@ -276,7 +272,7 @@ const DashboardCard = styled.div`
   justify-content: space-between;
   transition: transform 0.2s;
   cursor: pointer;
-  height: 170px;
+  height: 165px;
   width:85%;
   gap:10px;
   margin:10px;
@@ -300,6 +296,7 @@ const DashboardCard = styled.div`
     text-align: left; 
     margin:0;
     font-family: 'Poppins', sans-serif;
+    color: white;
   }
   @media (max-width: 1024px) {
     gap:5px;
@@ -345,13 +342,16 @@ const DashboardCard = styled.div`
 `;
 
 const CalendarSection = styled.div`
-  width: 30%;
+  width: 28%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: left;
   flex-direction: column;
   margin-top: 0;
+  position: relative;
+  right: 10px;
+  bottom: 5px;
   @media (max-width: 1024px) {
     width: 45%;
 
@@ -385,12 +385,13 @@ const CalendarCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-  height: 420px;
+  height: 410px;
 
   h3 {
     margin-bottom: 8px;
     align-text: left;
     font-family: "Poppins", sans-serif;
+    color: white;
   }
   @media (max-width: 768px) {
     width: 100%;
