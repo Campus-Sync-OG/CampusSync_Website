@@ -165,11 +165,11 @@ const SidebarContent = styled.div`
   }
 
   &::-webkit-scrollbar-track {
-    background: #002087;
+    background: #001a5c;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ff0066;
+   background: grey;
 
     border-radius: 3px;
   }
@@ -387,7 +387,6 @@ const Sidebar = () => {
                 onClick={() => setMobileOpen(false)}
               >
                 <ChildArrow />
-                
               </SidebarItem>
               <SidebarItem
                 to="/school/circular"

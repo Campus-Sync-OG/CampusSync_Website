@@ -120,6 +120,11 @@ const DashboardContainer = styled.div`
   align-items: center;
   overflow-y: auto;
   max-height: 90vh;
+ overflow-x: hidden;
+  @media (max-width: 320px) {
+    width: 100%;
+     overflow-x: hidden;
+  }
 `;
 
 const WelcomeCard = styled.div`

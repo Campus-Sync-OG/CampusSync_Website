@@ -23,6 +23,7 @@ const PageContainer = styled.div`
   position: relative;
   right: 80px;
   bottom: 35px;
+   
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -48,6 +49,7 @@ const DashboardContainer = styled.div`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
+  
 `;
 
 const WelcomeSection = styled.div`
