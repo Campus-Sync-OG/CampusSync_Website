@@ -204,6 +204,9 @@ const DashboardContainer = styled.div`
   @media (max-width: 1024px) {
     max-height: 170vh;
   }
+  @media (max-width: 426px) {
+    max-height: 270vh;
+  }
 `;
 
 const WelcomeCard = styled.div`
@@ -287,7 +290,7 @@ const WelcomeCard = styled.div`
   }
   @media (max-width: 426px) {
     width: 90%;
-    margin-left: -20px;
+    margin-right: px;
 
     .welcome-text {
       font-size: 17px;
@@ -301,6 +304,10 @@ const WelcomeCard = styled.div`
       font-size: 12px;
       margin: 0;
     }
+  }
+
+  @media (max-width: 320px) {
+    width: 85%;
   }
 `;
 
@@ -346,7 +353,6 @@ const CardGrid = styled.div`
   }
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
-    margin-left: -10px;
     gap: 20px;
     width: auto;
   }
@@ -410,8 +416,7 @@ const DashboardCard = styled.div`
   }
      @media (max-width: 376px) {
     margin:0;
-    margin-left:-10px;
-    width:90%;
+    width:85%;
     height:150px;
     img {
     width: 150px;
@@ -422,8 +427,8 @@ const DashboardCard = styled.div`
   }
    @media (max-width: 320px) {
     margin:0;
-    margin-left:-10px;
-    width:85%;
+    margin-left:0px;
+    width:80%;
     height:150px;
     img {
     width: 130px;
@@ -447,16 +452,20 @@ const CalendarSection = styled.div`
   }
   @media (max-width: 768px) {
     width: 100%;
-    margin-top: 15px;
+    margin-left: 20px;
   }
   @media (max-width: 426px) {
-    width: 90%;
-    margin-left: 10px;
-    margin-right: 15px;
+    width: 85%;
+    margin-left: 25px;
     margin-top: 0;
   }
-  @media (max-width: 376px) {
-    margin-left: 0;
+  @media (max-width: 480px) {
+    width: 95%;
+    margin-left: 20px;
+  }
+  @media (max-width: 320px) {
+    width: 95%;
+    margin-left: 25px;
   }
 `;
 

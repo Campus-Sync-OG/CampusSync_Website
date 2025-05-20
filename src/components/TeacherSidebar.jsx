@@ -89,7 +89,7 @@ const MobileMenu = styled.div`
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
     top: 88px; // Changed from -110px to position properly
-    left: 58px;
+    left: 30px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
     z-index: 1001;
@@ -101,6 +101,14 @@ const MobileMenu = styled.div`
       height: 40px; // Increase icon size
     }
   }
+
+  @media (max-width: 480px) {
+    left: 10px;
+  }
+  @media (max-width: 380px) {
+    left: 10px;
+  }
+
 `;
 
 const MobileDropdown = styled.div`
