@@ -196,10 +196,14 @@ const DashboardContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: -10px;
-  overflow-y: hidden;
+  margin-left: 0px;
   overflow-x: hidden;
   max-height: 90vh;
+  overflow-y: auto;
+
+  @media (max-width: 1024px) {
+    max-height: 170vh;
+  }
 `;
 
 const WelcomeCard = styled.div`
@@ -439,8 +443,7 @@ const CalendarSection = styled.div`
   margin-top: 0;
   @media (max-width: 1024px) {
     width: 45%;
-
-    margin-left: 20px;
+    margin-left: 220px;
   }
   @media (max-width: 768px) {
     width: 100%;
@@ -477,7 +480,7 @@ const CalendarCard = styled.div`
     margin-bottom: 8px;
     align-text: left;
     font-family: "Poppins", sans-serif;
-     color: white; 
+    color: white;
   }
   @media (max-width: 768px) {
     width: 100%;

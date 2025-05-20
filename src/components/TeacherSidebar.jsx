@@ -54,6 +54,10 @@ const SidebarWrapper = styled.div`
   height: 86.5vh; /* Fixed height */
   z-index: 1000;
 
+  @media (max-width: 1024px) {
+    height: 165vh;
+  }
+
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
     display: none;
@@ -162,7 +166,7 @@ const SidebarContent = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ff0066;
+    background: grey;
     border-radius: 3px;
   }
 
