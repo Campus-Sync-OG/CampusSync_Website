@@ -85,7 +85,7 @@ const LoginCard = styled.div`
     width: 250px;
     height: 350px;
   }
-  @media (max-width: 480px) {
+  @media (max-width: 420px) {
     width: 230px;
     height: 350px;
   }
@@ -102,6 +102,7 @@ const BackText = styled.div`
 const Title = styled.h2`
   color: #df0043;
   margin-bottom: 1.5rem;
+
   @media (max-width: 480px) {
     margin-bottom: 0px;
   }
@@ -114,7 +115,7 @@ const Icon = styled.img`
 
   @media (max-width: 480px) {
     margin-bottom: 0px;
-    
+  }
 `;
 
 const RoleLabel = styled.div`
@@ -152,6 +153,7 @@ const LoginButton = styled.button`
   @media (max-width: 480px) {
     position: relative;
     bottom: 50px;
+  }
 `;
 
 const ForgotPassword = styled.div`
@@ -164,6 +166,7 @@ const ForgotPassword = styled.div`
   @media (max-width: 480px) {
     position: relative;
     bottom: 55px;
+  }
 `;
 
 const Footer = styled.footer`
