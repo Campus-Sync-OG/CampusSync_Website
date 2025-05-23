@@ -23,7 +23,6 @@ const PageContainer = styled.div`
   position: relative;
   right: 80px;
   bottom: 35px;
-   
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -49,7 +48,6 @@ const DashboardContainer = styled.div`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
-  
 `;
 
 const WelcomeSection = styled.div`
@@ -113,35 +111,40 @@ const WelcomeSection = styled.div`
 
   @media (max-width: 768px) {
     left: 25px;
+    overflow-x: hidden;
   }
 
   @media (max-width: 480px) {
     left: 31px;
     h2 {
-      left: 100px;
       top: 0;
     }
     p {
-      left: 100px;
       text-align: center;
+      top: 0px;
     }
     img {
-      left: 75px;
+      left: 35px;
+      min-height: 15vh;
+      max-height: 12vh;
     }
   }
   @media (max-width: 320px) {
     width: 100%;
     left: 36px;
     h2 {
-      left: 50px;
       top: 0;
+      font-size: 1.1rem;
     }
     p {
-      left: 50px;
       text-align: center;
+      font-size: 1rem;
     }
     img {
-      left: 50px;
+      left: 15px;
+      min-height: 10vh;
+      max-height: 10vh;
+      min-width: 21vh;
     }
   }
 `;
