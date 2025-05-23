@@ -80,6 +80,15 @@ const LoginCard = styled.div`
   width: 400px;
   text-align: center;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 480px) {
+    width: 250px;
+    height: 370px;
+  }
+  @media (max-width: 420px) {
+    width: 230px;
+    height: 370px;
+  }
 `;
 
 const BackText = styled.div`
@@ -93,12 +102,20 @@ const BackText = styled.div`
 const Title = styled.h2`
   color: #df0043;
   margin-bottom: 1.5rem;
+
+  @media (max-width: 480px) {
+    margin-bottom: 0px;
+  }
 `;
 
 const Icon = styled.img`
   width: 90px;
   height: auto;
   margin-bottom: 0.5rem;
+
+  @media (max-width: 480px) {
+    margin-bottom: 0px;
+  }
 `;
 
 const RoleLabel = styled.div`
@@ -114,7 +131,13 @@ const Input = styled.input`
   border-radius: 4px;
   outline: none;
   font-size: 0.9rem;
-   margin-left: -13px;
+  margin-left: -13px;
+
+  @media (max-width: 480px) {
+    position: relative;
+    bottom: 30px;
+    margin-bottom: 10px;
+  }
 `;
 
 const LoginButton = styled.button`
@@ -127,6 +150,10 @@ const LoginButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
+  @media (max-width: 480px) {
+    position: relative;
+    bottom: 50px;
+  }
 `;
 
 const ForgotPassword = styled.div`
@@ -135,6 +162,11 @@ const ForgotPassword = styled.div`
   color: #df0043;
   cursor: pointer;
   text-decoration: underline;
+
+  @media (max-width: 480px) {
+    position: relative;
+    bottom: 55px;
+  }
 `;
 
 const Footer = styled.footer`
@@ -145,6 +177,7 @@ const Footer = styled.footer`
   text-align: center;
 `;
 
+// New styles for password visibility
 const PasswordWrapper = styled.div`
   position: relative;
 `;
@@ -156,12 +189,15 @@ const ToggleIcon = styled.div`
   transform: translateY(-50%);
   cursor: pointer;
   color: #df0043;
-`;
-const ErrorMessage = styled.div`
-  color: #ff4d4f;
-  font-size: 14px;
-  margin: 10px 0;
-  text-align: center;
+
+  @media (max-width: 480px) {
+    position: relative;
+    bottom: 59px;
+    left: 45%;
+    margin: 0;
+  }
+
+  
 `;
 
 const TeacherLogin = () => {
