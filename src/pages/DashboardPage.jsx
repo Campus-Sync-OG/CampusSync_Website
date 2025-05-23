@@ -129,7 +129,7 @@ const WelcomeSection = styled.div`
       max-height: 12vh;
     }
   }
-  @media (max-width: 320px) {
+  @media (max-width: 420px) {
     width: 100%;
     left: 36px;
     h2 {
