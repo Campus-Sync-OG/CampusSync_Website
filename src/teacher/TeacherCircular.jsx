@@ -5,6 +5,12 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllClassSections, uploadCircular } from "../api/ClientApi";
 
+const Container = styled.div`
+  padding: 20px;
+  width: 95%;
+  margin: 0 auto;
+`;
+
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -13,8 +19,7 @@ const Header = styled.div`
   padding: 18px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 10px;
-  width: 95%;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
@@ -43,11 +48,6 @@ const Icons = styled.div`
     width: 25px;
     height: 25px;
   }
-`;
-
-const Container = styled.div`
-  padding: 20px;
-  width: 95%;
 `;
 
 const Form = styled.form`
@@ -122,7 +122,7 @@ const Label = styled.label`
   font-size: 18px;
 `;
 
-const TeacherCircular = () => {
+const PrincipalCircular = () => {
   const navigate = useNavigate();
 
   const [forms, setForms] = useState([
@@ -204,23 +204,21 @@ const TeacherCircular = () => {
   };
 
   return (
-    <>
-      <Container>
-        <Header>
-          <Title>Circular</Title>
-          <Wrapper>
-            <Link to="/teacher-dashboard">
-              <Icons>
-                <img src={home} alt="home" />
-              </Icons>
-            </Link>
-            <Divider />
-            <Icons onClick={() => navigate(-1)}>
-              <img src={back} alt="back" />
+    <Container>
+      <Header>
+        <Title>Circular</Title>
+        <Wrapper>
+          <Link to="/teacher-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
             </Icons>
-          </Wrapper>
-        </Header>
-      </Container>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
 
       <Form onSubmit={handleSubmit}>
         {forms.map((form, index) => (
@@ -320,8 +318,8 @@ const TeacherCircular = () => {
           class and section.
         </Note>
       </Form>
-    </>
+    </Container>
   );
 };
 
-export default TeacherCircular;
+export default PrincipalCircular;

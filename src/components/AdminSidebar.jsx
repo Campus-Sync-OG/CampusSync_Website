@@ -53,10 +53,24 @@ const SidebarWrapper = styled.div`
   color: white;
   border-radius: 9px;
   transition: width 0.3s ease;
-  overflow: hidden;
+  overflow-y: auto; /* Enable vertical scroll */
   position: relative;
-  height: 100vh; /* Fixed height */
+  height: 86.5vh; /* Fixed height */
   z-index: 1000;
+  /* Optional: Style the scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #001a5c;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #ff0066;
+  }
 
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
@@ -101,6 +115,18 @@ const MobileMenu = styled.div`
       height: 40px; // Increase icon size
     }
   }
+  @media (max-width: 768px) {
+    left: 30px;
+    top: 90px;
+  }
+  @media (max-width: 380px) {
+    left: 10px;
+    top: 90px;
+  }
+  @media (max-width: 320px) {
+    left: 10px;
+    top: 98px;
+  }
 `;
 
 const MobileDropdown = styled.div`
@@ -115,7 +141,6 @@ const MobileDropdown = styled.div`
   z-index: 1002;
   animation: ${(props) => (props.open ? slideIn : slideOut)} 0.3s ease forwards;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  overflow-y: auto; // Enable scrolling
 
   // Custom scrollbar styling
   &::-webkit-scrollbar {
@@ -143,35 +168,18 @@ const MobileDropdown = styled.div`
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-start; // Always left-aligned in mobile
   padding: 1rem;
   gap: 1rem;
   white-space: nowrap;
-  overflow-y: auto; /* Enable vertical scrolling */
-  overflow-x: none; /* Enable vertical scrolling */
-  flex: 1; /* Take remaining space */
+  min-height: 100%; // Ensure content fills available space
+  overflow: visible !important; // Override any hidden overflow
   font-family: "Poppins", sans-serif;
 
+  // Mobile-specific adjustments
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
-  }
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #002087;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #002087;
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #002087;
   }
 `;
 
