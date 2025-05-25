@@ -198,8 +198,10 @@ export default TeacherProfile;
 
 // Styled-components
 const Container = styled.div`
-  padding: 20px;
   background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const NavigationContainer = styled.div`
