@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
@@ -7,6 +7,8 @@ import { getAllFeedback } from "../api/ClientApi";
 const Container = styled.div`
   padding: 2rem;
   font-family: Poppins;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const Header = styled.div`
@@ -104,19 +106,16 @@ const Td = styled.td`
   border-bottom: 1px solid #ddd;
 `;
 
-
-
 const PrincipalFeedback = () => {
   const navigate = useNavigate();
   const [feedbackList, setFeedbackList] = useState([]);
-  
 
   useEffect(() => {
     // Fetch feedback data when component mounts
     const fetchFeedbacks = async () => {
       try {
-        const data = await getAllFeedback();  // Call the API function
-        setFeedbackList(data);  // Set the feedback data to state
+        const data = await getAllFeedback(); // Call the API function
+        setFeedbackList(data); // Set the feedback data to state
       } catch (error) {
         console.error("Error fetching feedback:", error);
       }
@@ -144,22 +143,20 @@ const PrincipalFeedback = () => {
 
       <SectionTitle>Feedback List</SectionTitle>
 
-      
-
       <Table>
         <thead>
           <tr>
             <Th>Sl no</Th>
-           
+
             <Th>Reason</Th>
           </tr>
         </thead>
         <tbody>
-        {feedbackList.length > 0 ? (
+          {feedbackList.length > 0 ? (
             feedbackList.map((item, index) => (
               <tr key={index}>
                 <Td>{item.id}</Td>
-                
+
                 <Td>{item.message}</Td>
               </tr>
             ))

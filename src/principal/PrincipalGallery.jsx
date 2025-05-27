@@ -7,23 +7,22 @@ import { Link } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-  max-width: 900px;
-  margin: auto;
-  background: white;
+
+
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);  overflow-y: auto; /* Enable scrolling */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Enable scrolling */
   -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
   scrollbar-width: none; /* Hide scrollbar in Firefox */
-    flex-direction: column;
-  height: 70vh;
+  flex-direction: column;
+  height: 80vh;
 
   /* Hide scrollbar for WebKit browsers */
   &::-webkit-scrollbar {
     display: none;
   }
 `;
-
 
 const Header = styled.div`
   display: flex;
@@ -38,7 +37,7 @@ const Header = styled.div`
 `;
 
 const Icons = styled.div`
- display: flex;
+  display: flex;
   gap: 15px;
   cursor: pointer;
 `;
@@ -83,7 +82,7 @@ const GalleryItem = styled.img`
   height: 100px;
   cursor: pointer;
   transition: transform 0.2s;
-  
+
   &:hover {
     transform: scale(1.05);
   }
@@ -133,9 +132,9 @@ const CloseButton = styled(FaTimes)`
 `;
 
 const IconImage = styled.img`
-width: 24px;
-height: 24px;
-cursor: pointer;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
 `;
 
 const PrincipalGallery = () => {
@@ -157,7 +156,6 @@ const PrincipalGallery = () => {
     "https://images.pexels.com/photos/34950/pexels-photo.jpg", // Ocean View
     "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg", // Forest Path
     "https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg", // Beach Scene
-    
   ];
 
   return (
@@ -178,7 +176,10 @@ const PrincipalGallery = () => {
       {/* Video Banner */}
       <Banner>
         <Video ref={videoRef} controls>
-          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+          <source
+            src="https://www.w3schools.com/html/mov_bbb.mp4"
+            type="video/mp4"
+          />
           Your browser does not support the video tag.
         </Video>
         <PlayButton show={showPlayButton} onClick={handlePlayVideo}>
@@ -186,18 +187,16 @@ const PrincipalGallery = () => {
         </PlayButton>
       </Banner>
 
-  
-
-<GalleryGrid>
-  {imageUrls.map((url, index) => (
-    <GalleryItem
-      key={index}
-      src={url}
-      alt={`Gallery Image ${index + 1}`}
-      onClick={() => setModalImage(url)}
-    />
-  ))}
-</GalleryGrid>
+      <GalleryGrid>
+        {imageUrls.map((url, index) => (
+          <GalleryItem
+            key={index}
+            src={url}
+            alt={`Gallery Image ${index + 1}`}
+            onClick={() => setModalImage(url)}
+          />
+        ))}
+      </GalleryGrid>
 
       {/* Image Modal */}
       {modalImage && (

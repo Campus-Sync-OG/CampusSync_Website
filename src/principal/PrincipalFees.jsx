@@ -17,6 +17,8 @@ const Header = styled.div`
   margin-left: 0px;
   width:96%;
   margin-bottom: 10px;
+  
+
 `;
 
 const Title = styled.h2`
@@ -50,6 +52,8 @@ const Icons = styled.div`
 const Container = styled.div`
   padding: 20px;
   background: white;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const SearchBar = styled.div`
