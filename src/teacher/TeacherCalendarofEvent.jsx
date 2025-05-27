@@ -54,6 +54,8 @@ const Icons = styled.div`
 const CalendarContainer = styled.div`
   padding: 20px;
   background: white;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const CustomEvent = ({ event }) => {
