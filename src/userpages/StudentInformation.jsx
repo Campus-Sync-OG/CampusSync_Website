@@ -118,21 +118,23 @@ const ImageContainer = styled.div`
   align-items: center;
 `;
 
-const Circle = styled.div`
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  background-color: #dcddee;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
-const PreviewImg = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+const ProfilePreview = styled.div`
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #e0e0e0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 `;
 
 const StudentInformation = () => {
@@ -206,12 +208,7 @@ const StudentInformation = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPhoto(URL.createObjectURL(file));
-    }
-  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -228,7 +225,6 @@ const StudentInformation = () => {
         section,
         roll_no,
         religion,
-        images,
         blood_group,
         father_name,
         father_contact,
@@ -278,6 +274,13 @@ const StudentInformation = () => {
       alert("Failed to save information");
     }
   };
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value,
+    }));
+  };
 
   return (
     <Container>
@@ -300,17 +303,23 @@ const StudentInformation = () => {
       <Form onSubmit={handleSubmit}>
         <SectionTitle>Add New Students</SectionTitle>
         <ImageContainer>
-          <Circle>
-            {photo ? <PreviewImg src={photo} alt="Preview" /> : null}
-          </Circle>
+          <ProfilePreview>
+            {formData.photo && (
+              <img
+                src={URL.createObjectURL(formData.photo)}
+                alt="Preview"
+                style={{ width: 100, height: 100 }}
+              />
+            )}
+          </ProfilePreview>
           <div>
             <label>Upload Student Photo (150px x 150px)</label>
             <br />
             <input
               type="file"
-              name="images"
-              value={formData.images}
-              onChange={(e) => setImage(e.target.files[0])}
+              name="photo"
+              accept="image/*"
+              onChange={handleInputChange}
             />
           </div>
         </ImageContainer>
