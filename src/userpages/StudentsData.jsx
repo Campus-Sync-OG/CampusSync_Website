@@ -8,6 +8,8 @@ const Container = styled.div`
   padding: 20px;
   font-family: "Poppins", sans-serif;
   background: #f9f9f9;
+    flex-direction: column;
+  height: 70vh;
 `;
  
 const Header = styled.div`

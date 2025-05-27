@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 import { createTeacher } from "../api/ClientApi"; // Adjust the import based on your API structure
@@ -236,9 +236,11 @@ export default TeacherInformation;
 // ---------------- Styled Components ----------------
 
 const Container = styled.div`
-  padding: 2rem;
+  padding: 1rem 2rem 0 2rem;
   background: #f0f2f5;
   font-family: Arial, sans-serif;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const NavContainer = styled.div`

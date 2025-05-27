@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import homeIcon from "../assets/images/home.png"; // adjust the path as needed
 import backIcon from "../assets/images/back.png"; // adjust the path as needed
 
@@ -32,39 +32,38 @@ const SchoolInfo = () => {
   };
 
   const handleSave = () => {
-  const {
-    schoolName,
-    affiliationNo,
-    principalName,
-    address,
-    pincode,
-    state,
-    phone,
-    mobile,
-    email,
-    website,
-  } = form;
+    const {
+      schoolName,
+      affiliationNo,
+      principalName,
+      address,
+      pincode,
+      state,
+      phone,
+      mobile,
+      email,
+      website,
+    } = form;
 
-  if (
-    !schoolName ||
-    !affiliationNo ||
-    !principalName ||
-    !address ||
-    !pincode ||
-    !state ||
-    !phone ||
-    !mobile ||
-    !email ||
-    !website
-  ) {
-    alert("saved sucessfully!!.");
-    return;
-  }
+    if (
+      !schoolName ||
+      !affiliationNo ||
+      !principalName ||
+      !address ||
+      !pincode ||
+      !state ||
+      !phone ||
+      !mobile ||
+      !email ||
+      !website
+    ) {
+      alert("saved sucessfully!!.");
+      return;
+    }
 
-  setSuccessMessage("Saved successfully!");
-  setTimeout(() => setSuccessMessage(""), 3000);
-};
-
+    setSuccessMessage("Saved successfully!");
+    setTimeout(() => setSuccessMessage(""), 3000);
+  };
 
   return (
     <Container>
@@ -183,6 +182,8 @@ const Container = styled.div`
   padding: 2rem;
   background: #f0f2f5;
   font-family: Arial, sans-serif;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const NavContainer = styled.div`

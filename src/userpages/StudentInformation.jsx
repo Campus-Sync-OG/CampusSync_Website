@@ -12,6 +12,8 @@ import {
 const Container = styled.div`
   padding: 20px;
   font-family: sans-serif;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const Header = styled.div`
@@ -54,7 +56,6 @@ const IconBtn = styled.img`
   height: 25px;
   cursor: pointer;
 `;
-
 
 const Row = styled.div`
   display: flex;
@@ -133,8 +134,6 @@ const PreviewImg = styled.img`
   height: 100%;
   object-fit: cover;
 `;
-
-
 
 const StudentInformation = () => {
   const [formData, setFormData] = useState({
