@@ -12,11 +12,11 @@ const Container = styled.div`
   background: white;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  height: 100vh; /* Full viewport height */
-  overflow-y: auto; /* Enable scrolling */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);  overflow-y: auto; /* Enable scrolling */
   -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
   scrollbar-width: none; /* Hide scrollbar in Firefox */
+    flex-direction: column;
+  height: 70vh;
 
   /* Hide scrollbar for WebKit browsers */
   &::-webkit-scrollbar {
