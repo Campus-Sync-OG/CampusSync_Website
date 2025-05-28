@@ -52,7 +52,7 @@ const SidebarWrapper = styled.div`
   z-index: 1000;
 
   @media (max-width: 1024px) {
-    height: 100vh;
+    height: 84vh;
   }
 
   @media (max-width: 768px) {

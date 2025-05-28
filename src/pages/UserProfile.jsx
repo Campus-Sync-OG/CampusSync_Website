@@ -192,8 +192,14 @@ const styles = `
   .user-info-page {
     display: flex;
     flex-direction: column;
-    height: 85vh;
-    background-color: #f9f9f9;
+    height: 80vh;
+
+
+    @media(max-width:1024px){
+     display: flex;
+    flex-direction: column;
+      height: 75vh;
+    }
   }
 
   .content {
@@ -211,6 +217,10 @@ const styles = `
      margin-top: 0; /* Remove any margin */
   padding-top: 0; 
     height: 220px;
+
+    @media(max-width:1024px){
+    height:130px;
+    }
   }
 
   .bg-image {
@@ -259,10 +269,7 @@ const styles = `
   }
 
   .info-container {
-    background: white;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .info-heading {
@@ -279,19 +286,29 @@ const styles = `
 }
 
 .info-item {
-  display: flex;
+     display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px; /* Space between label and input */
+  gap: 12px;
   margin-bottom: 12px;
   width: 100%;
 }
 
 .info-item label {
+  position: relative;
   font-weight: bold;
-  width: 150px; /* Fixed width for labels */
-  text-align: left;
+  width: 150px;
+  text-align: left; /* Keep label name left-aligned */
+  display: inline-block;
+  padding-right: 20px; /* Add space for colon */
 }
+
+.info-item label::after {
+  content: ":";
+  position: absolute;
+  right: 0; /* Push colon to end of label box */
+}
+
 
 .info-item input, 
 .info-item span {
@@ -309,10 +326,8 @@ const styles = `
 /* Edit Button */
 .edit-btn {
   background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: left;
+  border: none;  
+  align-items: right;
 }
 
 .edit-btn img {
