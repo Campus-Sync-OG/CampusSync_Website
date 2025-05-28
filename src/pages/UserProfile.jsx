@@ -33,7 +33,7 @@ const UserInfo = () => {
       try {
         // 1. Get the stored user data from localStorage
         const storedUser = JSON.parse(localStorage.getItem("user"));
-        
+
         if (!storedUser || !storedUser.unique_id) {
           setError("No student logged in");
           setLoading(false);
@@ -43,17 +43,17 @@ const UserInfo = () => {
         // 2. Use the unique_id from localStorage as admission_no
         const admissionNo = storedUser.unique_id;
         console.log("Fetching student data for admission_no:", admissionNo);
-  
+
         // 3. Fetch student details using the admission_no
         const data = await fetchStudentByAdmissionNo(admissionNo);
         console.log("Fetched student data:", data);
-        
+
         // 4. Verify the unique_id matches admission_no
         if (data.admission_no !== admissionNo) {
           setError("Student data mismatch");
           return;
         }
-  
+
         setUserInfo(data);
       } catch (err) {
         console.error("Fetch error:", err);
@@ -62,7 +62,7 @@ const UserInfo = () => {
         setLoading(false);
       }
     };
-  
+
     getLoggedInStudent();
   }, []);
 
@@ -87,15 +87,21 @@ const UserInfo = () => {
         <div className="bg-container">
           <img src={bgImage} alt="Background" className="bg-image" />
           <div className="icons">
-            <img src={homeIcon} alt="Home" className="nav-icon" onClick={() => navigate("/dashboard")} />
-            <img src={backIcon} alt="Back" className="nav-icon" onClick={() => navigate(-1)} />
+            <img
+              src={homeIcon}
+              alt="Home"
+              className="nav-icon"
+              onClick={() => navigate("/dashboard")}
+            />
+            <img
+              src={backIcon}
+              alt="Back"
+              className="nav-icon"
+              onClick={() => navigate(-1)}
+            />
           </div>
           <div className="profile">
-            <img
-              src={userInfo.images}
-              alt="Profile"
-              className="profile-pic"
-            />
+            <img src={userInfo.images} alt="Profile" className="profile-pic" />
             <h3 className="profile-name">{userInfo.name}</h3>
           </div>
         </div>
@@ -105,27 +111,36 @@ const UserInfo = () => {
           <h2 className="info-heading">Personal Information</h2>
           <div className="info-grid">
             <div className="info-column">
-              {["student_name", "roll_no", "gender", "admission_no", "dob"].map((field) => (
-                <div key={field} className="info-item">
-                  <label>{fieldLabels[field]}:</label>
+              {["student_name", "roll_no", "gender", "admission_no", "dob"].map(
+                (field) => (
+                  <div key={field} className="info-item">
+                    <label>{fieldLabels[field]}:</label>
 
-                  {editField === field ? (
-                    <>
-                      <input type="text" value={tempValue} onChange={(e) => setTempValue(e.target.value)} />
-                      <button onClick={handleSave}>Save</button>
-                    </>
-                  ) : (
-                    <>
-                      <span>{userInfo[field]}</span>
-                      {["student_name", "dob"].includes(field) && (
-                        <button className="edit-btn" onClick={() => handleEdit(field)}>
-                          <img src={editimg} alt="Edit" />
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
-              ))}
+                    {editField === field ? (
+                      <>
+                        <input
+                          type="text"
+                          value={tempValue}
+                          onChange={(e) => setTempValue(e.target.value)}
+                        />
+                        <button onClick={handleSave}>Save</button>
+                      </>
+                    ) : (
+                      <>
+                        <span>{userInfo[field]}</span>
+                        {["student_name", "dob"].includes(field) && (
+                          <button
+                            className="edit-btn"
+                            onClick={() => handleEdit(field)}
+                          >
+                            <img src={editimg} alt="Edit" />
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )
+              )}
             </div>
 
             <div className="info-column">
@@ -134,14 +149,21 @@ const UserInfo = () => {
                   <label>{formatLabel(field)}:</label>
                   {editField === field ? (
                     <>
-                      <input type="text" value={tempValue} onChange={(e) => setTempValue(e.target.value)} />
+                      <input
+                        type="text"
+                        value={tempValue}
+                        onChange={(e) => setTempValue(e.target.value)}
+                      />
                       <button onClick={handleSave}>Save</button>
                     </>
                   ) : (
                     <>
                       <span>{userInfo[field]}</span>
                       {["student_name", "dob"].includes(field) && (
-                        <button className="edit-btn" onClick={() => handleEdit(field)}>
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEdit(field)}
+                        >
                           <img src={editimg} alt="Edit" />
                         </button>
                       )}
@@ -165,21 +187,22 @@ const formatLabel = (label) => {
 
 export default UserInfo;
 
-
-
-
 /* CSS */
 const styles = `
   .user-info-page {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 85vh;
     background-color: #f9f9f9;
   }
 
   .content {
     margin-top: 0;
-    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+        @media(max-width:768px){
+    overflow-y: auto;
+    }
   }
 
   .bg-container {
