@@ -48,7 +48,12 @@ const AppContainer = styled.div`
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 32, 135, 1) 31%,
+    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
+    /* 69% opacity */ #df0043 100%
+  );
   border-radius: 10px;
 `;
 
@@ -86,8 +91,8 @@ const Icons = styled.div`
   cursor: pointer;
 
   img {
-    width: 18px;
-    height: 18px;
+    width: 30px;
+    height: 25px;
   }
 `;
 
@@ -97,9 +102,8 @@ const Icons2 = styled.div`
 
   img {
     position: relative;
-    width: 18px;
-    height: 18px;
-    top: 4px;
+    width: 27px;
+    height: 25px;
   }
 `;
 

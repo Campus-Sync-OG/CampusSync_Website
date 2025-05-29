@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
-import { getFeesByAdmissionNo,fetchStudentByAdmissionNo } from "../api/ClientApi";
-import { useNavigate } from "react-router-dom"; 
+import {
+  getFeesByAdmissionNo,
+  fetchStudentByAdmissionNo,
+} from "../api/ClientApi";
+import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 
 const StudentFees = () => {
   const [feesData, setFeesData] = useState([]);
   const [admission_no, setAdmissionNo] = useState(null);
-const [receipts, setReceipts] = useState([]);
-const [studentName, setStudentName] = useState("");
-const [studentClass, setStudentClass] = useState("");
-const [studentSection, setStudentSection] = useState("");
- const navigate = useNavigate();
+  const [receipts, setReceipts] = useState([]);
+  const [studentName, setStudentName] = useState("");
+  const [studentClass, setStudentClass] = useState("");
+  const [studentSection, setStudentSection] = useState("");
+  const navigate = useNavigate();
 
   // Load admission number from localStorage
   useEffect(() => {
@@ -31,7 +34,7 @@ const [studentSection, setStudentSection] = useState("");
         console.log("Fetching fees for admission_no:", admission_no); // Log admission_no
         try {
           const data = await getFeesByAdmissionNo(admission_no);
-          setFeesData(data.data);  // Store the fetched fees in state
+          setFeesData(data.data); // Store the fetched fees in state
         } catch (error) {
           console.error("Failed to fetch fees:", error);
           alert("Failed to fetch fees data.");
@@ -40,7 +43,7 @@ const [studentSection, setStudentSection] = useState("");
         console.log("No admission number found");
       }
     };
-  
+
     fetchFees();
   }, [admission_no]);
   useEffect(() => {
@@ -61,66 +64,70 @@ const [studentSection, setStudentSection] = useState("");
   const handleViewReceipt = (receipt) => {
     navigate("/student-receipt", { state: { receipt } });
   };
-  
 
   const handleDownloadReceipt = (receipt) => {
     const doc = new jsPDF();
-  
+
     // Get logged-in user details
-    
-  
+
     // Header Title
     doc.setFontSize(18);
     doc.text("Fees Receipt", 80, 20);
-  
+
     // Student Information
-     doc.setFontSize(12);
-  let y = 35; // Y position
-  doc.text(`Student Name: ${studentName}`, 14, y);
-  y += 8;
-  doc.text(`Admission No: ${admission_no}`, 14, y);
-  y += 8;
-  doc.text(`Class: ${studentClass}`, 14, y);
-  y += 8;
-  doc.text(`Section: ${studentSection}`, 14, y);
-  
+    doc.setFontSize(12);
+    let y = 35; // Y position
+    doc.text(`Student Name: ${studentName}`, 14, y);
+    y += 8;
+    doc.text(`Admission No: ${admission_no}`, 14, y);
+    y += 8;
+    doc.text(`Class: ${studentClass}`, 14, y);
+    y += 8;
+    doc.text(`Section: ${studentSection}`, 14, y);
+
     // Receipt Details Title
     y += 15;
     doc.setFontSize(14);
     doc.text("Receipt Details", 14, y);
     y += 10;
-  
+
     // Draw table manually
     const startX = 14;
     const cellWidth = 38;
     const rowHeight = 10;
-  
-    const headers = ["Sl No", "Date", "Receipt No", "Amount Paid", "Pay Method"];
+
+    const headers = [
+      "Sl No",
+      "Date",
+      "Receipt No",
+      "Amount Paid",
+      "Pay Method",
+    ];
     const data = [
       [
         "1",
         new Date(receipt.pay_date).toLocaleDateString(),
         receipt.receipt_no,
         receipt.paid_amount.toString(),
-        receipt.pay_method
-      ]
+        receipt.pay_method,
+      ],
     ];
-  
+
     // Draw table header
     headers.forEach((header, i) => {
       doc.rect(startX + i * cellWidth, y, cellWidth, rowHeight); // Rectangle border
       doc.text(header, startX + i * cellWidth + 2, y + 7); // Text inside cell
     });
-  
+
     // Draw table body
     y += rowHeight;
-    data.forEach(row => {
+    data.forEach((row) => {
       row.forEach((text, i) => {
         doc.rect(startX + i * cellWidth, y, cellWidth, rowHeight);
         doc.text(text.toString(), startX + i * cellWidth + 2, y + 7);
       });
     });
-  
+
     // Save PDF
     doc.save(`Receipt_${receipt.receipt_no}.pdf`);
   };
@@ -154,7 +161,6 @@ const [studentSection, setStudentSection] = useState("");
             <Th>Payment Method</Th>
             <Th> View Fees</Th>
             <Th>Download Receipt</Th>
-            
           </tr>
         </thead>
         <tbody>
@@ -165,7 +171,7 @@ const [studentSection, setStudentSection] = useState("");
           ) : (
             feesData.map((r, idx) => (
               <Tr key={r.receipt_no}>
-                <Td>{String(idx + 1).padStart(2, '0')}</Td>
+                <Td>{String(idx + 1).padStart(2, "0")}</Td>
                 <Td>{new Date(r.pay_date).toLocaleDateString()}</Td>
                 <Td>{r.receipt_no}</Td>
                 <Td>{r.status}</Td>
@@ -180,11 +186,10 @@ const [studentSection, setStudentSection] = useState("");
                   </a>
                 </Td>
                 <Td>
-  <DownloadLink onClick={() => handleDownloadReceipt(r)}>
-    Download
-  </DownloadLink>
-</Td>
-
+                  <DownloadLink onClick={() => handleDownloadReceipt(r)}>
+                    Download
+                  </DownloadLink>
+                </Td>
               </Tr>
             ))
           )}
@@ -192,7 +197,8 @@ const [studentSection, setStudentSection] = useState("");
       </Table>
 
       <Note>
-        <strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        <strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit.
       </Note>
     </PageContainer>
   );
@@ -200,20 +206,22 @@ const [studentSection, setStudentSection] = useState("");
 
 export default StudentFees;
 
-
-
-
 /* ───────────────────────────────── styled-components ───────────────────────────────── */
 
 const PageContainer = styled.div`
   padding: 2rem;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 `;
 
 const HeaderBar = styled.div`
-  background: linear-gradient(90deg, #1c1c9c 0%, #d2005a 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 32, 135, 1) 31%,
+    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
+    /* 69% opacity */ #df0043 100%
+  );
   border-radius: 8px 8px 8px 8px;
-  padding: 0.8rem 1rem ;
+  padding: 1rem 1rem;
   display: flex;
   align-items: center;
   color: white;
@@ -305,16 +313,16 @@ const Note = styled.p`
 `;
 
 const Icons = styled.div`
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
-   align-items: center; /* Ensures icons and divider are vertically aligned */
+  align-items: center; /* Ensures icons and divider are vertically aligned */
 
   img {
-  position: relative;
-    width: 18px;
-    height: 18px;
-    right: 14px;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    right: 47px;
     top: 3px;
     @media (max-width: 768px) {
       width: 20px;
@@ -325,21 +333,22 @@ const Icons = styled.div`
 
 const Icons2 = styled.div`
   position: relative;
- width: 1px; /* Thickness of the white line */
+  width: 3px; /* Thickness of the white line */
   height: 20px; /* Adjust to match the size of icons */
-  background-color: white; 
-  right: 10px;
+  background-color: white;
+  right: 35px;
+  
   align-items: center; /* Ensures icons and divider are vertically aligned */
   img {
     position: relative;
-    width: 18px;
-    height: 18px;
-    left:5px;
+    width: 30px;
+    height: 30px;
+    left: 10px;
+    bottom: 5px;
 
     @media (max-width: 768px) {
       width: 20px;
       height: 20px;
-      
     }
   }
 
@@ -347,4 +356,3 @@ const Icons2 = styled.div`
     flex: none;
   }
 `;
-

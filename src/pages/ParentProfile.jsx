@@ -240,7 +240,13 @@ const styles = `
     display: flex;
   align-items: center;
   justify-content: space-between;
-   background: linear-gradient(90deg, #002087,#002087B0, #DF0043);
+   background:linear-gradient(
+  90deg,
+  rgba(0, 32, 135, 1) 31%,    /* 100% opacity */
+  rgba(0, 32, 135, 0.69) 69%, /* 69% opacity */
+  #df0043 100%
+)
+;
   padding: 10px 20px;
   border-radius: 8px; /* Optional for rounded corners */
   color: white; /* Text color */

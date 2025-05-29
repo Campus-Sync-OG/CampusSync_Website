@@ -104,7 +104,13 @@ const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #d9534f);
+  background: linear-gradient(
+  90deg,
+  rgba(0, 32, 135, 1) 31%,    /* 100% opacity */
+  rgba(0, 32, 135, 0.69) 69%, /* 69% opacity */
+  #df0043 100%
+)
+;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -135,8 +141,8 @@ const Divider = styled.div`
 `;
 
 const ImageIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 
