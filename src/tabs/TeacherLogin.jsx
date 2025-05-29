@@ -200,6 +200,14 @@ const ToggleIcon = styled.div`
   
 `;
 
+export const ErrorMessage = styled.p`
+  color: red;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  text-align: center;
+`;
+
 const TeacherLogin = () => {
    const navigate = useNavigate();
     const [uniqueId, setUniqueId] = useState("");

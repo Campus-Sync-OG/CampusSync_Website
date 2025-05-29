@@ -5,7 +5,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { getAllSubjects, getAssignmentsByAdmissionNo } from "../api/ClientApi"; // Adjust the import path as necessary
+import { getAllSubjects, getAssignmentsByAdmissionNo,studentUploadAssignment } from "../api/ClientApi"; // Adjust the import path as necessary
 
 // Global style to reset box sizing and overflow
 const GlobalStyle = createGlobalStyle`
@@ -158,12 +158,29 @@ const BackButton = styled.button`
   }
 `;
 
+const FileInput = styled.input`
+  margin-right: 10px;
+`;
+
+const UploadButton = styled.button`
+  padding: 5px 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
 const App = () => {
   const navigate = useNavigate();
   const [admission_no, setAdmissionNo] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [uploadFiles, setUploadFiles] = useState({}); // { index: File }
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -188,23 +205,40 @@ const App = () => {
 
     getAssignmentsByAdmissionNo(admission_no)
       .then((data) => {
-        console.log("Full response from assignment API:", data);
-
-        // Normalize response to always be an array
         const allAssignments = Array.isArray(data)
           ? data
           : Array.isArray(data.assignments)
           ? data.assignments
           : [];
-
         const filtered = allAssignments.filter(
           (a) => a.subjects === subject || a.subject_name === subject
         );
-
-        console.log("Filtered assignments:", filtered);
         setAssignments(filtered);
       })
       .catch((err) => console.error("Error fetching assignments:", err));
+  };
+
+  const handleFileChange = (index, file) => {
+    setUploadFiles((prev) => ({ ...prev, [index]: file }));
+  };
+
+  const handleUpload = async (assignment, index) => {
+    const file = uploadFiles[index];
+    if (!file) return alert("Please select a file to upload");
+
+    const formData = new FormData();
+    formData.append("title", assignment.title);
+    formData.append("subject_name", selectedSubject);
+    formData.append("file", file);
+
+    try {
+      const res = await studentUploadAssignment(admission_no, formData);
+      alert("Assignment uploaded successfully!");
+      fetchAssignments(selectedSubject); // Refresh the table
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed. Please try again.");
+    }
   };
 
   return (
@@ -240,6 +274,7 @@ const App = () => {
                     <th>Assignment</th>
                     <th>Date</th>
                     <th>Attachment</th>
+                    <th>Upload Assignment</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -258,29 +293,33 @@ const App = () => {
                               <img
                                 src="https://img.icons8.com/ios-glyphs/30/000000/download--v1.png"
                                 alt="Download"
-                                style={{
-                                  width: "20px",
-                                  height: "20px",
-                                  cursor: "pointer",
-                                }}
+                                style={{ width: "20px", height: "20px", cursor: "pointer" }}
                               />
                             </a>
                           ) : (
                             "N/A"
                           )}
                         </td>
+                        <td>
+                          <FileInput
+                            type="file"
+                            accept="application/pdf"
+                            onChange={(e) => handleFileChange(index, e.target.files[0])}
+                          />
+                          <UploadButton onClick={() => handleUpload(item, index)}>
+                            Upload
+                          </UploadButton>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5">No assignments available</td>
+                      <td colSpan="6">No assignments available</td>
                     </tr>
                   )}
                 </tbody>
               </AssignmentsTable>
-              <BackButton onClick={() => setSelectedSubject(null)}>
-                Back
-              </BackButton>
+              <BackButton onClick={() => setSelectedSubject(null)}>Back</BackButton>
             </>
           ) : (
             <>

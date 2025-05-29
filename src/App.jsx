@@ -78,6 +78,8 @@ import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
 import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
+import LeaveApplication from "./teacher/LeaveApplication";
+import PrincipalLeavePanel  from "./principal/PrincipalLeavePanel"; 
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -438,6 +440,14 @@ const App = () => {
               </TeacherLayout>
             }
           />
+            <Route
+            path="/teacher-levaveapplication"
+            element={
+              <TeacherLayout>
+                <LeaveApplication />
+              </TeacherLayout>
+            }
+          />
 
           {/*  Admin Dashboard & Pages (Uses Aminsidebar) */}
           <Route
@@ -674,6 +684,19 @@ const App = () => {
               </principalLayout>
             }
           />
+          <Route
+            path="/principal-leave-panel"
+            element={
+              <PrincipalLayout>
+                <PrincipalLeavePanel />
+              </PrincipalLayout>
+            }
+
+          />
+          
+         
+
+        
         </Routes>
       </div>
     </Router>

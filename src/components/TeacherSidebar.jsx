@@ -539,7 +539,12 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Assignment</Label>
             </SidebarItem>
-
+            <SidebarItem to="/teacher-levaveapplication" expanded={expanded}>
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={expanded}>LeaveApplication</Label>
+            </SidebarItem>
             {/* My School Dropdown */}
             <SidebarItem
               as="div"
