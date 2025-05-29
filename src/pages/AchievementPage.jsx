@@ -303,7 +303,7 @@ export default Achievement;
 const styles = `
   .achievement-page {
     flex-direction: column;
-    height: 100vh;
+    height: 80vh;
     overflow:hidden;
      margin: 0;
   padding: 0;

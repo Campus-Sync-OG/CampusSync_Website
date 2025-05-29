@@ -8,10 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-  max-width: 900px;
+  max-width:100%;
   margin: auto;
   background: white;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   height: 80vh; /* Full viewport height */
