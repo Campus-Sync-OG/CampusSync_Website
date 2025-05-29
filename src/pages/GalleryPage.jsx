@@ -14,7 +14,7 @@ const Container = styled.div`
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  height: 100vh; /* Full viewport height */
+  height: 80vh; /* Full viewport height */
   overflow-y: auto; /* Enable scrolling */
   -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
   scrollbar-width: none; /* Hide scrollbar in Firefox */
