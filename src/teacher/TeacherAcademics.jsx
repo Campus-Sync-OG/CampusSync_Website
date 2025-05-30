@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png";
 import {
   getAllClassSections,
   getAllSubjects,
@@ -45,12 +48,12 @@ const Button = styled.button`
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  background-color:rgb(57, 0, 179);
+  background-color: rgb(57, 0, 179);
   color: white;
   border: none;
   border-radius: 4px;
   &:hover {
-    background-color:rgb(179, 0, 0);
+    background-color: rgb(179, 0, 0);
   }
 `;
 
@@ -74,6 +77,36 @@ const Td = styled.td`
 
 const MarkInput = styled(Input)`
   width: 100px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background:  linear-gradient(90deg, #002087, #002087b0, #df0043);
+  padding: 10px 20px;
+  color: white;
+  border-radius: 8px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Icons = styled.div`
+  cursor: pointer;
+  margin: 0 10px;
+  img {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 30px;
+  background-color: white;
 `;
 
 const TeacherBulkMarksEntry = () => {
@@ -176,7 +209,9 @@ const TeacherBulkMarksEntry = () => {
       !examFormat ||
       !examDate
     ) {
-      return alert("All fields (Class, Section, Subject, Format, Date) are required.");
+      return alert(
+        "All fields (Class, Section, Subject, Format, Date) are required."
+      );
     }
 
     const updatedMarksData = marksData.map((entry) => ({
@@ -225,10 +260,28 @@ const TeacherBulkMarksEntry = () => {
 
   return (
     <Container>
+      <Header>
+        <Title>Academics</Title>
+        <Wrapper>
+          <Link to="/teacher-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
+
       <Title>Bulk Marks Entry</Title>
 
       <FormRow>
-        <Select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+        <Select
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+        >
           <option value="">Select Class</option>
           {classSections.map((cls, index) => (
             <option key={index} value={cls.className}>
@@ -237,7 +290,10 @@ const TeacherBulkMarksEntry = () => {
           ))}
         </Select>
 
-        <Select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
+        <Select
+          value={selectedSection}
+          onChange={(e) => setSelectedSection(e.target.value)}
+        >
           <option value="">Select Section</option>
           {selectedClassSection.map((sec, index) => (
             <option key={index} value={sec.section_name}>
@@ -246,7 +302,10 @@ const TeacherBulkMarksEntry = () => {
           ))}
         </Select>
 
-        <Select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+        <Select
+          value={selectedSubject}
+          onChange={(e) => setSelectedSubject(e.target.value)}
+        >
           <option value="">Select Subject</option>
           {subjectList.map((sub, index) => (
             <option key={index} value={sub}>
@@ -255,13 +314,20 @@ const TeacherBulkMarksEntry = () => {
           ))}
         </Select>
 
-        <Select value={examFormat} onChange={(e) => setExamFormat(e.target.value)}>
+        <Select
+          value={examFormat}
+          onChange={(e) => setExamFormat(e.target.value)}
+        >
           <option value="">Select Format</option>
           <option value="FA2">FA2</option>
           <option value="Summative">Summative</option>
         </Select>
 
-        <Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} />
+        <Input
+          type="date"
+          value={examDate}
+          onChange={(e) => setExamDate(e.target.value)}
+        />
         <Button onClick={fetchStudents}>Load Students</Button>
       </FormRow>
 
@@ -292,7 +358,11 @@ const TeacherBulkMarksEntry = () => {
                       type="number"
                       value={marksData[index]?.marks_obtained || ""}
                       onChange={(e) =>
-                        handleInputChange(index, "marks_obtained", e.target.value)
+                        handleInputChange(
+                          index,
+                          "marks_obtained",
+                          e.target.value
+                        )
                       }
                     />
                   </Td>
