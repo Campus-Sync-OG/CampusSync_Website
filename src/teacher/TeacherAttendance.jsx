@@ -206,11 +206,7 @@ const AttendancePage = () => {
   const studentsPerPage = 5;
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(
-    indexOfFirstStudent,
-    indexOfLastStudent
-  );
-
+  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
   const handleSearch = async () => {
@@ -218,18 +214,43 @@ const AttendancePage = () => {
       alert("Please select class and section");
       return;
     }
-    const students = await getStudentsByClassAndSection(
-      selectedClass,
-      selectedSection
-    );
-    setFilteredStudents(students);
 
-    const initialAttendance = students.reduce((acc, student) => {
-      acc[student.admission_no] = true; // default to present
-      return acc;
-    }, {});
-    setAttendance(initialAttendance);
+    // Reset data before search
+    setStudents([]);
+    setFilteredStudents([]);
+    setAttendance({});
+    setCurrentPage(1);
+
+    try {
+      const fetchedStudents = await getStudentsByClassAndSection(selectedClass, selectedSection);
+
+      if (!fetchedStudents || fetchedStudents.length === 0) {
+        return; // No data found
+      }
+
+      const initialAttendance = fetchedStudents.reduce((acc, student) => {
+        acc[student.admission_no] = true;
+        return acc;
+      }, {});
+
+      setStudents(fetchedStudents);
+      setFilteredStudents(fetchedStudents);
+      setAttendance(initialAttendance);
+      setSearchQuery("");
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      alert("Failed to fetch students. Please try again.");
+    }
   };
+
+  useEffect(() => {
+    const filtered = students.filter((student) =>
+      student.student_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredStudents(filtered);
+    setCurrentPage(1);
+  }, [searchQuery, students]);
 
   const handleCheckboxChange = (admission_no) => {
     setAttendance((prev) => ({
@@ -256,16 +277,16 @@ const AttendancePage = () => {
     }
   };
 
+  useEffect(() => {
+    setSearchQuery("");
+  }, [selectedClass, selectedSection]);
+
   return (
     <PageContainer>
       <Header>
         <HeaderTitle>Attendance Report</HeaderTitle>
         <IconsContainer>
-          <ImageIcon
-            src={homeIcon}
-            alt="Home"
-            onClick={() => navigate("/teacher-dashboard")}
-          />
+          <ImageIcon src={homeIcon} alt="Home" onClick={() => navigate("/teacher-dashboard")} />
           <Divider />
           <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
         </IconsContainer>
@@ -274,132 +295,116 @@ const AttendancePage = () => {
       <SearchContainer>
         <SearchInput
           type="text"
-          placeholder="Search by name."
+          placeholder="Search by name"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <SelectDropdownClass
-          value={selectedClass}
-          onChange={(e) => setSelectedClass(e.target.value)}
-        >
+        <SelectDropdownClass value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
           <option value="">Select Class</option>
-          <option value="10">X</option>
-          <option value="9">IX</option>
-          <option value="8">VIII</option>
-          <option value="7">VII</option>
-          <option value="6">VI</option>
-          <option value="5">V</option>
-          <option value="4">IV</option>
-          <option value="3">III</option>
-          <option value="2">II</option>
-          <option value="1">I</option>
+          {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"].map((cls, i) => (
+            <option key={cls} value={i + 1}>{cls}</option>
+          ))}
         </SelectDropdownClass>
-        <SelectDropdownSec
-          value={selectedSection}
-          onChange={(e) => setSelectedSection(e.target.value)}
-        >
+        <SelectDropdownSec value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
           <option value="">Select Section</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
+          {["A", "B", "C"].map(sec => (
+            <option key={sec} value={sec}>{sec}</option>
+          ))}
         </SelectDropdownSec>
         <SearchButton onClick={handleSearch}>SEARCH</SearchButton>
       </SearchContainer>
 
-      <TableWrapper>
-        <TableContainer>
-          <Table>
-            <TheadWrapper>
-              <tr>
-                <Th style={{ width: "50px" }}>Sl No</Th>
-                <Th style={{ width: "150px" }}>Student Name</Th>
-                <Th style={{ width: "100px" }}>Class</Th>
-                <Th style={{ width: "100px" }}>Section</Th>
-                <Th style={{ width: "120px" }}>Roll Number</Th>
-                <Th style={{ width: "150px" }}>Attendance</Th>
-              </tr>
-            </TheadWrapper>
-
-            <tbody>
-              {currentStudents.map((student, index) => (
-                <tr
-                  key={student.admission_no}
-                  style={{
-                    backgroundColor: attendance[student.admission_no]
-                      ? "transparent"
-                      : "#FF0000",
-                    transition: "background-color 0.5s ease",
-                  }}
-                >
-                  <Td>{indexOfFirstStudent + index + 1}</Td>
-                  <Td>{student.student_name}</Td>
-                  <Td>{student.class}</Td>
-                  <Td>{student.section}</Td>
-                  <Td>{student.admission_no}</Td>
-                  <Td>
-                    <input
-                      type="checkbox"
-                      checked={attendance[student.admission_no] || false}
-                      onChange={() =>
-                        handleCheckboxChange(student.admission_no)
-                      }
+      {filteredStudents.length === 0 ? (
+        <div style={{ textAlign: "center", marginTop: "40px", fontSize: "18px", color: "#666" }}>
+          No data found for the selected class and section.
+        </div>
+      ) : (
+        <>
+          <TableWrapper>
+            <TableContainer>
+              <Table>
+                <TheadWrapper>
+                  <tr>
+                    <Th style={{ width: "50px" }}>Sl No</Th>
+                    <Th style={{ width: "150px" }}>Student Name</Th>
+                    <Th style={{ width: "100px" }}>Class</Th>
+                    <Th style={{ width: "100px" }}>Section</Th>
+                    <Th style={{ width: "120px" }}>Roll Number</Th>
+                    <Th style={{ width: "150px" }}>Attendance</Th>
+                  </tr>
+                </TheadWrapper>
+                <tbody>
+                  {currentStudents.map((student, index) => (
+                    <tr
+                      key={student.admission_no}
                       style={{
-                        accentColor: attendance[student.admission_no]
-                          ? "green"
-                          : "red",
-                        width: "18px",
-                        height: "18px",
+                        backgroundColor: attendance[student.admission_no] ? "transparent" : "#FF0000",
+                        transition: "background-color 0.5s ease",
                       }}
-                    />
-                  </Td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </TableContainer>
-      </TableWrapper>
+                    >
+                      <Td>{indexOfFirstStudent + index + 1}</Td>
+                      <Td>{student.student_name}</Td>
+                      <Td>{student.class}</Td>
+                      <Td>{student.section}</Td>
+                      <Td>{student.admission_no}</Td>
+                      <Td>
+                        <input
+                          type="checkbox"
+                          checked={attendance[student.admission_no] || false}
+                          onChange={() => handleCheckboxChange(student.admission_no)}
+                          style={{
+                            accentColor: attendance[student.admission_no] ? "green" : "red",
+                            width: "18px",
+                            height: "18px",
+                          }}
+                        />
+                      </Td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </TableContainer>
+          </TableWrapper>
 
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
-      >
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          style={{
-            padding: "8px 12px",
-            marginRight: "10px",
-            backgroundColor: "#002087",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          &lt;
-        </button>
-        <span style={{ alignSelf: "center", fontSize: "16px" }}>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          style={{
-            padding: "8px 12px",
-            marginLeft: "10px",
-            backgroundColor: "#002087",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          &gt;
-        </button>
-      </div>
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              style={{
+                padding: "8px 12px",
+                marginRight: "10px",
+                backgroundColor: "#002087",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              &lt;
+            </button>
+            <span style={{ alignSelf: "center", fontSize: "16px" }}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              style={{
+                padding: "8px 12px",
+                marginLeft: "10px",
+                backgroundColor: "#002087",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+            >
+              &gt;
+            </button>
+          </div>
 
-      <SubmitButton onClick={handleSubmitAttendance}>SUBMIT</SubmitButton>
+          <SubmitButton onClick={handleSubmitAttendance}>SUBMIT</SubmitButton>
+        </>
+      )}
     </PageContainer>
   );
 };
