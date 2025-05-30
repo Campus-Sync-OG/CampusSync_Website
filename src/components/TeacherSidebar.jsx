@@ -517,6 +517,16 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem
+              to="/teacher-attendance-download"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Attendance Download</Label>
+            </SidebarItem>
+
+            <SidebarItem
               to="/teacher-achievement"
               onClick={() => setMobileOpen(false)}
             >
