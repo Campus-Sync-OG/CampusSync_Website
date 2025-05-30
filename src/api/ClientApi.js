@@ -107,18 +107,19 @@ export const bulkUpdateAttendance = async ({ records, emp_id, date }) => {
   });
   return response.data;
 };
-export const getStudentsByClassAndSection = async (
-  selectedClass,
-  selectedSection
-) => {
-  const response = await api.get(`/students/list`, {
-    params: {
-      class: selectedClass,
-      section: selectedSection,
-    },
-  });
-  return response.data;
+
+export const   getStudentsByClassAndSection= async (className, section = "") => {
+  return api
+    .get("/students/", {
+      params: {
+        className,
+        section,
+      },
+    })
+    .then((res) => res.data.students); // Extract the array of students
 };
+
+
 export const fetchStudents = () =>
   api.get("/students/list").then((res) => res.data);
 
