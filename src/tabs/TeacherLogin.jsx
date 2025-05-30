@@ -196,66 +196,64 @@ const ToggleIcon = styled.div`
     left: 45%;
     margin: 0;
   }
-
-  
 `;
+const ErrorMessage = styled.div``;
 
 const TeacherLogin = () => {
-   const navigate = useNavigate();
-    const [uniqueId, setUniqueId] = useState("");
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState("");
-  
-    const handleLogin = async (e) => {
-      e.preventDefault();
-    
-      const credentials = {
-        unique_id: uniqueId,
-        password: password,
-      };
-    
-      const selectedRole = localStorage.getItem("selectedRole");
-    
-      try {
-        const response = await loginUser(credentials);
-  
-    
-        // ✅ Make sure response is valid
-        if (!response || !response.user) {
-          setError("Something went wrong. Please try again.");
-          return;
-        }
-    
-        const { token, user } = response;
-    
-        if (user.role !== selectedRole) {
-          setError("Role mismatch. Please go back and select the correct role.");
-          return;
-        }
-    
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.removeItem("selectedRole");
-    
-        navigate("/teacher-dashboard"); // or redirect to role-based dashboard
-      } catch (err) {
-        console.error("Login failed:", err);
-        setError(err?.response?.data?.message || "Invalid credentials");
+  const navigate = useNavigate();
+  const [uniqueId, setUniqueId] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    const credentials = {
+      unique_id: uniqueId,
+      password: password,
+    };
+
+    const selectedRole = localStorage.getItem("selectedRole");
+
+    try {
+      const response = await loginUser(credentials);
+
+      // ✅ Make sure response is valid
+      if (!response || !response.user) {
+        setError("Something went wrong. Please try again.");
+        return;
       }
-    };
-    
-    const handleBack = () => navigate("/login");
-  
-    const handleForgotPassword = () => {
-      navigate("/forgot-password", {
-        state: {
-          role: "teacher",
-          icon: teacherIcon,
-          unique_id: uniqueId,
-        },
-      });
-    };
+
+      const { token, user } = response;
+
+      if (user.role !== selectedRole) {
+        setError("Role mismatch. Please go back and select the correct role.");
+        return;
+      }
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.removeItem("selectedRole");
+
+      navigate("/teacher-dashboard"); // or redirect to role-based dashboard
+    } catch (err) {
+      console.error("Login failed:", err);
+      setError(err?.response?.data?.message || "Invalid credentials");
+    }
+  };
+
+  const handleBack = () => navigate("/login");
+
+  const handleForgotPassword = () => {
+    navigate("/forgot-password", {
+      state: {
+        role: "teacher",
+        icon: teacherIcon,
+        unique_id: uniqueId,
+      },
+    });
+  };
 
   return (
     <>
@@ -290,11 +288,12 @@ const TeacherLogin = () => {
           <Icon src={teacherIcon} alt="Teacher" />
           <RoleLabel>Teacher</RoleLabel>
           {error && <ErrorMessage>{error}</ErrorMessage>}
-          <Input type="text" 
-          placeholder="User ID" 
-          value={uniqueId}
+          <Input
+            type="text"
+            placeholder="User ID"
+            value={uniqueId}
             onChange={(e) => setUniqueId(e.target.value)}
-            />
+          />
 
           <PasswordWrapper>
             <Input
