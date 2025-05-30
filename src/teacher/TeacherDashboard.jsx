@@ -291,13 +291,13 @@ const WelcomeCard = styled.div`
   @media (max-width: 426px) {
     width: 90%;
     margin-right: px;
-
+    padding-bottom: 43px;
     .welcome-text {
       font-size: 17px;
     }
     .image {
-      height: 70px;
-      width: 70px;
+      height: 100px;
+      width: 130px;
       margin-right: 10px;
     }
     .date {
@@ -306,8 +306,12 @@ const WelcomeCard = styled.div`
     }
   }
 
-  @media (max-width: 320px) {
+  @media (max-width: 420px) {
     width: 85%;
+    .image {
+      position: relative;
+      top: 20px;
+    }
   }
 `;
 
@@ -329,6 +333,11 @@ const MainContent = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
+  }
+  @media (max-width: 426px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
   }
 `;
 
@@ -353,8 +362,7 @@ const CardGrid = styled.div`
   }
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
-    gap: 20px;
-    width: auto;
+    gap: 0px;
   }
   @media (max-width: 376px) {
     width: 100%;
