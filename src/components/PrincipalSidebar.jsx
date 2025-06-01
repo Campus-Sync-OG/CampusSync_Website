@@ -473,6 +473,8 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Notification</Label>
             </SidebarItem>
 
+            
+
             <SidebarItem to="/principal-subjects" expanded={expanded}>
               <Icon>
                 <FiImage />
@@ -499,6 +501,13 @@ const PrincipalSidebar = () => {
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Announcement</Label>
+            </SidebarItem>
+
+              <SidebarItem to="/principal-leave-panel" expanded={expanded}>
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={expanded}>LeavesPannel</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>

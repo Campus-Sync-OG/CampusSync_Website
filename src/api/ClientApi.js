@@ -279,4 +279,14 @@ export const createUser = ({ role, name, phone_number }) =>
     .post("/users/create-user", { role, name, phone_number })
     .then((res) => res.data);
 
+export const studentUploadAssignment = (admission_no, formData) =>
+  api
+    .post(`/students/assignment-upload/${admission_no}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => res.data);
+
+
 export default api;

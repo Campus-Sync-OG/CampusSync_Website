@@ -517,6 +517,16 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem
+              to="/teacher-attendance-download"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Attendance Download</Label>
+            </SidebarItem>
+
+            <SidebarItem
               to="/teacher-achievement"
               onClick={() => setMobileOpen(false)}
             >
@@ -539,7 +549,12 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Assignment</Label>
             </SidebarItem>
-
+            <SidebarItem to="/teacher-levaveapplication" expanded={expanded}>
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={expanded}>LeaveApplication</Label>
+            </SidebarItem>
             {/* My School Dropdown */}
             <SidebarItem
               as="div"
