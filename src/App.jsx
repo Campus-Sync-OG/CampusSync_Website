@@ -80,6 +80,7 @@ import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
 import LeaveApplication from "./teacher/LeaveApplication";
 import PrincipalLeavePanel  from "./principal/PrincipalLeavePanel"; 
+import StudentLeaveApplication from "./pages/StudentLeaveApplication";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -294,7 +295,14 @@ const App = () => {
               </Layout>
             }
           />
-
+          <Route
+            path="/leave"
+            element={
+              <Layout>
+                <StudentLeaveApplication />
+              </Layout>
+            }
+          />
           {/*  Teacher Dashboard & Pages (Uses TeacherSidebar) */}
           <Route
             path="/teacher-dashboard"

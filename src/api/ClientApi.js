@@ -288,5 +288,15 @@ export const studentUploadAssignment = (admission_no, formData) =>
     })
     .then((res) => res.data);
 
+    
+export const applyTeacherLeave = (payload) =>
+  api.post("/leaves/apply", payload).then((res) => res.data);
+
+export const fetchAllLeaves = () =>
+  api.get("/leaves/all").then((res) => res.data);
+
+// REVIEW (approve/reject) a specific leave
+export const reviewLeave = (id, status) =>
+  api.put(`/leaves/review/${id}`, { status }).then((res) => res.data);
 
 export default api;
