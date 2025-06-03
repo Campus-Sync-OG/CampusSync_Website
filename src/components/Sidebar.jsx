@@ -435,6 +435,13 @@ const Sidebar = () => {
               <Label expanded={true}>Forms/Feedback</Label>
             </SidebarItem>
 
+            <SidebarItem to="/leave" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Leave Application</Label>
+            </SidebarItem>
+
             <SidebarItem to="/gallery" onClick={() => setMobileOpen(false)}>
               <Icon>
                 <FiImage />
@@ -556,6 +563,12 @@ const Sidebar = () => {
                 <AiOutlineForm />
               </Icon>
               <Label expanded={expanded}>Forms/Feedback</Label>
+            </SidebarItem>
+            <SidebarItem to="/leave" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={expanded}>Leave Application</Label>
             </SidebarItem>
 
             <SidebarItem to="/gallery" expanded={expanded}>

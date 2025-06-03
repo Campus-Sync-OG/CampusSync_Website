@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { applyTeacherLeave } from '../api/ClientApi';
-const LeaveApplication = () => {
+
+const StudentLeaveApplication = () => {
  const [formData, setFormData] = useState({
   leaveType: "",
   fromDate: "",
@@ -28,38 +28,20 @@ const handleChange = (e) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  setSuccessMessage(""); // reset old message
-  if (!validate()) return;
+ 
 
-  const payload = {
-    from_date: formData.fromDate,
-    to_date: formData.toDate,
-    reason: formData.reason,
-    leave_type: formData.leaveType,
-  };
-
-  try {
-    const response = await applyTeacherLeave(payload);
-    if (response.success) {
-  alert("Leave applied successfully");
-  setFormData({ leaveType: "", fromDate: "", toDate: "", reason: "" });
-}
-  } catch (err) {
-    console.error("Error submitting leave:", err);
-    setSuccessMessage("Something went wrong while applying for leave.");
-  }
+ 
 };
   return (
     <FormContainer>
-      <FormTitle>Teacher Leave Application</FormTitle>
+      <FormTitle>Student Leave Application</FormTitle>
       <StyledForm onSubmit={handleSubmit}>
         <Label>Leave Type</Label>
         <Select name="leaveType" value={formData.leaveType} onChange={handleChange}>
           <option value="">Select Leave Type</option>
           <option value="Casual">Casual Leave</option>
           <option value="Sick">Sick Leave</option>
-          <option value="Earned">Earned Leave</option>
-          <option value="Maternity">Maternity Leave</option>
+          
         </Select>
         {errors.leaveType && <ErrorText>{errors.leaveType}</ErrorText>}
 
@@ -81,7 +63,7 @@ const handleSubmit = async (e) => {
   );
 };
 
-export default LeaveApplication;
+export default StudentLeaveApplication;
 
 
 export const FormContainer = styled.div`
