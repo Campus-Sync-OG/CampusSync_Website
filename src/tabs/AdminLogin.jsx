@@ -287,6 +287,7 @@ const AdminLogin = ({ role = "Admin" || "operator" }) => {
         </LogoSection>
 
         <LoginCard>
+          <form onSubmit={handleLogin}>
           <BackText onClick={handleBack}>‹ Back</BackText>
           <Title>Login</Title>
           <Icon src={icon} alt={role} />
@@ -315,6 +316,7 @@ const AdminLogin = ({ role = "Admin" || "operator" }) => {
           <ForgotPassword onClick={handleForgotPassword}>
             Forgot Password?
           </ForgotPassword>
+          </form>
         </LoginCard>
 
         <Footer>© 2024 Campus Sync School Management</Footer>
