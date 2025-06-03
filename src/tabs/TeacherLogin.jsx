@@ -197,7 +197,6 @@ const ToggleIcon = styled.div`
     margin: 0;
   }
 `;
-const ErrorMessage = styled.div``;
 
 export const ErrorMessage = styled.p`
   color: red;
