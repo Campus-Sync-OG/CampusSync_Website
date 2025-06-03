@@ -291,6 +291,7 @@ const TeacherLogin = () => {
         </LogoSection>
 
         <LoginCard>
+          <form onSubmit={handleLogin}>
           <BackText onClick={handleBack}>‹ Back</BackText>
           <Title>Login</Title>
           <Icon src={teacherIcon} alt="Teacher" />
@@ -320,6 +321,7 @@ const TeacherLogin = () => {
           <ForgotPassword onClick={handleForgotPassword}>
             Forgot Password?
           </ForgotPassword>
+          </form>
         </LoginCard>
 
         <Footer>© 2024 Campus Sync School Management</Footer>
