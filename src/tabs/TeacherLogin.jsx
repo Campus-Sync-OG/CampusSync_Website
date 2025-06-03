@@ -197,7 +197,7 @@ const ToggleIcon = styled.div`
     margin: 0;
   }
 `;
-const ErrorMessage = styled.div``;
+
 
 export const ErrorMessage = styled.p`
   color: red;
@@ -227,7 +227,7 @@ const TeacherLogin = () => {
     try {
       const response = await loginUser(credentials);
 
-      // ✅ Make sure response is valid
+
       if (!response || !response.user) {
         setError("Something went wrong. Please try again.");
         return;
