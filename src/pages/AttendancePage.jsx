@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
@@ -6,8 +6,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
 import { getAttendanceByAdmissionNo } from "../api/ClientApi"; // Adjust the import path as necessary
-import { createGlobalStyle } from 'styled-components';
-
+import { createGlobalStyle } from "styled-components";
 
 // Styled Components
 const Container = styled.div`
@@ -36,7 +35,13 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-   background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+   background: linear-gradient(
+  90deg,
+  rgba(0, 32, 135, 1) 31%,    /* 100% opacity */
+  rgba(0, 32, 135, 0.69) 69%, /* 69% opacity */
+  #df0043 100%
+)
+;
   padding: 18px 20px;
   border-radius: 10px; /* Optional for rounded corners */
   color: white; /* Text color */
@@ -50,7 +55,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
- font-size: 20px;
+  font-size: 20px;
   font-weight: bold;
   margin: 0;
   @media (max-width: 768px) {
@@ -66,7 +71,7 @@ const Icons = styled.div`
   width: 25px;
   height: 25px;
   cursor: pointer;
-   align-items: center; /* Ensures icons and divider are vertically aligned */
+  align-items: center; /* Ensures icons and divider are vertically aligned */
   img {
     width: 18px;
     height: 18px;
@@ -80,21 +85,20 @@ const Icons = styled.div`
 
 const Icons2 = styled.div`
   position: relative;
- width: 1px; /* Thickness of the white line */
+  width: 1px; /* Thickness of the white line */
   height: 20px; /* Adjust to match the size of icons */
-  background-color: white; 
+  background-color: white;
   right: 10px;
   align-items: center; /* Ensures icons and divider are vertically aligned */
   img {
     position: relative;
     width: 18px;
     height: 18px;
-    left:4px;
+    left: 4px;
 
     @media (max-width: 768px) {
       width: 20px;
       height: 20px;
-      
     }
   }
 
@@ -102,7 +106,6 @@ const Icons2 = styled.div`
     flex: none;
   }
 `;
-
 
 const Content = styled.div`
   display: flex;
@@ -138,18 +141,17 @@ const CalendarWrapper = styled.div`
       }
 
       &.absent {
-        background-color:rgb(194, 25, 25) !important;
+        background-color: rgb(194, 25, 25) !important;
         color: white;
-      
       }
 
       &.weekend-holiday {
-        background-color:rgb(55, 28, 152) !important;
+        background-color: rgb(55, 28, 152) !important;
         color: white;
       }
 
       &.attendance-not-uploaded {
-        background-color:rgb(221, 183, 86) !important;
+        background-color: rgb(221, 183, 86) !important;
         color: white;
       }
     }
@@ -251,21 +253,19 @@ const CalendarStyles = createGlobalStyle`
 
 `;
 
-
-
 const Attendance = () => {
   const [admission_no, setAdmissionNo] = useState(null);
   const [attendanceData, setAttendanceData] = useState({});
   const [value, setValue] = useState(new Date());
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
+    const userData = JSON.parse(localStorage.getItem("user"));
     if (userData?.unique_id) {
       setAdmissionNo(userData.unique_id);
     } else {
-      setError('Admission number not found');
+      setError("Admission number not found");
       setLoading(false);
     }
   }, []);
@@ -284,8 +284,8 @@ const Attendance = () => {
         setAttendanceData(formatted);
         setLoading(false);
       } catch (err) {
-        console.error('Fetch error:', err.message);
-        setError('Failed to fetch attendance');
+        console.error("Fetch error:", err.message);
+        setError("Failed to fetch attendance");
         setLoading(false);
       }
     };
@@ -294,15 +294,15 @@ const Attendance = () => {
   }, [admission_no]);
 
   const tileClassName = ({ date, view }) => {
-    if (view !== 'month') return null;
+    if (view !== "month") return null;
 
-    const dateString = date.toLocaleDateString('en-CA'); // ensures 'YYYY-MM-DD'
+    const dateString = date.toLocaleDateString("en-CA"); // ensures 'YYYY-MM-DD'
     const status = attendanceData[dateString];
 
-    if (status === 'present') return 'present';
-    if (status === 'absent') return 'absent';
-    if (date.getDay() === 0) return 'weekend'; // Sunday
-    return 'not-uploaded';
+    if (status === "present") return "present";
+    if (status === "absent") return "absent";
+    if (date.getDay() === 0) return "weekend"; // Sunday
+    return "not-uploaded";
   };
 
   if (loading) return <div>Loading...</div>;
@@ -314,10 +314,14 @@ const Attendance = () => {
         <Title>Attendance</Title>
         <Wrapper>
           <Link to="/dashboard">
-            <Icons><img src={home} alt="home" /></Icons>
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
           </Link>
           <Link to="/dashboard">
-            <Icons2><img src={back} alt="back" /></Icons2>
+            <Icons2>
+              <img src={back} alt="back" />
+            </Icons2>
           </Link>
         </Wrapper>
       </Header>
@@ -332,10 +336,19 @@ const Attendance = () => {
         </CalendarWrapper>
 
         <LegendSection>
-          <LegendItem><span className="legend present" /> <p>Present</p></LegendItem>
-          <LegendItem><span className="legend absent" /> <p>Absent</p></LegendItem>
-          <LegendItem><span className="legend weekend" /> <p>Weekend Holiday</p></LegendItem>
-          <LegendItem><span className="legend not-uploaded" /> <p>Attendance Not Uploaded</p></LegendItem>
+          <LegendItem>
+            <span className="legend present" /> <p>Present</p>
+          </LegendItem>
+          <LegendItem>
+            <span className="legend absent" /> <p>Absent</p>
+          </LegendItem>
+          <LegendItem>
+            <span className="legend weekend" /> <p>Weekend Holiday</p>
+          </LegendItem>
+          <LegendItem>
+            <span className="legend not-uploaded" />{" "}
+            <p>Attendance Not Uploaded</p>
+          </LegendItem>
         </LegendSection>
       </Content>
 

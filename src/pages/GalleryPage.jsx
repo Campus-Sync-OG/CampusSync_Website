@@ -8,13 +8,12 @@ import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-  max-width: 900px;
+  max-width:100%;
   margin: auto;
   background: white;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  height: 100vh; /* Full viewport height */
+  height: 80vh; /* Full viewport height */
   overflow-y: auto; /* Enable scrolling */
   -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
   scrollbar-width: none; /* Hide scrollbar in Firefox */
@@ -30,7 +29,12 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background: linear-gradient(to right, #002f86, #d30046);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 32, 135, 1) 31%,
+    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
+    /* 69% opacity */ #df0043 100%
+  );
   border-radius: 8px 8px 0 0;
   color: white;
   font-size: 18px;
@@ -139,8 +143,8 @@ const CloseButton = styled(FaTimes)`
 `;
 
 const IconImage = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 

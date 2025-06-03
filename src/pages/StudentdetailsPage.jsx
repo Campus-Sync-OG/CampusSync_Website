@@ -4,26 +4,80 @@ import styled from "styled-components";
 
 // Sample student data
 const StudentData = [
-  { id: 1, name: "Pranav", rollNum: "522bbc009", class: "12 - A", contact: "82486 69086", profile: "https://i.pravatar.cc/40" },
-  { id: 2, name: "Vijay", rollNum: "522bbc010", class: "12 - B", contact: "82486 69087", profile: "https://i.pravatar.cc/41" },
-  { id: 3, name: "Abbey", rollNum: "522bbc011", class: "12 - C", contact: "82486 69088", profile: "https://i.pravatar.cc/42" },
-  { id: 4, name: "Shilpa", rollNum: "522bbc012", class: "12 - D", contact: "82486 69089", profile: "https://i.pravatar.cc/43" },
-  { id: 5, name: "Pranav", rollNum: "522bbc009", class: "12 - A", contact: "82486 69086", profile: "https://i.pravatar.cc/40" },
-  { id: 6, name: "Vijay", rollNum: "522bbc010", class: "12 - B", contact: "82486 69087", profile: "https://i.pravatar.cc/41" },
-  { id: 7, name: "Abbey", rollNum: "522bbc011", class: "12 - C", contact: "82486 69088", profile: "https://i.pravatar.cc/42" },
-  { id: 8, name: "Shilpa", rollNum: "522bbc012", class: "12 - D", contact: "82486 69089", profile: "https://i.pravatar.cc/43" },
+  {
+    id: 1,
+    name: "Pranav",
+    rollNum: "522bbc009",
+    class: "12 - A",
+    contact: "82486 69086",
+    profile: "https://i.pravatar.cc/40",
+  },
+  {
+    id: 2,
+    name: "Vijay",
+    rollNum: "522bbc010",
+    class: "12 - B",
+    contact: "82486 69087",
+    profile: "https://i.pravatar.cc/41",
+  },
+  {
+    id: 3,
+    name: "Abbey",
+    rollNum: "522bbc011",
+    class: "12 - C",
+    contact: "82486 69088",
+    profile: "https://i.pravatar.cc/42",
+  },
+  {
+    id: 4,
+    name: "Shilpa",
+    rollNum: "522bbc012",
+    class: "12 - D",
+    contact: "82486 69089",
+    profile: "https://i.pravatar.cc/43",
+  },
+  {
+    id: 5,
+    name: "Pranav",
+    rollNum: "522bbc009",
+    class: "12 - A",
+    contact: "82486 69086",
+    profile: "https://i.pravatar.cc/40",
+  },
+  {
+    id: 6,
+    name: "Vijay",
+    rollNum: "522bbc010",
+    class: "12 - B",
+    contact: "82486 69087",
+    profile: "https://i.pravatar.cc/41",
+  },
+  {
+    id: 7,
+    name: "Abbey",
+    rollNum: "522bbc011",
+    class: "12 - C",
+    contact: "82486 69088",
+    profile: "https://i.pravatar.cc/42",
+  },
+  {
+    id: 8,
+    name: "Shilpa",
+    rollNum: "522bbc012",
+    class: "12 - D",
+    contact: "82486 69089",
+    profile: "https://i.pravatar.cc/43",
+  },
 ];
 
 // Styled Components for Layout
 const StudentListContainer = styled.div`
   padding: 20px;
-   @media (max-width: 426px) {
-  padding:0;
-}
+  @media (max-width: 426px) {
+    padding: 0;
+  }
 `;
 const TableWrapper = styled.div`
-  
- 
   overflow: hidden;
 `;
 
@@ -37,7 +91,7 @@ const Table = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
   border-radius: 10px; /* Ensures rounded corners */
- text-align: left;
+  text-align: left;
 
   thead {
     background-color: #002087;
@@ -51,23 +105,19 @@ const Table = styled.table`
     text-align: left;
     font-family: "Poppins", sans-serif;
   }
-    td{
-    padding:15px;
+  td {
+    padding: 15px;
     text-align: center;
-    }
+  }
 
   tbody {
     max-height: 400px; /* Adjustable height */
     overflow-y: auto;
     width: 100%;
-    
   }
 
-  
   tr {
-    
     width: 100%;
-    
   }
 
   td img {
@@ -111,7 +161,12 @@ const NavigationContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 32, 135, 1) 31%,
+    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
+    /* 69% opacity */ #df0043 100%
+  );
   padding: 12px 20px;
   border-radius: 8px;
   color: white;
@@ -128,12 +183,10 @@ const NavTitle = styled.h1`
   font-size: 18px;
   font-weight: bold;
   margin: 0;
-  font-family:Poppins;
-   @media (max-width: 426px) {
-  
-  font-size:14px;
-  
-}
+  font-family: Poppins;
+  @media (max-width: 426px) {
+    font-size: 14px;
+  }
 `;
 
 const NavIcon = styled.img`
@@ -169,7 +222,7 @@ const HeaderContainer = styled.div`
 `;
 
 const StudentList = () => {
-    const [students, setStudents] = useState(StudentData);
+  const [students, setStudents] = useState(StudentData);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filter students by name or roll number
@@ -214,54 +267,54 @@ const StudentList = () => {
         />
       </HeaderContainer>
       <TableWrapper>
-      <Table>
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>Student Name</th>
-            <th>Roll No</th>
-            <th>Class</th>
-            <th>Contact</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-      </Table>
+        <Table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Student Name</th>
+              <th>Roll No</th>
+              <th>Class</th>
+              <th>Contact</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+        </Table>
         <TableContainer>
           <Table>
-        <tbody>
-          {filteredStudents.length === 0 ? (
-            <tr>
-              <td colSpan="6" style={{ textAlign: "center" }}>
-                No students found.
-              </td>
-            </tr>
-          ) : (
-            filteredStudents.map((student, index) => (
-              <tr key={student.id}>
-                <td>{index + 1}</td>
-                <td style={{  alignItems: "center", gap: "10px" }}>
-                  <img
-                    src={student.profile}
-                    alt="Profile"
-                    width="30"
-                    height="30"
-                    style={{ borderRadius: "50%" }}
-                  />
-                  {student.name}
-                </td>
-                <td>{student.rollNum}</td>
-                <td>{student.class}</td>
-                <td>{student.contact}</td>
-                <td className="action-icons">
-                  <FaEdit onClick={() => handleEdit(student.id)} />
-                  <FaTrash onClick={() => handleDelete(student.id)} />
-                </td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
-      </TableContainer>
+            <tbody>
+              {filteredStudents.length === 0 ? (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center" }}>
+                    No students found.
+                  </td>
+                </tr>
+              ) : (
+                filteredStudents.map((student, index) => (
+                  <tr key={student.id}>
+                    <td>{index + 1}</td>
+                    <td style={{ alignItems: "center", gap: "10px" }}>
+                      <img
+                        src={student.profile}
+                        alt="Profile"
+                        width="30"
+                        height="30"
+                        style={{ borderRadius: "50%" }}
+                      />
+                      {student.name}
+                    </td>
+                    <td>{student.rollNum}</td>
+                    <td>{student.class}</td>
+                    <td>{student.contact}</td>
+                    <td className="action-icons">
+                      <FaEdit onClick={() => handleEdit(student.id)} />
+                      <FaTrash onClick={() => handleDelete(student.id)} />
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </TableContainer>
       </TableWrapper>
     </StudentListContainer>
   );

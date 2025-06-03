@@ -136,8 +136,14 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(
+  90deg,
+  rgba(0, 32, 135, 1) 31%,    /* 100% opacity */
+  rgba(0, 32, 135, 0.69) 69%, /* 69% opacity */
+  #df0043 100%
+)
+;
+  padding: 10px 20px;
   color: white;
   border-radius: 10px;
   display: flex;
@@ -157,8 +163,8 @@ const IconGroup = styled.div`
 `;
 
 const Icon = styled.img`
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 

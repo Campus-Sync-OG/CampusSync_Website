@@ -59,7 +59,7 @@ const WelcomeSection = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.4rem;
-  width: 103%;
+  width: 105.5%;
   flex-wrap: wrap;
   position: relative;
   z-index: -1;
@@ -92,7 +92,7 @@ const WelcomeSection = styled.div`
 
   @media (max-width: 1024px) {
     position: relative;
-    left: 20px;
+    left: 12px;
 
     h2 {
       font-size: 1.5rem;
@@ -125,7 +125,7 @@ const WelcomeSection = styled.div`
     }
     img {
       left: 35px;
-      min-height: 15vh;
+      min-height: 1vh;
       max-height: 12vh;
     }
   }
@@ -141,17 +141,37 @@ const WelcomeSection = styled.div`
       font-size: 1rem;
     }
     img {
-      left: 15px;
-      min-height: 10vh;
-      max-height: 10vh;
-      min-width: 21vh;
+      left: 25px;
+      top: 0px;
+      min-height: 1vh;
+      max-height: 9.3vh;
+    }
+  }
+  @media (max-width: 380px) {
+    width: 100%;
+    left: 36px;
+    h2 {
+      top: 0;
+      font-size: 1.1rem;
+    }
+    p {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    img {
+      left: 25px;
+      top: 0px;
+      min-width: 35%;
+      max-width: 35%;
+      min-height: 9vh;
+      max-height: 9vh;
     }
   }
 `;
 
 const WidgetsContainer = styled.div`
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 2.9fr 0.5fr;
 
   @media (max-width: 1024px) {
     position: relative;
@@ -239,10 +259,11 @@ const Widget = styled.div`
     left: 40px;
   }
   @media (max-width: 320px) {
+    overflow-x: hidden;
     position: relative;
     height: 80px;
-    width: 90%;
-    right: 70px;
+    width: 104%;
+    left: 22px;
   }
 `;
 
@@ -315,7 +336,7 @@ const CalendarContainer = styled.div`
   border-radius: 18px;
   padding: 1rem;
   width: 100%;
-  max-width: 320px;
+  max-width: 335px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -343,7 +364,7 @@ const CalendarContainer = styled.div`
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 75px;
+    left: 68px;
     width: 90%;
   }
 `;
