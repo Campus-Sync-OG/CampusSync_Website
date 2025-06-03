@@ -81,6 +81,8 @@ import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
 import LeaveApplication from "./teacher/LeaveApplication";
 import PrincipalLeavePanel  from "./principal/PrincipalLeavePanel"; 
 import StudentLeaveApplication from "./pages/StudentLeaveApplication";
+import StudyModuleUpload from "./userpages/StudyModuleUpload";
+import StudyModulePage from "./pages/StudyModulePage";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -300,6 +302,15 @@ const App = () => {
             element={
               <Layout>
                 <StudentLeaveApplication />
+              </Layout>
+            }
+          />
+
+           <Route
+            path="/study-module"
+            element={
+              <Layout>
+                <StudyModulePage />
               </Layout>
             }
           />
@@ -591,6 +602,15 @@ const App = () => {
             element={
               <AdminLayout>
                 <AddSubject />
+              </AdminLayout>
+            }
+          />
+
+            <Route
+            path="/admin-studymodule"
+            element={
+              <AdminLayout>
+                <StudyModuleUpload />
               </AdminLayout>
             }
           />

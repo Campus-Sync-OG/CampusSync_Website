@@ -459,6 +459,16 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Subject List</Label>
             </SidebarItem>
+               <SidebarItem
+              to="/admin-studymodule"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Study Module</Label>
+            </SidebarItem>
+
             <SidebarItem to="/admin-fee" onClick={() => setMobileOpen(false)}>
               <Icon>
                 <HiDocumentCurrencyRupee />
@@ -595,6 +605,16 @@ const Sidebar = () => {
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>SubjectList</Label>
+            </SidebarItem>
+
+             <SidebarItem
+              to="/admin-studymodule"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Study Module</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-fee" expanded={expanded}>
