@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { fetchSubjectsByExam, fetchTopicsByExamAndSubject, fetchPDFUrlById } from '../api/ClientApi'; // Adjust path as needed
 
 const Container = styled.div`
   max-width: 800px;
@@ -78,103 +79,115 @@ const PDFButton = styled.a`
 `;
 
 const StudyModuleBrowser = () => {
-  const [examTypes, setExamTypes] = useState(["JEE", "NEET", "CET"]);
-  const [subjects, setSubjects] = useState([]);
-  const [topics, setTopics] = useState([]);
+    const [selectedExam, setSelectedExam] = useState('');
+    const [selectedSubject, setSelectedSubject] = useState('');
+    const [subjects, setSubjects] = useState([]);
+    const [topics, setTopics] = useState([]);
 
-  const [selectedExam, setSelectedExam] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("");
+    const examOptions = ['JEE', 'NEET', 'CET'];
 
-  // Mock subject fetch based on selected exam type
-  useEffect(() => {
-    if (!selectedExam) return;
-    // Replace this with an API call
-    const data = {
-      JEE: ["Physics", "Chemistry", "Mathematics"],
-      NEET: ["Biology", "Physics", "Chemistry"],
-      CET: ["Maths", "Electronics"],
+    useEffect(() => {
+        if (selectedExam) {
+            fetchSubjectsByExam(selectedExam)
+                .then(setSubjects)
+                .catch((err) => console.error('Failed to fetch subjects:', err));
+            setSelectedSubject('');
+        } else {
+            setSubjects([]);
+            setSelectedSubject('');
+        }
+    }, [selectedExam]);
+
+    useEffect(() => {
+        if (selectedExam && selectedSubject) {
+            fetchTopicsByExamAndSubject(selectedExam, selectedSubject)
+                .then(setTopics)
+                .catch((err) => console.error('Failed to fetch topics:', err));
+        } else {
+            setTopics([]);
+        }
+    }, [selectedExam, selectedSubject]);
+
+    const handleViewPDF = async (topicName) => {
+        try {
+            const res = await fetchPDFUrlById(topicName); // calls `/modules/download/:topicName`
+            if (res.url) {
+                window.open(res.url, '_blank'); // ✅ Opens the PDF in a new tab
+            } else {
+                alert('PDF URL not found');
+            }
+        } catch (err) {
+            console.error('Failed to fetch PDF URL', err);
+            alert('Failed to open PDF');
+        }
     };
-    setSubjects(data[selectedExam] || []);
-    setSelectedSubject("");
-    setTopics([]);
-  }, [selectedExam]);
 
-  // Mock topic fetch based on selected subject
-  useEffect(() => {
-    if (!selectedSubject) return;
-    // Replace with an API call
-    const mockTopics = {
-      Physics: [
-        { name: "Kinematics", pdfUrl: "/pdfs/kinematics.pdf" },
-        { name: "Dynamics", pdfUrl: "/pdfs/dynamics.pdf" },
-      ],
-      Chemistry: [
-        { name: "Organic Chemistry", pdfUrl: "/pdfs/organic.pdf" },
-        { name: "Inorganic Chemistry", pdfUrl: "/pdfs/inorganic.pdf" },
-      ],
-      Biology: [{ name: "Cell Biology", pdfUrl: "/pdfs/cell.pdf" }],
-    };
-    setTopics(mockTopics[selectedSubject] || []);
-  }, [selectedSubject]);
+    return (
+        <Container>
+            <Title>Study Module Browser</Title>
 
-  return (
-    <Container>
-      <Title>Study Modules</Title>
+            <Section>
+                <SectionTitle>Select Exam</SectionTitle>
+                <ButtonGrid>
+                    {examOptions.map((exam) => (
+                        <Button
+                            key={exam}
+                            className={selectedExam === exam ? 'selected' : ''}
+                            onClick={() => setSelectedExam(exam)}
+                        >
+                            {exam}
+                        </Button>
+                    ))}
+                </ButtonGrid>
+            </Section>
 
-      {/* Exam Type Selection */}
-      <Section>
-        <SectionTitle>Select Exam Type</SectionTitle>
-        <ButtonGrid>
-          {examTypes.map((exam) => (
-            <Button
-              key={exam}
-              onClick={() => setSelectedExam(exam)}
-              className={selectedExam === exam ? "selected" : ""}
-            >
-              {exam}
-            </Button>
-          ))}
-        </ButtonGrid>
-      </Section>
+            {subjects.length > 0 && (
+                <Section>
+                    <SectionTitle>Select Subject</SectionTitle>
+                    <ButtonGrid>
+                        {subjects.map((subject) => (
+                            <Button
+                                key={subject}
+                                className={selectedSubject === subject ? 'selected' : ''}
+                                onClick={() => setSelectedSubject(subject)}
+                            >
+                                {subject}
+                            </Button>
+                        ))}
+                    </ButtonGrid>
+                </Section>
+            )}
 
-      {/* Subject Selection */}
-      {selectedExam && (
-        <Section>
-          <SectionTitle>Select Subject</SectionTitle>
-          <ButtonGrid>
-            {subjects.map((subj) => (
-              <Button
-                key={subj}
-                onClick={() => setSelectedSubject(subj)}
-                className={selectedSubject === subj ? "selected" : ""}
-              >
-                {subj}
-              </Button>
-            ))}
-          </ButtonGrid>
-        </Section>
-      )}
-
-      {/* Topics */}
-      {selectedSubject && (
-        <Section>
-          <SectionTitle>Available Topics</SectionTitle>
-          {topics.length > 0 ? (
-            topics.map((topic) => (
-              <TopicCard key={topic.name}>
-                <TopicTitle>{topic.name}</TopicTitle>
-                <PDFButton href={topic.pdfUrl} target="_blank" rel="noopener noreferrer">
-                  View / Download PDF
-                </PDFButton>
-              </TopicCard>
-            ))
-          ) : (
-            <p>No topics available.</p>
-          )}
-        </Section>
-      )}
-    </Container>
-  );
+            {topics.length > 0 ? (
+                <Section>
+                    <SectionTitle>Topics</SectionTitle>
+                    {topics.map((topic, index) => (
+                        <TopicCard key={index}>
+                            <TopicTitle>{topic.topicName}</TopicTitle>
+                            <PDFButton onClick={() => handleViewPDF(topic.topicName)}>
+                                View PDF
+                            </PDFButton>
+                            <PDFButton
+                                href={topic.pdfUrl}
+                                download
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Download PDF
+                            </PDFButton>
+                        </TopicCard>
+                    ))}
+                </Section>
+            ) : (
+                selectedExam &&
+                selectedSubject && (
+                    <p style={{ textAlign: 'center', color: 'gray' }}>
+                        No topics available for this selection.
+                    </p>
+                )
+            )}
+        </Container>
+    );
 };
 
 export default StudyModuleBrowser;

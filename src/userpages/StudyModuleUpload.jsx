@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { uploadStudyModule } from "../api/ClientApi"; // API function to handle module upload
 
 const Container = styled.div`
   max-width: 600px;
@@ -76,6 +77,9 @@ const StudyModuleUpload = () => {
     pdfFile: null,
   });
 
+  const [uploading, setUploading] = useState(false);
+  const [success, setSuccess] = useState(null);
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -84,17 +88,37 @@ const StudyModuleUpload = () => {
     setFormData((prev) => ({ ...prev, pdfFile: e.target.files[0] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!formData.examType || !formData.subject || !formData.topicName || !formData.pdfFile) {
+      alert("Please fill all fields and select a PDF file.");
+      return;
+    }
+
     const data = new FormData();
-    data.append("examType", formData.examType);
-    data.append("subject", formData.subject);
+    data.append("examName", formData.examType);
+    data.append("subjectName", formData.subject);
     data.append("topicName", formData.topicName);
     data.append("pdf", formData.pdfFile);
 
-    console.log("Submitting study module:", formData);
-    // axios.post('/api/study-modules', data)
+    try {
+      setUploading(true);
+      const response = await uploadStudyModule(data);
+      setSuccess("Study module uploaded successfully!");
+      console.log("Uploaded module:", response);
+      setFormData({
+        examType: "",
+        subject: "",
+        topicName: "",
+        pdfFile: null,
+      });
+    } catch (error) {
+      console.error("Upload failed:", error);
+      setSuccess("Failed to upload module. Please try again.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -105,7 +129,10 @@ const StudyModuleUpload = () => {
 
           <Field>
             <Label>Exam Type</Label>
-            <Select value={formData.examType} onChange={(e) => handleChange("examType", e.target.value)}>
+            <Select
+              value={formData.examType}
+              onChange={(e) => handleChange("examType", e.target.value)}
+            >
               <option value="">Select exam type</option>
               <option value="JEE">JEE</option>
               <option value="NEET">NEET</option>
@@ -115,7 +142,10 @@ const StudyModuleUpload = () => {
 
           <Field>
             <Label>Subject</Label>
-            <Select value={formData.subject} onChange={(e) => handleChange("subject", e.target.value)}>
+            <Select
+              value={formData.subject}
+              onChange={(e) => handleChange("subject", e.target.value)}
+            >
               <option value="">Select subject</option>
               <option value="Physics">Physics</option>
               <option value="Chemistry">Chemistry</option>
@@ -137,10 +167,16 @@ const StudyModuleUpload = () => {
           <Field>
             <Label>Upload PDF</Label>
             <Input type="file" accept="application/pdf" onChange={handleFileChange} />
-            {formData.pdfFile && <FileName>Selected: {formData.pdfFile.name}</FileName>}
+            {formData.pdfFile && (
+              <FileName>Selected: {formData.pdfFile.name}</FileName>
+            )}
           </Field>
 
-          <Button type="submit">Upload Module</Button>
+          <Button type="submit" disabled={uploading}>
+            {uploading ? "Uploading..." : "Upload Module"}
+          </Button>
+
+          {success && <p style={{ marginTop: "10px" }}>{success}</p>}
         </form>
       </Card>
     </Container>

@@ -288,7 +288,7 @@ export const studentUploadAssignment = (admission_no, formData) =>
     })
     .then((res) => res.data);
 
-    
+
 export const applyTeacherLeave = (payload) =>
   api.post("/leaves/apply", payload).then((res) => res.data);
 
@@ -298,5 +298,30 @@ export const fetchAllLeaves = () =>
 // REVIEW (approve/reject) a specific leave
 export const reviewLeave = (id, status) =>
   api.put(`/leaves/review/${id}`, { status }).then((res) => res.data);
+
+export const uploadStudyModule = (formData) =>
+  api.post("/studymodules/modules", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  }).then((res) => res.data);
+
+// Fetch subjects for a specific exam
+export const fetchSubjectsByExam = (examName) =>
+  api.get(`/studymodules/modules/subjects/${examName}`).then((res) => res.data);
+
+
+// Fetch topics for a specific exam and subject
+export const fetchTopicsByExamAndSubject = (examName, subjectName) =>
+  api
+    .get(`/studymodules/modules/topics/${examName}/${subjectName}`)
+    .then((res) => res.data);
+
+export const fetchPDFUrlById = async (topicName) => {
+  const response = await api.get(`/studymodules/modules/download/${topicName}`);
+  return response.data; // expects { url: "..." }
+};
+
+// Inside component or event handler
 
 export default api;
