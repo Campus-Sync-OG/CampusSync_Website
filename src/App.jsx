@@ -73,7 +73,7 @@ import PrincipleAnnouncement from "./principal/PrincipalAnnouncement";
 import AdminFee from "./userpages/AdminFee";
 import SubjectList from "./userpages/SubjectList";
 import AddSubject from "./userpages/AddSubject";
-import TeacherAttendanceDownload from "./teacher/TeacherAttendancedownload";
+import TeacherAttendanceDownload from "./teacher/TeacherAttendanceDownload";
 import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
 import StudentReceiptPage from "./pages/ReciptPage";

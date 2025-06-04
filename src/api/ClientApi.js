@@ -98,17 +98,18 @@ export const fetchAchievements = async () =>
 export const fetchAcademics = async () =>
   api.get("/academics/list").then((res) => res.data);
 
-export const bulkUpdateAttendance = async ({ records, emp_id, date }) => {
-  console.log(records, emp_id, date);
-  const response = await api.post(`/teachers/${emp_id}/upload-attendance`, {
-    records,
-    emp_id,
-    date,
-  });
-  return response.data;
+export const bulkUpdateAttendance = (emp_id, payload, attendance_type) => {
+  return api.post(`/teachers/${emp_id}/upload-attendance`, {
+    ...payload,
+    attendance_type,
+  }).then((res) => res.data);
 };
 
-export const   getStudentsByClassAndSection= async (className, section = "") => {
+
+
+
+
+export const getStudentsByClassAndSection = async (className, section = "") => {
   return api
     .get("/students/", {
       params: {
@@ -279,5 +280,21 @@ export const createUser = ({ role, name, phone_number }) =>
   api
     .post("/users/create-user", { role, name, phone_number })
     .then((res) => res.data);
+
+export const downloadAttendanceCSV = async (payload) => {
+  return api.post("/principal/attendance?download=true", payload, {
+    responseType: "blob", // Important for downloading files
+  });
+};
+
+export const getClassAttendance = async (className, section, date) => {
+  return api.get("/principal/class-attendance", {
+    params: {
+      class: className,
+      section,
+      date,
+    },
+  }).then(res => res.data);
+};
 
 export default api;
