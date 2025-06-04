@@ -323,6 +323,17 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Dashboard</Label>
             </SidebarItem>
+
+            <SidebarItem
+              to="/admin-usercreation"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>User Creation</Label>
+            </SidebarItem>
+
             <SidebarItem
               to="/admin-school-information"
               onClick={() => setMobileOpen(false)}
@@ -368,15 +379,7 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Students data</Label>
             </SidebarItem>
-            <SidebarItem
-              to="/admin-gallery"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <RiGalleryLine />
-              </Icon>
-              <Label expanded={true}>Gallery</Label>
-            </SidebarItem>
+
             <SidebarItem
               to="/admin-feedback"
               onClick={() => setMobileOpen(false)}
@@ -387,15 +390,6 @@ const Sidebar = () => {
               <Label expanded={true}>Feedback</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/admin-usercreation"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <TbFileSpreadsheet />
-              </Icon>
-              <Label expanded={true}>User Creation</Label>
-            </SidebarItem>
             <SidebarItem
               to="/admin-timetable"
               onClick={() => setMobileOpen(false)}
@@ -465,6 +459,16 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Fees</Label>
             </SidebarItem>
+
+            <SidebarItem
+              to="/admin-gallery"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiGalleryLine />
+              </Icon>
+              <Label expanded={true}>Gallery</Label>
+            </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
       )}
@@ -481,6 +485,13 @@ const Sidebar = () => {
                 <LiaPaletteSolid />
               </Icon>
               <Label expanded={expanded}>Dashboard</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-usercreation" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>UserCreation</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-school-information" expanded={expanded}>
@@ -525,20 +536,6 @@ const Sidebar = () => {
                 </Icon>
                 <Label expanded={expanded}>Student Information</Label>
               </SidebarItem>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-usercreation" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>UserCreation</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-gallery" expanded={expanded}>
-              <Icon>
-                <RiGalleryLine />
-              </Icon>
-              <Label expanded={expanded}>Admin Gallery</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-subjects" expanded={expanded}>
@@ -602,6 +599,13 @@ const Sidebar = () => {
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Fees</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-gallery" expanded={expanded}>
+              <Icon>
+                <RiGalleryLine />
+              </Icon>
+              <Label expanded={expanded}>Admin Gallery</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>

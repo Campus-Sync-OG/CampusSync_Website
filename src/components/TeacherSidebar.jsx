@@ -553,7 +553,7 @@ const Sidebar = () => {
               <Icon>
                 <FiImage />
               </Icon>
-              <Label expanded={expanded}>LeaveApplication</Label>
+              <Label expanded={expanded}>Leave Request</Label>
             </SidebarItem>
             {/* My School Dropdown */}
             <SidebarItem

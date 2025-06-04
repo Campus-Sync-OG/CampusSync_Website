@@ -415,7 +415,7 @@ const CalendarCard = styled.div`
   height: 385px;
 
   h3 {
-    margin-bottom: 8px;
+    margin-top: 1px;
     align-text: left;
     font-family: "Poppins", sans-serif;
     color: white;
@@ -434,7 +434,7 @@ const StyledCalendar = styled(Calendar)`
   border-radius: 8px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   padding: 5px;
-
+  height: 70vh; 
   .react-calendar__navigation {
     margin-bottom: 2px; /* Reduce gap between month and days */
     padding-bottom: 0; /* Minimize extra space */
