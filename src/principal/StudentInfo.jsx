@@ -7,45 +7,12 @@ import back from "../assets/images/back.png";
 import { getAllClassSections, fetchStudents } from "../api/ClientApi";
 
 const Container = styled.div`
-  padding: 2rem;
+  padding: 0.5rem;
   max-height: 90vh;
   overflow-y: auto;
   font-family: poppins;
   flex-direction: column;
   height: 70vh;
-`;
-
-const FilterSection = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-`;
-
-const Input = styled.input`
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  flex: 1;
-  min-width: 180px;
-`;
-
-const Select = styled.select`
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  flex: 1;
-  min-width: 180px;
-`;
-
-const Button = styled.button`
-  background-color: #e60050;
-  color: white;
-  border: none;
-  padding: 0.6rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
 `;
 
 const Table = styled.table`
@@ -88,7 +55,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, rgb(1, 26, 109), #002087b0, #df0043);
-  padding: 18px 20px;
+  padding: 25px 20px;
   border-radius: 10px;
   color: white;
   margin-left: 0px;
@@ -98,6 +65,7 @@ const Header = styled.div`
 const Title = styled.h2`
   font-size: 20px;
   font-weight: bold;
+  font-family: "Poppins";
   margin: 0;
 `;
 

@@ -24,6 +24,20 @@ const PrincipalDashboard = () => {
       date: "14-03-2025",
     },
   ];
+
+  const leaveApplications = [
+    {
+      id: 1,
+      title: "Sick Leave - Rahul",
+      date: "16-03-2025",
+    },
+    {
+      id: 2,
+      title: "Family Function - Meena",
+      date: "14-03-2025",
+    },
+  ];
+
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -87,14 +101,18 @@ const PrincipalDashboard = () => {
             <StyledCalendar value={date} onChange={setDate} />
             <AnnouncementsHeading>Announcements</AnnouncementsHeading>
             <AnnouncementsContainer>
-              {announcements.map((announcement) => (
+              {[...leaveApplications, ...announcements].map((item, index) => (
                 <NotificationCard
-                  key={announcement.id}
-                  to={`/announcement/${announcement.id}`}
+                  key={item.id}
+                  to={
+                    item.title.includes("Leave")
+                      ? `/leave/${item.id}`
+                      : `/announcement/${item.id}`
+                  }
                 >
                   <Content>
-                    <Title>{announcement.title}</Title>
-                    <DateText>• {announcement.date}</DateText>
+                    <Title>{item.title}</Title>
+                    <DateText>• {item.date}</DateText>
                   </Content>
                   <OptionsIcon />
                 </NotificationCard>
@@ -120,10 +138,10 @@ const DashboardContainer = styled.div`
   align-items: center;
   overflow-y: auto;
   max-height: 90vh;
- overflow-x: hidden;
+  overflow-x: hidden;
   @media (max-width: 320px) {
     width: 100%;
-     overflow-x: hidden;
+    overflow-x: hidden;
   }
 `;
 
@@ -415,7 +433,7 @@ const CalendarCard = styled.div`
   height: 385px;
 
   h3 {
-    margin-bottom: 8px;
+    margin-top: 1px;
     align-text: left;
     font-family: "Poppins", sans-serif;
     color: white;
@@ -434,6 +452,7 @@ const StyledCalendar = styled(Calendar)`
   border-radius: 8px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   padding: 5px;
+  height: 150vh;
 
   .react-calendar__navigation {
     margin-bottom: 2px; /* Reduce gap between month and days */
@@ -465,7 +484,7 @@ const AnnouncementsContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   overflow-y: auto;
-  max-height: 300px; /* Prevent overflow */
+  max-height: 200px; /* Prevent overflow */
   padding-right: 5px;
   &::-webkit-scrollbar {
     width: 0;

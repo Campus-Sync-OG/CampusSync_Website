@@ -1,11 +1,33 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { fetchAllLeaves, reviewLeave } from "../api/ClientApi";
+
 // Sample mock leave applications
+const mockLeaves = [
+  {
+    id: 1,
+    teacherName: "Anita Sharma",
+    leaveType: "Sick",
+    fromDate: "2025-06-01",
+    toDate: "2025-06-03",
+    reason:
+      "I am writing to formally request a sick leave from [start date] to [end date] due to a sudden illness. I have been experiencing symptoms such as high fever, fatigue, and body aches, which require rest and medical attention. My doctor has advised me to take a few days off to recover fully and avoid spreading any potential infection. I will ensure that my responsibilities are managed during my absence and will make up for any missed work once I return. I kindly request your understanding and approval of my leave application.",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    teacherName: "Ravi Kumar",
+    leaveType: "Casual",
+    fromDate: "2025-06-05",
+    toDate: "2025-06-06",
+    reason: "Personal work",
+    status: "Pending",
+  },
+];
 
 
 const PrincipalLeavePanel = () => {
+  const navigate = useNavigate();
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,49 +69,127 @@ const PrincipalLeavePanel = () => {
     }
   };
   return (
-    <PanelContainer>
-      <Title>Leave Applications</Title>
-      {leaves.length === 0 ? (
-        <NoData>No leave applications found.</NoData>
-      ) : (
-        leaves.map((leave) => (
-          <LeaveCard key={leave.id}>
-            <CardHeader>
-              <h3>{leave.teacherName}</h3>
-              <StatusBadge status={leave.status}>{leave.status}</StatusBadge>
-            </CardHeader>
-            <LeaveInfo>
-              <p><strong>Type:</strong> {leave.leaveType}</p>
-              <p><strong>From:</strong> {leave.fromDate}</p>
-              <p><strong>To:</strong> {leave.toDate}</p>
-              <p><strong>Reason:</strong> {leave.reason}</p>
-            </LeaveInfo>
-            {leave.status === "Pending" && (
-              <ActionButtons>
-                <ApproveButton onClick={() => handleAction(leave.id, "Approved")}>
-                  Approve
-                </ApproveButton>
-                <RejectButton onClick={() => handleAction(leave.id, "Rejected")}>
-                  Reject
-                </RejectButton>
-              </ActionButtons>
-            )}
-          </LeaveCard>
-        ))
-      )}
-    </PanelContainer>
+    <>
+      <Header>
+        <Title>Leave Applications</Title>
+        <Wrapper>
+          <Link to="/principal-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
+
+      <PanelContainer>
+        {leaves.length === 0 ? (
+          <NoData>No leave applications found.</NoData>
+        ) : (
+          leaves.map((leave) => (
+            <LeaveCard key={leave.id}>
+              <CardHeader>
+                <h3>{leave.teacherName}</h3>
+                <StatusBadge status={leave.status}>{leave.status}</StatusBadge>
+              </CardHeader>
+              <LeaveInfo>
+                <p>
+                  <strong>Type:</strong> {leave.leaveType}
+                </p>
+                <p>
+                  <strong>From:</strong> {leave.fromDate}
+                </p>
+                <p>
+                  <strong>To:</strong> {leave.toDate}
+                </p>
+                <p>
+                  <strong>Reason:</strong> {leave.reason}
+                </p>
+              </LeaveInfo>
+              {leave.status === "Pending" && (
+                <ActionButtons>
+                  <ApproveButton
+                    onClick={() => handleAction(leave.id, "Approved")}
+                  >
+                    Approve
+                  </ApproveButton>
+                  <RejectButton
+                    onClick={() => handleAction(leave.id, "Rejected")}
+                  >
+                    Reject
+                  </RejectButton>
+                </ActionButtons>
+              )}
+            </LeaveCard>
+          ))
+        )}
+      </PanelContainer>
+    </>
   );
 };
 
 export default PrincipalLeavePanel;
 
-export const PanelContainer = styled.div`
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 20px;
+export const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: white;
+  font-family: "Poppins";
+  font-size: 20px;
+  margin: 5px;
 `;
 
-export const Title = styled.h2`
+export const Title = styled.h1`
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const Icons = styled.div`
+  cursor: pointer;
+  margin: 0 10px;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
+export const Divider = styled.div`
+  width: 2px;
+  height: 30px;
+  background-color: white;
+`;
+
+// Page content styles
+export const PanelContainer = styled.div`
+  overflow-y: auto;
+  height: 70vh;
+
+  /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+
+  /* Hide scrollbar for Internet Explorer and Edge */
+  -ms-overflow-style: none;
+`;
+
+export const PanelTitle = styled.h2`
   text-align: center;
   margin-bottom: 30px;
   color: #2c3e50;
@@ -136,7 +236,7 @@ export const ActionButtons = styled.div`
 `;
 
 export const ApproveButton = styled.button`
-  background-color: #2ecc71;
+  background-color: #002087;
   color: white;
   padding: 10px 20px;
   border-radius: 10px;
@@ -150,7 +250,7 @@ export const ApproveButton = styled.button`
 `;
 
 export const RejectButton = styled.button`
-  background-color: #e74c3c;
+  background-color: #df0043;
   color: white;
   padding: 10px 20px;
   border-radius: 10px;

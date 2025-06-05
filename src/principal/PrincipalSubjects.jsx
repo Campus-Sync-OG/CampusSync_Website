@@ -7,7 +7,7 @@ import { fetchFilteredSubjects } from "../api/ClientApi";
 
 // Styled Components
 const Container = styled.div`
-  padding: 20px;
+  padding: 5px;
   background: white;
 `;
 
@@ -16,7 +16,9 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  padding: 25px 20px;
+  font-family: "Poppins";
+  font-size: 20px;
   border-radius: 10px;
   color: white;
   margin-bottom: 20px;
@@ -135,7 +137,7 @@ const PrincipalSubject = () => {
         emp_name: item.teacherName,
         class_name: item.class,
         section: item.section,
-       subjects: item.subjects || [],
+        subjects: item.subjects || [],
 
         role: item.role || "",
       }));
@@ -159,7 +161,7 @@ const PrincipalSubject = () => {
             <img src={home} alt="home" />
           </Icons>
           <Divider />
-          <Icons onClick={handleBack}>
+          <Icons onClick={() => navigate(-1)}>
             <img src={back} alt="back" />
           </Icons>
         </Wrapper>
@@ -235,7 +237,6 @@ const PrincipalSubject = () => {
               <td>{item.class_name}</td>
               <td>{item.section}</td>
               <td>{item.subjects}</td> {/* ← Correct way */}
-
               <td>{item.role}</td>
             </tr>
           ))}

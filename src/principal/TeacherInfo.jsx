@@ -129,8 +129,8 @@ export default TeacherInfo;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 20px;
-  font-family: "Poppins", sans-serif;
+  padding: 5px;
+  font-family: "Poppins";
   background: #f9f9f9;
   flex-direction: column;
   height: 70vh;
@@ -147,7 +147,8 @@ const NavContainer = styled.div`
 
 const Title = styled.h2`
   color: #fff;
-  font-size: 18px;
+  font-size: 20px;
+  font-family: "Poppins";
   font-weight: bold;
 `;
 

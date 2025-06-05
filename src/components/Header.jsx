@@ -19,7 +19,7 @@ const HeaderContainer = styled.header`
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-wrap: nowrap;
-  position: sticky;
+  // position: sticky;
   font-family: "Roboto", sans-serif;
 
   @media (max-width: 768px) {

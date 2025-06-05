@@ -286,39 +286,41 @@ const StudentLogin = () => {
           <img src={logo} alt="Logo" />
         </LogoSection>
 
-        <LoginCard>
-          <BackText onClick={handleBack}>‹ Back</BackText>
-          <Title>Login</Title>
-          <Icon src={studentIcon} alt="Student" />
-          <RoleLabel>Student</RoleLabel>
+        <form onSubmit={handleLogin}>
+          <LoginCard>
+            <BackText onClick={handleBack}>‹ Back</BackText>
+            <Title>Login</Title>
+            <Icon src={studentIcon} alt="Student" />
+            <RoleLabel>Student</RoleLabel>
 
-          <Input
-            type="text"
-            placeholder="User ID"
-            value={uniqueId}
-            onChange={(e) => setUniqueId(e.target.value)}
-          />
-
-          <PasswordWrapper>
             <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="text"
+              placeholder="User ID"
+              value={uniqueId}
+              onChange={(e) => setUniqueId(e.target.value)}
             />
-            <ToggleIcon onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-            </ToggleIcon>
-          </PasswordWrapper>
 
-          {error && <ErrorText>{error}</ErrorText>}
+            <PasswordWrapper>
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <ToggleIcon onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+              </ToggleIcon>
+            </PasswordWrapper>
 
-          <LoginButton onClick={handleLogin}>Login</LoginButton>
+            {error && <ErrorText>{error}</ErrorText>}
 
-          <ForgotPassword onClick={handleForgotPassword}>
-            Forgot Password?
-          </ForgotPassword>
-        </LoginCard>
+            <LoginButton type="submit">Login</LoginButton>
+
+            <ForgotPassword onClick={handleForgotPassword}>
+              Forgot Password?
+            </ForgotPassword>
+          </LoginCard>
+        </form>
 
         <Footer>© 2024 Campus Sync School Management</Footer>
       </Container>

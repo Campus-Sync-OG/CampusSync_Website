@@ -198,6 +198,7 @@ const ToggleIcon = styled.div`
   }
 `;
 
+
 export const ErrorMessage = styled.p`
   color: red;
   margin-top: 10px;
@@ -226,7 +227,7 @@ const TeacherLogin = () => {
     try {
       const response = await loginUser(credentials);
 
-      // ✅ Make sure response is valid
+
       if (!response || !response.user) {
         setError("Something went wrong. Please try again.");
         return;
@@ -290,6 +291,7 @@ const TeacherLogin = () => {
         </LogoSection>
 
         <LoginCard>
+          <form onSubmit={handleLogin}>
           <BackText onClick={handleBack}>‹ Back</BackText>
           <Title>Login</Title>
           <Icon src={teacherIcon} alt="Teacher" />
@@ -319,6 +321,7 @@ const TeacherLogin = () => {
           <ForgotPassword onClick={handleForgotPassword}>
             Forgot Password?
           </ForgotPassword>
+          </form>
         </LoginCard>
 
         <Footer>© 2024 Campus Sync School Management</Footer>

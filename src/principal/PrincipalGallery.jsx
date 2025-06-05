@@ -3,13 +3,11 @@ import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { FaPlay, FaTimes } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-
-
-  padding: 20px;
+  padding: 5px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: auto; /* Enable scrolling */
@@ -24,22 +22,43 @@ const Container = styled.div`
   }
 `;
 
-const Header = styled.div`
+export const Header = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(to right, #002f86, #d30046);
-  border-radius: 8px 8px 0 0;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  padding: 10px 20px;
+  border-radius: 10px;
   color: white;
-  font-size: 18px;
+  font-family: "Poppins";
+  font-size: 20px;
+  margin: 5px;
+`;
+
+export const Title = styled.h1`
+  font-size: 24px;
   font-weight: bold;
 `;
 
-const Icons = styled.div`
+export const Wrapper = styled.div`
   display: flex;
-  gap: 15px;
+  align-items: center;
+`;
+
+export const Icons = styled.div`
   cursor: pointer;
+  margin: 0 10px;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
+export const Divider = styled.div`
+  width: 2px;
+  height: 30px;
+  background-color: white;
 `;
 
 const Banner = styled.div`
@@ -138,6 +157,7 @@ const IconImage = styled.img`
 `;
 
 const PrincipalGallery = () => {
+  const navigate = useNavigate();
   const videoRef = useRef(null);
   const [showPlayButton, setShowPlayButton] = useState(true);
   const [modalImage, setModalImage] = useState(null);
@@ -161,18 +181,21 @@ const PrincipalGallery = () => {
   return (
     <Container>
       {/* Header */}
-      <Header>
-        <span>School Gallery</span>
-        <Icons>
-          <Link to="/dashboard">
-            <IconImage src={home} alt="home" />
-          </Link>
-          <Link to="/dashboard">
-            <IconImage src={back} alt="back" />
-          </Link>
-        </Icons>
-      </Header>
-
+     <Header>
+             <Title>Leave Applications</Title>
+             <Wrapper>
+               <Link to="/principal-dashboard">
+                 <Icons>
+                   <img src={home} alt="home" />
+                 </Icons>
+               </Link>
+               <Divider />
+               <Icons onClick={() => navigate(-1)}>
+                 <img src={back} alt="back" />
+               </Icons>
+             </Wrapper>
+           </Header>
+     
       {/* Video Banner */}
       <Banner>
         <Video ref={videoRef} controls>

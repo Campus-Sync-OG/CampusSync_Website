@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { applyTeacherLeave } from '../api/ClientApi';
+
 const LeaveApplication = () => {
  const [formData, setFormData] = useState({
   leaveType: "",
@@ -50,43 +50,110 @@ const handleSubmit = async (e) => {
   }
 };
   return (
-    <FormContainer>
-      <FormTitle>Teacher Leave Application</FormTitle>
-      <StyledForm onSubmit={handleSubmit}>
-        <Label>Leave Type</Label>
-        <Select name="leaveType" value={formData.leaveType} onChange={handleChange}>
-          <option value="">Select Leave Type</option>
-          <option value="Casual">Casual Leave</option>
-          <option value="Sick">Sick Leave</option>
-          <option value="Earned">Earned Leave</option>
-          <option value="Maternity">Maternity Leave</option>
-        </Select>
-        {errors.leaveType && <ErrorText>{errors.leaveType}</ErrorText>}
+    <>
+      <Header>
+        <Title>Teacher Leave application</Title>
+        <Wrapper>
+          <Link to="/teacher-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
 
-        <Label>From Date</Label>
-        <InputField type="date" name="fromDate" value={formData.fromDate} onChange={handleChange} />
-        {errors.fromDate && <ErrorText>{errors.fromDate}</ErrorText>}
+      <FormContainer>
+        <StyledForm onSubmit={handleSubmit}>
+          <Label>Leave Type</Label>
+          <Select
+            name="leaveType"
+            value={formData.leaveType}
+            onChange={handleChange}
+          >
+            <option value="">Select Leave Type</option>
+            <option value="Casual">Casual Leave</option>
+            <option value="Sick">Sick Leave</option>
+            <option value="Earned">Earned Leave</option>
+            <option value="Maternity">Maternity Leave</option>
+          </Select>
+          {errors.leaveType && <ErrorText>{errors.leaveType}</ErrorText>}
 
-        <Label>To Date</Label>
-        <InputField type="date" name="toDate" value={formData.toDate} onChange={handleChange} />
-        {errors.toDate && <ErrorText>{errors.toDate}</ErrorText>}
+          <Label>From Date</Label>
+          <InputField
+            type="date"
+            name="fromDate"
+            value={formData.fromDate}
+            onChange={handleChange}
+          />
+          {errors.fromDate && <ErrorText>{errors.fromDate}</ErrorText>}
 
-        <Label>Reason</Label>
-        <TextArea name="reason" value={formData.reason} onChange={handleChange} rows="4" />
-        {errors.reason && <ErrorText>{errors.reason}</ErrorText>}
+          <Label>To Date</Label>
+          <InputField
+            type="date"
+            name="toDate"
+            value={formData.toDate}
+            onChange={handleChange}
+          />
+          {errors.toDate && <ErrorText>{errors.toDate}</ErrorText>}
 
-        <SubmitButton type="submit">Apply for Leave</SubmitButton>
-      </StyledForm>
-    </FormContainer>
+          <Label>Reason</Label>
+          <TextArea
+            name="reason"
+            value={formData.reason}
+            onChange={handleChange}
+            rows="4"
+          />
+          {errors.reason && <ErrorText>{errors.reason}</ErrorText>}
+
+          <SubmitButton type="submit">Apply for Leave</SubmitButton>
+        </StyledForm>
+      </FormContainer>
+    </>
   );
 };
 
 export default LeaveApplication;
 
+export const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  padding: 20px 40px;
+  color: white;
+`;
+
+export const Title = styled.h1`
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const Icons = styled.div`
+  cursor: pointer;
+  margin: 0 10px;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
+export const Divider = styled.div`
+  width: 2px;
+  height: 30px;
+  background-color: white;
+`;
 
 export const FormContainer = styled.div`
-  max-width: 500px;
-  margin: 40px auto;
   padding: 30px;
   background-color: #ffffff;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -135,7 +202,7 @@ export const Select = styled.select`
 export const SubmitButton = styled.button`
   margin-top: 25px;
   padding: 12px;
-  background-color: #2ecc71;
+  background-color: #002087;
   color: white;
   border: none;
   font-size: 16px;
@@ -144,7 +211,7 @@ export const SubmitButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #27ae60;
+    background-color: #df0043;
   }
 `;
 
@@ -153,4 +220,3 @@ export const ErrorText = styled.p`
   font-size: 14px;
   margin-top: 5px;
 `;
-
