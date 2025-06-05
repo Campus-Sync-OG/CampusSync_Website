@@ -354,6 +354,13 @@ const PrincipalSidebar = () => {
               <Label expanded={true}>Teacher Data</Label>
             </SidebarItem>
 
+             <SidebarItem to="/principal-attendance" expanded={expanded}>
+                <Icon>
+                  <LiaSchoolSolid />
+                </Icon>
+                <Label expanded={expanded}>Attendance Report</Label>
+              </SidebarItem>
+
             <SidebarItem
               to="/Principal-gallery"
               onClick={() => setMobileOpen(false)}
@@ -458,6 +465,15 @@ const PrincipalSidebar = () => {
                 <Label expanded={expanded}>Student Data</Label>
               </SidebarItem>
             </SidebarItem>
+
+             <SidebarItem to="/principal-attendance" expanded={expanded}>
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={expanded}>Attendance Report</Label>
+            </SidebarItem>
+            
+
 
             <SidebarItem to="/Principal-gallery" expanded={expanded}>
               <Icon>

@@ -18,7 +18,7 @@ const formatDateToYMD = (dateStr) => {
   return `${yyyy}/${mm}/${dd}`;
 };
 
-const TeacherAttendanceDownload = () => {
+const AttendnaceReport = () => {
   const navigate = useNavigate();
 
   const [selectedClass, setSelectedClass] = useState("");
@@ -251,7 +251,7 @@ const TeacherAttendanceDownload = () => {
   );
 };
 
-export default TeacherAttendanceDownload;
+export default AttendnaceReport;
 
 // Styled components declarations (you can keep your existing ones)
 

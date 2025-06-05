@@ -78,6 +78,8 @@ import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
 import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
+import AttendnaceReport from "./principal/AttendanceReport";
+
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -666,6 +668,15 @@ const App = () => {
               </PrincipalLayout>
             }
           />
+
+            <Route
+            path="/principal-attendance"
+            element={
+              <principalLayout>
+                <AttendnaceReport />
+              </principalLayout>
+            }
+          />
            <Route
             path="/principal-notification"
             element={
@@ -674,6 +685,8 @@ const App = () => {
               </principalLayout>
             }
           />
+
+        
         </Routes>
       </div>
     </Router>
