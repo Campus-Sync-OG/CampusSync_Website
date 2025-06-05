@@ -28,6 +28,7 @@ const mockLeaves = [
 ];
 
 const PrincipalLeavePanel = () => {
+  const navigate = useNavigate();
   const [leaves, setLeaves] = useState([]);
 
   useEffect(() => {
@@ -116,10 +117,12 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  padding: 10px 20px;
   border-radius: 10px;
   color: white;
-  margin: 20px;
+  font-family: "Poppins";
+  font-size: 20px;
+  margin: 5px;
 `;
 
 export const Title = styled.h1`
@@ -152,6 +155,17 @@ export const Divider = styled.div`
 export const PanelContainer = styled.div`
   overflow-y: auto;
   height: 70vh;
+
+  /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+
+  /* Hide scrollbar for Internet Explorer and Edge */
+  -ms-overflow-style: none;
 `;
 
 export const PanelTitle = styled.h2`
@@ -201,7 +215,7 @@ export const ActionButtons = styled.div`
 `;
 
 export const ApproveButton = styled.button`
-  background-color:#002087;
+  background-color: #002087;
   color: white;
   padding: 10px 20px;
   border-radius: 10px;

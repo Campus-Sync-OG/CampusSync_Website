@@ -7,9 +7,7 @@ import { Link } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-
-
-  padding: 20px;
+  padding: 5px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   overflow-y: auto; /* Enable scrolling */
@@ -26,20 +24,28 @@ const Container = styled.div`
 
 const Header = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(to right, #002f86, #d30046);
-  border-radius: 8px 8px 0 0;
-  color: white;
-  font-size: 18px;
+  justify-content: space-between;
+  background: linear-gradient(90deg, rgb(1, 26, 109), #002087b0, #df0043);
+  padding: 25px 20px;
+  border-radius: 10px;
+  font-size: 20px;
   font-weight: bold;
-`;
+  font-family: "Poppins";
+  color: white;
+  margin-left: 0px;
+  margin-bottom: 10px;`
 
 const Icons = styled.div`
   display: flex;
   gap: 15px;
   cursor: pointer;
+`;
+
+const Divider = styled.div`
+  width: 3px;
+  height: 25px;
+  background-color: white;
 `;
 
 const Banner = styled.div`
@@ -167,6 +173,7 @@ const PrincipalGallery = () => {
           <Link to="/dashboard">
             <IconImage src={home} alt="home" />
           </Link>
+          <Divider />
           <Link to="/dashboard">
             <IconImage src={back} alt="back" />
           </Link>

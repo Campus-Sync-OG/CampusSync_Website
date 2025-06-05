@@ -6,7 +6,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 
 const Container = styled.div`
-  padding: 2rem;
+  padding: 0.5rem;
   max-height: 90vh;
   overflow-y: auto;
   flex-direction: column;
@@ -86,7 +86,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, rgb(1, 26, 109), #002087b0, #df0043);
-  padding: 18px 20px;
+  padding: 25px 20px;
   border-radius: 10px;
   color: white;
   margin-left: 0px;
@@ -96,6 +96,7 @@ const Header = styled.div`
 const Title = styled.h2`
   font-size: 20px;
   font-weight: bold;
+  font-family: "Poppins";
   margin: 0;
 `;
 

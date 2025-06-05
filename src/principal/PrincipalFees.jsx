@@ -11,12 +11,14 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  padding: 25px 20px;
   border-radius: 10px;
   color: white;
   margin-left: 0px;
   width: 96%;
   margin-bottom: 10px;
+  font-size: 20px;
+  font-family: "Poppins";
 `;
 
 const Title = styled.h2`
@@ -48,7 +50,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 5px;
   background: white;
   flex-direction: column;
   height: 70vh;

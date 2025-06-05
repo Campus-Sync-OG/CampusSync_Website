@@ -5,7 +5,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllFeedback } from "../api/ClientApi";
 const Container = styled.div`
-  padding: 2rem;
+  padding: 0.5rem;
   font-family: Poppins;
   flex-direction: column;
   height: 70vh;
@@ -16,8 +16,10 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  padding: 25px 20px;
   border-radius: 15px;
+  font-family: "Poppins";
+  fon-size: 20px;
   color: white;
   margin-bottom: 30px;
 `;
