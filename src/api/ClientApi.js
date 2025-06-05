@@ -304,4 +304,24 @@ export const getClassAttendance = async (className, section, date) => {
   }).then(res => res.data);
 };
 
+export const getAttendancePercentage = async (className, section) => {
+  return api.get("/principal/percentage", {
+    params: {
+      class: className,
+      section: section,
+    },
+  }).then(res => res.data);
+};
+
+export const updateAttendancePercentage = async (admission_no, percentage) => {
+  return api.put("/update-percentage", {
+    admission_no,
+    percentage,
+  }).then((res) => res.data);
+};
+
+
+
+
+
 export default api;

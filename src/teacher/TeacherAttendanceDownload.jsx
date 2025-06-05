@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import {
+  getAllClassSections,
+  getClassAttendance,
+  getAttendancePercentage,
+  downloadAttendanceCSV,
+  updateAttendancePercentage,
+} from "../api/ClientApi"; // make sure this has updateAttendancePercentage
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import {
-  getClassAttendance,
-  downloadAttendanceCSV,
-  getAllClassSections,
-} from "../api/ClientApi";
-
-// Utility to format date to YYYY/MM/DD
-const formatDateToYMD = (dateStr) => {
-  const date = new Date(dateStr);
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
-  return `${yyyy}/${mm}/${dd}`;
-};
 
 const TeacherAttendanceDownload = () => {
   const navigate = useNavigate();
@@ -29,6 +22,9 @@ const TeacherAttendanceDownload = () => {
   const [attendanceData, setAttendanceData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [reportType, setReportType] = useState("date");
+  const [updatedPercentages, setUpdatedPercentages] = useState({});
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const fetchClassSections = async () => {
@@ -47,9 +43,20 @@ const TeacherAttendanceDownload = () => {
     fetchClassSections();
   }, []);
 
+  const formatDateToYMD = (dateStr) => {
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
   const handleFetch = async () => {
-    if (!selectedClass || !selectedDate) {
-      setError("Please select Class, Section, and Date.");
+    if (!selectedClass || !selectedSection) {
+      setError("Please select Class and Section.");
+      setAttendanceData(null);
+      return;
+    }
+
+    if (reportType === "date" && !selectedDate) {
+      setError("Please select a Date.");
       setAttendanceData(null);
       return;
     }
@@ -59,9 +66,14 @@ const TeacherAttendanceDownload = () => {
     setAttendanceData(null);
 
     try {
-      const formattedDate = formatDateToYMD(selectedDate);
-      const data = await getClassAttendance(selectedClass, selectedSection, formattedDate);
-      console.log("Fetched Attendance Data:", data);
+      let data;
+      if (reportType === "date") {
+        const formattedDate = formatDateToYMD(selectedDate);
+        data = await getClassAttendance(selectedClass, selectedSection, formattedDate);
+      } else {
+        data = await getAttendancePercentage(selectedClass, selectedSection);
+      }
+
       setAttendanceData(data);
     } catch (err) {
       console.error(err);
@@ -72,7 +84,7 @@ const TeacherAttendanceDownload = () => {
   };
 
   const handleDownload = async () => {
-    if (!selectedClass  || !selectedDate) {
+    if (!selectedClass || !selectedDate) {
       setError("Please select Class, Section, and Date.");
       return;
     }
@@ -82,14 +94,8 @@ const TeacherAttendanceDownload = () => {
 
     try {
       const formattedDate = formatDateToYMD(selectedDate);
+      const response = await downloadAttendanceCSV(selectedClass, selectedSection, formattedDate);
 
-      const response = await downloadAttendanceCSV(
-        selectedClass,
-        selectedSection,
-        formattedDate
-      );
-
-      // 🟢 Success case — download file
       const blob = new Blob([response.data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
@@ -100,9 +106,7 @@ const TeacherAttendanceDownload = () => {
       link.download = "attendance_report.xlsx";
       link.click();
       window.URL.revokeObjectURL(url);
-
     } catch (error) {
-      // 🔴 Handle error if file is not downloaded
       if (
         error.response &&
         error.response.data instanceof Blob &&
@@ -128,6 +132,35 @@ const TeacherAttendanceDownload = () => {
     }
   };
 
+  const handlePercentageChange = (admission_no, value) => {
+    setUpdatedPercentages(prev => ({ ...prev, [admission_no]: value }));
+  };
+
+  const handleUpdatePercentages = async () => {
+    try {
+      setUpdating(true);
+
+      const updates = attendanceData.data.map(async (student) => {
+        let { admission_no, percentage, present_days, total_days } = student;
+
+        if (percentage === undefined || percentage === null) {
+          const calculated = Math.round((present_days / (total_days || 1)) * 100);
+
+          // Call backend to save
+          return updateAttendancePercentage(admission_no, calculated);
+        }
+      });
+
+      await Promise.all(updates);
+      alert("All percentages updated successfully.");
+    } catch (err) {
+      console.error("Failed to update percentages:", err);
+      alert("Failed to update percentages.");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   return (
     <Container>
       <Header>
@@ -143,15 +176,12 @@ const TeacherAttendanceDownload = () => {
         <FormSection>
           <Label>
             Select Class:
-            <Select
-              value={selectedClass}
-              onChange={(e) => {
-                setSelectedClass(e.target.value);
-                setSelectedSection("");
-                setAttendanceData(null);
-                setError(null);
-              }}
-            >
+            <Select value={selectedClass} onChange={(e) => {
+              setSelectedClass(e.target.value);
+              setSelectedSection("");
+              setAttendanceData(null);
+              setError(null);
+            }}>
               <option value="">-- Select Class --</option>
               {classSections.map((cls) => (
                 <option key={cls.className} value={cls.className}>{cls.className}</option>
@@ -178,18 +208,35 @@ const TeacherAttendanceDownload = () => {
           </Label>
 
           <Label>
-            Select Date:
-            <InputDate
-              type="date"
-              value={selectedDate}
-              max={new Date().toISOString().split("T")[0]}
+            Report Type:
+            <Select
+              value={reportType}
               onChange={(e) => {
-                setSelectedDate(e.target.value);
+                setReportType(e.target.value);
                 setAttendanceData(null);
                 setError(null);
               }}
-            />
+            >
+              <option value="date">Date-wise</option>
+              <option value="all">All</option>
+            </Select>
           </Label>
+
+          {reportType === "date" && (
+            <Label>
+              Select Date:
+              <InputDate
+                type="date"
+                value={selectedDate}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  setAttendanceData(null);
+                  setError(null);
+                }}
+              />
+            </Label>
+          )}
 
           <FetchButton onClick={handleFetch} disabled={loading}>
             {loading ? "Loading..." : "Fetch Report"}
@@ -200,13 +247,17 @@ const TeacherAttendanceDownload = () => {
 
         {attendanceData && (
           <>
-            <Summary>
-              <p>Total Students : {attendanceData.summary.total_students}</p>
-              <p>
-                <Green>Present : {attendanceData.summary.present}</Green>{" "}
-                <Red>Absent : {attendanceData.summary.absent}</Red>
-              </p>
-            </Summary>
+            {attendanceData.summary && (
+              <Summary>
+                <p>Total Students : {attendanceData.summary.total_students}</p>
+                {reportType === "date" && (
+                  <p>
+                    <Green>Present : {attendanceData.summary.present}</Green>{" "}
+                    <Red>Absent : {attendanceData.summary.absent}</Red>
+                  </p>
+                )}
+              </Summary>
+            )}
 
             <TableSection>
               <h3>Attendance Details</h3>
@@ -216,6 +267,7 @@ const TeacherAttendanceDownload = () => {
                     <th>Student ID</th>
                     <th>Student Name</th>
                     <th>Attendance</th>
+                    {reportType === "all" && <th>Percentage</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -229,20 +281,38 @@ const TeacherAttendanceDownload = () => {
                             {student.status}
                           </StatusLabel>
                         </td>
+                        {reportType === "all" && (
+                          <td>
+                            <input
+                              type="number"
+                              value={updatedPercentages[student.admission_no] || student.percentage || 0}
+                              onChange={(e) => handlePercentageChange(student.admission_no, e.target.value)}
+                              style={{ width: "60px" }}
+                            />
+                            %
+                          </td>
+                        )}
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="3" style={{ textAlign: "center", color: "gray" }}>
+                      <td colSpan={reportType === "all" ? 4 : 3} style={{ textAlign: "center", color: "gray" }}>
                         No attendance details available.
                       </td>
                     </tr>
                   )}
                 </tbody>
               </StyledTable>
-              <DownloadButton onClick={handleDownload} disabled={loading}>
-                📥 Download Report
-              </DownloadButton>
+              {reportType === "date" && (
+                <DownloadButton onClick={handleDownload} disabled={loading}>
+                  📥 Download Report
+                </DownloadButton>
+              )}
+              {reportType === "all" && (
+                <DownloadButton onClick={handleUpdatePercentages} disabled={updating}>
+                  {updating ? "Updating..." : "✅ Update Percentages"}
+                </DownloadButton>
+              )}
             </TableSection>
           </>
         )}
@@ -252,6 +322,8 @@ const TeacherAttendanceDownload = () => {
 };
 
 export default TeacherAttendanceDownload;
+
+
 
 // Styled components declarations (you can keep your existing ones)
 
