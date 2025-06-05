@@ -82,24 +82,47 @@ const TeacherAttendanceDownload = () => {
 
     try {
       const formattedDate = formatDateToYMD(selectedDate);
-      const payload = {
-        className: selectedClass,
-        section: selectedSection,
-        date: formattedDate,
-      };
 
-      const response = await downloadAttendanceCSV(payload);
-      const blob = new Blob([response.data], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
+      const response = await downloadAttendanceCSV(
+        selectedClass,
+        selectedSection,
+        formattedDate
+      );
+
+      // 🟢 Success case — download file
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `attendance_report_${selectedClass}_${selectedSection}_${formattedDate}.csv`);
-      document.body.appendChild(link);
+      link.download = "attendance_report.xlsx";
       link.click();
-      document.body.removeChild(link);
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.message || "Failed to download attendance report.");
+      window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+      // 🔴 Handle error if file is not downloaded
+      if (
+        error.response &&
+        error.response.data instanceof Blob &&
+        error.response.data.type === "application/json"
+      ) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const errorMsg = JSON.parse(reader.result);
+            console.error("Server Error:", errorMsg.message);
+            alert(errorMsg.message);
+          } catch (jsonErr) {
+            alert(`Download failed. Error: ${reader.result}`);
+          }
+        };
+        reader.readAsText(error.response.data);
+      } else {
+        console.error("Unexpected Error:", error);
+        alert("Something went wrong while downloading the file.");
+      }
     } finally {
       setLoading(false);
     }

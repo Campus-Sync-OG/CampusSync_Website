@@ -281,11 +281,18 @@ export const createUser = ({ role, name, phone_number }) =>
     .post("/users/create-user", { role, name, phone_number })
     .then((res) => res.data);
 
-export const downloadAttendanceCSV = async (payload) => {
-  return api.post("/principal/attendance?download=true", payload, {
-    responseType: "blob", // Important for downloading files
+export const  downloadAttendanceCSV = async (className, section, date) => {
+  return api.get("/principal/class-attendance", {
+    params: {
+      class: className,
+      section,
+      date,
+      download: true,
+    },
+    responseType: "blob", // 💾 Important for downloading files
   });
 };
+
 
 export const getClassAttendance = async (className, section, date) => {
   return api.get("/principal/class-attendance", {
