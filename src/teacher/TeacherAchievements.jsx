@@ -1,7 +1,7 @@
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { fetchAchievements } from "../api/ClientApi";
@@ -10,17 +10,17 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 20px 20px;
   border-radius: 10px;
   color: white;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   margin: 0;
 `;
 
@@ -47,8 +47,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
-  background: white;
+  padding: 0 10px;
 `;
 
 const Table = styled.table`
@@ -88,13 +87,10 @@ const Note = styled.p`
   margin-top: 10px;
 `;
 
-
-
 const TeacherAchievements = () => {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
 
   useEffect(() => {
     // Fetch data from the backend API
@@ -108,8 +104,8 @@ const TeacherAchievements = () => {
         setError("Failed to fetch achievements");
         setLoading(false);
       });
-  }, []); 
-    const navigate = useNavigate();
+  }, []);
+  const navigate = useNavigate();
   return (
     <Container>
       <Header>
@@ -122,9 +118,11 @@ const TeacherAchievements = () => {
           </Link>
           <Divider />
           <Link to="/teacher-dashboard">
-          <Icons onClick={() => navigate(-1)}> {/* Navigate to the previous page */}
-          <img src={back} alt="back" />
-        </Icons>
+            <Icons onClick={() => navigate(-1)}>
+              {" "}
+              {/* Navigate to the previous page */}
+              <img src={back} alt="back" />
+            </Icons>
           </Link>
         </Wrapper>
       </Header>
@@ -148,7 +146,7 @@ const TeacherAchievements = () => {
             <tr key={achievement.id}>
               <td>{index + 1}</td>
               <td>{achievement.admission_no}</td>
-              <td>{achievement.student?.student_name || 'N/A'}</td>
+              <td>{achievement.student?.student_name || "N/A"}</td>
               <td>{achievement.className}</td>
               <td>
                 <a href="#">{achievement.section}</a>
@@ -162,9 +160,7 @@ const TeacherAchievements = () => {
         </tbody>
       </Table>
 
-      <Note>
-       {/* incase if you want to add a note */}
-      </Note>
+      <Note>{/* incase if you want to add a note */}</Note>
     </Container>
   );
 };

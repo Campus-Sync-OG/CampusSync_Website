@@ -13,16 +13,14 @@ import {
 
 // Styled Components
 const Container = styled.div`
-  margin: 20px;
-  padding: 20px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
+  padding: 0 15px;
+  
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const FormRow = styled.div`
@@ -83,8 +81,8 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 10px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   color: white;
   border-radius: 8px;
 `;

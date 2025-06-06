@@ -10,7 +10,7 @@ import backIcon from "../assets/images/back.png";
 
 // Styled Components
 const PageContainer = styled.div`
-  padding: 5px;
+  padding: 0 10px;
   font-family: "Poppins", sans-serif;
   max-height: 90vh;
   overflow-y: auto;
@@ -26,14 +26,15 @@ const Header = styled.header`
   align-items: center;
   background: linear-gradient(90deg, #002087, #df0043);
   color: white;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 1px 10px;
+  border-radius: 10px;
+  font-family: "Poppins";
 `;
 
 const HeaderTitle = styled.h2`
-  font-size: 20px;
-  font-family: Poppins, sans-serif;
-  font-weight: 400;
+  font-size: 26px;
+  font-family: "Poppins";
+  font-weight: 600;
 `;
 
 const IconsContainer = styled.div`

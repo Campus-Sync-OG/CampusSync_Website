@@ -133,23 +133,23 @@ export default TeacherAttendanceDownload;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 10px;
   max-width: 100%;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #d9534f);
+  background: linear-gradient(90deg, #002087, #df0043);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
-  border-radius: 12px;
+  padding: 1px 20px;
+  border-radius: 10px;
 `;
 
 const HeaderTitle = styled.h2`
   color: white;
-  font-size: 24px;
-  font-family: Poppins;
+  font-size: 26px;
+  font-family: "Poppins";
 `;
 
 const IconsContainer = styled.div`
@@ -165,8 +165,8 @@ const Divider = styled.div`
 `;
 
 const ImageIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 
