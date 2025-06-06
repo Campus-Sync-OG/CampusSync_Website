@@ -16,6 +16,7 @@ const AssignmentPage = () => {
   const [classSections, setClassSections] = useState([]);
   const [selectedClassSection, setSelectedClassSection] = useState([]);
   const [subjectList, setSelectedSubjects] = useState([]);
+  
 
 
   useEffect(() => {

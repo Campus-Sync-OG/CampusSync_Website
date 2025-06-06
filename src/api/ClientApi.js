@@ -344,4 +344,7 @@ export const fetchAllLeaves = () =>
 export const reviewLeave = (id, status) =>
   api.put(`/leaves/review/${id}`, { status }).then((res) => res.data);
 
+export const getAllUsers = () =>
+  api.get("/users/list").then((res) => res.data);
+
 export default api;
