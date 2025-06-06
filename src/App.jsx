@@ -73,11 +73,13 @@ import PrincipleAnnouncement from "./principal/PrincipalAnnouncement";
 import AdminFee from "./userpages/AdminFee";
 import SubjectList from "./userpages/SubjectList";
 import AddSubject from "./userpages/AddSubject";
-import TeacherAttendanceDownload from "./teacher/TeacherAttendancedownload";
+import TeacherAttendanceDownload from "./teacher/TeacherAttendanceDownload";
 import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
 import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
+import AttendnaceReport from "./principal/AttendanceReport";
+
 import LeaveApplication from "./teacher/LeaveApplication";
 import PrincipalLeavePanel  from "./principal/PrincipalLeavePanel"; 
 import StudentLeaveApplication from "./pages/StudentLeaveApplication";
@@ -684,6 +686,15 @@ const App = () => {
               </PrincipalLayout>
             }
           />
+
+            <Route
+            path="/principal-attendance"
+            element={
+              <principalLayout>
+                <AttendnaceReport />
+              </principalLayout>
+            }
+          />
            <Route
             path="/principal-notification"
             element={
@@ -692,6 +703,8 @@ const App = () => {
               </principalLayout>
             }
           />
+
+        
           <Route
             path="/principal-leave-panel"
             element={

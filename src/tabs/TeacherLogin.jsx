@@ -196,15 +196,14 @@ const ToggleIcon = styled.div`
     left: 45%;
     margin: 0;
   }
-`;
-
-
-export const ErrorMessage = styled.p`
+  `;
+  export const ErrorMessage = styled.p`{
   color: red;
   margin-top: 10px;
   margin-bottom: 10px;
   font-size: 14px;
   text-align: center;
+  }
 `;
 
 const TeacherLogin = () => {
