@@ -5,30 +5,30 @@ import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 
-
 const Container = styled.div`
-  padding: 20px;
+  padding: 0px 15px;
   font-family: sans-serif;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(to right, #002e9f, #cc027c);
-  padding: 10px;
-  color: white;
-  border-radius: 15px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 5px 20px;
+  border-radius: 15px;
+  color: white;
 `;
 
 const Title = styled.h1`
-  font-size: 26px;
+  color: #fff;
+  font-size: 25px;
   font-weight: bold;
+  font-family: "Poppins";
 `;
 
 const IconWrapper = styled.div`
   display: flex;
-  gap: 20px;
 `;
 
 const IconBtn = styled.img`
@@ -134,8 +134,6 @@ const Divider = styled.div`
   top: 5px;
 `;
 
-
-
 const UserCreation = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -168,9 +166,19 @@ const UserCreation = () => {
       <Header>
         <Title>Create User IDs</Title>
         <IconWrapper>
-          <IconBtn src={homeIcon} alt="Home" title="Home" onClick={() => navigate("/admin-dashboard")} />
+          <IconBtn
+            src={homeIcon}
+            alt="Home"
+            title="Home"
+            onClick={() => navigate("/admin-dashboard")}
+          />
           <Divider />
-          <IconBtn src={backIcon} alt="Back" title="Back" onClick={() => navigate(-1)} />
+          <IconBtn
+            src={backIcon}
+            alt="Back"
+            title="Back"
+            onClick={() => navigate(-1)}
+          />
         </IconWrapper>
       </Header>
 
@@ -179,7 +187,12 @@ const UserCreation = () => {
       <Form onSubmit={handleGenerate}>
         <FormGroup>
           <Label>Roles *</Label>
-          <Select name="role" value={formData.role} onChange={handleChange} required>
+          <Select
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            required
+          >
             <option value="">Select</option>
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
@@ -190,12 +203,26 @@ const UserCreation = () => {
 
         <FormGroup>
           <Label>Name *</Label>
-          <Input type="text" name="name" value={formData.name} onChange={handleChange} required placeholder="Type here" />
+          <Input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            placeholder="Type here"
+          />
         </FormGroup>
 
         <FormGroup>
           <Label>Phone Number *</Label>
-          <Input type="tel" name="phone_number" value={formData.phone_number} onChange={handleChange} required placeholder="Type here" />
+          <Input
+            type="tel"
+            name="phone_number"
+            value={formData.phone_number}
+            onChange={handleChange}
+            required
+            placeholder="Type here"
+          />
         </FormGroup>
 
         <ButtonGroup>
@@ -206,7 +233,9 @@ const UserCreation = () => {
       {showModal && (
         <ModalOverlay>
           <ModalBox>
-            <p><strong>ID and password is generated and sent</strong></p>
+            <p>
+              <strong>ID and password is generated and sent</strong>
+            </p>
             <CloseButton onClick={() => setShowModal(false)}>OK</CloseButton>
           </ModalBox>
         </ModalOverlay>

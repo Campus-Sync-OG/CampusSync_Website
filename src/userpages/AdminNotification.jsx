@@ -4,7 +4,6 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { useNavigate } from "react-router-dom";
 
-
 export const StyledSelect = styled.select`
   width: 100%;
   padding: 10px;
@@ -21,7 +20,7 @@ export const StyledSelect = styled.select`
 `;
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   background-color: white;
 `;
 
@@ -30,15 +29,15 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 20px;
+  padding: 1px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 30px;
 `;
 
 const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconGroup = styled.div`
@@ -75,7 +74,6 @@ const InputGroup = styled.div`
 const Label = styled.label`
   font-weight: 500;
   margin-bottom: 6px;
-  color: #333;
 `;
 
 const Input = styled.input`
@@ -183,12 +181,14 @@ const AdminNotification = () => {
 
     alert(
       "Notifications submitted:\n\n" +
-      notifications
-        .map(
-          (n, idx) =>
-            `#${idx + 1}\nTo: ${n.recipient}\nTitle: ${n.title}\nDescription: ${n.description}`
-        )
-        .join("\n\n")
+        notifications
+          .map(
+            (n, idx) =>
+              `#${idx + 1}\nTo: ${n.recipient}\nTitle: ${
+                n.title
+              }\nDescription: ${n.description}`
+          )
+          .join("\n\n")
     );
 
     setNotifications([{ title: "", description: "", recipient: "" }]);
@@ -226,7 +226,9 @@ const AdminNotification = () => {
               </Label>
               <StyledSelect
                 value={notification.recipient}
-                onChange={(e) => handleChange(index, "recipient", e.target.value)}
+                onChange={(e) =>
+                  handleChange(index, "recipient", e.target.value)
+                }
                 required
               >
                 <option value="">Select Recipient</option>
@@ -235,7 +237,6 @@ const AdminNotification = () => {
                 <option value="Principal">Principal</option>
                 <option value="Parent">General</option>
               </StyledSelect>
-
             </InputGroup>
 
             <InputGroup>
@@ -247,9 +248,7 @@ const AdminNotification = () => {
                 name="title"
                 placeholder="Type here"
                 value={notification.title}
-                onChange={(e) =>
-                  handleChange(index, "title", e.target.value)
-                }
+                onChange={(e) => handleChange(index, "title", e.target.value)}
                 required
               />
               {notifications.length > 1 && (

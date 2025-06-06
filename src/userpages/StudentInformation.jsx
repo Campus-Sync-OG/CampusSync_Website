@@ -10,15 +10,14 @@ import {
 } from "../api/ClientApi"; // Adjust the import based on your API structure
 
 const Container = styled.div`
-  padding: 20px;
-  font-family: sans-serif;
+  padding:  0 15px;
   flex-direction: column;
   height: 70vh;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(to right, #002e9f, #cc027c);
-  padding: 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 5px 20px;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -27,7 +26,9 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 22px;
+   font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Form = styled.form`

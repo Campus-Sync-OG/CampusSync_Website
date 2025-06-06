@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import home from "../assets/images/home.png";
@@ -9,17 +9,17 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 22px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 10px;
-  width: 95%;
+  
 `;
 
 const Title = styled.h2`
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: "Poppins";
   margin: 0;
 `;
 
@@ -46,8 +46,8 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
-  width: 95%;
+  padding: 0 15px;
+ 
 `;
 
 const Form = styled.form`
@@ -132,7 +132,6 @@ const RemoveButton = styled(Button)`
   margin-left: 1rem;
 `;
 
-
 const SubjectList = () => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -169,10 +168,10 @@ const SubjectList = () => {
     try {
       const filtered = subjects.filter((s) => s.trim() !== "");
       if (filtered.length === 0) return alert("Please enter valid subjects.");
-  
+
       await saveSubjects(filtered);
       alert("Subjects saved successfully!");
-  
+
       // Reset the form
       setSubjects([""]);
       setIsEditing(false);
@@ -213,7 +212,10 @@ const SubjectList = () => {
               />
             </Field>
             {isEditing && (
-              <RemoveButton type="button" onClick={() => handleRemoveSubject(index)}>
+              <RemoveButton
+                type="button"
+                onClick={() => handleRemoveSubject(index)}
+              >
                 Remove
               </RemoveButton>
             )}

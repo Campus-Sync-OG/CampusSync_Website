@@ -7,7 +7,7 @@ import { fetchFilteredSubjects } from "../api/ClientApi";
 
 // Styled Components
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   background: white;
 `;
 
@@ -15,17 +15,17 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  background: linear-gradient(90deg, #002087, #df0043);
   padding: 18px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 25px;
+  font-weight: 600;
   margin: 0;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`

@@ -5,15 +5,14 @@ import backIcon from "../assets/images/back.png";
 import { useNavigate } from "react-router-dom"; // Importing useNavigate
 
 const Container = styled.div`
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 0 15px;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(to right, #002e9f, #cc027c);
-  padding: 10px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 5px 20px;
   color: white;
-  border-radius: 15px;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,7 +20,8 @@ const Header = styled.div`
 
 const Title = styled.h1`
   font-size: 26px;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconWrapper = styled.div`
@@ -66,7 +66,7 @@ const FormGroup = styled.div`
 `;
 
 const Label = styled.label`
-  font-size: 16px;
+  font-size: 20px;
   margin-bottom: 8px;
 `;
 
