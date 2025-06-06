@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png";
 
 // Sample mock leave applications
 const mockLeaves = [
@@ -24,7 +26,6 @@ const mockLeaves = [
     status: "Pending",
   },
 ];
-
 
 const PrincipalLeavePanel = () => {
   const navigate = useNavigate();
