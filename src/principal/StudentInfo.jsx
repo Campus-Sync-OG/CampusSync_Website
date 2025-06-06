@@ -54,7 +54,7 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, rgb(1, 26, 109), #002087b0, #df0043);
+  background: linear-gradient(90deg, #002087, #df0043);
   padding: 25px 20px;
   border-radius: 10px;
   color: white;

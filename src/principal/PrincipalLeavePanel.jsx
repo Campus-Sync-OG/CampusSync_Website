@@ -137,7 +137,7 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  background: linear-gradient(90deg, #002087, #df0043);
   padding: 10px 20px;
   border-radius: 10px;
   color: white;
