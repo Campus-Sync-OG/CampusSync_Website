@@ -108,7 +108,6 @@ const MobileMenu = styled.div`
   @media (max-width: 380px) {
     left: 10px;
   }
-
 `;
 
 const MobileDropdown = styled.div`
@@ -496,11 +495,6 @@ const Sidebar = () => {
               {expanded && <DropdownIcon open={dropdown.profile} />}
             </SidebarItem>
             <Dropdown show={dropdown.profile} expanded={expanded}>
-              <SidebarItem to="/profile/teacher-profile" expanded={expanded}>
-                <ChildArrow />
-                <Label expanded={expanded}>My Profile</Label>
-              </SidebarItem>
-
               <SidebarItem
                 to="/profile/teacher-school-info"
                 expanded={expanded}

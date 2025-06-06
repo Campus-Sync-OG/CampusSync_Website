@@ -169,7 +169,7 @@ const SidebarContent = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-   background: grey;
+    background: grey;
 
     border-radius: 3px;
   }
@@ -478,10 +478,6 @@ const Sidebar = () => {
               {expanded && <DropdownIcon open={dropdown.profile} />}
             </SidebarItem>
             <Dropdown show={dropdown.profile} expanded={expanded}>
-              <SidebarItem to="/profile/my-profile" expanded={expanded}>
-                <ChildArrow />
-                <Label expanded={expanded}>My Profile</Label>
-              </SidebarItem>
               <SidebarItem to="/profile/parent-info" expanded={expanded}>
                 <ChildArrow />
                 <Label expanded={expanded}>Parent Info</Label>
