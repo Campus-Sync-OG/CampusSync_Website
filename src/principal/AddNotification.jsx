@@ -156,6 +156,8 @@ const NotificationForm = () => {
     section_id: ''
   });
 
+
+
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [classSections, setClassSections] = useState([]); // For class list
@@ -229,15 +231,9 @@ const NotificationForm = () => {
   // ✅ Form change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "role" && value !== "student" ? {
-        class_id: '',
-        section_id: '',
-        user_id: ''
-      } : {}),
-      ...(name === "class_id" ? { section_id: '', user_id: '' } : {})
     }));
   };
 
@@ -248,8 +244,9 @@ const NotificationForm = () => {
     const payload = {
       ...formData,
       roles: formData.role === "general" ? ["general"] : [formData.role],
-      user_id: formData.user_id || null
+      user_id: formData.role === "general" ? null : formData.user_id || null,
     };
+
 
     try {
       await postNotification(payload, userRole);
@@ -341,12 +338,12 @@ const NotificationForm = () => {
           </>
         )}
 
-        {formData.role && (
+        {formData.role && formData.role !== 'general' && (
           <FieldGroup>
             <Label>Select User</Label>
             <Select name="user_id" value={formData.user_id} onChange={handleChange}>
-              <option value="">All Users</option>
-              {filteredUsers.map(user => (
+              <option value="all">All Users</option>
+              {filteredUsers.map((user) => (
                 <option key={user.unique_id || user.id} value={user.unique_id || user.id}>
                   {user.name} ({user.unique_id || user.id})
                 </option>
@@ -354,7 +351,6 @@ const NotificationForm = () => {
             </Select>
           </FieldGroup>
         )}
-
         <FieldGroup>
           <Label>Title *</Label>
           <Input name="title" type="text" placeholder="Enter title" value={formData.title} onChange={handleChange} required />

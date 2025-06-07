@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png"; 
 
 const LeaveApplication = () => {
  const [formData, setFormData] = useState({
