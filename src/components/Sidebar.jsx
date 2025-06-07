@@ -441,6 +441,12 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Leave Application</Label>
             </SidebarItem>
+             <SidebarItem to="/study-module" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Study Module</Label>
+            </SidebarItem>
 
             <SidebarItem to="/gallery" onClick={() => setMobileOpen(false)}>
               <Icon>
@@ -565,6 +571,13 @@ const Sidebar = () => {
                 <RiCalendarEventFill />
               </Icon>
               <Label expanded={expanded}>Leave Application</Label>
+            </SidebarItem>
+
+             <SidebarItem to="/study-module" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Study Module</Label>
             </SidebarItem>
 
             <SidebarItem to="/gallery" expanded={expanded}>
