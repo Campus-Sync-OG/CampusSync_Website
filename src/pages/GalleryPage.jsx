@@ -8,11 +8,10 @@ import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-  max-width:100%;
-  margin: auto;
+  padding: 0 15px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
   height: 80vh; /* Full viewport height */
   overflow-y: auto; /* Enable scrolling */
   -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
@@ -28,17 +27,13 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 32, 135, 1) 31%,
-    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
-    /* 69% opacity */ #df0043 100%
-  );
-  border-radius: 8px 8px 0 0;
+  padding: 20px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  border-radius: 10px;
   color: white;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Icons = styled.div`

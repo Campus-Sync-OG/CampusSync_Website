@@ -208,7 +208,7 @@ export default CertificateRequest;
 const Container = styled.div`
   font-family: Poppins;
   margin: auto;
-  padding: 20px;
+  padding: 0 15px;
   @media (max-width: 426px) {
     max-height: 400px;
     overflow-y: auto;
@@ -302,22 +302,18 @@ const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 32, 135, 1) 31%,
-    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
-    /* 69% opacity */ #df0043 100%
-  );
-  padding: 10px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
-  height: 40px;
+  height: 80px;
   flex-shrink: 0;
 `;
 
 const Title = styled.h2`
   color: white;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   @media (max-width: 426px) {
     font-size: 14px;
   }

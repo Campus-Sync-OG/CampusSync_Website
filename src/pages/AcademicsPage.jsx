@@ -166,7 +166,7 @@ const styles = `
  
    .main-content {
      flex: 1;
-     padding: 20px;
+     padding: 0 15px;
      background-color: #f9f9f9;
      overflow-y:auto;
      scrollbar-width: none; /* Firefox */
@@ -181,15 +181,9 @@ const styles = `
      display: flex;
    align-items: center;
    justify-content: space-between;
-    background: linear-gradient(
-  90deg,
-  rgba(0, 32, 135, 1) 31%,    /* 100% opacity */
-  rgba(0, 32, 135, 0.69) 69%, /* 69% opacity */
-  #df0043 100%
-)
-);
-   padding: 10px 20px;
-   border-radius: 8px; /* Optional for rounded corners */
+    background: linear-gradient(90deg, #002087, #df0043);
+   padding: 15px 20px;
+   border-radius: 10px; /* Optional for rounded corners */
    color: white; /* Text color */
    }
    .nav-icons-container {
@@ -198,8 +192,9 @@ const styles = `
  }
  
   .nav-title {
-   font-size: 20px;
-   font-weight: bold;
+   font-size: 26px;
+   font-weight: 600;
+   font-family: "Poppins";
  }
  .nav-icon {
      width: 25px;

@@ -209,28 +209,24 @@ export default StudentFees;
 /* ───────────────────────────────── styled-components ───────────────────────────────── */
 
 const PageContainer = styled.div`
-  padding: 2rem;
+  padding: 0 15px;
   font-family: "Segoe UI", sans-serif;
 `;
 
 const HeaderBar = styled.div`
-  background: linear-gradient(
-    90deg,
-    rgba(0, 32, 135, 1) 31%,
-    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
-    /* 69% opacity */ #df0043 100%
-  );
-  border-radius: 8px 8px 8px 8px;
-  padding: 1rem 1rem;
+  background: linear-gradient(90deg, #002087, #df0043);
+  border-radius: 10px;
+  padding: 22px 20px;
   display: flex;
   align-items: center;
   color: white;
-  width: 100%;
 `;
 
 const HeaderTitle = styled.h2`
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 26px;
+  font-weight: 600px;
+  font-family: "Poppins";
   flex: 1;
 `;
 
@@ -337,7 +333,7 @@ const Icons2 = styled.div`
   height: 20px; /* Adjust to match the size of icons */
   background-color: white;
   right: 35px;
-  
+
   align-items: center; /* Ensures icons and divider are vertically aligned */
   img {
     position: relative;

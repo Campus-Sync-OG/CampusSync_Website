@@ -5,7 +5,11 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { getAllSubjects, getAssignmentsByAdmissionNo,studentUploadAssignment } from "../api/ClientApi"; // Adjust the import path as necessary
+import {
+  getAllSubjects,
+  getAssignmentsByAdmissionNo,
+  studentUploadAssignment,
+} from "../api/ClientApi"; // Adjust the import path as necessary
 
 // Global style to reset box sizing and overflow
 const GlobalStyle = createGlobalStyle`
@@ -42,18 +46,12 @@ const GlobalStyle = createGlobalStyle`
 const AppContainer = styled.div`
   width: 100%;
   height: 100vh;
-  font-family: Arial, sans-serif;
-  background: #fff;
+  padding: 0 15px;
 `;
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 32, 135, 1) 31%,
-    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
-    /* 69% opacity */ #df0043 100%
-  );
+  background: linear-gradient(90deg, #002087, #df0043);
   border-radius: 10px;
 `;
 
@@ -67,8 +65,9 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
@@ -297,7 +296,11 @@ const App = () => {
                               <img
                                 src="https://img.icons8.com/ios-glyphs/30/000000/download--v1.png"
                                 alt="Download"
-                                style={{ width: "20px", height: "20px", cursor: "pointer" }}
+                                style={{
+                                  width: "20px",
+                                  height: "20px",
+                                  cursor: "pointer",
+                                }}
                               />
                             </a>
                           ) : (
@@ -308,9 +311,13 @@ const App = () => {
                           <FileInput
                             type="file"
                             accept="application/pdf"
-                            onChange={(e) => handleFileChange(index, e.target.files[0])}
+                            onChange={(e) =>
+                              handleFileChange(index, e.target.files[0])
+                            }
                           />
-                          <UploadButton onClick={() => handleUpload(item, index)}>
+                          <UploadButton
+                            onClick={() => handleUpload(item, index)}
+                          >
                             Upload
                           </UploadButton>
                         </td>
@@ -323,7 +330,9 @@ const App = () => {
                   )}
                 </tbody>
               </AssignmentsTable>
-              <BackButton onClick={() => setSelectedSubject(null)}>Back</BackButton>
+              <BackButton onClick={() => setSelectedSubject(null)}>
+                Back
+              </BackButton>
             </>
           ) : (
             <>

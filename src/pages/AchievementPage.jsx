@@ -305,52 +305,38 @@ const styles = `
     flex-direction: column;
     height: 80vh;
     overflow:hidden;
-     margin: 0;
-  padding: 0;
+    padding: 0 15px;
   }
-
-  
-
 
   .main-content {
     flex: 1;
-    padding: 20px;
+    padding: 0 15px;
     background-color: #f9f9f9;
-    width: 100%;
-  box-sizing: border-box;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
-  }
-  
-    
+    display: none; 
   }
 
   .navigation-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background:linear-gradient(
-  90deg,
-  rgba(0, 32, 135, 1) 31%,    /* 100% opacity */
-  rgba(0, 32, 135, 0.69) 69%, /* 69% opacity */
-  #df0043 100%
-)
-;
-  padding: 10px 20px;
-  border-radius: 8px; /* Optional for rounded corners */
+  background:linear-gradient(90deg, #002087, #df0043);
+  padding: 22px 20px;
+  border-radius: 10px; 
   color: white; /* Text color */
   }
   .nav-icons-container {
   display: flex; /* Ensures icons and divider are in a horizontal row */
   align-items: center; /* Ensures vertical alignment of items */
+  gap:10px;
 }
 
  .nav-title {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   margin: 0;
 }
 .nav-icon {
@@ -369,12 +355,9 @@ const styles = `
 }
 
   .content {
-    background-color: white;
     padding: 10px;
     margin-top:10px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    
   }
 
   .achievement-form .form-row {

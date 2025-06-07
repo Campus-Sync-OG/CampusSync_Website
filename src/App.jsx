@@ -93,7 +93,7 @@ const Layout = ({ children }) => {
       <Header />
       <div style={{ display: "flex", flex: 1, height: "100vh" }}>
         <Sidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, padding: "20px" }}>
+        <div style={{ flex: 1, padding: "2px" }}>
           {children}
         </div>
       </div>

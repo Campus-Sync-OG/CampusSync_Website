@@ -8,13 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-  max-width: 900px;
   margin: auto;
-  background: white;
-  padding: 20px;
+  padding: 0 15px;
   border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  max-height: 80vh; /* Set max height for scroll */
   overflow-y: auto; /* Enable vertical scroll */
 
   /* Hide scrollbar */
@@ -30,25 +26,21 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 32, 135, 1) 31%,
-    /* 100% opacity */ rgba(0, 32, 135, 0.69) 69%,
-    /* 69% opacity */ #df0043 100%
-  );
-  border-radius: 8px 8px 0 0;
+  padding: 1px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  border-radius: 10px;
 `;
 
 const Title = styled.h2`
   color: white;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconWrapper = styled.div`
   display: flex;
-  gap: 15px;
+  gap: 10px;
 `;
 
 const Divider = styled.div`
