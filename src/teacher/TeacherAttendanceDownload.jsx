@@ -30,10 +30,12 @@ const TeacherAttendanceDownload = () => {
     const fetchClassSections = async () => {
       try {
         const data = await getAllClassSections();
-        const uniqueClasses = Array.from(new Set(data.map(item => item.className)))
-          .map(cls => ({ className: cls }));
-        const uniqueSections = Array.from(new Set(data.map(item => item.section_name)))
-          .map(sec => ({ section_name: sec }));
+        const uniqueClasses = Array.from(
+          new Set(data.map((item) => item.className))
+        ).map((cls) => ({ className: cls }));
+        const uniqueSections = Array.from(
+          new Set(data.map((item) => item.section_name))
+        ).map((sec) => ({ section_name: sec }));
         setClassSections(uniqueClasses);
         setSelectedClassSection(uniqueSections);
       } catch (error) {
@@ -45,7 +47,10 @@ const TeacherAttendanceDownload = () => {
 
   const formatDateToYMD = (dateStr) => {
     const d = new Date(dateStr);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(d.getDate()).padStart(2, "0")}`;
   };
 
   const handleFetch = async () => {
@@ -69,7 +74,11 @@ const TeacherAttendanceDownload = () => {
       let data;
       if (reportType === "date") {
         const formattedDate = formatDateToYMD(selectedDate);
-        data = await getClassAttendance(selectedClass, selectedSection, formattedDate);
+        data = await getClassAttendance(
+          selectedClass,
+          selectedSection,
+          formattedDate
+        );
       } else {
         data = await getAttendancePercentage(selectedClass, selectedSection);
       }
@@ -94,7 +103,11 @@ const TeacherAttendanceDownload = () => {
 
     try {
       const formattedDate = formatDateToYMD(selectedDate);
-      const response = await downloadAttendanceCSV(selectedClass, selectedSection, formattedDate);
+      const response = await downloadAttendanceCSV(
+        selectedClass,
+        selectedSection,
+        formattedDate
+      );
 
       const blob = new Blob([response.data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -133,7 +146,7 @@ const TeacherAttendanceDownload = () => {
   };
 
   const handlePercentageChange = (admission_no, value) => {
-    setUpdatedPercentages(prev => ({ ...prev, [admission_no]: value }));
+    setUpdatedPercentages((prev) => ({ ...prev, [admission_no]: value }));
   };
 
   const handleUpdatePercentages = async () => {
@@ -144,7 +157,9 @@ const TeacherAttendanceDownload = () => {
         let { admission_no, percentage, present_days, total_days } = student;
 
         if (percentage === undefined || percentage === null) {
-          const calculated = Math.round((present_days / (total_days || 1)) * 100);
+          const calculated = Math.round(
+            (present_days / (total_days || 1)) * 100
+          );
 
           // Call backend to save
           return updateAttendancePercentage(admission_no, calculated);
@@ -166,7 +181,11 @@ const TeacherAttendanceDownload = () => {
       <Header>
         <HeaderTitle>Attendance Report</HeaderTitle>
         <IconsContainer>
-          <ImageIcon src={homeIcon} alt="Home" onClick={() => navigate("/teacher-dashboard")} />
+          <ImageIcon
+            src={homeIcon}
+            alt="Home"
+            onClick={() => navigate("/teacher-dashboard")}
+          />
           <Divider />
           <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
         </IconsContainer>
@@ -176,15 +195,20 @@ const TeacherAttendanceDownload = () => {
         <FormSection>
           <Label>
             Select Class:
-            <Select value={selectedClass} onChange={(e) => {
-              setSelectedClass(e.target.value);
-              setSelectedSection("");
-              setAttendanceData(null);
-              setError(null);
-            }}>
+            <Select
+              value={selectedClass}
+              onChange={(e) => {
+                setSelectedClass(e.target.value);
+                setSelectedSection("");
+                setAttendanceData(null);
+                setError(null);
+              }}
+            >
               <option value="">-- Select Class --</option>
               {classSections.map((cls) => (
-                <option key={cls.className} value={cls.className}>{cls.className}</option>
+                <option key={cls.className} value={cls.className}>
+                  {cls.className}
+                </option>
               ))}
             </Select>
           </Label>
@@ -202,7 +226,9 @@ const TeacherAttendanceDownload = () => {
             >
               <option value="">-- Select Section --</option>
               {selectedClassSection.map((sec) => (
-                <option key={sec.section_name} value={sec.section_name}>{sec.section_name}</option>
+                <option key={sec.section_name} value={sec.section_name}>
+                  {sec.section_name}
+                </option>
               ))}
             </Select>
           </Label>
@@ -271,7 +297,8 @@ const TeacherAttendanceDownload = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(attendanceData.data) && attendanceData.data.length > 0 ? (
+                  {Array.isArray(attendanceData.data) &&
+                  attendanceData.data.length > 0 ? (
                     attendanceData.data.map((student, index) => (
                       <tr key={index}>
                         <td>{student.admission_no}</td>
@@ -285,8 +312,17 @@ const TeacherAttendanceDownload = () => {
                           <td>
                             <input
                               type="number"
-                              value={updatedPercentages[student.admission_no] || student.percentage || 0}
-                              onChange={(e) => handlePercentageChange(student.admission_no, e.target.value)}
+                              value={
+                                updatedPercentages[student.admission_no] ||
+                                student.percentage ||
+                                0
+                              }
+                              onChange={(e) =>
+                                handlePercentageChange(
+                                  student.admission_no,
+                                  e.target.value
+                                )
+                              }
                               style={{ width: "60px" }}
                             />
                             %
@@ -296,7 +332,10 @@ const TeacherAttendanceDownload = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={reportType === "all" ? 4 : 3} style={{ textAlign: "center", color: "gray" }}>
+                      <td
+                        colSpan={reportType === "all" ? 4 : 3}
+                        style={{ textAlign: "center", color: "gray" }}
+                      >
                         No attendance details available.
                       </td>
                     </tr>
@@ -309,7 +348,10 @@ const TeacherAttendanceDownload = () => {
                 </DownloadButton>
               )}
               {reportType === "all" && (
-                <DownloadButton onClick={handleUpdatePercentages} disabled={updating}>
+                <DownloadButton
+                  onClick={handleUpdatePercentages}
+                  disabled={updating}
+                >
                   {updating ? "Updating..." : "✅ Update Percentages"}
                 </DownloadButton>
               )}
@@ -323,13 +365,61 @@ const TeacherAttendanceDownload = () => {
 
 export default TeacherAttendanceDownload;
 
-
-
 // Styled components declarations (you can keep your existing ones)
 
 const Container = styled.div`
   padding: 0 10px;
   max-width: 100%;
+`;
+const Content = styled.div`
+  margin-top: 20px;
+`;
+const FormSection = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+`;
+const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+`;
+
+const Select = styled.select`
+  margin-top: 5px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+`;
+
+const InputDate = styled.input`
+  margin-top: 5px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+`;
+
+const FetchButton = styled.button`
+  padding: 8px 16px;
+  background-color: #002087;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  margin-top: 22px;
+  cursor: pointer;
+
+  &:disabled {
+    background-color: #7f8fa6;
+    cursor: not-allowed;
+  }
 `;
 
 const Header = styled.div`
@@ -364,9 +454,6 @@ const Divider = styled.div`
   background-color: #ccc;
   margin: 0 10px;
 `;
-
-
-
 
 const ErrorMsg = styled.p`
   color: red;
@@ -411,6 +498,8 @@ const DownloadButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  margin-top: 10px;
+
   &:disabled {
     background-color: #98d5a9;
     cursor: not-allowed;
@@ -457,4 +546,3 @@ const StatusLabel = styled.span`
   color: ${(props) => (props.present ? "green" : "red")};
   font-weight: bold;
 `;
-

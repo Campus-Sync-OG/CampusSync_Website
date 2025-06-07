@@ -17,6 +17,7 @@ const Header = styled.div`
   padding: 5px 20px;
   border-radius: 10px;
   color: white;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`

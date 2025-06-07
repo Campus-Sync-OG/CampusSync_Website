@@ -243,7 +243,7 @@ export default AssignmentPage;
 
 // Styled Components
 const PageContainer = styled.div`
-  width: 95%;
+
   padding: 0 10px;
   h3 {
     color: #002087;

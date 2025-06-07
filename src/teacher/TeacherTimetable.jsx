@@ -176,6 +176,7 @@ const Header = styled.div`
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
