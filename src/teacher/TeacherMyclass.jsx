@@ -11,7 +11,7 @@ import {
 
 // Styled Components for the page
 const StudentListContainer = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   @media (max-width: 426px) {
     padding: 0;
   }
@@ -21,11 +21,10 @@ const NavigationContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 12px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 8px 20px;
   border-radius: 8px;
   color: white;
-  margin-bottom: 20px;
 `;
 
 const NavIconsContainer = styled.div`
@@ -35,10 +34,9 @@ const NavIconsContainer = styled.div`
 `;
 
 const NavTitle = styled.h1`
-  font-size: 18px;
-  font-weight: bold;
-  margin: 0;
-  font-family: Poppins;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   @media (max-width: 426px) {
     font-size: 14px;
   }

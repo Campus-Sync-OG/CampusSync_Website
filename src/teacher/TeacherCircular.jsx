@@ -6,26 +6,23 @@ import back from "../assets/images/back.png";
 import { getAllClassSections, uploadCircular } from "../api/ClientApi";
 
 const Container = styled.div`
-  padding: 20px;
-  width: 95%;
-  margin: 0 auto;
+  padding: 0 15px;
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 5px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
@@ -41,12 +38,12 @@ const Divider = styled.div`
 `;
 
 const Icons = styled.div`
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   img {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
   }
 `;
 

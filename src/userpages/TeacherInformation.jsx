@@ -236,7 +236,7 @@ export default TeacherInformation;
 // ---------------- Styled Components ----------------
 
 const Container = styled.div`
-  padding: 1rem 2rem 0 2rem;
+  padding: 0rem 1rem;
   background: #f0f2f5;
   font-family: Arial, sans-serif;
   flex-direction: column;
@@ -244,19 +244,19 @@ const Container = styled.div`
 `;
 
 const NavContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+   display: flex;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 0px 20px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  color: white;
 `;
 
 const Title = styled.h2`
   color: white;
   font-size: 25px;
-  font-weight: bold;
+  font-weight: 600;
   font-family: Poppins;
 `;
 

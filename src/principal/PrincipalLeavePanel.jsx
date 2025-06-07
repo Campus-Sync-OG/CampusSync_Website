@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png";
 
 // Sample mock leave applications
 const mockLeaves = [
@@ -24,7 +26,6 @@ const mockLeaves = [
     status: "Pending",
   },
 ];
-
 
 const PrincipalLeavePanel = () => {
   const navigate = useNavigate();
@@ -137,7 +138,7 @@ export const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
+  background: linear-gradient(90deg, #002087, #df0043);
   padding: 10px 20px;
   border-radius: 10px;
   color: white;

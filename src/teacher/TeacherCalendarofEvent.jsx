@@ -15,18 +15,17 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
   color: white;
-  margin-left: 10px;
   margin-bottom: 10px;
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
@@ -52,8 +51,7 @@ const Icons = styled.div`
 `;
 
 const CalendarContainer = styled.div`
-  padding: 20px;
-  background: white;
+  padding: 0 15px;
   flex-direction: column;
   height: 70vh;
 `;

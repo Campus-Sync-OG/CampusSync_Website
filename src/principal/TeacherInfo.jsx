@@ -114,13 +114,15 @@ const TeacherInfo = () => {
       </TableContainer>
 
       {/* Pagination */}
-      <Pagination>
-        <span>Previous</span>
-        <Page active>1</Page>
-        <Page>2</Page>
-        <Page>3</Page>
-        <span>Next</span>
-      </Pagination>
+      {filteredTeachers.length > 10 && (
+        <Pagination>
+          <span>Previous</span>
+          <Page active>1</Page>
+          <Page>2</Page>
+          <Page>3</Page>
+          <span>Next</span>
+        </Pagination>
+      )}
     </Container>
   );
 };
@@ -137,7 +139,7 @@ const Container = styled.div`
 `;
 
 const NavContainer = styled.div`
-  background: linear-gradient(90deg, #002087, #d9534f);
+  background: linear-gradient(90deg, #002087, #df0043);
   padding: 10px 20px;
   border-radius: 10px;
   display: flex;

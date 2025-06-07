@@ -328,20 +328,23 @@ export default TeacherAttendanceDownload;
 // Styled components declarations (you can keep your existing ones)
 
 const Container = styled.div`
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 15px;
-  font-family: Arial, sans-serif;
+  padding: 0 10px;
+  max-width: 100%;
 `;
 
 const Header = styled.div`
+  background: linear-gradient(90deg, #002087, #df0043);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1px 20px;
+  border-radius: 10px;
 `;
 
 const HeaderTitle = styled.h2`
-  margin: 0;
+  color: white;
+  font-size: 26px;
+  font-family: "Poppins";
 `;
 
 const IconsContainer = styled.div`
@@ -362,48 +365,8 @@ const Divider = styled.div`
   margin: 0 10px;
 `;
 
-const Content = styled.div`
-  margin-top: 20px;
-`;
 
-const FormSection = styled.div`
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-`;
 
-const Label = styled.label`
-  display: flex;
-  flex-direction: column;
-  font-weight: bold;
-  margin-bottom: 10px;
-  min-width: 150px;
-`;
-
-const Select = styled.select`
-  padding: 6px;
-  margin-top: 5px;
-`;
-
-const InputDate = styled.input`
-  padding: 6px;
-  margin-top: 5px;
-`;
-
-const FetchButton = styled.button`
-  background-color: #007bff;
-  color: white;
-  padding: 8px 15px;
-  border: none;
-  margin-top: 22px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-weight: bold;
-  &:disabled {
-    background-color: #a0c8ff;
-    cursor: not-allowed;
-  }
-`;
 
 const ErrorMsg = styled.p`
   color: red;

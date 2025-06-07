@@ -8,17 +8,17 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 22px 20px;
   border-radius: 10px;
   color: white;
   margin-bottom: 10px;
-  width: 95%;
 `;
 
 const Title = styled.h2`
   font-size: 24px;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: "Poppins";
   margin: 0;
 `;
 
@@ -45,8 +45,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
-  width: 95%;
+  padding: 0 15px;
 `;
 
 const Form = styled.form`

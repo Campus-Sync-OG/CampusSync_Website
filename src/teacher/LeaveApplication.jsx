@@ -1,54 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png";
 
 const LeaveApplication = () => {
- const [formData, setFormData] = useState({
-  leaveType: "",
-  fromDate: "",
-  toDate: "",
-  reason: "",
-});
-const [errors, setErrors] = useState({});
-const [successMessage, setSuccessMessage] = useState("");
+  const [formData, setFormData] = useState({
+    leaveType: "",
+    fromDate: "",
+    toDate: "",
+    reason: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
 
-const validate = () => {
-  const newErrors = {};
-  if (!formData.leaveType) newErrors.leaveType = "Leave type is required";
-  if (!formData.fromDate) newErrors.fromDate = "From date is required";
-  if (!formData.toDate) newErrors.toDate = "To date is required";
-  if (!formData.reason) newErrors.reason = "Reason is required";
-  setErrors(newErrors);
-  return Object.keys(newErrors).length === 0;
-};
-
-const handleChange = (e) => {
-  const { name, value } = e.target;
-  setFormData((prev) => ({ ...prev, [name]: value }));
-};
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setSuccessMessage(""); // reset old message
-  if (!validate()) return;
-
-  const payload = {
-    from_date: formData.fromDate,
-    to_date: formData.toDate,
-    reason: formData.reason,
-    leave_type: formData.leaveType,
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.leaveType) newErrors.leaveType = "Leave type is required";
+    if (!formData.fromDate) newErrors.fromDate = "From date is required";
+    if (!formData.toDate) newErrors.toDate = "To date is required";
+    if (!formData.reason) newErrors.reason = "Reason is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  try {
-    const response = await applyTeacherLeave(payload);
-    if (response.success) {
-  alert("Leave applied successfully");
-  setFormData({ leaveType: "", fromDate: "", toDate: "", reason: "" });
-}
-  } catch (err) {
-    console.error("Error submitting leave:", err);
-    setSuccessMessage("Something went wrong while applying for leave.");
-  }
-};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSuccessMessage(""); // reset old message
+    if (!validate()) return;
+
+    const payload = {
+      from_date: formData.fromDate,
+      to_date: formData.toDate,
+      reason: formData.reason,
+      leave_type: formData.leaveType,
+    };
+
+    try {
+      const response = await applyTeacherLeave(payload);
+      if (response.success) {
+        alert("Leave applied successfully");
+        setFormData({ leaveType: "", fromDate: "", toDate: "", reason: "" });
+      }
+    } catch (err) {
+      console.error("Error submitting leave:", err);
+      setSuccessMessage("Something went wrong while applying for leave.");
+    }
+  };
   return (
     <>
       <Header>
@@ -122,14 +125,17 @@ export const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 20px 40px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 5px 18px;
   color: white;
+  border-radius: 10px;
+  margin: 0 15px;
 `;
 
 export const Title = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 export const Wrapper = styled.div`
@@ -154,10 +160,8 @@ export const Divider = styled.div`
 `;
 
 export const FormContainer = styled.div`
-  padding: 30px;
-  background-color: #ffffff;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-radius: 16px;
+  padding: 0 15px;
+  border-radius: 10px;
 `;
 
 export const FormTitle = styled.h2`

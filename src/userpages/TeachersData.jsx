@@ -33,7 +33,7 @@ const TeachersData = () => {
     <Container>
       {/* Top Navigation */}
       <NavContainer>
-        <Title>Teacher information</Title>
+        <Title>Teacher Data</Title>
         <IconsContainer>
           <ImageIcon
             src={homeIcon}
@@ -120,7 +120,7 @@ export default TeachersData;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   font-family: "Poppins", sans-serif;
   background: #f9f9f9;
   flex-direction: column;
@@ -128,8 +128,8 @@ const Container = styled.div`
 `;
 
 const NavContainer = styled.div`
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
@@ -138,8 +138,10 @@ const NavContainer = styled.div`
 
 const Title = styled.h2`
   color: #fff;
-  font-size: 18px;
-  font-weight: bold;
+   font-size: 25px;
+  font-weight: 600;
+  font-family: "Poppins";
+  
 `;
 
 const IconsContainer = styled.div`
