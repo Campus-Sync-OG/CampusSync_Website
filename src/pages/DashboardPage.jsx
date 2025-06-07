@@ -13,8 +13,10 @@ import Confetti from "react-confetti";
 // Styled Components
 const PageContainer = styled.div`
   flex: 1;
+  padding: 0 10px;
   width: 100%;
-  padding: 20px;
+  margin: 40px 15px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
