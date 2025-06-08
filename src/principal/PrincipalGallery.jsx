@@ -182,7 +182,7 @@ const PrincipalGallery = () => {
     <Container>
       {/* Header */}
      <Header>
-             <Title>Leave Applications</Title>
+             <Title>Gallery</Title>
              <Wrapper>
                <Link to="/principal-dashboard">
                  <Icons>

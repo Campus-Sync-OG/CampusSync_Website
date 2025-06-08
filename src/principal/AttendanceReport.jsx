@@ -13,8 +13,8 @@ import {
 const formatDateToYMD = (dateStr) => {
   const date = new Date(dateStr);
   const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, '0');
-  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
   return `${yyyy}/${mm}/${dd}`;
 };
 
@@ -34,10 +34,12 @@ const AttendnaceReport = () => {
     const fetchClassSections = async () => {
       try {
         const data = await getAllClassSections();
-        const uniqueClasses = Array.from(new Set(data.map(item => item.className)))
-          .map(cls => ({ className: cls }));
-        const uniqueSections = Array.from(new Set(data.map(item => item.section_name)))
-          .map(sec => ({ section_name: sec }));
+        const uniqueClasses = Array.from(
+          new Set(data.map((item) => item.className))
+        ).map((cls) => ({ className: cls }));
+        const uniqueSections = Array.from(
+          new Set(data.map((item) => item.section_name))
+        ).map((sec) => ({ section_name: sec }));
         setClassSections(uniqueClasses);
         setSelectedClassSection(uniqueSections);
       } catch (error) {
@@ -60,7 +62,11 @@ const AttendnaceReport = () => {
 
     try {
       const formattedDate = formatDateToYMD(selectedDate);
-      const data = await getClassAttendance(selectedClass, selectedSection, formattedDate);
+      const data = await getClassAttendance(
+        selectedClass,
+        selectedSection,
+        formattedDate
+      );
       console.log("Fetched Attendance Data:", data);
       setAttendanceData(data);
     } catch (err) {
@@ -72,7 +78,7 @@ const AttendnaceReport = () => {
   };
 
   const handleDownload = async () => {
-    if (!selectedClass  || !selectedDate) {
+    if (!selectedClass || !selectedDate) {
       setError("Please select Class, Section, and Date.");
       return;
     }
@@ -100,7 +106,6 @@ const AttendnaceReport = () => {
       link.download = "attendance_report.xlsx";
       link.click();
       window.URL.revokeObjectURL(url);
-
     } catch (error) {
       // 🔴 Handle error if file is not downloaded
       if (
@@ -131,12 +136,16 @@ const AttendnaceReport = () => {
   return (
     <Container>
       <Header>
-        <HeaderTitle>Attendance Report</HeaderTitle>
-        <IconsContainer>
-          <ImageIcon src={homeIcon} alt="Home" onClick={() => navigate("/teacher-dashboard")} />
+        <Title>Attendance Report</Title>
+        <Wrapper>
+          <Icons onClick={() => navigate("/teacher-dashboard")}>
+            <img src={homeIcon} alt="home" />
+          </Icons>
           <Divider />
-          <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
-        </IconsContainer>
+          <Icons onClick={() => navigate(-1)}>
+            <img src={backIcon} alt="back" />
+          </Icons>
+        </Wrapper>
       </Header>
 
       <Content>
@@ -154,7 +163,9 @@ const AttendnaceReport = () => {
             >
               <option value="">-- Select Class --</option>
               {classSections.map((cls) => (
-                <option key={cls.className} value={cls.className}>{cls.className}</option>
+                <option key={cls.className} value={cls.className}>
+                  {cls.className}
+                </option>
               ))}
             </Select>
           </Label>
@@ -172,7 +183,9 @@ const AttendnaceReport = () => {
             >
               <option value="">-- Select Section --</option>
               {selectedClassSection.map((sec) => (
-                <option key={sec.section_name} value={sec.section_name}>{sec.section_name}</option>
+                <option key={sec.section_name} value={sec.section_name}>
+                  {sec.section_name}
+                </option>
               ))}
             </Select>
           </Label>
@@ -219,7 +232,8 @@ const AttendnaceReport = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(attendanceData.data) && attendanceData.data.length > 0 ? (
+                  {Array.isArray(attendanceData.data) &&
+                  attendanceData.data.length > 0 ? (
                     attendanceData.data.map((student, index) => (
                       <tr key={index}>
                         <td>{student.admission_no}</td>
@@ -233,7 +247,10 @@ const AttendnaceReport = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="3" style={{ textAlign: "center", color: "gray" }}>
+                      <td
+                        colSpan="3"
+                        style={{ textAlign: "center", color: "gray" }}
+                      >
                         No attendance details available.
                       </td>
                     </tr>
@@ -256,42 +273,54 @@ export default AttendnaceReport;
 // Styled components declarations (you can keep your existing ones)
 
 const Container = styled.div`
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 15px;
+  padding: 0 15px;
   font-family: Arial, sans-serif;
 `;
 
 const Header = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 10px 20px;
+  border-radius: 15px;
+  font-family: "Poppins";
+  font-size: 20px;
+  color: white;
+  margin-bottom: 30px;
 `;
 
-const HeaderTitle = styled.h2`
-  margin: 0;
+const Title = styled.h2`
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
-const IconsContainer = styled.div`
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const ImageIcon = styled.img`
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
+  gap: 10px;
 `;
 
 const Divider = styled.div`
-  width: 1px;
-  height: 30px;
-  background-color: #ccc;
-  margin: 0 10px;
+  width: 2px;
+  height: 25px;
+  background-color: white;
+`;
+
+const Icons = styled.div`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const Content = styled.div`
-  margin-top: 20px;
+  margin-top: 50px;
+  padding: 0 15px;
 `;
 
 const FormSection = styled.div`
@@ -422,4 +451,3 @@ const StatusLabel = styled.span`
   color: ${(props) => (props.present ? "green" : "red")};
   font-weight: bold;
 `;
-

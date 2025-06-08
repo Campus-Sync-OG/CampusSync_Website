@@ -79,7 +79,6 @@ import ReceiptPage from "./principal/ViewReciept";
 import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
 import AttendnaceReport from "./principal/AttendanceReport";
-
 import LeaveApplication from "./teacher/LeaveApplication";
 import PrincipalLeavePanel  from "./principal/PrincipalLeavePanel"; 
 import StudentLeaveApplication from "./pages/StudentLeaveApplication";
@@ -559,6 +558,7 @@ const App = () => {
               </AdminLayout>
             }
           />
+          
           <Route
             path="/admin-promotion"
             element={
@@ -707,12 +707,12 @@ const App = () => {
             }
           />
 
-            <Route
+           <Route
             path="/principal-attendance"
             element={
-              <principalLayout>
+              <PrincipalLayout>
                 <AttendnaceReport />
-              </principalLayout>
+              </PrincipalLayout>
             }
           />
            <Route
