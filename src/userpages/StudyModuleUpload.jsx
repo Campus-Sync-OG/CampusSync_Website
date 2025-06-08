@@ -1,11 +1,50 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png";
 import { uploadStudyModule } from "../api/ClientApi"; // API function to handle module upload
 
 const Container = styled.div`
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 1rem;
+  padding: 0 15px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
+  border-radius: 15px;
+  color: white;
+`;
+
+const Title = styled.h2`
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 25px;
+  background-color: white;
+`;
+
+const Icons = styled.div`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const Card = styled.div`
@@ -13,12 +52,6 @@ const Card = styled.div`
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   padding: 24px;
   background-color: #fff;
-`;
-
-const Title = styled.h2`
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 16px;
 `;
 
 const Field = styled.div`
@@ -87,11 +120,16 @@ const StudyModuleUpload = () => {
   const handleFileChange = (e) => {
     setFormData((prev) => ({ ...prev, pdfFile: e.target.files[0] }));
   };
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.examType || !formData.subject || !formData.topicName || !formData.pdfFile) {
+    if (
+      !formData.examType ||
+      !formData.subject ||
+      !formData.topicName ||
+      !formData.pdfFile
+    ) {
       alert("Please fill all fields and select a PDF file.");
       return;
     }
@@ -123,10 +161,22 @@ const StudyModuleUpload = () => {
 
   return (
     <Container>
+      <Header>
+        <Title>Upload Study Modules</Title>
+        <Wrapper>
+          <Link to="/admin-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
       <Card>
         <form onSubmit={handleSubmit}>
-          <Title>Upload Study Module</Title>
-
           <Field>
             <Label>Exam Type</Label>
             <Select
@@ -166,7 +216,11 @@ const StudyModuleUpload = () => {
 
           <Field>
             <Label>Upload PDF</Label>
-            <Input type="file" accept="application/pdf" onChange={handleFileChange} />
+            <Input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+            />
             {formData.pdfFile && (
               <FileName>Selected: {formData.pdfFile.name}</FileName>
             )}
