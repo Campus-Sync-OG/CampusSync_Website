@@ -570,6 +570,19 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Leave Application</Label>
             </SidebarItem>
+            <SidebarItem to="/BusLocation" expanded={expanded}>
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={expanded}>track bus</Label>
+            </SidebarItem>
+            <SidebarItem to="/DriverLocation" expanded={expanded}>
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={expanded}>driver loc</Label>
+            </SidebarItem>
+
 
             <SidebarItem to="/gallery" expanded={expanded}>
               <Icon>

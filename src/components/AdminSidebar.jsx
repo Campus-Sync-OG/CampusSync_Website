@@ -533,7 +533,35 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>UserCreation</Label>
             </SidebarItem>
-
+<SidebarItem
+              as="div"
+              expanded={expanded}
+              onClick={() => toggleDropdown("transport")}
+            >
+              <Icon>
+                <FaSchool />
+              </Icon>
+              <Label expanded={expanded}>transport</Label>
+              {expanded && <DropdownIcon open={dropdown.transport} />}
+            </SidebarItem>
+            <Dropdown show={dropdown.transport} expanded={expanded}>
+              <SidebarItem to="/transport/addbus" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}>Add Bus</Label>
+              </SidebarItem>
+              <SidebarItem to="/transport/buses" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}>Buses</Label>
+              </SidebarItem>
+              <SidebarItem to="/transport/adddriver" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}>Add Driver</Label>
+              </SidebarItem>
+              <SidebarItem to="/transport/drivers" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}> Drivers</Label>
+              </SidebarItem>
+            </Dropdown>
             <SidebarItem to="/admin-gallery" expanded={expanded}>
               <Icon>
                 <RiGalleryLine />
