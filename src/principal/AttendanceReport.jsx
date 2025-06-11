@@ -1,24 +1,17 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import {
+  getAllClassSections,
+  getClassAttendance,
+  getAttendancePercentage,
+  downloadAttendanceCSV,
+  updateAttendancePercentage,
+} from "../api/ClientApi"; // make sure this has updateAttendancePercentage
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import {
-  getClassAttendance,
-  downloadAttendanceCSV,
-  getAllClassSections,
-} from "../api/ClientApi";
 
-// Utility to format date to YYYY/MM/DD
-const formatDateToYMD = (dateStr) => {
-  const date = new Date(dateStr);
-  const yyyy = date.getFullYear();
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  return `${yyyy}/${mm}/${dd}`;
-};
-
-const AttendnaceReport = () => {
+const TeacherAttendanceDownload = () => {
   const navigate = useNavigate();
 
   const [selectedClass, setSelectedClass] = useState("");
@@ -29,6 +22,9 @@ const AttendnaceReport = () => {
   const [attendanceData, setAttendanceData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [reportType, setReportType] = useState("date");
+  const [updatedPercentages, setUpdatedPercentages] = useState({});
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const fetchClassSections = async () => {
@@ -49,9 +45,23 @@ const AttendnaceReport = () => {
     fetchClassSections();
   }, []);
 
+  const formatDateToYMD = (dateStr) => {
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(d.getDate()).padStart(2, "0")}`;
+  };
+
   const handleFetch = async () => {
-    if (!selectedClass || !selectedDate) {
-      setError("Please select Class, Section, and Date.");
+    if (!selectedClass || !selectedSection) {
+      setError("Please select Class and Section.");
+      setAttendanceData(null);
+      return;
+    }
+
+    if (reportType === "date" && !selectedDate) {
+      setError("Please select a Date.");
       setAttendanceData(null);
       return;
     }
@@ -61,13 +71,18 @@ const AttendnaceReport = () => {
     setAttendanceData(null);
 
     try {
-      const formattedDate = formatDateToYMD(selectedDate);
-      const data = await getClassAttendance(
-        selectedClass,
-        selectedSection,
-        formattedDate
-      );
-      console.log("Fetched Attendance Data:", data);
+      let data;
+      if (reportType === "date") {
+        const formattedDate = formatDateToYMD(selectedDate);
+        data = await getClassAttendance(
+          selectedClass,
+          selectedSection,
+          formattedDate
+        );
+      } else {
+        data = await getAttendancePercentage(selectedClass, selectedSection);
+      }
+
       setAttendanceData(data);
     } catch (err) {
       console.error(err);
@@ -88,14 +103,12 @@ const AttendnaceReport = () => {
 
     try {
       const formattedDate = formatDateToYMD(selectedDate);
-
       const response = await downloadAttendanceCSV(
         selectedClass,
         selectedSection,
         formattedDate
       );
 
-      // 🟢 Success case — download file
       const blob = new Blob([response.data], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
@@ -107,7 +120,6 @@ const AttendnaceReport = () => {
       link.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      // 🔴 Handle error if file is not downloaded
       if (
         error.response &&
         error.response.data instanceof Blob &&
@@ -133,19 +145,50 @@ const AttendnaceReport = () => {
     }
   };
 
+  const handlePercentageChange = (admission_no, value) => {
+    setUpdatedPercentages((prev) => ({ ...prev, [admission_no]: value }));
+  };
+
+  const handleUpdatePercentages = async () => {
+    try {
+      setUpdating(true);
+
+      const updates = attendanceData.data.map(async (student) => {
+        let { admission_no, percentage, present_days, total_days } = student;
+
+        if (percentage === undefined || percentage === null) {
+          const calculated = Math.round(
+            (present_days / (total_days || 1)) * 100
+          );
+
+          // Call backend to save
+          return updateAttendancePercentage(admission_no, calculated);
+        }
+      });
+
+      await Promise.all(updates);
+      alert("All percentages updated successfully.");
+    } catch (err) {
+      console.error("Failed to update percentages:", err);
+      alert("Failed to update percentages.");
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   return (
     <Container>
       <Header>
-        <Title>Attendance Report</Title>
-        <Wrapper>
-          <Icons onClick={() => navigate("/teacher-dashboard")}>
-            <img src={homeIcon} alt="home" />
-          </Icons>
+        <HeaderTitle>Attendance Report</HeaderTitle>
+        <IconsContainer>
+          <ImageIcon
+            src={homeIcon}
+            alt="Home"
+            onClick={() => navigate("/teacher-dashboard")}
+          />
           <Divider />
-          <Icons onClick={() => navigate(-1)}>
-            <img src={backIcon} alt="back" />
-          </Icons>
-        </Wrapper>
+          <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
+        </IconsContainer>
       </Header>
 
       <Content>
@@ -191,18 +234,35 @@ const AttendnaceReport = () => {
           </Label>
 
           <Label>
-            Select Date:
-            <InputDate
-              type="date"
-              value={selectedDate}
-              max={new Date().toISOString().split("T")[0]}
+            Report Type:
+            <Select
+              value={reportType}
               onChange={(e) => {
-                setSelectedDate(e.target.value);
+                setReportType(e.target.value);
                 setAttendanceData(null);
                 setError(null);
               }}
-            />
+            >
+              <option value="date">Date-wise</option>
+              <option value="all">All</option>
+            </Select>
           </Label>
+
+          {reportType === "date" && (
+            <Label>
+              Select Date:
+              <InputDate
+                type="date"
+                value={selectedDate}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  setAttendanceData(null);
+                  setError(null);
+                }}
+              />
+            </Label>
+          )}
 
           <FetchButton onClick={handleFetch} disabled={loading}>
             {loading ? "Loading..." : "Fetch Report"}
@@ -213,13 +273,17 @@ const AttendnaceReport = () => {
 
         {attendanceData && (
           <>
-            <Summary>
-              <p>Total Students : {attendanceData.summary.total_students}</p>
-              <p>
-                <Green>Present : {attendanceData.summary.present}</Green>{" "}
-                <Red>Absent : {attendanceData.summary.absent}</Red>
-              </p>
-            </Summary>
+            {attendanceData.summary && (
+              <Summary>
+                <p>Total Students : {attendanceData.summary.total_students}</p>
+                {reportType === "date" && (
+                  <p>
+                    <Green>Present : {attendanceData.summary.present}</Green>{" "}
+                    <Red>Absent : {attendanceData.summary.absent}</Red>
+                  </p>
+                )}
+              </Summary>
+            )}
 
             <TableSection>
               <h3>Attendance Details</h3>
@@ -229,6 +293,7 @@ const AttendnaceReport = () => {
                     <th>Student ID</th>
                     <th>Student Name</th>
                     <th>Attendance</th>
+                    {reportType === "all" && <th>Percentage</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -243,12 +308,32 @@ const AttendnaceReport = () => {
                             {student.status}
                           </StatusLabel>
                         </td>
+                        {reportType === "all" && (
+                          <td>
+                            <input
+                              type="number"
+                              value={
+                                updatedPercentages[student.admission_no] ||
+                                student.percentage ||
+                                0
+                              }
+                              onChange={(e) =>
+                                handlePercentageChange(
+                                  student.admission_no,
+                                  e.target.value
+                                )
+                              }
+                              style={{ width: "60px" }}
+                            />
+                            %
+                          </td>
+                        )}
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td
-                        colSpan="3"
+                        colSpan={reportType === "all" ? 4 : 3}
                         style={{ textAlign: "center", color: "gray" }}
                       >
                         No attendance details available.
@@ -257,9 +342,19 @@ const AttendnaceReport = () => {
                   )}
                 </tbody>
               </StyledTable>
-              <DownloadButton onClick={handleDownload} disabled={loading}>
-                📥 Download Report
-              </DownloadButton>
+              {reportType === "date" && (
+                <DownloadButton onClick={handleDownload} disabled={loading}>
+                  📥 Download Report
+                </DownloadButton>
+              )}
+              {reportType === "all" && (
+                <DownloadButton
+                  onClick={handleUpdatePercentages}
+                  disabled={updating}
+                >
+                  {updating ? "Updating..." : "✅ Update Percentages"}
+                </DownloadButton>
+              )}
             </TableSection>
           </>
         )}
@@ -268,98 +363,96 @@ const AttendnaceReport = () => {
   );
 };
 
-export default AttendnaceReport;
+export default TeacherAttendanceDownload;
 
 // Styled components declarations (you can keep your existing ones)
 
 const Container = styled.div`
-  padding: 0 15px;
-  font-family: Arial, sans-serif;
+  padding: 0 10px;
+  max-width: 100%;
 `;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #df0043);
-  padding: 10px 20px;
-  border-radius: 15px;
-  font-family: "Poppins";
-  font-size: 20px;
-  color: white;
-  margin-bottom: 30px;
-`;
-
-const Title = styled.h2`
-  font-size: 26px;
-  font-weight: 600;
-  font-family: "Poppins";
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const Divider = styled.div`
-  width: 2px;
-  height: 25px;
-  background-color: white;
-`;
-
-const Icons = styled.div`
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-  img {
-    width: 100%;
-    height: 100%;
-  }
-`;
-
 const Content = styled.div`
-  margin-top: 50px;
-  padding: 0 15px;
+  margin-top: 20px;
 `;
-
 const FormSection = styled.div`
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
 `;
-
 const Label = styled.label`
   display: flex;
   flex-direction: column;
-  font-weight: bold;
-  margin-bottom: 10px;
-  min-width: 150px;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
 `;
 
 const Select = styled.select`
-  padding: 6px;
   margin-top: 5px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
 `;
 
 const InputDate = styled.input`
-  padding: 6px;
   margin-top: 5px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
 `;
 
 const FetchButton = styled.button`
-  background-color: #007bff;
+  padding: 8px 16px;
+  background-color: #002087;
   color: white;
-  padding: 8px 15px;
   border: none;
+  border-radius: 5px;
+  font-weight: 600;
   margin-top: 22px;
   cursor: pointer;
-  border-radius: 4px;
-  font-weight: bold;
+
   &:disabled {
-    background-color: #a0c8ff;
+    background-color: #7f8fa6;
     cursor: not-allowed;
   }
+`;
+
+const Header = styled.div`
+  background: linear-gradient(90deg, #002087, #df0043);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 20px;
+  border-radius: 10px;
+`;
+
+const HeaderTitle = styled.h2`
+  color: white;
+  font-size: 26px;
+  font-family: "Poppins";
+`;
+
+const IconsContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ImageIcon = styled.img`
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+`;
+
+const Divider = styled.div`
+  width: 1px;
+  height: 30px;
+  background-color: #ccc;
+  margin: 0 10px;
 `;
 
 const ErrorMsg = styled.p`
@@ -405,6 +498,8 @@ const DownloadButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  margin-top: 10px;
+
   &:disabled {
     background-color: #98d5a9;
     cursor: not-allowed;
