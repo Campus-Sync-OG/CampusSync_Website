@@ -1,15 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createFeeOrder, verifyFeePayment } from "../api/ClientApi";
+import { createFeeOrder, verifyFeePayment, getFeesByAdmissionNo } from "../api/ClientApi";
 
-// === Styled Components ===
 const Container = styled.div`
-  max-width: 750px;
+  padding: 20px;
+  max-width: 900px;
   margin: auto;
-  padding: 2rem;
-  background: #fefefe;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
 const Title = styled.h2`
@@ -17,249 +13,274 @@ const Title = styled.h2`
   margin-bottom: 1rem;
 `;
 
-const FormGroup = styled.div`
-  margin-bottom: 1rem;
-`;
-
 const Label = styled.label`
   display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.6rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  margin-top: 1rem;
 `;
 
 const Select = styled.select`
   width: 100%;
-  padding: 0.6rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 8px;
+  margin-top: 0.5rem;
 `;
 
-const Button = styled.button`
+const Input = styled.input`
   width: 100%;
-  padding: 0.75rem;
-  background-color: #0a66c2;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #094d96;
-  }
+  padding: 8px;
+  margin-top: 0.5rem;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.5rem;
-
+  margin: 1.5rem 0;
   th, td {
     border: 1px solid #ccc;
-    padding: 0.75rem;
-    text-align: left;
+    padding: 8px;
+    text-align: center;
   }
-
   th {
-    background: #f0f0f0;
+    background-color: #f4f4f4;
   }
 `;
 
+const Button = styled.button`
+  background-color: #0a66c2;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
 const FeePaymentForm = () => {
+  const defaultUniformRates = { shirt: 500, pant: 600, tie: 300, sweater: 700, shoes: 800 };
+
+  const [admission_no, setAdmissionNo] = useState(null);
+  const [student, setStudent] = useState({ admission_no: "", class_name: "", section_name: "" });
+  const [selectedFeeType, setSelectedFeeType] = useState("");
+  const [dueDates, setDueDates] = useState([]);
+  const [fees, setFees] = useState([]);
   const [formData, setFormData] = useState({
-    admission_no: "",
-    class_name: "",
-    section_name: "",
     due_date: "",
-    feestype: "",
-    pay_method: "Online",
-    tuition_amount: 1,
-    book_amount: 2000,
-    transport_amount: 3000,
-    uniform_details: { shirt: 500, pant: 600, tie: 300, sweater: 700, shoes: 800 },
     paid_amount: 0,
+    uniform_selection: {
+      shirt: false,
+      pant: false,
+      tie: false,
+      sweater: false,
+      shoes: false,
+    },
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const getDueDates = async () => {
+    return ["2025-06-15", "2025-07-01", "2025-08-01"];
+  };
 
-    if (name.includes("uniform_details.")) {
-      const key = name.split(".")[1];
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData?.unique_id) {
+      setAdmissionNo(userData.unique_id);
+    }
+    getDueDates().then(setDueDates);
+  }, []);
+  console.log("Admission No:", admission_no);
+
+  const handleFeeTypeChange = (e) => {
+    const type = e.target.value;
+    setSelectedFeeType(type);
+
+    // Find first unpaid matching fee
+    const unpaidFee = fees.find(f => f.feestype === type && (f.total_amount - (f.paid_amount || 0)) > 0);
+
+    if (unpaidFee) {
       setFormData((prev) => ({
         ...prev,
-        uniform_details: {
-          ...prev.uniform_details,
-          [key]: parseFloat(value) || 0,
-        },
+        due_date: unpaidFee.due_date,
+        paid_amount: unpaidFee.total_amount - (unpaidFee.paid_amount || 0)
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: name === "paid_amount" ? parseFloat(value) || 0 : value,
+        paid_amount: 0
       }));
     }
   };
 
-  const totalUniform = Object.values(formData.uniform_details).reduce((a, b) => a + b, 0);
-  const totalFee = (formData.tuition_amount || 0) + (formData.book_amount || 0) + (formData.transport_amount || 0) + totalUniform;
+
+  const handleFormChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    if (name.startsWith("uniform_selection.")) {
+      const key = name.split(".")[1];
+      setFormData(fd => ({
+        ...fd,
+        uniform_selection: { ...fd.uniform_selection, [key]: checked }
+      }));
+    } else {
+      setFormData(fd => ({
+        ...fd,
+        [name]: type === "number" ? parseFloat(value || 0) : value
+      }));
+    }
+  };
+
+  const getUniformTotal = () =>
+    Object.entries(formData.uniform_selection)
+      .filter(([, sel]) => sel)
+      .reduce((sum, [k]) => sum + defaultUniformRates[k], 0);
+
+  const getFeeSummaryAmount = () => {
+    switch (selectedFeeType) {
+      case "Tuition": return 100;
+      case "Books": return 100;
+      case "Transport": return 100;
+      case "Uniform": return getUniformTotal();
+      case "Multiple": return 100 + 100 + 100 + getUniformTotal();
+      default: return 0;
+    }
+  };
 
   const handlePayment = async (e) => {
     e.preventDefault();
-
+    const payload = {
+      ...student,
+      feestype: selectedFeeType,
+      due_date: formData.due_date,
+      paid_amount: formData.paid_amount,
+      uniform_details: formData.uniform_selection,
+      total_fee: getFeeSummaryAmount(),
+    };
     try {
-      const orderResponse = await createFeeOrder(formData);
-      const orderId = orderResponse.order.id;
-
+      const orderRes = await createFeeOrder(payload, admission_no);
       const options = {
-        key: "your_razorpay_key", // Replace with your Razorpay key
-        amount: orderResponse.order.amount,
+        key: "rzp_test_FFJX9DG8jkqrES",
+        amount: orderRes.order.amount,
         currency: "INR",
+        order_id: orderRes.order.id,
         name: "Your School Name",
         description: "Fee Payment",
-        order_id: orderId,
-        handler: async function (response) {
-          const paymentData = {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            admission_no: formData.admission_no,
+        handler: async (response) => {
+          const verify = {
+            ...response,
+            admission_no: student.admission_no
           };
-          const verifyResponse = await verifyFeePayment(paymentData);
+          const verifyResponse = await verifyFeePayment(verify);
           console.log("Payment verified", verifyResponse);
         },
         theme: { color: "#0a66c2" },
       };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error("Payment error:", error);
+      new window.Razorpay(options).open();
+    } catch (err) {
+      console.error("Payment error:", err);
     }
-  };
-
-  const renderFeeTable = () => {
-    const show = (type) => formData.feestype === type || formData.feestype === "Multiple";
-
-    return (
-      <Table>
-        <thead>
-          <tr>
-            <th>Fee Category</th>
-            <th>Amount (INR)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {show("Tuition") && (
-            <tr>
-              <td>Tuition</td>
-              <td>{formData.tuition_amount}</td>
-            </tr>
-          )}
-          {show("Books") && (
-            <tr>
-              <td>Books</td>
-              <td>{formData.book_amount}</td>
-            </tr>
-          )}
-          {show("Transport") && (
-            <tr>
-              <td>Transport</td>
-              <td>{formData.transport_amount}</td>
-            </tr>
-          )}
-          {show("Uniform") &&
-            Object.entries(formData.uniform_details).map(([item, amount]) => (
-              <tr key={item}>
-                <td>Uniform - {item.charAt(0).toUpperCase() + item.slice(1)}</td>
-                <td>{amount}</td>
-              </tr>
-            ))}
-          <tr>
-            <th>Total</th>
-            <th>{totalFee}</th>
-          </tr>
-        </tbody>
-      </Table>
-    );
   };
 
   return (
     <Container>
       <Title>Student Fee Payment</Title>
-      <form onSubmit={handlePayment}>
-        <FormGroup>
-          <Label>Admission Number</Label>
-          <Input name="admission_no" onChange={handleChange} required />
-        </FormGroup>
 
-        <FormGroup>
-          <Label>Class</Label>
-          <Input name="class_name" onChange={handleChange} required />
-        </FormGroup>
+      <Label>Select Fee Type</Label>
+      <Select value={selectedFeeType} onChange={handleFeeTypeChange}>
+        <option value="pay_method">-- Select Fee Type --</option>
+        <option value="Tuition">Tuition</option>
+        <option value="Books">Books</option>
+        <option value="Transport">Transport</option>
+        <option value="Uniform">Uniform</option>
+        <option value="Multiple">Multiple</option>
+      </Select>
 
-        <FormGroup>
-          <Label>Section</Label>
-          <Input name="section_name" onChange={handleChange} required />
-        </FormGroup>
+      {selectedFeeType && (
+        <>
+          <Table>
+            <thead>
+              <tr>
+                <th>Due Date</th>
+                <th>Receipt Book</th>
+                <th>Fee Name</th>
+                <th>Actual Amount</th>
+                <th>Paid Amount</th>
+                <th>Outstanding Amount</th>
+                <th>Select</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fees
+                .filter(f => selectedFeeType === "" || f.feestype === selectedFeeType)
+                .map((fee, index) => {
+                  const outstanding = fee.total_amount - (fee.paid_amount || 0);
+                  return (
+                    <tr key={index}>
+                      <td>{fee.due_date}</td>
+                      <td>{fee.receipt_book || `${fee.feestype.toUpperCase()} FEE (2025-26)`}</td>
+                      <td>{fee.term_name || `${fee.feestype} Fee`}</td>
+                      <td>{fee.total_amount} ₹</td>
+                      <td>{fee.paid_amount || 0} ₹</td>
+                      <td>{outstanding} ₹</td>
+                      <td>
+                        <input
+                          type="radio"
+                          name="selected_fee"
+                          onChange={() => {
+                            setFormData((prev) => ({
+                              ...prev,
+                              due_date: fee.due_date,
+                              paid_amount: outstanding
+                            }));
+                          }}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </Table>
 
-        <FormGroup>
+
+          {selectedFeeType === "Uniform" && (
+            <Table>
+              <thead>
+                <tr><th>Select</th><th>Item</th><th>Price</th></tr>
+              </thead>
+              <tbody>
+                {Object.entries(defaultUniformRates).map(([item, rate]) => (
+                  <tr key={item}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        name={`uniform_selection.${item}`}
+                        checked={formData.uniform_selection[item]}
+                        onChange={handleFormChange}
+                      />
+                    </td>
+                    <td>{item.charAt(0).toUpperCase() + item.slice(1)}</td>
+                    <td>{rate} ₹</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
+
           <Label>Due Date</Label>
-          <Input name="due_date" type="date" onChange={handleChange} required />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Fee Type</Label>
-          <Select name="feestype" onChange={handleChange} required>
-            <option value="">-- Select Fee Type --</option>
-            <option value="Tuition">Tuition</option>
-            <option value="Books">Books</option>
-            <option value="Transport">Transport</option>
-            <option value="Uniform">Uniform</option>
-            <option value="Multiple">Multiple</option>
+          <Select name="due_date" value={formData.due_date} onChange={handleFormChange} required>
+            <option value="">-- Select Due Date --</option>
+            {dueDates.map((d, i) => (
+              <option key={i} value={d}>{d}</option>
+            ))}
           </Select>
-        </FormGroup>
 
-        <FormGroup>
-          <Label>Payment Method</Label>
-          <Select name="pay_method" onChange={handleChange} required>
-            <option value="Online">Online</option>
-            <option value="Cash">Cash</option>
-            <option value="Cheque">Cheque</option>
-            <option value="UPI">UPI</option>
-          </Select>
-        </FormGroup>
-
-        {formData.feestype && renderFeeTable()}
-
-        <FormGroup>
-          <Label>Enter Paid Amount</Label>
+          <Label>Paid Amount</Label>
           <Input
             type="number"
             name="paid_amount"
-            placeholder="Amount you are paying"
-            onChange={handleChange}
+            value={formData.paid_amount}
+            onChange={handleFormChange}
             required
           />
-        </FormGroup>
 
-        <FormGroup>
-          <Label>Remaining Balance</Label>
-          <Input
-            value={Math.max(totalFee - formData.paid_amount, 0)}
-            readOnly
-            style={{ background: "#eee" }}
-          />
-        </FormGroup>
-
-        <Button type="submit">Proceed to Pay</Button>
-      </form>
+          <Button type="submit" onClick={handlePayment}>Proceed to Pay</Button>
+        </>
+      )}
     </Container>
   );
 };

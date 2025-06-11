@@ -371,14 +371,14 @@ export const fetchPDFUrlById = async (topicName) => {
 };
 
 // Create fee payment order via Razorpay
-export const createFeeOrder = async (formData) => {
+export const createFeeOrder = async (formData,admissio_no) => {
   const totalAmount =
     Number(formData.tuition_amount || 0) +
     Number(formData.book_amount || 0) +
     Number(formData.transport_amount || 0) +
     Object.values(formData.uniform_details || {}).reduce((a, b) => a + Number(b || 0), 0);
 
-  return api.post("/fee/create-order", {
+  return api.post(`/fee/create-order/${admissio_no}`, {
     ...formData,
     amount: totalAmount,
   }).then(res => res.data);
