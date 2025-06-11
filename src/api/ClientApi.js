@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -99,15 +99,13 @@ export const fetchAcademics = async () =>
   api.get("/academics/list").then((res) => res.data);
 
 export const bulkUpdateAttendance = (emp_id, payload, attendance_type) => {
-  return api.post(`/teachers/${emp_id}/upload-attendance`, {
-    ...payload,
-    attendance_type,
-  }).then((res) => res.data);
+  return api
+    .post(`/teachers/${emp_id}/upload-attendance`, {
+      ...payload,
+      attendance_type,
+    })
+    .then((res) => res.data);
 };
-
-
-
-
 
 export const getStudentsByClassAndSection = async (className, section = "") => {
   return api
@@ -119,7 +117,6 @@ export const getStudentsByClassAndSection = async (className, section = "") => {
     })
     .then((res) => res.data.students); // Extract the array of students
 };
-
 
 export const fetchStudents = () =>
   api.get("/students/list").then((res) => res.data);
@@ -281,7 +278,7 @@ export const createUser = ({ role, name, phone_number }) =>
     .post("/users/create-user", { role, name, phone_number })
     .then((res) => res.data);
 
-export const  downloadAttendanceCSV = async (className, section, date) => {
+export const downloadAttendanceCSV = async (className, section, date) => {
   return api.get("/principal/class-attendance", {
     params: {
       class: className,
@@ -293,36 +290,37 @@ export const  downloadAttendanceCSV = async (className, section, date) => {
   });
 };
 
-
 export const getClassAttendance = async (className, section, date) => {
-  return api.get("/principal/class-attendance", {
-    params: {
-      class: className,
-      section,
-      date,
-    },
-  }).then(res => res.data);
+  return api
+    .get("/principal/class-attendance", {
+      params: {
+        class: className,
+        section,
+        date,
+      },
+    })
+    .then((res) => res.data);
 };
 
 export const getAttendancePercentage = async (className, section) => {
-  return api.get("/principal/percentage", {
-    params: {
-      class: className,
-      section: section,
-    },
-  }).then(res => res.data);
+  return api
+    .get("/principal/percentage", {
+      params: {
+        class: className,
+        section: section,
+      },
+    })
+    .then((res) => res.data);
 };
 
 export const updateAttendancePercentage = async (admission_no, percentage) => {
-  return api.put("/update-percentage", {
-    admission_no,
-    percentage,
-  }).then((res) => res.data);
+  return api
+    .put("/update-percentage", {
+      admission_no,
+      percentage,
+    })
+    .then((res) => res.data);
 };
-
-
-
-
 
 export const studentUploadAssignment = (admission_no, formData) =>
   api
@@ -332,7 +330,6 @@ export const studentUploadAssignment = (admission_no, formData) =>
       },
     })
     .then((res) => res.data);
-
 
 export const applyTeacherLeave = (payload) =>
   api.post("/leaves/apply", payload).then((res) => res.data);
@@ -344,20 +341,20 @@ export const fetchAllLeaves = () =>
 export const reviewLeave = (id, status) =>
   api.put(`/leaves/review/${id}`, { status }).then((res) => res.data);
 
-export const getAllUsers = () =>
-  api.get("/users/list").then((res) => res.data);
+export const getAllUsers = () => api.get("/users/list").then((res) => res.data);
 
 export const uploadStudyModule = (formData) =>
-  api.post("/studymodules/modules", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  }).then((res) => res.data);
+  api
+    .post("/studymodules/modules", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => res.data);
 
 // Fetch subjects for a specific exam
 export const fetchSubjectsByExam = (examName) =>
   api.get(`/studymodules/modules/subjects/${examName}`).then((res) => res.data);
-
 
 // Fetch topics for a specific exam and subject
 export const fetchTopicsByExamAndSubject = (examName, subjectName) =>
@@ -371,23 +368,47 @@ export const fetchPDFUrlById = async (topicName) => {
 };
 
 // Create fee payment order via Razorpay
-export const createFeeOrder = async (formData,admissio_no) => {
+export const createFeeOrder = async (formData, admissio_no) => {
   const totalAmount =
     Number(formData.tuition_amount || 0) +
     Number(formData.book_amount || 0) +
     Number(formData.transport_amount || 0) +
-    Object.values(formData.uniform_details || {}).reduce((a, b) => a + Number(b || 0), 0);
+    Object.values(formData.uniform_details || {}).reduce(
+      (a, b) => a + Number(b || 0),
+      0
+    );
 
-  return api.post(`/fee/create-order/${admissio_no}`, {
-    ...formData,
-    amount: totalAmount,
-  }).then(res => res.data);
+  return api
+    .post(`/fee/create-order/${admissio_no}`, {
+      ...formData,
+      amount: totalAmount,
+    })
+    .then((res) => res.data);
 };
 
 // Verify payment after success
 export const verifyFeePayment = async (paymentData) => {
-  return api.post("/fee/verify-payment", paymentData).then(res => res.data);
+  return api.post("/fee/verify-payment", paymentData).then((res) => res.data);
 };
+
+// src/api/receipt.js or your central api file
+export const generateReceipt = async ({ admission_no, feestype }) => {
+  const res = await api.post("/fee/generate-receipt", {
+    admission_no,
+    feestype,
+  });
+
+  console.log("generateReceipt API response:", res.data);
+
+  if (res.data.success) {
+    // ✅ Use the full URL directly (no need to prepend origin)
+    const receiptUrl = res.data.receiptUrl;
+    return receiptUrl;
+  } else {
+    throw new Error(res.data.message || "Failed to generate receipt.");
+  }
+};
+
 
 
 // Inside component or event handler
