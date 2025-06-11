@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
+import { fetchAllLeaves, reviewLeave } from "../api/ClientApi"; // Adjust the import path as necessary
 
 // Sample mock leave applications
 const mockLeaves = [

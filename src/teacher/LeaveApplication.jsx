@@ -2,23 +2,40 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
-import back from "../assets/images/back.png"; 
+import back from "../assets/images/back.png";
+import { applyTeacherLeave } from "../api/ClientApi"; // Update with actual path
 
 const LeaveApplication = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     leaveType: "",
     fromDate: "",
     toDate: "",
     reason: "",
   });
+
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0];
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+    setFormData((prev) => ({
+      ...prev,
+      fromDate: today,
+      toDate: tomorrow,
+    }));
+  }, []);
 
   const validate = () => {
     const newErrors = {};
     if (!formData.leaveType) newErrors.leaveType = "Leave type is required";
     if (!formData.fromDate) newErrors.fromDate = "From date is required";
     if (!formData.toDate) newErrors.toDate = "To date is required";
+    if (formData.fromDate && formData.toDate && formData.toDate < formData.fromDate) {
+      newErrors.toDate = "To date cannot be before From date";
+    }
     if (!formData.reason) newErrors.reason = "Reason is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -31,7 +48,7 @@ const LeaveApplication = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMessage(""); // reset old message
+    setSuccessMessage("");
     if (!validate()) return;
 
     const payload = {
@@ -44,18 +61,21 @@ const LeaveApplication = () => {
     try {
       const response = await applyTeacherLeave(payload);
       if (response.success) {
-        alert("Leave applied successfully");
+        setSuccessMessage("Leave applied successfully.");
         setFormData({ leaveType: "", fromDate: "", toDate: "", reason: "" });
+      } else {
+        setSuccessMessage("Something went wrong while applying for leave.");
       }
     } catch (err) {
       console.error("Error submitting leave:", err);
       setSuccessMessage("Something went wrong while applying for leave.");
     }
   };
+
   return (
     <>
       <Header>
-        <Title>Teacher Leave application</Title>
+        <Title>Teacher Leave Application</Title>
         <Wrapper>
           <Link to="/teacher-dashboard">
             <Icons>
@@ -72,11 +92,7 @@ const LeaveApplication = () => {
       <FormContainer>
         <StyledForm onSubmit={handleSubmit}>
           <Label>Leave Type</Label>
-          <Select
-            name="leaveType"
-            value={formData.leaveType}
-            onChange={handleChange}
-          >
+          <Select name="leaveType" value={formData.leaveType} onChange={handleChange}>
             <option value="">Select Leave Type</option>
             <option value="Casual">Casual Leave</option>
             <option value="Sick">Sick Leave</option>
@@ -113,6 +129,7 @@ const LeaveApplication = () => {
           {errors.reason && <ErrorText>{errors.reason}</ErrorText>}
 
           <SubmitButton type="submit">Apply for Leave</SubmitButton>
+          {successMessage && <SuccessText>{successMessage}</SuccessText>}
         </StyledForm>
       </FormContainer>
     </>
@@ -120,6 +137,8 @@ const LeaveApplication = () => {
 };
 
 export default LeaveApplication;
+
+// Styled Components
 
 export const Header = styled.div`
   display: flex;
@@ -162,12 +181,6 @@ export const Divider = styled.div`
 export const FormContainer = styled.div`
   padding: 0 15px;
   border-radius: 10px;
-`;
-
-export const FormTitle = styled.h2`
-  text-align: center;
-  color: #2c3e50;
-  margin-bottom: 25px;
 `;
 
 export const StyledForm = styled.form`
@@ -223,4 +236,10 @@ export const ErrorText = styled.p`
   color: red;
   font-size: 14px;
   margin-top: 5px;
+`;
+
+export const SuccessText = styled.p`
+  color: green;
+  font-size: 15px;
+  margin-top: 10px;
 `;
