@@ -32,8 +32,8 @@ const LogoSection = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  cursor: "pointer"
-  
+  cursor: pointer;
+
   @media (max-width: 768px) {
     justify-content: flex-end;
     width: 100%;
