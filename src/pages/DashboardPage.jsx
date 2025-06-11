@@ -13,8 +13,8 @@ import Confetti from "react-confetti";
 // Styled Components
 const PageContainer = styled.div`
   flex: 1;
-  padding: 0 10px;
-  width: 100%;
+  padding: 0 15px;
+  width: 98.5%;
   margin: 40px 15px;
 
   display: flex;
@@ -483,25 +483,25 @@ const BirthdayButton = styled.button`
 const widgetConfig = [
   {
     title: "Academics",
-    color: "#77EAD0",
+    color: "#9865F6",
     image: academics,
     link: "/academics",
   },
   {
     title: "School Fees",
-    color: "#7E81EC",
+    color: "#FE8906",
     image: fees,
     link: "/fees",
   },
   {
     title: "Attendance",
-    color: "#BD7BF9",
+    color: "#D5321A",
     image: attendance,
     link: "/attendance",
   },
   {
     title: "Assignment",
-    color: "#FA807D",
+    color: "#5DC355",
     image: assignment,
     link: "/school/assignment",
   },

@@ -66,28 +66,28 @@ const PrincipalDashboard = () => {
         {/* 2x2 Grid Cards */}
         <CardGrid>
           <Link to="/principal-fees" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#FA807D">
+            <DashboardCard color="#9865F6">
               <p>Fees</p>
               <img src={princiattendanceImage} alt="Attendance" />
             </DashboardCard>
           </Link>
 
           <Link to="/principal-academics" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#7E81EC">
+            <DashboardCard color="#FE8906">
               <p>Academics</p>
               <img src={princiacademiImage} alt="academics" />
             </DashboardCard>
           </Link>
 
           <Link to="/principal-subjects" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#77EAD0">
+            <DashboardCard color="#D5321A">
               <p>Subjects</p>
               <img src={princisubjectImage} alt="Subjects" />
             </DashboardCard>
           </Link>
 
           <Link to="/principal-announcement" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#BD7BF9">
+            <DashboardCard color="#5DC355">
               <p>Announcement </p>
               <img src={princiannouncementImage} alt="Announcement" />
             </DashboardCard>
