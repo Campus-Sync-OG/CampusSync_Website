@@ -80,7 +80,7 @@ import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
 import AttendnaceReport from "./principal/AttendanceReport";
 import LeaveApplication from "./teacher/LeaveApplication";
-import PrincipalLeavePanel  from "./principal/PrincipalLeavePanel"; 
+import PrincipalLeavePanel from "./principal/PrincipalLeavePanel";
 import StudentLeaveApplication from "./pages/StudentLeaveApplication";
 import StudyModuleUpload from "./userpages/StudyModuleUpload";
 import StudyModulePage from "./pages/StudyModulePage";
@@ -89,41 +89,30 @@ import StudyModulePage from "./pages/StudyModulePage";
 const Layout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
-        <Sidebar style={{ flexShrink: 0, height: "100%" }} />
-        <div
-          style={{
-            flex: 1,
-            padding: "2px",
-            overflowY: "auto",
-            height: "100%",
-          }}
-        >
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <Sidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
   );
 };
 
-
 // 📌 Layout Component for Teachers (Uses TeacherSidebar)
 const TeacherLayout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
-        <TeacherSidebar style={{ flexShrink: 0, height: "100%" }} />
-        <div
-          style={{
-            flex: 1,
-            padding: "5px",
-            overflowY: "auto",
-            height: "100%",
-          }}
-        >
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <TeacherSidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
@@ -133,40 +122,29 @@ const TeacherLayout = ({ children }) => {
 const AdminLayout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
-        <AdminSidebar style={{ flexShrink: 0, height: "100%" }} />
-        <div
-          style={{
-            flex: 1,
-            padding: "0px",
-            overflowY: "auto",
-            height: "100%",
-          }}
-        >
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <AdminSidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
   );
 };
 
-
 const PrincipalLayout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
-        <PrincipalSidebar style={{ flexShrink: 0, height: "100%" }} />
-        <div
-          style={{
-            flex: 1,
-            padding: "1px",
-            overflowY: "auto",
-            height: "100%",
-          }}
-        >
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <PrincipalSidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
@@ -338,7 +316,7 @@ const App = () => {
             }
           />
 
-           <Route
+          <Route
             path="/study-module"
             element={
               <Layout>
@@ -491,7 +469,7 @@ const App = () => {
               </TeacherLayout>
             }
           />
-            <Route
+          <Route
             path="/teacher-levaveapplication"
             element={
               <TeacherLayout>
@@ -589,7 +567,7 @@ const App = () => {
               </AdminLayout>
             }
           />
-          
+
           <Route
             path="/admin-promotion"
             element={
@@ -639,7 +617,7 @@ const App = () => {
             }
           />
 
-            <Route
+          <Route
             path="/admin-studymodule"
             element={
               <AdminLayout>
@@ -738,7 +716,7 @@ const App = () => {
             }
           />
 
-           <Route
+          <Route
             path="/principal-attendance"
             element={
               <PrincipalLayout>
@@ -746,7 +724,7 @@ const App = () => {
               </PrincipalLayout>
             }
           />
-           <Route
+          <Route
             path="/principal-notification"
             element={
               <principalLayout>
@@ -755,7 +733,6 @@ const App = () => {
             }
           />
 
-        
           <Route
             path="/principal-leave-panel"
             element={
@@ -763,12 +740,7 @@ const App = () => {
                 <PrincipalLeavePanel />
               </PrincipalLayout>
             }
-
           />
-          
-         
-
-        
         </Routes>
       </div>
     </Router>
