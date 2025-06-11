@@ -464,7 +464,7 @@ const Header = ({
         navigate("/teacher-dashboard");
         break;
       case "student":
-        navigate("/student-dashboard");
+        navigate("/dashboard");
         break;
       default:
         navigate("/login");
