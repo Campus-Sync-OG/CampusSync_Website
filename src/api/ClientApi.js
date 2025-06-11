@@ -370,6 +370,26 @@ export const fetchPDFUrlById = async (topicName) => {
   return response.data; // expects { url: "..." }
 };
 
+// Create fee payment order via Razorpay
+export const createFeeOrder = async (formData) => {
+  const totalAmount =
+    Number(formData.tuition_amount || 0) +
+    Number(formData.book_amount || 0) +
+    Number(formData.transport_amount || 0) +
+    Object.values(formData.uniform_details || {}).reduce((a, b) => a + Number(b || 0), 0);
+
+  return api.post("/fee/create-order", {
+    ...formData,
+    amount: totalAmount,
+  }).then(res => res.data);
+};
+
+// Verify payment after success
+export const verifyFeePayment = async (paymentData) => {
+  return api.post("/fee/verify-payment", paymentData).then(res => res.data);
+};
+
+
 // Inside component or event handler
 
 export default api;

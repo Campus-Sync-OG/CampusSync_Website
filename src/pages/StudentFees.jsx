@@ -1,354 +1,267 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import home from "../assets/images/home.png";
-import back from "../assets/images/back.png";
-import { Link } from "react-router-dom";
-import {
-  getFeesByAdmissionNo,
-  fetchStudentByAdmissionNo,
-} from "../api/ClientApi";
-import { useNavigate } from "react-router-dom";
-import jsPDF from "jspdf";
+import { createFeeOrder, verifyFeePayment } from "../api/ClientApi";
 
-const StudentFees = () => {
-  const [feesData, setFeesData] = useState([]);
-  const [admission_no, setAdmissionNo] = useState(null);
-  const [receipts, setReceipts] = useState([]);
-  const [studentName, setStudentName] = useState("");
-  const [studentClass, setStudentClass] = useState("");
-  const [studentSection, setStudentSection] = useState("");
-  const navigate = useNavigate();
-
-  // Load admission number from localStorage
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData?.unique_id) {
-      setAdmissionNo(userData.unique_id);
-    }
-  }, []);
-
-  // Fetch fees data
-  useEffect(() => {
-    const fetchFees = async () => {
-      if (admission_no) {
-        console.log("Fetching fees for admission_no:", admission_no); // Log admission_no
-        try {
-          const data = await getFeesByAdmissionNo(admission_no);
-          setFeesData(data.data); // Store the fetched fees in state
-        } catch (error) {
-          console.error("Failed to fetch fees:", error);
-          alert("Failed to fetch fees data.");
-        }
-      } else {
-        console.log("No admission number found");
-      }
-    };
-
-    fetchFees();
-  }, [admission_no]);
-  useEffect(() => {
-    if (admission_no) {
-      fetchStudentByAdmissionNo(admission_no)
-        .then((data) => {
-          setStudentName(data.student_name || "N/A");
-          console.log("Student Name:", data.student_name);
-          setStudentClass(data.class || "N/A");
-          setStudentSection(data.section || "N/A");
-        })
-        .catch((err) => {
-          console.error("Error fetching student info:", err);
-        });
-    }
-  }, [admission_no]);
-
-  const handleViewReceipt = (receipt) => {
-    navigate("/student-receipt", { state: { receipt } });
-  };
-
-  const handleDownloadReceipt = (receipt) => {
-    const doc = new jsPDF();
-
-    // Get logged-in user details
-
-    // Header Title
-    doc.setFontSize(18);
-    doc.text("Fees Receipt", 80, 20);
-
-    // Student Information
-    doc.setFontSize(12);
-    let y = 35; // Y position
-    doc.text(`Student Name: ${studentName}`, 14, y);
-    y += 8;
-    doc.text(`Admission No: ${admission_no}`, 14, y);
-    y += 8;
-    doc.text(`Class: ${studentClass}`, 14, y);
-    y += 8;
-    doc.text(`Section: ${studentSection}`, 14, y);
-
-    // Receipt Details Title
-    y += 15;
-    doc.setFontSize(14);
-    doc.text("Receipt Details", 14, y);
-    y += 10;
-
-    // Draw table manually
-    const startX = 14;
-    const cellWidth = 38;
-    const rowHeight = 10;
-
-    const headers = [
-      "Sl No",
-      "Date",
-      "Receipt No",
-      "Amount Paid",
-      "Pay Method",
-    ];
-    const data = [
-      [
-        "1",
-        new Date(receipt.pay_date).toLocaleDateString(),
-        receipt.receipt_no,
-        receipt.paid_amount.toString(),
-        receipt.pay_method,
-      ],
-    ];
-
-    // Draw table header
-    headers.forEach((header, i) => {
-      doc.rect(startX + i * cellWidth, y, cellWidth, rowHeight); // Rectangle border
-      doc.text(header, startX + i * cellWidth + 2, y + 7); // Text inside cell
-    });
-
-    // Draw table body
-    y += rowHeight;
-    data.forEach((row) => {
-      row.forEach((text, i) => {
-        doc.rect(startX + i * cellWidth, y, cellWidth, rowHeight);
-        doc.text(text.toString(), startX + i * cellWidth + 2, y + 7);
-      });
-    });
-
-    // Save PDF
-    doc.save(`Receipt_${receipt.receipt_no}.pdf`);
-  };
-
-  return (
-    <PageContainer>
-      <HeaderBar>
-        <HeaderTitle>Fees</HeaderTitle>
-        <Link to="/dashboard">
-          <Icons>
-            <img src={home} alt="home" />
-          </Icons>
-        </Link>
-        <Link to="/dashboard">
-          <Icons2>
-            <img src={back} alt="back" />
-          </Icons2>
-        </Link>
-      </HeaderBar>
-
-      <SectionTitle>Fees Receipt Information</SectionTitle>
-
-      <Table>
-        <thead>
-          <tr>
-            <Th>Sl no</Th>
-            <Th>Date</Th>
-            <Th>Receipt Number</Th>
-            <Th>Status</Th>
-            <Th>Amount Paid</Th>
-            <Th>Payment Method</Th>
-            <Th> View Fees</Th>
-            <Th>Download Receipt</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {feesData.length === 0 ? (
-            <Tr>
-              <Td colSpan="7">No fees data available.</Td>
-            </Tr>
-          ) : (
-            feesData.map((r, idx) => (
-              <Tr key={r.receipt_no}>
-                <Td>{String(idx + 1).padStart(2, "0")}</Td>
-                <Td>{new Date(r.pay_date).toLocaleDateString()}</Td>
-                <Td>{r.receipt_no}</Td>
-                <Td>{r.status}</Td>
-                <Td>{r.paid_amount}</Td>
-                <Td>{r.pay_method}</Td>
-                <Td>
-                  <a
-                    onClick={() => handleViewReceipt(r)}
-                    style={{ cursor: "pointer", color: "#007bff" }}
-                  >
-                    View
-                  </a>
-                </Td>
-                <Td>
-                  <DownloadLink onClick={() => handleDownloadReceipt(r)}>
-                    Download
-                  </DownloadLink>
-                </Td>
-              </Tr>
-            ))
-          )}
-        </tbody>
-      </Table>
-
-      <Note>
-        <strong>Note:</strong> Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit.
-      </Note>
-    </PageContainer>
-  );
-};
-
-export default StudentFees;
-
-/* ───────────────────────────────── styled-components ───────────────────────────────── */
-
-const PageContainer = styled.div`
-  padding: 0 15px;
-  font-family: "Segoe UI", sans-serif;
-`;
-
-const HeaderBar = styled.div`
-  background: linear-gradient(90deg, #002087, #df0043);
+// === Styled Components ===
+const Container = styled.div`
+  max-width: 750px;
+  margin: auto;
+  padding: 2rem;
+  background: #fefefe;
   border-radius: 10px;
-  padding: 22px 20px;
-  display: flex;
-  align-items: center;
-  color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 `;
 
-const HeaderTitle = styled.h2`
-  margin: 0;
-  font-size: 26px;
-  font-weight: 600px;
-  font-family: "Poppins";
-  flex: 1;
+const Title = styled.h2`
+  text-align: center;
+  margin-bottom: 1rem;
 `;
 
-const SectionTitle = styled.h3`
-  margin: 1.5rem 0 1rem;
-  color: #1a237e;
+const FormGroup = styled.div`
+  margin-bottom: 1rem;
 `;
 
-const SearchInput = styled.input`
-  flex: 1 1 200px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  &::placeholder {
-    color: #999;
-  }
+const Label = styled.label`
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 `;
 
 const Select = styled.select`
-  flex: 0 1 150px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 `;
 
-const SearchButton = styled.button`
-  flex: 0 1 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5ch;
-  background: #d2005a;
+const Button = styled.button`
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #0a66c2;
   color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem;
   font-weight: bold;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #094d96;
+  }
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
-`;
+  margin-bottom: 1.5rem;
 
-const Th = styled.th`
-  background: #001d88;
-  color: white;
-  padding: 0.75rem;
-  text-align: left;
-`;
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.75rem;
+    text-align: left;
+  }
 
-const Tr = styled.tr`
-  &:nth-child(even) {
-    background: #fafafa;
+  th {
+    background: #f0f0f0;
   }
 `;
 
-const Td = styled.td`
-  padding: 0.75rem;
-  border-bottom: 1px solid #eee;
-`;
+const FeePaymentForm = () => {
+  const [formData, setFormData] = useState({
+    admission_no: "",
+    class_name: "",
+    section_name: "",
+    due_date: "",
+    feestype: "",
+    pay_method: "Online",
+    tuition_amount: 1,
+    book_amount: 2000,
+    transport_amount: 3000,
+    uniform_details: { shirt: 500, pant: 600, tie: 300, sweater: 700, shoes: 800 },
+    paid_amount: 0,
+  });
 
-const DownloadLink = styled.a`
-  color: #d2005a;
-  text-decoration: none;
-  font-weight: 500;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-const Note = styled.p`
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
-  color: #d2005a;
-`;
-
-const Icons = styled.div`
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  align-items: center; /* Ensures icons and divider are vertically aligned */
-
-  img {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    right: 47px;
-    top: 3px;
-    @media (max-width: 768px) {
-      width: 20px;
-      height: 20px;
+    if (name.includes("uniform_details.")) {
+      const key = name.split(".")[1];
+      setFormData((prev) => ({
+        ...prev,
+        uniform_details: {
+          ...prev.uniform_details,
+          [key]: parseFloat(value) || 0,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === "paid_amount" ? parseFloat(value) || 0 : value,
+      }));
     }
-  }
-`;
+  };
 
-const Icons2 = styled.div`
-  position: relative;
-  width: 3px; /* Thickness of the white line */
-  height: 20px; /* Adjust to match the size of icons */
-  background-color: white;
-  right: 35px;
+  const totalUniform = Object.values(formData.uniform_details).reduce((a, b) => a + b, 0);
+  const totalFee = (formData.tuition_amount || 0) + (formData.book_amount || 0) + (formData.transport_amount || 0) + totalUniform;
 
-  align-items: center; /* Ensures icons and divider are vertically aligned */
-  img {
-    position: relative;
-    width: 30px;
-    height: 30px;
-    left: 10px;
-    bottom: 5px;
+  const handlePayment = async (e) => {
+    e.preventDefault();
 
-    @media (max-width: 768px) {
-      width: 20px;
-      height: 20px;
+    try {
+      const orderResponse = await createFeeOrder(formData);
+      const orderId = orderResponse.order.id;
+
+      const options = {
+        key: "your_razorpay_key", // Replace with your Razorpay key
+        amount: orderResponse.order.amount,
+        currency: "INR",
+        name: "Your School Name",
+        description: "Fee Payment",
+        order_id: orderId,
+        handler: async function (response) {
+          const paymentData = {
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            admission_no: formData.admission_no,
+          };
+          const verifyResponse = await verifyFeePayment(paymentData);
+          console.log("Payment verified", verifyResponse);
+        },
+        theme: { color: "#0a66c2" },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Payment error:", error);
     }
-  }
+  };
 
-  @media (max-width: 768px) {
-    flex: none;
-  }
-`;
+  const renderFeeTable = () => {
+    const show = (type) => formData.feestype === type || formData.feestype === "Multiple";
+
+    return (
+      <Table>
+        <thead>
+          <tr>
+            <th>Fee Category</th>
+            <th>Amount (INR)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {show("Tuition") && (
+            <tr>
+              <td>Tuition</td>
+              <td>{formData.tuition_amount}</td>
+            </tr>
+          )}
+          {show("Books") && (
+            <tr>
+              <td>Books</td>
+              <td>{formData.book_amount}</td>
+            </tr>
+          )}
+          {show("Transport") && (
+            <tr>
+              <td>Transport</td>
+              <td>{formData.transport_amount}</td>
+            </tr>
+          )}
+          {show("Uniform") &&
+            Object.entries(formData.uniform_details).map(([item, amount]) => (
+              <tr key={item}>
+                <td>Uniform - {item.charAt(0).toUpperCase() + item.slice(1)}</td>
+                <td>{amount}</td>
+              </tr>
+            ))}
+          <tr>
+            <th>Total</th>
+            <th>{totalFee}</th>
+          </tr>
+        </tbody>
+      </Table>
+    );
+  };
+
+  return (
+    <Container>
+      <Title>Student Fee Payment</Title>
+      <form onSubmit={handlePayment}>
+        <FormGroup>
+          <Label>Admission Number</Label>
+          <Input name="admission_no" onChange={handleChange} required />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Class</Label>
+          <Input name="class_name" onChange={handleChange} required />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Section</Label>
+          <Input name="section_name" onChange={handleChange} required />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Due Date</Label>
+          <Input name="due_date" type="date" onChange={handleChange} required />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Fee Type</Label>
+          <Select name="feestype" onChange={handleChange} required>
+            <option value="">-- Select Fee Type --</option>
+            <option value="Tuition">Tuition</option>
+            <option value="Books">Books</option>
+            <option value="Transport">Transport</option>
+            <option value="Uniform">Uniform</option>
+            <option value="Multiple">Multiple</option>
+          </Select>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Payment Method</Label>
+          <Select name="pay_method" onChange={handleChange} required>
+            <option value="Online">Online</option>
+            <option value="Cash">Cash</option>
+            <option value="Cheque">Cheque</option>
+            <option value="UPI">UPI</option>
+          </Select>
+        </FormGroup>
+
+        {formData.feestype && renderFeeTable()}
+
+        <FormGroup>
+          <Label>Enter Paid Amount</Label>
+          <Input
+            type="number"
+            name="paid_amount"
+            placeholder="Amount you are paying"
+            onChange={handleChange}
+            required
+          />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Remaining Balance</Label>
+          <Input
+            value={Math.max(totalFee - formData.paid_amount, 0)}
+            readOnly
+            style={{ background: "#eee" }}
+          />
+        </FormGroup>
+
+        <Button type="submit">Proceed to Pay</Button>
+      </form>
+    </Container>
+  );
+};
+
+export default FeePaymentForm;
