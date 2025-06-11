@@ -6,7 +6,7 @@ import back from "../assets/images/back.png";
 import {
   fetchSubjectsByExam,
   fetchTopicsByExamAndSubject,
-  fetchPDFUrlById,
+  fetchPDFUrl, fetchSubTopics,
 } from "../api/ClientApi"; // Adjust path as needed
 
 const Container = styled.div`
@@ -106,26 +106,45 @@ const TopicTitle = styled.p`
   font-size: 16px;
 `;
 
-const PDFButton = styled.a`
+const PDFButton = styled.button`
+  margin-right: 10px;
   margin-top: 10px;
-  display: inline-block;
   background: #10b981;
   color: white;
   padding: 8px 14px;
   border-radius: 6px;
-  text-decoration: none;
   font-size: 14px;
+  border: none;
+  cursor: pointer;
 
   &:hover {
     background: #059669;
   }
 `;
 
+const DownloadLink = styled.a`
+  margin-top: 10px;
+  background: #3b82f6;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  text-decoration: none;
+  display: inline-block;
+
+  &:hover {
+    background: #2563eb;
+  }
+`;
+
 const StudyModuleBrowser = () => {
   const [selectedExam, setSelectedExam] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
+    const [selectedTopic, setSelectedTopic] = useState('');
   const [subjects, setSubjects] = useState([]);
   const [topics, setTopics] = useState([]);
+    const [subtopics, setSubTopics] = useState([]);
+    const [pdfUrlToView, setPdfUrlToView] = useState('');
 
   const examOptions = ["JEE", "NEET", "CET"];
 
@@ -135,9 +154,17 @@ const StudyModuleBrowser = () => {
         .then(setSubjects)
         .catch((err) => console.error("Failed to fetch subjects:", err));
       setSelectedSubject("");
+            setTopics([]);
+            setSelectedTopic('');
+            setSubTopics([]);
+            setPdfUrlToView('');
     } else {
       setSubjects([]);
       setSelectedSubject("");
+            setTopics([]);
+            setSelectedTopic('');
+            setSubTopics([]);
+            setPdfUrlToView('');
     }
   }, [selectedExam]);
 
@@ -146,24 +173,32 @@ const StudyModuleBrowser = () => {
       fetchTopicsByExamAndSubject(selectedExam, selectedSubject)
         .then(setTopics)
         .catch((err) => console.error("Failed to fetch topics:", err));
+            setSelectedTopic('');
+            setSubTopics([]);
+            setPdfUrlToView('');
     } else {
       setTopics([]);
+            setSelectedTopic('');
+            setSubTopics([]);
+            setPdfUrlToView('');
     }
   }, [selectedExam, selectedSubject]);
 
-  const handleViewPDF = async (topicName) => {
-    try {
-      const res = await fetchPDFUrlById(topicName); // calls `/modules/download/:topicName`
-      if (res.url) {
-        window.open(res.url, "_blank"); // ✅ Opens the PDF in a new tab
-      } else {
-        alert("PDF URL not found");
-      }
-    } catch (err) {
-      console.error("Failed to fetch PDF URL", err);
-      alert("Failed to open PDF");
-    }
-  };
+    useEffect(() => {
+        if (selectedExam && selectedSubject && selectedTopic) {
+            fetchSubTopics(selectedExam, selectedSubject, selectedTopic)
+                .then(setSubTopics)
+                .catch((err) => console.error('Failed to fetch subtopics:', err));
+            setPdfUrlToView('');
+        } else {
+            setSubTopics([]);
+            setPdfUrlToView('');
+        }
+    }, [selectedExam, selectedSubject, selectedTopic]);
+
+    const handleViewPDF = (url) => {
+        setPdfUrlToView(url);
+    };
 
   return (
     <Container>
@@ -216,36 +251,72 @@ const StudyModuleBrowser = () => {
         </Section>
       )}
 
-      {topics.length > 0 ? (
-        <Section>
-          <SectionTitle>Topics</SectionTitle>
-          {topics.map((topic, index) => (
-            <TopicCard key={index}>
-              <TopicTitle>{topic.topicName}</TopicTitle>
-              <PDFButton onClick={() => handleViewPDF(topic.topicName)}>
-                View PDF
-              </PDFButton>
-              <PDFButton
-                href={topic.pdfUrl}
-                download
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Download PDF
-              </PDFButton>
-            </TopicCard>
-          ))}
-        </Section>
-      ) : (
-        selectedExam &&
-        selectedSubject && (
-          <p style={{ textAlign: "center", color: "gray" }}>
-            No topics available for this selection.
-          </p>
-        )
-      )}
-    </Container>
-  );
+            {topics.length > 0 && (
+                <Section>
+                    <SectionTitle>Select Topic</SectionTitle>
+                    <ButtonGrid>
+                        {topics.map((topic) => (
+                            <Button
+                                key={topic}
+                                className={selectedTopic === topic ? 'selected' : ''}
+                                onClick={() => setSelectedTopic(topic)}
+                            >
+                                {topic}
+                            </Button>
+                        ))}
+                    </ButtonGrid>
+                </Section>
+            )}
+
+            {subtopics.length > 0 ? (
+                <Section>
+                    <SectionTitle>Subtopics</SectionTitle>
+                    {subtopics.map((sub, index) => (
+                        <TopicCard key={index}>
+                            <TopicTitle>{sub.subtitles}</TopicTitle>
+
+                            <PDFButton onClick={() => handleViewPDF(sub.pdfUrl)}>
+                                View PDF
+                            </PDFButton>
+
+                            <DownloadLink
+                                href={sub.pdfUrl}
+                                download
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Download PDF
+                            </DownloadLink>
+                        </TopicCard>
+                    ))}
+                </Section>
+            ) : (
+                selectedExam && selectedSubject && selectedTopic && (
+                    <p style={{ textAlign: 'center', color: 'gray' }}>
+                        No subtopics available for this selection.
+                    </p>
+                )
+            )}
+
+            {pdfUrlToView && (
+                <Section>
+                    <SectionTitle>PDF Viewer</SectionTitle>
+                    <div style={{ height: '600px', border: '1px solid #ccc' }}>
+                        <iframe
+                            src={`https://docs.google.com/gview?url=${encodeURIComponent(pdfUrlToView)}&embedded=true`}
+                            title="PDF Viewer"
+                            width="100%"
+                            height="100%"
+                            style={{ border: 'none' }}
+                        />
+                    </div>
+                    <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                        <Button onClick={() => setPdfUrlToView('')}>Close PDF</Button>
+                    </div>
+                </Section>
+            )}
+        </Container>
+    );
 };
 
 export default StudyModuleBrowser;

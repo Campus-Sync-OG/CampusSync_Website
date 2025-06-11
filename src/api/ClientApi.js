@@ -365,10 +365,20 @@ export const fetchTopicsByExamAndSubject = (examName, subjectName) =>
     .get(`/studymodules/modules/topics/${examName}/${subjectName}`)
     .then((res) => res.data);
 
-export const fetchPDFUrlById = async (topicName) => {
-  const response = await api.get(`/studymodules/modules/download/${topicName}`);
+export const fetchPDFUrlById = async (subtitles) => {
+  const response = await api.get(`/studymodules/modules/download/${subtitles}`);
   return response.data; // expects { url: "..." }
 };
+export const fetchPDFUrl = async (subtitles) => {
+  const response = await api.get(`/studymodules/modules/view/${subtitles}`);
+  return response.data; // expects { url: "..." }
+};
+
+
+export const  fetchSubTopics= (examName, subjectName,topicName) =>
+  api
+    .get(`/studymodules/modules/topics/${examName}/${subjectName}/${topicName}`)
+    .then((res) => res.data);
 
 // Create fee payment order via Razorpay
 export const createFeeOrder = async (formData) => {
