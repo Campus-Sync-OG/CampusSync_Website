@@ -32,7 +32,8 @@ const LogoSection = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-
+  cursor: "pointer"
+  
   @media (max-width: 768px) {
     justify-content: flex-end;
     width: 100%;
@@ -369,6 +370,7 @@ const Header = ({
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const back_location = useLocation();
+  const [role, setRole] = useState(null);
 
   const searchRoutes = {
     dashboard: "/dashboard",
@@ -392,7 +394,7 @@ const Header = ({
 
   const handleSearch = () => {
     const key = searchTerm.toLowerCase().trim();
-    const role = localStorage.getItem("role");
+    const Role = localStorage.getItem("role")?.toLowerCase();
 
     const studentRoutes = [
       "dashboard",
@@ -417,12 +419,11 @@ const Header = ({
       "student details",
     ];
 
-    const isStudentRoute = role !== "teacher" && studentRoutes.includes(key);
-    const isTeacherRoute = role === "teacher" && teacherRoutes.includes(key);
+    const isStudentRoute = Role !== "teacher" && studentRoutes.includes(key);
+    const isTeacherRoute = Role === "teacher" && teacherRoutes.includes(key);
 
     if (isStudentRoute || isTeacherRoute) {
-      const path = searchRoutes[key];
-      navigate(path);
+      navigate(searchRoutes[key]);
       setSearchTerm("");
     } else {
       alert("Page not found or access denied.");
@@ -433,34 +434,60 @@ const Header = ({
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
 
   const handleViewAllNotifications = () => {
-    const rawRole = localStorage.getItem("role");
-    console.log("Raw role:", rawRole, typeof rawRole);
-
-    const role = rawRole?.trim().toLowerCase();
-    console.log("Normalized role:", role);
-
-    if (role === "teacher") {
-      console.log("Navigating to teacher page");
+    const Role = localStorage.getItem("role")?.trim().toLowerCase();
+    if (Role === "teacher") {
       navigate("/teacher-notification");
     } else {
-      console.log("Navigating to student/other notification page");
       navigate("/notifications");
     }
   };
+  const handleProfileClick = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = user?.role;
 
+    console.log("Profile click role:", role);
 
+    if (!role) {
+      console.warn("Role not set, redirecting to login");
+      navigate("/login");
+      return;
+    }
+
+    switch (role) {
+      case "admin":
+        navigate("/admin-dashboard");
+        break;
+      case "principal":
+        navigate("/principal-dashboard");
+        break;
+      case "teacher":
+        navigate("/teacher-dashboard");
+        break;
+      case "student":
+        navigate("/student-dashboard");
+        break;
+      default:
+        navigate("/login");
+    }
+  };
 
   useEffect(() => {
     setIsPopupVisible(false);
   }, [back_location]);
 
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    console.log("Profile click role:", storedRole);
+    setRole(storedRole?.toLowerCase());
+  }, []);
+
   return (
     <>
       <HeaderContainer>
-        <LogoSection>
+        <LogoSection onClick={handleProfileClick}>
           <Logo src={logo} alt="Campus Sync Logo" />
           <Divider />
-          <SchoolDetails>
+          <SchoolDetails onClick={handleProfileClick}>
             <SlogoImage src={schoolLogo} alt="School Logo" />
             <div>
               <h1>{schoolName}</h1>
@@ -497,12 +524,10 @@ const Header = ({
           </MenuButton>
 
           <DropdownMenu visible={isDropdownVisible}>
-            <Link to="/profile/my-profile" style={{ textDecoration: "none" }}>
-              <DropdownItem>
-                <CgProfile />
-                Profile
-              </DropdownItem>
-            </Link>
+            <DropdownItem onClick={handleProfileClick}>
+              <CgProfile />
+              Profile
+            </DropdownItem>
             <Link to="/settings" style={{ textDecoration: "none" }}>
               <DropdownItem>
                 <FiSettings />
