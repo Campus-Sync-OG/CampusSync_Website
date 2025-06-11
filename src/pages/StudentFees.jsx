@@ -118,7 +118,7 @@ const FeePaymentForm = () => {
       const orderId = orderResponse.order.id;
 
       const options = {
-        key: "your_razorpay_key", // Replace with your Razorpay key
+        key: "rzp_test_FFJX9DG8jkqrES", // Replace with your Razorpay key
         amount: orderResponse.order.amount,
         currency: "INR",
         name: "Your School Name",
