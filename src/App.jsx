@@ -90,37 +90,39 @@ const Layout = ({ children }) => {
   return (
     <>
       <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <Sidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, padding: "2px" }}>
+      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
+        <Sidebar style={{ flexShrink: 0, height: "100%" }} />
+        <div
+          style={{
+            flex: 1,
+            padding: "2px",
+            overflowY: "auto",
+            height: "100%",
+          }}
+        >
           {children}
         </div>
       </div>
     </>
   );
 };
+
 
 // 📌 Layout Component for Teachers (Uses TeacherSidebar)
 const TeacherLayout = ({ children }) => {
   return (
     <>
       <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <TeacherSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "5px" }}>
-          {children}
-        </div>
-      </div>
-    </>
-  );
-};
-const AdminLayout = ({ children }) => {
-  return (
-    <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <AdminSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "0px" }}>
+      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
+        <TeacherSidebar style={{ flexShrink: 0, height: "100%" }} />
+        <div
+          style={{
+            flex: 1,
+            padding: "5px",
+            overflowY: "auto",
+            height: "100%",
+          }}
+        >
           {children}
         </div>
       </div>
@@ -128,13 +130,42 @@ const AdminLayout = ({ children }) => {
   );
 };
 
+const AdminLayout = ({ children }) => {
+  return (
+    <>
+      <Header />
+      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
+        <AdminSidebar style={{ flexShrink: 0, height: "100%" }} />
+        <div
+          style={{
+            flex: 1,
+            padding: "0px",
+            overflowY: "auto",
+            height: "100%",
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    </>
+  );
+};
+
+
 const PrincipalLayout = ({ children }) => {
   return (
     <>
       <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <PrincipalSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "1px" }}>
+      <div style={{ display: "flex", flex: 1, height: "calc(100vh - 60px)" }}>
+        <PrincipalSidebar style={{ flexShrink: 0, height: "100%" }} />
+        <div
+          style={{
+            flex: 1,
+            padding: "1px",
+            overflowY: "auto",
+            height: "100%",
+          }}
+        >
           {children}
         </div>
       </div>
