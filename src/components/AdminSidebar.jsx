@@ -512,7 +512,6 @@ const Sidebar = () => {
               <Label expanded={expanded}>School Information</Label>
             </SidebarItem>
 
-              onClick={() => setMobileOpen(false)}
             <SidebarItem to="/admin-teacher-information" expanded={expanded}>
               <Icon>
                 <GiTeacher />
