@@ -343,6 +343,7 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>SchoolInformation</Label>
             </SidebarItem>
+
             <SidebarItem
               to="/admin-teacher-information"
               onClick={() => setMobileOpen(false)}
@@ -453,7 +454,7 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Subject List</Label>
             </SidebarItem>
-               <SidebarItem
+            <SidebarItem
               to="/admin-studymodule"
               onClick={() => setMobileOpen(false)}
             >
@@ -511,10 +512,7 @@ const Sidebar = () => {
               <Label expanded={expanded}>School Information</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/admin-teacher-information"
-              onClick={() => setMobileOpen(false)}
-            >
+            <SidebarItem to="/admin-teacher-information" expanded={expanded}>
               <Icon>
                 <GiTeacher />
               </Icon>
@@ -535,17 +533,11 @@ const Sidebar = () => {
               <Label expanded={expanded}>Students Data</Label>
             </SidebarItem>
 
-            <SidebarItem
-              as="div"
-              expanded={expanded}
-              onClick={() => toggleDropdown("school")}
-            >
-              <SidebarItem to="/admin-student-information" expanded={expanded}>
-                <Icon>
-                  <PiStudentThin />
-                </Icon>
-                <Label expanded={expanded}>Student Information</Label>
-              </SidebarItem>
+            <SidebarItem to="/admin-student-information" expanded={expanded}>
+              <Icon>
+                <PiStudentThin />
+              </Icon>
+              <Label expanded={expanded}>Student Information</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-subjects" expanded={expanded}>
@@ -604,14 +596,11 @@ const Sidebar = () => {
               <Label expanded={expanded}>SubjectList</Label>
             </SidebarItem>
 
-             <SidebarItem
-              to="/admin-studymodule"
-              onClick={() => setMobileOpen(false)}
-            >
+            <SidebarItem to="/admin-studymodule" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
-              <Label expanded={true}>Study Module</Label>
+              <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-fee" expanded={expanded}>

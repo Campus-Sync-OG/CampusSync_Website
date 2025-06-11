@@ -510,22 +510,16 @@ const Sidebar = () => {
               <Label expanded={expanded}>Attendance</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/teacher-attendance-download"
-              onClick={() => setMobileOpen(false)}
-            >
+            <SidebarItem to="/teacher-attendance-download" expanded={expanded}>
               <Icon>
                 <RiCalendarEventFill />
               </Icon>
-              <Label expanded={true}>Attendance Download</Label>
+              <Label expanded={expanded}>Attendance Download</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/teacher-achievement"
-              onClick={() => setMobileOpen(false)}
-            >
+            <SidebarItem to="/teacher-achievement" expanded={expanded}>
               <Icon>
-                <SlBadge />
+                 <SlBadge />
               </Icon>
               <Label expanded={expanded}>Achievement</Label>
             </SidebarItem>
@@ -550,18 +544,14 @@ const Sidebar = () => {
               <Label expanded={expanded}>Leave Request</Label>
             </SidebarItem>
             {/* My School Dropdown */}
-            <SidebarItem
-              as="div"
-              expanded={expanded}
-              onClick={() => toggleDropdown("school")}
-            >
+           
               <SidebarItem to="/teacher-myclass" expanded={expanded}>
                 <Icon>
                   <LiaSchoolSolid />
                 </Icon>
                 <Label expanded={expanded}>My Class</Label>
               </SidebarItem>
-            </SidebarItem>
+           
 
             <SidebarItem to="/teacher-calendar-of-event" expanded={expanded}>
               <Icon>

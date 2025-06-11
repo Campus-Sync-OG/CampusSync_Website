@@ -52,8 +52,7 @@ const SidebarWrapper = styled.div`
   z-index: 1000;
 
   @media (max-width: 1024px) {
-   height: 92vh;
-
+    height: 92vh;
   }
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
@@ -113,7 +112,7 @@ const MobileMenu = styled.div`
       height: 40px; // Increase icon size
     }
   }
-  
+
   @media (max-width: 480px) {
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
@@ -354,12 +353,12 @@ const PrincipalSidebar = () => {
               <Label expanded={true}>Teacher Data</Label>
             </SidebarItem>
 
-             <SidebarItem to="/principal-attendance" expanded={expanded}>
-                <Icon>
-                  <LiaSchoolSolid />
-                </Icon>
-                <Label expanded={expanded}>Attendance Report</Label>
-              </SidebarItem>
+            <SidebarItem to="/principal-attendance" expanded={expanded}>
+              <Icon>
+                <LiaSchoolSolid />
+              </Icon>
+              <Label expanded={expanded}>Attendance Report</Label>
+            </SidebarItem>
 
             <SidebarItem
               to="/Principal-gallery"
@@ -453,27 +452,20 @@ const PrincipalSidebar = () => {
             </SidebarItem>
 
             {/* My School Dropdown */}
-            <SidebarItem
-              as="div"
-              expanded={expanded}
-              onClick={() => toggleDropdown("school")}
-            >
-              <SidebarItem to="/principal-studentinfo" expanded={expanded}>
-                <Icon>
-                  <LiaSchoolSolid />
-                </Icon>
-                <Label expanded={expanded}>Student Data</Label>
-              </SidebarItem>
+
+            <SidebarItem to="/principal-studentinfo" expanded={expanded}>
+              <Icon>
+                <LiaSchoolSolid />
+              </Icon>
+              <Label expanded={expanded}>Student Data</Label>
             </SidebarItem>
 
-             <SidebarItem to="/principal-attendance" expanded={expanded}>
+            <SidebarItem to="/principal-attendance" expanded={expanded}>
               <Icon>
                 <TbFileSpreadsheet />
               </Icon>
               <Label expanded={expanded}>Attendance Report</Label>
             </SidebarItem>
-            
-
 
             <SidebarItem to="/Principal-gallery" expanded={expanded}>
               <Icon>
@@ -488,8 +480,6 @@ const PrincipalSidebar = () => {
               </Icon>
               <Label expanded={expanded}>Notification</Label>
             </SidebarItem>
-
-            
 
             <SidebarItem to="/principal-subjects" expanded={expanded}>
               <Icon>
@@ -519,7 +509,7 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Announcement</Label>
             </SidebarItem>
 
-              <SidebarItem to="/principal-leave-panel" expanded={expanded}>
+            <SidebarItem to="/principal-leave-panel" expanded={expanded}>
               <Icon>
                 <FiImage />
               </Icon>

@@ -271,7 +271,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleRoleClick = (role) => {
-    localStorage.setItem("selectedRole", role); // ✅ Save selected role
+    localStorage.setItem("selectedRole",role); // ✅ Save selected role
 
     switch (role) {
       case "admin":
