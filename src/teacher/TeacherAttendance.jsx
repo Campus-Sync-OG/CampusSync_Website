@@ -192,6 +192,17 @@ const SubmitButton = styled.button`
   float: right;
   width: 200px;
 `;
+const DownloadButton = styled.button`
+  background-color: #002087;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px;
+  float: right;
+  width: 200px;
+`;
 
 const AttendancePage = () => {
   const navigate = useNavigate();
@@ -210,7 +221,10 @@ const AttendancePage = () => {
   const studentsPerPage = 5;
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
-  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
+  const currentStudents = filteredStudents.slice(
+    indexOfFirstStudent,
+    indexOfLastStudent
+  );
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
   const handleSearch = async () => {
@@ -229,7 +243,10 @@ const AttendancePage = () => {
     setCurrentPage(1);
 
     try {
-      const fetchedStudents = await getStudentsByClassAndSection(selectedClass, selectedSection);
+      const fetchedStudents = await getStudentsByClassAndSection(
+        selectedClass,
+        selectedSection
+      );
 
       if (!fetchedStudents || fetchedStudents.length === 0) return;
 
@@ -262,7 +279,7 @@ const AttendancePage = () => {
       section: selectedSection,
       date,
       emp_id,
-      attendance_type:"day-wise"  ,
+      attendance_type: "day-wise",
     }));
     console.log("Attendance Records:", records);
 
@@ -293,15 +310,29 @@ const AttendancePage = () => {
       <Header>
         <HeaderTitle>Attendance Report</HeaderTitle>
         <IconsContainer>
-          <ImageIcon src={homeIcon} alt="Home" onClick={() => navigate("/teacher-dashboard")} />
+          <ImageIcon
+            src={homeIcon}
+            alt="Home"
+            onClick={() => navigate("/teacher-dashboard")}
+          />
           <Divider />
           <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
         </IconsContainer>
       </Header>
 
       <ToggleButtonContainer>
-        <ToggleButton active={viewMode === "day-wise"} onClick={() => handleToggleView("day-wise")}>Day-wise</ToggleButton>
-        <ToggleButton active={viewMode === "period-wise"} onClick={() => handleToggleView("period-wise")}>Period-wise</ToggleButton>
+        <ToggleButton
+          active={viewMode === "day-wise"}
+          onClick={() => handleToggleView("day-wise")}
+        >
+          Day-wise
+        </ToggleButton>
+        <ToggleButton
+          active={viewMode === "period-wise"}
+          onClick={() => handleToggleView("period-wise")}
+        >
+          Period-wise
+        </ToggleButton>
       </ToggleButtonContainer>
 
       <SearchContainer>
@@ -311,23 +342,40 @@ const AttendancePage = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <SelectDropdownClass value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+        <SelectDropdownClass
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+        >
           <option value="">Select Class</option>
-          {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"].map((cls, i) => (
-            <option key={cls} value={i + 1}>{cls}</option>
-          ))}
+          {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"].map(
+            (cls, i) => (
+              <option key={cls} value={i + 1}>
+                {cls}
+              </option>
+            )
+          )}
         </SelectDropdownClass>
-        <SelectDropdownSec value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
+        <SelectDropdownSec
+          value={selectedSection}
+          onChange={(e) => setSelectedSection(e.target.value)}
+        >
           <option value="">Select Section</option>
-          {["A", "B", "C"].map(sec => (
-            <option key={sec} value={sec}>{sec}</option>
+          {["A", "B", "C"].map((sec) => (
+            <option key={sec} value={sec}>
+              {sec}
+            </option>
           ))}
         </SelectDropdownSec>
         {viewMode === "period-wise" && (
-          <SelectDropdownClass value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+          <SelectDropdownClass
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value)}
+          >
             <option value="">Select Subject</option>
             {subjects.map((sub) => (
-              <option key={sub} value={sub}>{sub}</option>
+              <option key={sub} value={sub}>
+                {sub}
+              </option>
             ))}
           </SelectDropdownClass>
         )}
@@ -336,7 +384,14 @@ const AttendancePage = () => {
 
       {/* Render Table */}
       {filteredStudents.length === 0 ? (
-        <div style={{ textAlign: "center", marginTop: "40px", fontSize: "18px", color: "#666" }}>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "40px",
+            fontSize: "18px",
+            color: "#666",
+          }}
+        >
           No data found for the selected class and section.
         </div>
       ) : (
@@ -358,7 +413,11 @@ const AttendancePage = () => {
                   {currentStudents.map((student, index) => (
                     <tr
                       key={student.admission_no}
-                      style={{ backgroundColor: attendance[student.admission_no] ? "transparent" : "#FF0000" }}
+                      style={{
+                        backgroundColor: attendance[student.admission_no]
+                          ? "transparent"
+                          : "#FF0000",
+                      }}
                     >
                       <Td>{indexOfFirstStudent + index + 1}</Td>
                       <Td>{student.student_name}</Td>
@@ -369,8 +428,20 @@ const AttendancePage = () => {
                         <input
                           type="checkbox"
                           checked={attendance[student.admission_no] || false}
-                          onChange={() => setAttendance((prev) => ({ ...prev, [student.admission_no]: !prev[student.admission_no] }))}
-                          style={{ accentColor: attendance[student.admission_no] ? "green" : "red", width: "18px", height: "18px" }}
+                          onChange={() =>
+                            setAttendance((prev) => ({
+                              ...prev,
+                              [student.admission_no]:
+                                !prev[student.admission_no],
+                            }))
+                          }
+                          style={{
+                            accentColor: attendance[student.admission_no]
+                              ? "green"
+                              : "red",
+                            width: "18px",
+                            height: "18px",
+                          }}
                         />
                       </Td>
                     </tr>
@@ -381,11 +452,24 @@ const AttendancePage = () => {
           </TableWrapper>
 
           {/* Pagination */}
-          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
+            }}
+          >
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              style={{ padding: "8px 12px", marginRight: "10px", backgroundColor: "#002087", color: "white", border: "none", borderRadius: "5px" }}
+              style={{
+                padding: "8px 12px",
+                marginRight: "10px",
+                backgroundColor: "#002087",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+              }}
             >
               &lt;
             </button>
@@ -393,15 +477,38 @@ const AttendancePage = () => {
               Page {currentPage} of {totalPages}
             </span>
             <button
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
-              style={{ padding: "8px 12px", marginLeft: "10px", backgroundColor: "#002087", color: "white", border: "none", borderRadius: "5px" }}
+              style={{
+                padding: "8px 12px",
+                marginLeft: "10px",
+                backgroundColor: "#002087",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+              }}
             >
               &gt;
             </button>
           </div>
 
-          <SubmitButton onClick={handleSubmitAttendance}>SUBMIT</SubmitButton>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "20px",
+              marginRight: "10px",
+            }}
+          >
+            <DownloadButton
+              onClick={() => navigate("/teacher-attendance-download")}
+            >
+              Download Report
+            </DownloadButton>
+            <SubmitButton onClick={handleSubmitAttendance}>SUBMIT</SubmitButton>
+          </div>
         </>
       )}
     </PageContainer>
@@ -409,4 +516,3 @@ const AttendancePage = () => {
 };
 
 export default AttendancePage;
-
