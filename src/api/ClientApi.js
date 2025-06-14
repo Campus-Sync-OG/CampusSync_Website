@@ -400,6 +400,18 @@ export const verifyFeePayment = async (paymentData) => {
 };
 
 
+export const fetchChatMessages = async (admission_no, emp_id) => {
+  return api.get(`/chat/chatbot/${admission_no}/${emp_id}`);
+};
+
+export const sendMessageToClassTeacher = async ({ admission_no, message }) => {
+  return api.post('/student/send', { admission_no, message });
+};
+
+export const teacherReplyToStudent = async ({ emp_id, admission_no, message }) => {
+  return api.post('/teacher/reply', { emp_id, admission_no, message });
+};
+
 // Inside component or event handler
 
 export default api;
