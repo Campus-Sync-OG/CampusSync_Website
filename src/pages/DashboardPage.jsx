@@ -41,7 +41,17 @@ const PageContainer = styled.div`
 
   @media (max-width: 768px) {
     padding: 0.8rem;
-    bottom: 25px;
+  }
+
+  @media (max-width: 480px) {
+    width: 86%;
+  }
+
+  @media (max-width: 420px) {
+    width: 86%;
+  }
+  @media (max-width: 320px) {
+    width: 86%;
   }
 `;
 
@@ -99,6 +109,8 @@ const WelcomeSection = styled.div`
   @media (max-width: 1024px) {
     position: relative;
     left: 12px;
+    width: 101%;
+    margin-left: 10px;
 
     h2 {
       font-size: 1.5rem;
@@ -116,12 +128,13 @@ const WelcomeSection = styled.div`
   }
 
   @media (max-width: 768px) {
-    left: 25px;
     overflow-x: hidden;
+    width: 102%;
   }
 
   @media (max-width: 480px) {
-    left: 31px;
+    width: 107%;
+    left: 30px;
     h2 {
       top: 0;
     }
@@ -137,7 +150,7 @@ const WelcomeSection = styled.div`
   }
   @media (max-width: 420px) {
     width: 100%;
-    left: 36px;
+
     h2 {
       top: 0;
       font-size: 1.1rem;
@@ -173,6 +186,10 @@ const WelcomeSection = styled.div`
       max-height: 9vh;
     }
   }
+
+  @media (max-width: 320px) {
+    width: 98%;
+  }
 `;
 
 const WidgetsContainer = styled.div`
@@ -206,7 +223,7 @@ const CardGrid = styled.div`
 
   @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1.7rem 5.5rem;
+    gap: 0rem 6rem;
     position: relative;
     right: 10px;
     bottom: 10px;
@@ -214,13 +231,12 @@ const CardGrid = styled.div`
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-    gap: 25px 105px;
+    gap: 25px 100px;
     position: relative;
     right: 24px;
   }
 
   @media (max-width: 480px) {
-    right: 6px;
     gap: 15px 105px;
   }
   @media (max-width: 380px) {
@@ -261,18 +277,19 @@ const Widget = styled.div`
   @media (max-width: 1024px) {
     position: relative;
     left: 40px;
-    width: 120%;
-    height: 90%;
+    width: 130%;
+    height: 70%;
   }
   @media (max-width: 768px) {
     position: relative;
-    height: 140px;
+    height: 130px;
+    width: 115%;
     left: 55px;
   }
   @media (max-width: 480px) {
     height: 120px;
-    width: 100%;
-    left: 70px;
+    width: 109%;
+    left: 80px;
   }
   @media (max-width: 380px) {
     height: 100px;
@@ -284,7 +301,7 @@ const Widget = styled.div`
     position: relative;
     height: 80px;
     width: 104%;
-    left: 22px;
+    left: 25px;
   }
 `;
 
@@ -380,8 +397,8 @@ const CalendarContainer = styled.div`
 
   @media (max-width: 1024px) {
     position: relative;
-    width: 80%;
-    height: 95%;
+    width: 75%;
+    height: 86%;
     left: 130px;
     bottom: 10px;
   }
@@ -390,9 +407,9 @@ const CalendarContainer = styled.div`
     left: 210px;
   }
   @media (max-width: 480px) {
-    width: 95%;
+    width: 100%;
     position: relative;
-    left: 80px;
+    left: 70px;
   }
   @media (max-width: 380px) {
     position: relative;
@@ -401,8 +418,8 @@ const CalendarContainer = styled.div`
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 68px;
-    width: 90%;
+    left: 72px;
+    width: 96%;
   }
 `;
 
