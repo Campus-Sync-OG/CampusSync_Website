@@ -215,7 +215,7 @@ const FeePaymentForm = () => {
       const orderRes = await createFeeOrder(payload, admission_no);
       const options = {
         key: "rzp_test_FFJX9DG8jkqrES", // Replace with your Razorpay key
-        amount: orderResponse.order.amount,
+        amount: orderRes.order.amount,
         currency: "INR",
         order_id: orderRes.order.id,
         name: "Your School Name",
