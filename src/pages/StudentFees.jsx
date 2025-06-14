@@ -1,265 +1,494 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { createFeeOrder, verifyFeePayment } from "../api/ClientApi";
+import {
+  createFeeOrder,
+  verifyFeePayment,
+  getFeesByAdmissionNo,
+  generateReceipt,
+} from "../api/ClientApi";
 
-// === Styled Components ===
 const Container = styled.div`
-  max-width: 750px;
+  padding: 40px 20px;
+  max-width: 1000px;
   margin: auto;
-  padding: 2rem;
-  background: #fefefe;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 `;
 
 const Title = styled.h2`
   text-align: center;
-  margin-bottom: 1rem;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  color: #0a66c2;
 `;
 
 const Label = styled.label`
   display: block;
-  margin-bottom: 0.4rem;
+  margin-top: 1rem;
   font-weight: 600;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.6rem;
-  border-radius: 5px;
-  border: 1px solid #ccc;
 `;
 
 const Select = styled.select`
   width: 100%;
-  padding: 0.6rem;
-  border-radius: 5px;
+  padding: 10px;
+  margin-top: 0.5rem;
+  border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 1rem;
 `;
 
-const Button = styled.button`
+const Input = styled.input`
   width: 100%;
-  padding: 0.75rem;
-  background-color: #0a66c2;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #094d96;
-  }
+  padding: 10px;
+  margin-top: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 1.5rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
 
-  th, td {
-    border: 1px solid #ccc;
-    padding: 0.75rem;
-    text-align: left;
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
   }
 
   th {
-    background: #f0f0f0;
+    background-color: #f4f8fc;
+    font-weight: 600;
+    color: #0a66c2;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    transform: scale(1.2);
+    cursor: pointer;
+  }
+`;
+
+const Button = styled.button`
+  background-color: #0a66c2;
+  color: white;
+  padding: 12px 20px;
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background-color: #004c9c;
   }
 `;
 
 const FeePaymentForm = () => {
-  const [formData, setFormData] = useState({
+  const defaultUniformRates = {
+    shirt: 500,
+    pant: 600,
+    tie: 300,
+    sweater: 700,
+    shoes: 800,
+  };
+
+  const [admission_no, setAdmissionNo] = useState(null);
+  const [student, setStudent] = useState({
     admission_no: "",
     class_name: "",
     section_name: "",
+  });
+  const [selectedFeeType, setSelectedFeeType] = useState("");
+  const [dueDates, setDueDates] = useState([]);
+  const [fees, setFees] = useState([]);
+  const [lastPayment, setLastPayment] = useState(null);
+  const [formData, setFormData] = useState({
     due_date: "",
-    feestype: "",
-    pay_method: "Online",
-    tuition_amount: 1,
-    book_amount: 2000,
-    transport_amount: 3000,
-    uniform_details: { shirt: 500, pant: 600, tie: 300, sweater: 700, shoes: 800 },
     paid_amount: 0,
+    uniform_selection: {
+      shirt: { selected: false, quantity: 1 },
+      pant: { selected: false, quantity: 1 },
+      tie: { selected: false, quantity: 1 },
+      sweater: { selected: false, quantity: 1 },
+      shoes: { selected: false, quantity: 1 },
+    },
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const getDueDates = async () => {
+    return ["2025-06-15", "2025-07-01", "2025-08-01"];
+  };
 
-    if (name.includes("uniform_details.")) {
-      const key = name.split(".")[1];
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData?.unique_id) {
+      setAdmissionNo(userData.unique_id);
+      getFeesByAdmissionNo(userData.unique_id).then((res) => {
+        setFees(res.data || []);
+        setStudent({
+          admission_no: userData.unique_id,
+          class_name: res.data?.[0]?.class_name || "",
+          section_name: res.data?.[0]?.section_name || "",
+        });
+      });
+    }
+    getDueDates().then(setDueDates);
+  }, []);
+
+  const handleFeeTypeChange = (e) => {
+    const type = e.target.value;
+    setSelectedFeeType(type);
+    const unpaidFee = fees.find(
+      (f) => f.feestype === type && f.total_amount - (f.paid_amount || 0) > 0
+    );
+
+    if (unpaidFee) {
       setFormData((prev) => ({
         ...prev,
-        uniform_details: {
-          ...prev.uniform_details,
-          [key]: parseFloat(value) || 0,
-        },
+        due_date: unpaidFee.due_date,
+        paid_amount: unpaidFee.total_amount - (unpaidFee.paid_amount || 0),
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: name === "paid_amount" ? parseFloat(value) || 0 : value,
+        paid_amount: 0,
       }));
     }
   };
 
-  const totalUniform = Object.values(formData.uniform_details).reduce((a, b) => a + b, 0);
-  const totalFee = (formData.tuition_amount || 0) + (formData.book_amount || 0) + (formData.transport_amount || 0) + totalUniform;
+  const handleFormChange = (e) => {
+    const { name, value, checked, type } = e.target;
+
+    if (name.startsWith("uniform_selection.")) {
+      const [, item, field] = name.split(".");
+      setFormData((fd) => ({
+        ...fd,
+        uniform_selection: {
+          ...fd.uniform_selection,
+          [item]: {
+            ...fd.uniform_selection[item],
+            [field]: field === "selected" ? checked : parseInt(value || 1),
+          },
+        },
+      }));
+    } else {
+      setFormData((fd) => ({
+        ...fd,
+        [name]: type === "number" ? parseFloat(value || 0) : value,
+      }));
+    }
+  };
+
+  const getUniformTotal = () =>
+    Object.entries(formData.uniform_selection)
+      .filter(([, data]) => data.selected)
+      .reduce(
+        (sum, [item, data]) => sum + defaultUniformRates[item] * data.quantity,
+        0
+      );
+
+  const getFeeSummaryAmount = () => {
+    if (selectedFeeType === "Uniform") return getUniformTotal();
+    if (selectedFeeType === "Multiple")
+      return 100 + 100 + 100 + getUniformTotal();
+    return formData.paid_amount;
+  };
 
   const handlePayment = async (e) => {
     e.preventDefault();
-
+    const payload = {
+      ...student,
+      feestype: selectedFeeType,
+      due_date: formData.due_date,
+      paid_amount: formData.paid_amount,
+      uniform_details: formData.uniform_selection,
+      total_fee: getFeeSummaryAmount(),
+    };
     try {
-      const orderResponse = await createFeeOrder(formData);
-      const orderId = orderResponse.order.id;
-
+      const orderRes = await createFeeOrder(payload, admission_no);
       const options = {
         key: "rzp_test_FFJX9DG8jkqrES", // Replace with your Razorpay key
         amount: orderResponse.order.amount,
         currency: "INR",
+        order_id: orderRes.order.id,
         name: "Your School Name",
         description: "Fee Payment",
-        order_id: orderId,
-        handler: async function (response) {
-          const paymentData = {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-            admission_no: formData.admission_no,
+        handler: async (response) => {
+          const verify = {
+            ...response,
+            admission_no: student.admission_no,
           };
-          const verifyResponse = await verifyFeePayment(paymentData);
-          console.log("Payment verified", verifyResponse);
+
+          await verifyFeePayment(verify);
+          const receiptWindow = window.open("", "_blank");
+
+          try {
+            const receiptUrl = await generateReceipt({
+              admission_no: student.admission_no,
+              feestype: selectedFeeType,
+            });
+
+            window.open(receiptUrl, "_blank"); // 👈 Opens PDF in new tab
+
+            const link = document.createElement("a");
+            link.href = receiptUrl;
+            link.download = receiptUrl.split("/").pop(); // Extract filename
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          } catch (err) {
+            alert("Receipt not available.");
+            console.error("Receipt error:", err);
+          }
+
+          setLastPayment({
+            response,
+            feestype: selectedFeeType,
+          });
+
+          const refreshed = await getFeesByAdmissionNo(admission_no);
+          setFees(refreshed.data || []);
         },
         theme: { color: "#0a66c2" },
       };
-
-      const rzp = new window.Razorpay(options);
-      rzp.open();
-    } catch (error) {
-      console.error("Payment error:", error);
+      new window.Razorpay(options).open();
+    } catch (err) {
+      console.error("Payment error:", err);
     }
   };
 
-  const renderFeeTable = () => {
-    const show = (type) => formData.feestype === type || formData.feestype === "Multiple";
+  const handleManualReceipt = async () => {
+    if (!lastPayment) {
+      alert("No payment found to generate receipt.");
+      return;
+    }
 
-    return (
-      <Table>
-        <thead>
-          <tr>
-            <th>Fee Category</th>
-            <th>Amount (INR)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {show("Tuition") && (
-            <tr>
-              <td>Tuition</td>
-              <td>{formData.tuition_amount}</td>
-            </tr>
-          )}
-          {show("Books") && (
-            <tr>
-              <td>Books</td>
-              <td>{formData.book_amount}</td>
-            </tr>
-          )}
-          {show("Transport") && (
-            <tr>
-              <td>Transport</td>
-              <td>{formData.transport_amount}</td>
-            </tr>
-          )}
-          {show("Uniform") &&
-            Object.entries(formData.uniform_details).map(([item, amount]) => (
-              <tr key={item}>
-                <td>Uniform - {item.charAt(0).toUpperCase() + item.slice(1)}</td>
-                <td>{amount}</td>
-              </tr>
-            ))}
-          <tr>
-            <th>Total</th>
-            <th>{totalFee}</th>
-          </tr>
-        </tbody>
-      </Table>
-    );
+    try {
+      const receiptWindow = window.open("", "_blank");
+      const receiptData = await generateReceipt({
+        admission_no: student.admission_no,
+        feestype: lastPayment.feestype,
+        pay_response: lastPayment.response,
+      });
+
+      if (receiptData?.receiptUrl) {
+        receiptWindow.location.href = receiptData.receiptUrl;
+      } else {
+        receiptWindow.document.body.innerHTML = "<p>Receipt not found.</p>";
+      }
+    } catch (err) {
+      alert("Error generating receipt. Please try again.");
+      console.error(err);
+    }
   };
 
   return (
     <Container>
       <Title>Student Fee Payment</Title>
-      <form onSubmit={handlePayment}>
-        <FormGroup>
-          <Label>Admission Number</Label>
-          <Input name="admission_no" onChange={handleChange} required />
-        </FormGroup>
 
-        <FormGroup>
-          <Label>Class</Label>
-          <Input name="class_name" onChange={handleChange} required />
-        </FormGroup>
+      <Label>Select Fee Type</Label>
+      <Select value={selectedFeeType} onChange={handleFeeTypeChange}>
+        <option value="">-- Select Fee Type --</option>
+        <option value="Tuition">Tuition</option>
+        <option value="Books">Books</option>
+        <option value="Transport">Transport</option>
+        <option value="Uniform">Uniform</option>
+        <option value="Multiple">Multiple</option>
+      </Select>
 
-        <FormGroup>
-          <Label>Section</Label>
-          <Input name="section_name" onChange={handleChange} required />
-        </FormGroup>
+      {selectedFeeType && (
+        <>
+          <Table>
+            <thead>
+              <tr>
+                <th>Due Date</th>
+                <th>Receipt Book</th>
+                <th>Fee Name</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Pending</th>
+                <th>Select</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fees
+                .filter((f) => f.feestype === selectedFeeType)
+                .map((fee, i) => {
+                  const pending = fee.total_amount - (fee.paid_amount || 0);
+                  return (
+                    <tr key={i}>
+                      <td>{fee.due_date}</td>
+                      <td>
+                        {fee.receipt_book ||
+                          `${fee.feestype.toUpperCase()} FEE (2025-26)`}
+                      </td>
+                      <td>{fee.term_name || `${fee.feestype} Fee`}</td>
+                      <td>{fee.total_amount} ₹</td>
+                      <td>{fee.paid_amount || 0} ₹</td>
+                      <td>{pending} ₹</td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="selected_fee"
+                          onChange={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              due_date: fee.due_date,
+                              paid_amount: pending,
+                            }))
+                          }
+                        />
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </Table>
 
-        <FormGroup>
+          {selectedFeeType === "Uniform" && (
+            <Table>
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>Item</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(defaultUniformRates).map(([item, rate]) => {
+                  const selected = formData.uniform_selection[item].selected;
+                  const quantity = formData.uniform_selection[item].quantity;
+
+                  const handleQuantityChange = (delta) => {
+                    if (!selected) return;
+                    setFormData((fd) => {
+                      const newQty = Math.max(
+                        1,
+                        fd.uniform_selection[item].quantity + delta
+                      );
+                      return {
+                        ...fd,
+                        uniform_selection: {
+                          ...fd.uniform_selection,
+                          [item]: {
+                            ...fd.uniform_selection[item],
+                            quantity: newQty,
+                          },
+                        },
+                      };
+                    });
+                  };
+
+                  return (
+                    <tr key={item}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name={`uniform_selection.${item}.selected`}
+                          checked={selected}
+                          onChange={handleFormChange}
+                        />
+                      </td>
+                      <td>
+                        {item.charAt(0).toUpperCase() + item.slice(1)}{" "}
+                        {selected && (
+                          <span style={{ marginLeft: "10px" }}>
+                            <button
+                              type="button"
+                              onClick={() => handleQuantityChange(-1)}
+                              style={{ padding: "2px 6px", marginRight: "5px" }}
+                            >
+                              −
+                            </button>
+                            {quantity}
+                            <button
+                              type="button"
+                              onClick={() => handleQuantityChange(1)}
+                              style={{ padding: "2px 6px", marginLeft: "5px" }}
+                            >
+                              +
+                            </button>
+                          </span>
+                        )}
+                      </td>
+                      <td>{rate} ₹</td>
+                      <td>{selected ? rate * quantity : 0} ₹</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan="3"
+                    style={{ textAlign: "right", fontWeight: "bold" }}
+                  >
+                    Total
+                  </td>
+                  <td style={{ fontWeight: "bold" }}>{getUniformTotal()} ₹</td>
+                </tr>
+              </tfoot>
+            </Table>
+          )}
+
           <Label>Due Date</Label>
-          <Input name="due_date" type="date" onChange={handleChange} required />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Fee Type</Label>
-          <Select name="feestype" onChange={handleChange} required>
-            <option value="">-- Select Fee Type --</option>
-            <option value="Tuition">Tuition</option>
-            <option value="Books">Books</option>
-            <option value="Transport">Transport</option>
-            <option value="Uniform">Uniform</option>
-            <option value="Multiple">Multiple</option>
+          <Select
+            name="due_date"
+            value={formData.due_date}
+            onChange={handleFormChange}
+            required
+          >
+            <option value="">-- Select Due Date --</option>
+            {dueDates.map((d, i) => (
+              <option key={i} value={d}>
+                {d}
+              </option>
+            ))}
           </Select>
-        </FormGroup>
 
-        <FormGroup>
-          <Label>Payment Method</Label>
-          <Select name="pay_method" onChange={handleChange} required>
-            <option value="Online">Online</option>
-            <option value="Cash">Cash</option>
-            <option value="Cheque">Cheque</option>
-            <option value="UPI">UPI</option>
-          </Select>
-        </FormGroup>
-
-        {formData.feestype && renderFeeTable()}
-
-        <FormGroup>
-          <Label>Enter Paid Amount</Label>
+          <Label>Paid Amount</Label>
           <Input
             type="number"
             name="paid_amount"
-            placeholder="Amount you are paying"
-            onChange={handleChange}
+            value={formData.paid_amount}
+            onChange={handleFormChange}
             required
           />
-        </FormGroup>
 
-        <FormGroup>
-          <Label>Remaining Balance</Label>
-          <Input
-            value={Math.max(totalFee - formData.paid_amount, 0)}
-            readOnly
-            style={{ background: "#eee" }}
-          />
-        </FormGroup>
+          <Button type="submit" onClick={handlePayment}>
+            Proceed to Pay
+          </Button>
 
-        <Button type="submit">Proceed to Pay</Button>
-      </form>
+          {/* 🆕 Button to manually regenerate receipt */}
+          {lastPayment !== null && (
+            <div style={{ marginTop: "20px", textAlign: "center" }}>
+              <Button
+                type="button"
+                onClick={handleManualReceipt}
+                style={{
+                  backgroundColor: "#28a745",
+                  color: "white",
+                  padding: "10px 20px",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  border: "none",
+                  borderRadius: "4px",
+                }}
+              >
+                Generate Receipt Again
+              </Button>
+            </div>
+          )}
+        </>
+      )}
     </Container>
   );
 };

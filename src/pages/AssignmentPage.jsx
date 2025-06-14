@@ -191,6 +191,7 @@ const App = () => {
       setAdmissionNo(userData.unique_id);
     }
   }, []);
+  console.log("Admission No:", admission_no);
 
   useEffect(() => {
     getAllSubjects()
