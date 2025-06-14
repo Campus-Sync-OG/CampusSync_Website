@@ -92,6 +92,10 @@ const WelcomeSection = styled.div`
     top: 15px;
   }
 
+  @media (max-width: 1366px) {
+    margin-bottom: 1rem;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     left: 12px;
@@ -191,6 +195,15 @@ const CardGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
   gap: 1.2rem 5.5rem;
   margin-top: 0;
+
+  @media (max-width: 1366px) {
+    gap: 15px 87px;
+    padding-top: 0;
+    padding-left: 0;
+    margin-left: 5px;
+    height: 35%;
+  }
+
   @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 1.7rem 5.5rem;
@@ -198,6 +211,7 @@ const CardGrid = styled.div`
     right: 10px;
     bottom: 10px;
   }
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
     gap: 25px 105px;
@@ -239,6 +253,11 @@ const Widget = styled.div`
     transform: scale(1.05);
   }
 
+  @media (max-width: 1366px) {
+    width: 115%;
+    height: 120px;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     left: 40px;
@@ -277,6 +296,11 @@ const WidgetTitle = styled.div`
   position: relative;
   right: 100px;
   top: 15px;
+
+  @media (max-width: 1366px) {
+    font-size: 1.3rem;
+  }
+
   @media (max-width: 1024px) {
     font-size: 1rem;
     right: 40px;
@@ -310,6 +334,12 @@ const WidgetImage = styled.img`
   position: relative;
   left: 110px;
   top: 0px;
+
+  @media (max-width: 1366px) {
+    max-height: 90%;
+    max-width: 70%;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     max-width: 85%;
@@ -343,6 +373,11 @@ const CalendarContainer = styled.div`
   flex-direction: column;
   align-items: center;
   left: 90px;
+
+  @media (max-width: 1366px) {
+    height: 90%;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     width: 80%;
@@ -380,6 +415,9 @@ const CalendarWidget = styled.div`
   &:hover {
     transform: scale(1.05);
   }
+  @media (max-width: 1366px) {
+    height: 95%;
+  }
 `;
 
 const CalendarHeader = styled.div`
@@ -407,6 +445,10 @@ const CalendarGrid = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
   text-align: center;
+
+  @media (max-width: 1366px) {
+    gap: 0;
+  }
 
   @media (max-width: 1024px) {
     font-size: 15px;
