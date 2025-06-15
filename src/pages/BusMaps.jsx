@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import maplibregl from 'maplibre-gl';
 
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -17,25 +18,45 @@ L.Icon.Default.mergeOptions({
 const RecenterMap = ({ lat, lng }) => {
   const map = useMap();
   useEffect(() => {
-    if (lat && lng) map.setView([lat, lng]);
+    if (lat && lng) {
+      map.setView([lat, lng], 18);
+    }
   }, [lat, lng]);
   return null;
 };
 
-const BusMap = ({ lat, lng }) => {
+const BusMap = ({ lat, lng, details }) => {
   if (!lat || !lng) return <p>Loading map...</p>;
 
-  console.log("Map coords:", lat, lng); // DEBUG
-
   return (
-    <MapContainer center={[lat, lng]} zoom={16} style={{ height: '500px', width: '100%' }}>
+    <MapContainer
+      center={[lat, lng]}
+      zoom={18}
+      style={{ height: '100vh', width: '100%' }}
+      scrollWheelZoom={true}
+    >
+      {/* Satellite background */}
       <TileLayer
-        attribution='&copy; Esri'
-        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
+        url="https://api.maptiler.com/maps/openstreetmap/{z}/{x}/{y}.jpg?key=se80gRWG0V6Ek8Iq1vqQ"
+        attribution='&copy; MapTiler & OpenStreetMap contributors'
       />
+      {/* Transparent labels
+      <TileLayer
+        url="https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=se80gRWG0V6Ek8Iq1vqQ"
+        attribution='&copy; MapTiler'
+        opacity={0.4}
+      /> */}
+
       <Marker position={[lat, lng]}>
-        <Popup>Bus is here</Popup>
+        <Popup>
+          <strong>Bus Location</strong><br />
+          Latitude: {lat.toFixed(5)}<br />
+          Longitude: {lng.toFixed(5)}<br />
+          {details?.time && <>Last Updated: {details.time}<br /></>}
+          {details?.speed && <>Speed: {details.speed} km/h</>}
+        </Popup>
       </Marker>
+
       <RecenterMap lat={lat} lng={lng} />
     </MapContainer>
   );
