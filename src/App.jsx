@@ -84,7 +84,7 @@ import PrincipalLeavePanel from "./principal/PrincipalLeavePanel";
 import StudentLeaveApplication from "./pages/StudentLeaveApplication";
 import StudyModuleUpload from "./userpages/StudyModuleUpload";
 import StudyModulePage from "./pages/StudyModulePage";
-
+import PrincipalProfile from "./principal/PrincipalProfile"
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -656,6 +656,14 @@ const App = () => {
             element={
               <PrincipalLayout>
                 <StudentInfo />
+              </PrincipalLayout>
+            }
+          />
+          <Route
+            path="/profile/principalprofile"
+            element={
+              <PrincipalLayout>
+                <PrincipalProfile />
               </PrincipalLayout>
             }
           />

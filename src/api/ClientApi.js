@@ -118,6 +118,10 @@ export const getStudentsByClassAndSection = async (className, section = "") => {
     .then((res) => res.data.students); // Extract the array of students
 };
 
+export const fetchPrincipalById = (p_id) => {
+  return api.get(`/principal/all/${p_id}`).then(res => res.data);
+};
+
 export const fetchStudents = () =>
   api.get("/students/list").then((res) => res.data);
 

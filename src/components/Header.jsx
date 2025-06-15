@@ -441,19 +441,42 @@ const Header = ({
       navigate("/notifications");
     }
   };
+const redirectToProfile = (userRole) => {
+    switch (userRole) {
+      case "student":
+        navigate("/profile/my-profile");
+        break;
+      case "teacher":
+        navigate("/profile/teacher-profile");
+        break;
+       case "principal":
+        navigate("/profile/principalprofile");
+        break;
+      default:
+        console.warn("Unknown role, redirecting to login");
+        navigate("/login");
+    }
+  };
+
+  // 👤 Called on profile click
   const handleProfileClick = () => {
     const user = JSON.parse(localStorage.getItem("user"));
-    const role = user?.role;
+    const userRole = user?.role?.toLowerCase();
 
-    console.log("Profile click role:", role);
+    console.log("Profile click role:", userRole);
 
-    if (!role) {
+    if (!userRole) {
       console.warn("Role not set, redirecting to login");
       navigate("/login");
       return;
     }
 
-    switch (role) {
+    redirectToProfile(userRole); // ✅ Delegate to separate function
+  };
+
+  // 🔁 Dashboard redirection logic (keep unchanged)
+  const redirectToDashboard = (userRole) => {
+    switch (userRole) {
       case "admin":
         navigate("/admin-dashboard");
         break;
@@ -477,10 +500,9 @@ const Header = ({
 
   useEffect(() => {
     const storedRole = localStorage.getItem("role");
-    console.log("Profile click role:", storedRole);
+    console.log("Loaded role:", storedRole);
     setRole(storedRole?.toLowerCase());
   }, []);
-
   return (
     <>
       <HeaderContainer>
