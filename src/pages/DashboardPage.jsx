@@ -7,7 +7,7 @@ import academics from "../assets/images/academics.png";
 import fees from "../assets/images/fees.png";
 import assignment from "../assets/images/assignment.png";
 import attendance from "../assets/images/attendance.png";
-import { fetchStudentByAdmissionNo } from "../api/ClientApi"; // API function to fetch student info
+import { fetchStudentByAdmissionNo,fetchAnnouncements } from "../api/ClientApi"; // API function to fetch student info
 import { useWindowSize } from "@react-hook/window-size";
 import Confetti from "react-confetti";
 // Styled Components
@@ -167,6 +167,59 @@ const WelcomeSection = styled.div`
       max-width: 35%;
       min-height: 9vh;
       max-height: 9vh;
+    }
+  }
+`;
+const PopupOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const PopupBox = styled.div`
+  background-color: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+
+  h1 {
+    color: red;
+    font-family: "Poppins", sans-serif;
+  }
+
+  h3 {
+    margin-bottom: 10px;
+    font-family: "Poppins", sans-serif;
+  }
+
+  p {
+    margin: 10px 0;
+    font-family: "Roboto", sans-serif;
+  }
+
+  button {
+    margin-top: 20px;
+    background-color: #002087;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #001764;
     }
   }
 `;
@@ -508,6 +561,7 @@ const widgetConfig = [
 ];
 
 const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
+  
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
@@ -520,8 +574,11 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
   ).getDay();
   const adjustedFirstDay = (firstDay + 6) % 7;
   const dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
+    
+ 
   return (
+   
+    
     <CalendarContainer>
       <CalendarWidget>
         <CalendarHeader>
@@ -554,6 +611,7 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
         </CalendarGrid>
       </CalendarWidget>
     </CalendarContainer>
+   
   );
 };
 
@@ -564,7 +622,9 @@ const DashboardPage = () => {
   const [isBirthday, setIsBirthday] = useState(false);
   const [showBirthdayWish, setShowBirthdayWish] = useState(false);
   const [width, height] = useWindowSize(); // ✅ get window size for confetti
-
+   const [showPopup, setShowPopup] = useState(false);
+    const [latestAnnouncement, setLatestAnnouncement] = useState(null);
+    const [announcements, setAnnouncements] = useState([]);
   const storedUser = localStorage.getItem("user");
   let user = null;
 
@@ -646,9 +706,33 @@ const DashboardPage = () => {
     }
   }, [admission_no]);
 
+   useEffect(() => {
+      const popupSeen = sessionStorage.getItem("popupSeen");
+
+    const loadAnnouncements = async () => {
+      try {
+        const data = await fetchAnnouncements();
+        console.log("Fetched Announcements:", data);
+        setAnnouncements(data);
+
+        if (data.length > 0 && !popupSeen) {
+          const latest = data[0]; // your controller already sorts DESC
+          setLatestAnnouncement(latest);
+          setShowPopup(true);
+          sessionStorage.setItem("popupSeen", "true"); // Mark popup as shown
+        }
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      }
+    };
+
+    loadAnnouncements();
+   
+  }, []);
+
   return (
-    <>
-      {isBirthday && showBirthdayWish && (
+    <> 
+      {/* {isBirthday && showBirthdayWish && (
         <BirthdayPopup>
           <Confetti width={width} height={height} />
           <BirthdayCard>
@@ -661,6 +745,17 @@ const DashboardPage = () => {
             </BirthdayButton>
           </BirthdayCard>
         </BirthdayPopup>
+      )} */}
+      {showPopup && latestAnnouncement && (
+        <PopupOverlay>
+          <PopupBox>
+            <h1>Announcement</h1>
+            <h3>{latestAnnouncement.title}</h3>
+            {/* <p><strong>{new Date(latestAnnouncement.date).toLocaleDateString("en-IN")}</strong></p> */}
+            <p>{latestAnnouncement.message}</p>
+            <button onClick={() => setShowPopup(false)}>Close</button>
+          </PopupBox>
+        </PopupOverlay>
       )}
       <PageContainer>
         <DashboardContainer>

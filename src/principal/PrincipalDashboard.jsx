@@ -1,42 +1,75 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import principalImage from "../assets/images/principaldashboard.png";
 import princiattendanceImage from "../assets/images/princiattendance.png";
 import princiacademiImage from "../assets/images/princiacademics.png";
 import princisubjectImage from "../assets/images/princisubject.png";
 import princiannouncementImage from "../assets/images/princiannouncement.png";
 import { FaEllipsisH } from "react-icons/fa";
+import { fetchAllLeaves,fetchAnnouncements } from "../api/ClientApi";
 const PrincipalDashboard = () => {
   const [date, setDate] = useState(new Date());
+ const [announcements, setAnnouncements] = useState([]);
+const [leaveApplications, setLeaveApplications] = useState([]);
+const [combinedData, setCombinedData] = useState([]);
+   const [Loading, setLoading] = useState([]);
+ const getAnnouncements = async () => {
+  try {
+    const data = await fetchAnnouncements();
+    const formatted = data.map((item) => ({
+      id: item.id,
+      type: "announcement",
+      title: item.title,
+      message: item.message,
+      date: item.date,
+    }));
+    setAnnouncements(formatted);
+    return formatted;
+  } catch (error) {
+    console.error("Error fetching announcements:", error);
+    return [];
+  }
+};
 
-  const announcements = [
-    {
-      id: 1,
-      title: "Circular for Trek",
-      date: "16-03-2025",
-    },
-    {
-      id: 2,
-      title: "New Parking Layout",
-      date: "14-03-2025",
-    },
-  ];
+const getLeaves = async () => {
+  try {
+    const response = await fetchAllLeaves();
+    const formatted = response.data.map((leave) => ({
+      id: leave.id,
+      type: "leave",
+      title: `Leave by ${leave.teacher.name}`,
+      message: `${leave.leave_type} leave from ${leave.from_date} to ${leave.to_date}`,
+      date: leave.from_date,
+    }));
+    setLeaveApplications(formatted);
+    return formatted;
+  } catch (error) {
+    console.error("Error fetching leaves:", error);
+    return [];
+  }
+};
 
-  const leaveApplications = [
-    {
-      id: 1,
-      title: "Sick Leave - Rahul",
-      date: "16-03-2025",
-    },
-    {
-      id: 2,
-      title: "Family Function - Meena",
-      date: "14-03-2025",
-    },
-  ];
+useEffect(() => {
+  const loadDashboardData = async () => {
+    const [announcementList, leaveList] = await Promise.all([
+      getAnnouncements(),
+      getLeaves(),
+    ]);
+
+    const combined = [...announcementList, ...leaveList].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+
+    setCombinedData(combined);
+  };
+
+  loadDashboardData();
+}, []);
+
+
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -101,23 +134,24 @@ const PrincipalDashboard = () => {
             <StyledCalendar value={date} onChange={setDate} />
             <AnnouncementsHeading>Announcements</AnnouncementsHeading>
             <AnnouncementsContainer>
-              {[...leaveApplications, ...announcements].map((item, index) => (
-                <NotificationCard
-                  key={item.id}
-                  to={
-                    item.title.includes("Leave")
-                      ? `/leave/${item.id}`
-                      : `/announcement/${item.id}`
-                  }
-                >
-                  <Content>
-                    <Title>{item.title}</Title>
-                    <DateText>• {item.date}</DateText>
-                  </Content>
-                  <OptionsIcon />
-                </NotificationCard>
-              ))}
-            </AnnouncementsContainer>
+  {combinedData.map((item) => (
+    <NotificationCard
+      key={`${item.type}-${item.id}`}
+      to={
+        item.type === "leave"
+          ? `/principal-leave-panel`
+          : `/announcement/${item.id}`
+      }
+    >
+      <Content>
+        <Title>{item.title}</Title>
+        <DateText>• {new Date(item.date).toLocaleDateString()}</DateText>
+      </Content>
+      <OptionsIcon />
+    </NotificationCard>
+  ))}
+</AnnouncementsContainer>
+
           </CalendarCard>
         </CalendarSection>
       </MainContent>

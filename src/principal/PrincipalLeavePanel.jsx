@@ -6,27 +6,7 @@ import back from "../assets/images/back.png";
 import { fetchAllLeaves, reviewLeave } from "../api/ClientApi"; // Adjust the import path as necessary
 
 // Sample mock leave applications
-const mockLeaves = [
-  {
-    id: 1,
-    teacherName: "Anita Sharma",
-    leaveType: "Sick",
-    fromDate: "2025-06-01",
-    toDate: "2025-06-03",
-    reason:
-      "I am writing to formally request a sick leave from [start date] to [end date] due to a sudden illness. I have been experiencing symptoms such as high fever, fatigue, and body aches, which require rest and medical attention. My doctor has advised me to take a few days off to recover fully and avoid spreading any potential infection. I will ensure that my responsibilities are managed during my absence and will make up for any missed work once I return. I kindly request your understanding and approval of my leave application.",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    teacherName: "Ravi Kumar",
-    leaveType: "Casual",
-    fromDate: "2025-06-05",
-    toDate: "2025-06-06",
-    reason: "Personal work",
-    status: "Pending",
-  },
-];
+
 
 const PrincipalLeavePanel = () => {
   const navigate = useNavigate();
