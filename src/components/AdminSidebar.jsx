@@ -609,6 +609,12 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
+             <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Upload Documents</Label>
+            </SidebarItem>
 
             <SidebarItem to="/admin-gallery" expanded={expanded}>
               <Icon>

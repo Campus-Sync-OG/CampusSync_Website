@@ -423,8 +423,14 @@ export const generateReceipt = async ({ admission_no, feestype }) => {
   }
 };
 
+export const fetchStudentDocumentByAdmissionNo = (admission_no) =>
+  api.get(`/studentdocuments/getbyid/${admission_no}`).then((res) => res.data);
 
+export const createStudentDocument = (body) =>
+  api.post('/studentdocuments/create', body).then((res) => res.data);
 
+export const updateStudentDocumentByAdmissionNo = (admission_no, body) =>
+  api.put(`/studentdocuments/update/${admission_no}`, body).then((res) => res.data);
 // Inside component or event handler
 
 export default api;

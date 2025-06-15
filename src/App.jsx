@@ -84,7 +84,8 @@ import PrincipalLeavePanel from "./principal/PrincipalLeavePanel";
 import StudentLeaveApplication from "./pages/StudentLeaveApplication";
 import StudyModuleUpload from "./userpages/StudyModuleUpload";
 import StudyModulePage from "./pages/StudyModulePage";
-import PrincipalProfile from "./principal/PrincipalProfile"
+import PrincipalProfile from "./principal/PrincipalProfile";
+import StudentDocument from "./userpages/AddStudentDocument";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -625,7 +626,14 @@ const App = () => {
               </AdminLayout>
             }
           />
-
+          <Route
+            path="/admin-Studentdocuments"
+            element={
+              <AdminLayout>
+                <StudentDocument />
+              </AdminLayout>
+            }
+          />
           {/*  principal & Pages (Uses Aminsidebar) */}
           <Route
             path="/principal-dashboard"
