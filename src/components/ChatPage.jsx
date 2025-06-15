@@ -1,29 +1,61 @@
-import React,{useState,useEffect} from "react";
-import styled from "styled-components";
+import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import {
-  fetchChatMessages,
   sendMessageToClassTeacher,
   teacherReplyToStudent,
-} from '../api/ClientApi'; 
+  fetchChatMessages,
+  fetchTeacherInbox,
+} from "../api/ClientApi";
 
 const ChatContainer = styled.div`
-  max-width: 600px;
-  margin: 50px auto;
-  border-radius: 20px;
+  display: flex;
+  height: 90vh;
+  max-width: 1000px;
+  margin: 40px auto;
+  border: 1px solid #ccc;
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+`;
+
+const Sidebar = styled.div`
+  width: 250px;
+  background: #f4f6f8;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+`;
+
+const SidebarHeader = styled.div`
+  padding: 15px;
+  background: #4a90e2;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const InboxItem = styled.div`
+  padding: 15px;
+  cursor: pointer;
+  background: ${props => (props.active ? '#dcefff' : 'transparent')};
+  border-bottom: 1px solid #ddd;
+  font-weight: ${props => (props.active ? 'bold' : 'normal')};
+
+  &:hover {
+    background: #e0eefa;
+  }
+`;
+
+const ChatArea = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  background: #fff;
 `;
 
 const ChatHeader = styled.div`
-  background: linear-gradient(135deg, #4a90e2, #6fcf97);
-  padding: 20px;
+  padding: 15px;
+  background: #6fcf97;
   color: white;
-  font-size: 1.5rem;
-  text-align: center;
+  font-size: 1.2rem;
   font-weight: bold;
 `;
 
@@ -39,12 +71,12 @@ const ChatBody = styled.div`
 const MessageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${props => (props.from === "student" ? "flex-end" : "flex-start")};
+  align-items: ${props => (props.isCurrentUser ? 'flex-end' : 'flex-start')};
   margin-bottom: 15px;
 `;
 
 const MessageBubble = styled.div`
-  background-color: ${props => (props.from === "student" ? "#daf7dc" : "#e1ecf4")};
+  background-color: ${props => (props.isCurrentUser ? '#daf7dc' : '#e1ecf4')};
   color: #333;
   padding: 12px 16px;
   border-radius: 20px;
@@ -66,13 +98,14 @@ const ChatFooter = styled.div`
   background: white;
 `;
 
-const ChatInput = styled.input`
+const ChatInput = styled.textarea`
   flex: 1;
   padding: 12px 16px;
   font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 25px;
-  outline: none;
+  border-radius: 20px;
+  resize: none;
+  height: 50px;
   margin-right: 10px;
 `;
 
@@ -84,86 +117,170 @@ const SendButton = styled.button`
   border-radius: 25px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
 
   &:hover {
     background: #357ab8;
   }
+
+  &:disabled {
+    background: #b0c4de;
+    cursor: not-allowed;
+  }
 `;
 
-const DummyMessages = [
-  { from: "teacher", message: "Hello! Please share your doubts." },
-  { from: "student", message: "I have a doubt in Physics, chapter 3." },
-];
-
 const ChatPage = () => {
+  const [role, setRole] = useState('');
+  const [empId, setEmpId] = useState('');
+  const [admissionNo, setAdmissionNo] = useState('');
+  const [inboxList, setInboxList] = useState([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [role, setRole] = useState('');
-  const [admissionNo, setAdmissionNo] = useState('');
-  const [empId, setEmpId] = useState('');
+  const chatRef = useRef(null);
 
   useEffect(() => {
-    const storedRole = localStorage.getItem('role'); // e.g., 'student' or 'teacher'
-    const admission = localStorage.getItem('unique_id'); // for student
-    console.log("Admission No:", admission);
-    const emp = localStorage.getItem('emp_id'); // for teacher
-   console.log("Employee ID:", emp);
-    setRole(storedRole);
-    setAdmissionNo(admission || '');
-    setEmpId(emp || '');
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (!userData) {
+      alert('Unauthorized. Please login.');
+      return;
+    }
 
-    if (storedRole === 'student' && admission && emp) {
-      fetchChat(admission, emp);
-    } else if (storedRole === 'teacher' && admission && emp) {
-      fetchChat(admission, emp);
+    setRole(userData.role);
+
+    if (userData.role === 'teacher') {
+      setEmpId(userData.unique_id);
+      fetchTeacherInbox(userData.unique_id)
+        .then((res) => {
+          const list = res.data.students || res.data;
+          setInboxList(
+            list.map((adm) => ({
+              admission_no: adm,
+              name: `Student ${adm}`, // Placeholder, replace with actual names if needed
+            }))
+          );
+        })
+        .catch((err) => console.error('Failed to fetch inbox', err));
+    } else if (userData.role === 'student') {
+      setAdmissionNo(userData.unique_id);
+      fetchChatMessages(userData.unique_id, '')
+        .then((res) => setMessages(res.data.chat))
+        .catch((err) => console.error('Failed to load chat', err));
     }
   }, []);
 
-  const fetchChat = async (admission_no, emp_id) => {
-    try {
-      const res = await fetchChatMessages(admission_no, emp_id);
-      setMessages(res.data.chat);
-    } catch (err) {
-      console.error('Chat fetch error', err);
+  useEffect(() => {
+    if (selectedStudent && role === 'teacher') {
+      fetchChatMessages(selectedStudent.admission_no, empId)
+        .then((res) => setMessages(res.data.chat))
+        .catch((err) => console.error('Failed to load chat', err));
     }
-  };
+  }, [selectedStudent, empId, role]);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
 
     try {
-      if (role === 'student') {
-        await sendMessageToClassTeacher({ admission_no: admissionNo, message: input });
-      } else if (role === 'teacher') {
-        await teacherReplyToStudent({ emp_id: empId, admission_no: admissionNo, message: input });
+      if (role === 'teacher' && selectedStudent) {
+        await teacherReplyToStudent({
+          emp_id: empId,
+          admission_no: selectedStudent.admission_no,
+          message: input,
+        });
+        const res = await fetchChatMessages(selectedStudent.admission_no, empId);
+        setMessages(res.data.chat);
+      } else if (role === 'student') {
+        await sendMessageToClassTeacher({
+          admission_no: admissionNo,
+          message: input,
+        });
+        const res = await fetchChatMessages(admissionNo, '');
+        setMessages(res.data.chat);
       }
+
       setInput('');
-      fetchChat(admissionNo, empId);
     } catch (err) {
-      console.error('Send error:', err);
+      console.error('Send error', err);
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  if (!role) return <div>Loading...</div>;
+
   return (
     <ChatContainer>
-      <ChatHeader>Chat with Class Teacher</ChatHeader>
-      <ChatBody>
-        {messages.map((msg, idx) => (
-          <MessageWrapper key={idx} from={msg.from}>
-            <MessageBubble from={msg.from}>{msg.message}</MessageBubble>
-            <Timestamp>{new Date(msg.timestamp).toLocaleTimeString()}</Timestamp>
-          </MessageWrapper>
-        ))}
-      </ChatBody>
-      <ChatFooter>
-        <ChatInput
-          placeholder="Type your message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <SendButton onClick={handleSend}>Send</SendButton>
-      </ChatFooter>
+      {role === 'teacher' && (
+        <Sidebar>
+          <SidebarHeader>Inbox</SidebarHeader>
+          {Array.isArray(inboxList) && inboxList.length > 0 ? (
+            inboxList.map((student, idx) => (
+              <InboxItem
+                key={idx}
+                onClick={() => setSelectedStudent(student)}
+                active={selectedStudent?.admission_no === student.admission_no}
+              >
+                {student.name}
+              </InboxItem>
+            ))
+          ) : (
+            <div style={{ padding: '1rem', color: '#999' }}>No messages</div>
+          )}
+        </Sidebar>
+      )}
+
+      <ChatArea>
+        <ChatHeader>
+          {role === 'teacher'
+            ? selectedStudent
+              ? `Chat with ${selectedStudent.name}`
+              : 'Select a student'
+            : 'Chat with Class Teacher'}
+        </ChatHeader>
+
+        <ChatBody ref={chatRef}>
+          {messages.map((msg, idx) => {
+            const isMe =
+              role === 'teacher' ? msg.from === 'teacher' : msg.from === 'student';
+            return (
+              <MessageWrapper key={idx} isCurrentUser={isMe}>
+                <MessageBubble isCurrentUser={isMe}>{msg.message}</MessageBubble>
+                <Timestamp>
+                  {new Date(msg.timestamp).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </Timestamp>
+              </MessageWrapper>
+            );
+          })}
+        </ChatBody>
+
+        <ChatFooter>
+          <ChatInput
+            placeholder="Type your message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+          />
+          <SendButton
+            onClick={handleSend}
+            disabled={!input.trim() || (role === 'teacher' && !selectedStudent)}
+          >
+            Send
+          </SendButton>
+        </ChatFooter>
+      </ChatArea>
     </ChatContainer>
   );
 };

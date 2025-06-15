@@ -399,17 +399,23 @@ export const verifyFeePayment = async (paymentData) => {
   return api.post("/fee/verify-payment", paymentData).then(res => res.data);
 };
 
-
-export const fetchChatMessages = async (admission_no, emp_id) => {
-  return api.get(`/chat/chatbot/${admission_no}/${emp_id}`);
-};
-
 export const sendMessageToClassTeacher = async ({ admission_no, message }) => {
-  return api.post('/student/send', { admission_no, message });
+  return api.post('/chat/student/send', { admission_no, message });
 };
 
+// ✅ Teacher replies to student
 export const teacherReplyToStudent = async ({ emp_id, admission_no, message }) => {
-  return api.post('/teacher/reply', { emp_id, admission_no, message });
+  return api.post('/chat/teacher/reply', { emp_id, admission_no, message });
+};
+
+// ✅ Teacher gets inbox (list of student admission numbers)
+export const fetchTeacherInbox = async (emp_id) => {
+  return api.get(`/chat/inbox/${emp_id}`);
+};
+
+// ✅ Fetch messages between student and teacher
+export const fetchChatMessages = async (admission_no, emp_id) => {
+  return api.get(`/chat/messages/${emp_id}/${admission_no}`);
 };
 
 // Inside component or event handler
