@@ -204,43 +204,109 @@ export default Promotion;
 
 // Styled Components (unchanged)
 const Container = styled.div`
-  max-width: 900px;
-  margin: auto;
-  padding: 1rem;
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 2rem;
+  background: #f9fafb;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 `;
 
 const FormGroup = styled.div`
-  margin: 10px 0;
+  background: #ffffff;
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 12px;
   display: flex;
   flex-wrap: wrap;
+  gap: 15px;
   align-items: center;
-  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+
   label {
+    font-weight: 600;
+    color: #333;
     margin-right: 5px;
   }
-  select, button {
-    padding: 5px 10px;
+
+  select {
+    padding: 10px 14px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    min-width: 160px;
+    background-color: #f1f3f5;
+    font-size: 15px;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      background-color: #fff;
+    }
+  }
+
+  button {
+    padding: 10px 18px;
+    background-color:  #00166b;
+    color: #fff;
+    border: none;
+    font-size: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color:  #c9302c;
+    }
+
+    &:disabled {
+      background-color: #adb5bd;
+      cursor: not-allowed;
+    }
   }
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+
   th, td {
-    border: 1px solid #ccc;
-    padding: 0.5rem;
+    padding: 12px 16px;
+    text-align: center;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #495057;
+  }
+
+  td {
+    font-size: 14px;
+    color: #333;
   }
 `;
 
 const TableRow = styled.tr`
-  background-color: ${(props) => (props.red ? "red" : "white")};
+  background-color: ${(props) => (props.red ? "red" : "#ffffff")};
   cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => (props.red ? "#f5c6cb" : "#f1f3f5")};
+  }
 `;
 
 const Success = styled.div`
   margin-top: 20px;
-  padding: 10px;
+  padding: 14px;
   background-color: #d4edda;
   color: #155724;
+  border-radius: 8px;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(40, 167, 69, 0.1);
+  text-align: center;
 `;
