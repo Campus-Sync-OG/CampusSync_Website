@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getAllClassSections, getStudentsByClassAndSection, promoteStudentsAPI } from "../api/ClientApi";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png";
+import { Link } from "react-router-dom";
 
 const Promotion = () => {
   const [classSections, setClassSections] = useState([]);
@@ -114,8 +117,20 @@ const Promotion = () => {
 
   return (
     <Container>
-      <h2>Promote Students</h2>
-
+      <Header>
+        <Title>Promote Students</Title>
+        <Wrapper>
+          <Link to="/admin-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
       <FormGroup>
         <label>From Class:</label>
         <select value={fromClass} onChange={(e) => {
@@ -204,15 +219,18 @@ export default Promotion;
 
 // Styled Components (unchanged)
 const Container = styled.div`
+ position: relative;
   max-width: 1000px;
   margin: 30px auto;
   padding: 2rem;
   background: #f9fafb;
   border-radius: 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  bottom: 60px;
 `;
 
 const FormGroup = styled.div`
+position: relative;
   background: #ffffff;
   padding: 20px;
   margin-bottom: 25px;
@@ -222,6 +240,7 @@ const FormGroup = styled.div`
   gap: 15px;
   align-items: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  top: 30px;
 
   label {
     font-weight: 600;
@@ -309,4 +328,42 @@ const Success = styled.div`
   font-weight: 500;
   box-shadow: 0 4px 10px rgba(40, 167, 69, 0.1);
   text-align: center;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 25px;
+  background-color: white;
+`;
+
+const Icons = styled.div`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
+  border-radius: 15px;
+  color: white;
+`;
+
+const Title = styled.h2`
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
