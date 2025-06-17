@@ -87,6 +87,7 @@ import StudyModulePage from "./pages/StudyModulePage";
 import ChatPage from "./components/ChatPage";
 import PrincipalProfile from "./principal/PrincipalProfile";
 import StudentDocument from "./userpages/AddStudentDocument";
+import TeacherViewAssignment from "./teacher/TeacherViewAssignment";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -497,7 +498,14 @@ const App = () => {
               </TeacherLayout>
             }
           />
-
+          <Route
+            path="/view-assignments"
+            element={
+              <TeacherLayout>
+                <TeacherViewAssignment />
+              </TeacherLayout>
+            }
+          />
           {/*  Admin Dashboard & Pages (Uses Aminsidebar) */}
           <Route
             path="/admin-dashboard"

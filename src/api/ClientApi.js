@@ -464,6 +464,17 @@ export const createStudentDocument = (body) =>
 
 export const updateStudentDocumentByAdmissionNo = (admission_no, body) =>
   api.put(`/studentdocuments/update/${admission_no}`, body).then((res) => res.data);
+
+export const getStudentAssignmentsByTeacher = async (params) => {
+  try {
+    const response = await api.get("/assignments/view", { params });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching assignments:", error);
+    throw error;
+  }
+};
+
 // Inside component or event handler
 
 export default api;

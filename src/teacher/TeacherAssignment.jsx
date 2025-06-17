@@ -150,6 +150,10 @@ const AssignmentPage = () => {
     setAssignmentTitle("");
     setFile(null);
   };
+  const handleViewAssignmentsClick = () => {
+  navigate("/view-assignments");
+};
+
   const navigate = useNavigate(); // Hook for navigation
 
   const handleHomeClick = () => {
@@ -234,6 +238,8 @@ const AssignmentPage = () => {
       <ButtonContainer>
         <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
         <AddMoreButton onClick={handleAddMore}>Add More</AddMoreButton>
+        <ViewButton onClick={handleViewAssignmentsClick}>View Student Assignments</ViewButton>
+
       </ButtonContainer>
     </PageContainer>
   );
@@ -387,3 +393,19 @@ const AddMoreButton = styled.button`
     background-color: #00166b;
   }
 `;
+
+const ViewButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
