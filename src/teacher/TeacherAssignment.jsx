@@ -395,7 +395,7 @@ const AddMoreButton = styled.button`
 `;
 
 const ViewButton = styled.button`
-  background-color: #007bff;
+  background-color:  #002087;
   color: white;
   border: none;
   padding: 6px 14px;
@@ -405,7 +405,7 @@ const ViewButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #0056b3;
+    background-color:  #00166b;
   }
 `;
 

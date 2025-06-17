@@ -57,22 +57,22 @@ const TeacherViewAssignment = () => {
         <Container>
             <h2>View Student Assignments</h2>
             <FilterBar>
-                <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+                <Select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
                     <option value="">Select Class</option>
                     {classList.map((cls, i) => <option key={i} value={cls}>{cls}</option>)}
-                </select>
+                </Select>
 
-                <select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
+                <Select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
                     <option value="">Select Section</option>
                     {sectionList.map((sec, i) => <option key={i} value={sec}>{sec}</option>)}
-                </select>
+                </Select>
 
-                <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+                <Select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
                     <option value="">Select Subject</option>
                     {subjectList.map((sub, i) => <option key={i} value={sub}>{sub}</option>)}
-                </select>
+                </Select>
 
-                <button onClick={fetchAssignments}>Fetch Assignments</button>
+                <FetchButton onClick={fetchAssignments}>Fetch Assignments</FetchButton>
             </FilterBar>
 
             <AssignmentTable>
@@ -129,37 +129,112 @@ const TeacherViewAssignment = () => {
 export default TeacherViewAssignment;
 
 // Styles
-const Container = styled.div`padding: 20px; max-width: 1000px; margin: auto;`;
-const FilterBar = styled.div`display: flex; gap: 10px; margin-bottom: 20px;`;
+const Container = styled.div`
+  padding: 30px;
+  max-width: 1100px;
+  margin: auto;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+`;
+
+const FilterBar = styled.div`
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+`;
+
+const Select = styled.select`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  min-width: 160px;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  &:focus {
+    border-color:rgb(13, 0, 255);
+    outline: none;
+  }
+`;
+
+const FetchButton = styled.button`
+  padding: 10px 20px;
+  background-color:  #d9534f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px hsla(0, 0.00%, 0.00%, 0.51);
+  &:hover {
+    background-color: red;
+  }
+`;
+
 const AssignmentTable = styled.table`
   width: 100%;
   border-collapse: collapse;
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  th {
+    background-color:#002087;
+    color: white;
+    padding: 12px;
+    font-weight: 600;
+    text-align: center;
+  }
+  td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e9ecef;
+  }
+  tr:hover {
+    background-color: #f1f3f5;
+  }
 `;
-const PDFViewer = styled.div`margin-top: 20px; border: 1px solid #ccc;`;
+
+const PDFViewer = styled.div`
+  margin-top: 30px;
+  border: 1px solid #dee2e6;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+`;
 
 const ViewButton = styled.button`
-  background-color: #007bff;
+  background-color: #00166b;
   color: white;
   border: none;
-  padding: 5px 10px;
-  margin-right: 6px;
-  border-radius: 5px;
+  padding: 6px 14px;
+  border-radius: 6px;
   cursor: pointer;
+  margin-right: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
   &:hover {
-    background-color: #0056b3;
+    background-color:  #c9302c;
   }
 `;
 
 const DownloadButton = styled.button`
-  background-color: #28a745;
+  background-color:   #c9302c;
   color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 6px 14px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
   &:hover {
-    background-color: #1e7e34;
+    background-color: #00166b;
   }
 `;
+
 
