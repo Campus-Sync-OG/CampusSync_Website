@@ -7,6 +7,7 @@ import { FaBell, FaCaretDown, FaEllipsisV } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { FiSettings } from "react-icons/fi";
 import { TbLogout } from "react-icons/tb";
+import { TbMessageChatbot } from "react-icons/tb";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import NotificationPopupPage from "./notificationpopup";
 
@@ -241,6 +242,34 @@ const NotificationButton = styled.div`
 `;
 
 const NotificationButtonIcon = styled(FaBell)`
+  font-size: 20px;
+  color: rgb(233, 30, 30);
+`;
+
+const IconButton = styled.button`
+  background-color: #4a90e2;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #357ab8;
+  }
+
+  svg {
+    color: white;
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+
+const MeesageIcon = styled(TbMessageChatbot)`
   font-size: 20px;
   color: rgb(233, 30, 30);
 `;
@@ -519,16 +548,18 @@ const redirectToProfile = (userRole) => {
         </LogoSection>
 
         <HeaderRight>
-          <SearchBarContainer>
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          <IconButton>
+            <MeesageIcon
+              onClick={() => {
+                const role = localStorage.getItem("role")?.toLowerCase();
+                if (role === "teacher") {
+                  navigate("/teacher-chatbot");
+                } else {
+                  navigate("/chatbot");
+                }
+              }}
             />
-            <i className="fas fa-search" onClick={handleSearch}></i>
-          </SearchBarContainer>
+          </IconButton>
 
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />

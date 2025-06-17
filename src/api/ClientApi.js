@@ -405,6 +405,39 @@ export const verifyFeePayment = async (paymentData) => {
   return api.post("/fee/verify-payment", paymentData).then((res) => res.data);
 };
 
+export const sendMessageToClassTeacher = async ({ admission_no, message }) => {
+  return api.post('/chat/student/send', { admission_no, message });
+};
+
+// ✅ Teacher replies to student
+export const teacherReplyToStudent = async ({ emp_id, admission_no, message }) => {
+  return api.post('/chat/teacher/reply', { emp_id, admission_no, message });
+};
+
+// ✅ Teacher gets inbox (list of student admission numbers)
+export const fetchTeacherInbox = async (emp_id) => {
+  return api.get(`/chat/inbox/${emp_id}`);
+};
+
+// ✅ Fetch messages between student and teacher
+export const fetchChatMessages = async (admission_no, emp_id) => {
+  return api.get(`/chat/messages/${emp_id}/${admission_no}`);
+};
+
+// ✅ Student fetches chat with their class teacher
+export const fetchStudentMessages = async (admission_no) => {
+  return api.get(`/chat/student/${admission_no}`);
+};
+
+export const  promoteStudentsAPI = async (promotionData) => {
+  return api
+    .post("/promotion/promote", promotionData)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error("Promotion failed:", err.response?.data || err.message);
+      throw err.response?.data || { error: "Unknown promotion error" };
+    });
+};
 // src/api/receipt.js or your central api file
 export const generateReceipt = async ({ admission_no, feestype }) => {
   const res = await api.post("/fee/generate-receipt", {

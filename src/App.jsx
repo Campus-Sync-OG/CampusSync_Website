@@ -84,6 +84,7 @@ import PrincipalLeavePanel from "./principal/PrincipalLeavePanel";
 import StudentLeaveApplication from "./pages/StudentLeaveApplication";
 import StudyModuleUpload from "./userpages/StudyModuleUpload";
 import StudyModulePage from "./pages/StudyModulePage";
+import ChatPage from "./components/ChatPage";
 import PrincipalProfile from "./principal/PrincipalProfile";
 import StudentDocument from "./userpages/AddStudentDocument";
 // 📌 General Layout Component for Students (Uses Sidebar)
@@ -275,6 +276,15 @@ const App = () => {
           />
 
           <Route
+            path="/chatbot"
+            element={
+              <Layout>
+                 <ChatPage/>
+                {/* Chatbot component can be added here */}
+              </Layout>
+            }
+          />
+          <Route
             path="/notifications"
             element={
               <Layout>
@@ -427,6 +437,15 @@ const App = () => {
             element={
               <TeacherLayout>
                 <NotificationPopup />
+              </TeacherLayout>
+            }
+          />
+           <Route
+            path="/teacher-chatbot"
+            element={
+              <TeacherLayout>
+                 <ChatPage/>
+                {/* Chatbot component can be added here */}
               </TeacherLayout>
             }
           />

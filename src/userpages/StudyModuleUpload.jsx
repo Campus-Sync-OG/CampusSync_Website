@@ -107,11 +107,13 @@ const StudyModuleUpload = () => {
     examType: "",
     subject: "",
     topicName: "",
+    subtopicName: "",
     pdfFile: null,
   });
 
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -120,7 +122,7 @@ const StudyModuleUpload = () => {
   const handleFileChange = (e) => {
     setFormData((prev) => ({ ...prev, pdfFile: e.target.files[0] }));
   };
-  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -128,6 +130,7 @@ const StudyModuleUpload = () => {
       !formData.examType ||
       !formData.subject ||
       !formData.topicName ||
+      !formData.subtopicName ||
       !formData.pdfFile
     ) {
       alert("Please fill all fields and select a PDF file.");
@@ -138,6 +141,7 @@ const StudyModuleUpload = () => {
     data.append("examName", formData.examType);
     data.append("subjectName", formData.subject);
     data.append("topicName", formData.topicName);
+    data.append("subtopicName", formData.subtopicName);
     data.append("pdf", formData.pdfFile);
 
     try {
@@ -149,6 +153,7 @@ const StudyModuleUpload = () => {
         examType: "",
         subject: "",
         topicName: "",
+        subtopicName: "",
         pdfFile: null,
       });
     } catch (error) {
@@ -175,6 +180,7 @@ const StudyModuleUpload = () => {
           </Icons>
         </Wrapper>
       </Header>
+
       <Card>
         <form onSubmit={handleSubmit}>
           <Field>
@@ -211,6 +217,16 @@ const StudyModuleUpload = () => {
               placeholder="Enter topic name"
               value={formData.topicName}
               onChange={(e) => handleChange("topicName", e.target.value)}
+            />
+          </Field>
+
+          <Field>
+            <Label>Subtopic Name</Label>
+            <Input
+              type="text"
+              placeholder="Enter subtopic name"
+              value={formData.subtopicName}
+              onChange={(e) => handleChange("subtopicName", e.target.value)}
             />
           </Field>
 

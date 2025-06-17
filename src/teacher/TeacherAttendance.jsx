@@ -279,12 +279,14 @@ const AttendancePage = () => {
       section: selectedSection,
       date,
       emp_id,
-      attendance_type: "day-wise",
+      attendance_type: viewMode, // ✅ dynamically uses current selection
+      ...(viewMode === "period-wise" && { subject: selectedSubject }), // ✅ include subject if needed
     }));
+
     console.log("Attendance Records:", records);
 
     try {
-      await bulkUpdateAttendance(emp_id, { records }, "day-wise");
+      await bulkUpdateAttendance(emp_id, { records }, viewMode); // ✅ dynamic mode passed to backend
 
       alert("Attendance submitted successfully!");
     } catch (error) {
