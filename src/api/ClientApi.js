@@ -418,6 +418,11 @@ export const fetchChatMessages = async (admission_no, emp_id) => {
   return api.get(`/chat/messages/${emp_id}/${admission_no}`);
 };
 
+// ✅ Student fetches chat with their class teacher
+export const fetchStudentMessages = async (admission_no) => {
+  return api.get(`/chat/student/${admission_no}`);
+};
+
 // Inside component or event handler
 
 export default api;

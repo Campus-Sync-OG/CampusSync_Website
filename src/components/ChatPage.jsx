@@ -5,6 +5,7 @@ import {
   teacherReplyToStudent,
   fetchChatMessages,
   fetchTeacherInbox,
+  fetchStudentMessages
 } from "../api/ClientApi";
 
 const ChatContainer = styled.div`
@@ -155,14 +156,14 @@ const ChatPage = () => {
           setInboxList(
             list.map((adm) => ({
               admission_no: adm,
-              name: `Student ${adm}`, // Placeholder, replace with actual names if needed
+              name: `Student ${adm}`,
             }))
           );
         })
         .catch((err) => console.error('Failed to fetch inbox', err));
     } else if (userData.role === 'student') {
       setAdmissionNo(userData.unique_id);
-      fetchChatMessages(userData.unique_id, '')
+      fetchStudentMessages(userData.unique_id)
         .then((res) => setMessages(res.data.chat))
         .catch((err) => console.error('Failed to load chat', err));
     }
@@ -175,6 +176,23 @@ const ChatPage = () => {
         .catch((err) => console.error('Failed to load chat', err));
     }
   }, [selectedStudent, empId, role]);
+
+  // 🔁 Auto-refresh chat every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (role === 'teacher' && selectedStudent) {
+        fetchChatMessages(selectedStudent.admission_no, empId)
+          .then((res) => setMessages(res.data.chat))
+          .catch((err) => console.error('Auto-refresh failed', err));
+      } else if (role === 'student' && admissionNo) {
+        fetchStudentMessages(admissionNo)
+          .then((res) => setMessages(res.data.chat))
+          .catch((err) => console.error('Auto-refresh failed', err));
+      }
+    }, 3000); // Every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [role, selectedStudent, empId, admissionNo]);
 
   useEffect(() => {
     if (chatRef.current) {
@@ -199,7 +217,7 @@ const ChatPage = () => {
           admission_no: admissionNo,
           message: input,
         });
-        const res = await fetchChatMessages(admissionNo, '');
+        const res = await fetchStudentMessages(admissionNo);
         setMessages(res.data.chat);
       }
 
