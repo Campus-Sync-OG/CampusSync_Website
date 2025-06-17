@@ -41,7 +41,17 @@ const PageContainer = styled.div`
 
   @media (max-width: 768px) {
     padding: 0.8rem;
-    bottom: 25px;
+  }
+
+  @media (max-width: 480px) {
+    width: 86%;
+  }
+
+  @media (max-width: 420px) {
+    width: 86%;
+  }
+  @media (max-width: 320px) {
+    width: 86%;
   }
 `;
 
@@ -92,9 +102,15 @@ const WelcomeSection = styled.div`
     top: 15px;
   }
 
+  @media (max-width: 1366px) {
+    margin-bottom: 1rem;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     left: 12px;
+    width: 101%;
+    margin-left: 10px;
 
     h2 {
       font-size: 1.5rem;
@@ -112,12 +128,13 @@ const WelcomeSection = styled.div`
   }
 
   @media (max-width: 768px) {
-    left: 25px;
     overflow-x: hidden;
+    width: 102%;
   }
 
   @media (max-width: 480px) {
-    left: 31px;
+    width: 107%;
+    left: 30px;
     h2 {
       top: 0;
     }
@@ -133,7 +150,7 @@ const WelcomeSection = styled.div`
   }
   @media (max-width: 420px) {
     width: 100%;
-    left: 36px;
+
     h2 {
       top: 0;
       font-size: 1.1rem;
@@ -168,6 +185,10 @@ const WelcomeSection = styled.div`
       min-height: 9vh;
       max-height: 9vh;
     }
+  }
+
+  @media (max-width: 320px) {
+    width: 98%;
   }
 `;
 const PopupOverlay = styled.div`
@@ -244,22 +265,31 @@ const CardGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
   gap: 1.2rem 5.5rem;
   margin-top: 0;
+
+  @media (max-width: 1366px) {
+    gap: 15px 87px;
+    padding-top: 0;
+    padding-left: 0;
+    margin-left: 5px;
+    height: 35%;
+  }
+
   @media (max-width: 1024px) {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1.7rem 5.5rem;
+    gap: 0rem 6rem;
     position: relative;
     right: 10px;
     bottom: 10px;
   }
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-    gap: 25px 105px;
+    gap: 25px 100px;
     position: relative;
     right: 24px;
   }
 
   @media (max-width: 480px) {
-    right: 6px;
     gap: 15px 105px;
   }
   @media (max-width: 380px) {
@@ -292,21 +322,27 @@ const Widget = styled.div`
     transform: scale(1.05);
   }
 
+  @media (max-width: 1366px) {
+    width: 115%;
+    height: 120px;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     left: 40px;
-    width: 120%;
-    height: 90%;
+    width: 130%;
+    height: 70%;
   }
   @media (max-width: 768px) {
     position: relative;
-    height: 140px;
+    height: 130px;
+    width: 115%;
     left: 55px;
   }
   @media (max-width: 480px) {
     height: 120px;
-    width: 100%;
-    left: 70px;
+    width: 109%;
+    left: 80px;
   }
   @media (max-width: 380px) {
     height: 100px;
@@ -318,7 +354,7 @@ const Widget = styled.div`
     position: relative;
     height: 80px;
     width: 104%;
-    left: 22px;
+    left: 25px;
   }
 `;
 
@@ -330,6 +366,11 @@ const WidgetTitle = styled.div`
   position: relative;
   right: 100px;
   top: 15px;
+
+  @media (max-width: 1366px) {
+    font-size: 1.3rem;
+  }
+
   @media (max-width: 1024px) {
     font-size: 1rem;
     right: 40px;
@@ -363,6 +404,12 @@ const WidgetImage = styled.img`
   position: relative;
   left: 110px;
   top: 0px;
+
+  @media (max-width: 1366px) {
+    max-height: 90%;
+    max-width: 70%;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     max-width: 85%;
@@ -396,10 +443,15 @@ const CalendarContainer = styled.div`
   flex-direction: column;
   align-items: center;
   left: 90px;
+
+  @media (max-width: 1366px) {
+    height: 90%;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
-    width: 80%;
-    height: 95%;
+    width: 75%;
+    height: 86%;
     left: 130px;
     bottom: 10px;
   }
@@ -408,9 +460,9 @@ const CalendarContainer = styled.div`
     left: 210px;
   }
   @media (max-width: 480px) {
-    width: 95%;
+    width: 100%;
     position: relative;
-    left: 80px;
+    left: 70px;
   }
   @media (max-width: 380px) {
     position: relative;
@@ -419,8 +471,8 @@ const CalendarContainer = styled.div`
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 68px;
-    width: 90%;
+    left: 72px;
+    width: 96%;
   }
 `;
 
@@ -432,6 +484,9 @@ const CalendarWidget = styled.div`
   border-radius: 15px;
   &:hover {
     transform: scale(1.05);
+  }
+  @media (max-width: 1366px) {
+    height: 95%;
   }
 `;
 
@@ -460,6 +515,10 @@ const CalendarGrid = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
   text-align: center;
+
+  @media (max-width: 1366px) {
+    gap: 0;
+  }
 
   @media (max-width: 1024px) {
     font-size: 15px;

@@ -198,7 +198,7 @@ const DashboardContainer = styled.div`
   align-items: center;
   margin-left: 0px;
   overflow-x: hidden;
-  max-height: 90vh;
+  max-height: 84vh;
   overflow-y: auto;
 
   @media (max-width: 1024px) {
@@ -265,7 +265,9 @@ const WelcomeCard = styled.div`
   }
   @media (max-width: 1024px) {
     margin: 0;
+    margin-bottom: 10px;
     width: 94%;
+    padding-left: 10px;
   }
   @media (max-width: 768px) {
     flex-direction: column;
@@ -307,7 +309,8 @@ const WelcomeCard = styled.div`
   }
 
   @media (max-width: 420px) {
-    width: 85%;
+    width: 91%;
+    margin-bottom: 10px;
     .image {
       position: relative;
       top: 20px;
@@ -350,14 +353,21 @@ const CardGrid = styled.div`
   margin-bottom: 0px;
   padding: 10px;
 
+  @media (max-width: 1366px) {
+    gap: 0;
+    padding-top: 0;
+    padding-left: 0;
+    margin: 0;
+  }
+
   @media (max-width: 1024px) {
     width: 100%;
-    gap: 20px;
-    margin: 0;
+    gap: 7px;
+    margin-left: 6px;
   }
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr; /* Stack cards */
-    gap: 20px;
+    margin-left: 20px;
     max-width: auto;
   }
   @media (max-width: 426px) {
@@ -404,6 +414,16 @@ const DashboardCard = styled.div`
     margin:0;
     font-family: 'Poppins', sans-serif;
   }
+
+
+    @media(max-width:1366px){
+    height:120px;
+    img {
+      width:170px;
+      height:140px;
+    }
+  }
+
   @media (max-width: 1024px) {
     gap:5px;
     margin:0;
@@ -416,12 +436,13 @@ const DashboardCard = styled.div`
     width:85%;
     
   }
+
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
-    gap:20px;
-    margin:15px;
-    width:80%;
+    width:85%;
+    margin-bottom:20px;
   }
+
      @media (max-width: 376px) {
     margin:0;
     width:85%;
@@ -454,9 +475,14 @@ const CalendarSection = styled.div`
   text-align: left;
   flex-direction: column;
   margin-top: 0;
+
+  @media (max-width: 1366px) {
+    width: 22%;
+  }
+
   @media (max-width: 1024px) {
     width: 45%;
-    margin-left: 220px;
+    margin-left: 200px;
   }
   @media (max-width: 768px) {
     width: 100%;
@@ -499,6 +525,16 @@ const CalendarCard = styled.div`
     font-family: "Poppins", sans-serif;
     color: white;
   }
+
+  @media (max-width: 1366px) {
+    margin-top: 10px;
+    height: 300px;
+
+    h3 {
+      margin-top: 0;
+    }
+  }
+
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -529,13 +565,22 @@ const StyledCalendar = styled(Calendar)`
   }
 
   .react-calendar__month-view {
-    height: 250px; /* Ensure the calendar stays within 200px */
+    height: 190px; /* Ensure the calendar stays within 200px */
     margin: 0;
   }
 
   .react-calendar__navigation button {
     font-size: 12px;
     padding: 2px;
+  }
+
+  @media (max-width: 1366px) {
+    padding: 0;
+
+    .react-calendar__tile {
+      font-size: 9px; /* Reduce font size to fit */
+      padding: 0px;
+    }
   }
 `;
 

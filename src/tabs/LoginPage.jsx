@@ -82,6 +82,10 @@ const LoginBox = styled.div`
   width: 50%;
   height: 50vh;
 
+  @media (max-width: 1366px) {
+    width: 71%;
+    height: 62vh;
+  }
   @media (max-width: 1024px) {
     width: 71%;
     height: 62vh;
@@ -271,7 +275,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleRoleClick = (role) => {
-    localStorage.setItem("selectedRole",role); // ✅ Save selected role
+    localStorage.setItem("selectedRole", role); // ✅ Save selected role
 
     switch (role) {
       case "admin":
