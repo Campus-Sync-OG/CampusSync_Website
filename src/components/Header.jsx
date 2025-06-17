@@ -269,7 +269,7 @@ const IconButton = styled.button`
 `;
 
 
-const MeesageIcon = styled(TbMessageChatbot )`
+const MeesageIcon = styled(TbMessageChatbot)`
   font-size: 20px;
   color: rgb(233, 30, 30);
 `;
@@ -526,9 +526,19 @@ const Header = ({
         </LogoSection>
 
         <HeaderRight>
-         <IconButton>
-           <MeesageIcon onClick={() => navigate("/chatbot")} />
+          <IconButton>
+            <MeesageIcon
+              onClick={() => {
+                const role = localStorage.getItem("role")?.toLowerCase();
+                if (role === "teacher") {
+                  navigate("/teacher-chatbot");
+                } else {
+                  navigate("/chatbot");
+                }
+              }}
+            />
           </IconButton>
+
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />
           </NotificationButton>

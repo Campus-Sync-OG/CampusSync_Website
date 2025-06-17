@@ -320,10 +320,6 @@ export const updateAttendancePercentage = async (admission_no, percentage) => {
   }).then((res) => res.data);
 };
 
-
-
-
-
 export const studentUploadAssignment = (admission_no, formData) =>
   api
     .post(`/students/assignment-upload/${admission_no}`, formData, {
@@ -421,6 +417,16 @@ export const fetchChatMessages = async (admission_no, emp_id) => {
 // ✅ Student fetches chat with their class teacher
 export const fetchStudentMessages = async (admission_no) => {
   return api.get(`/chat/student/${admission_no}`);
+};
+
+export const  promoteStudentsAPI = async (promotionData) => {
+  return api
+    .post("/promotion/promote", promotionData)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.error("Promotion failed:", err.response?.data || err.message);
+      throw err.response?.data || { error: "Unknown promotion error" };
+    });
 };
 
 // Inside component or event handler

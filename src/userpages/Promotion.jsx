@@ -1,240 +1,246 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import homeIcon from "../assets/images/home.png";
-import backIcon from "../assets/images/back.png";
-import { useNavigate } from "react-router-dom"; // Importing useNavigate
-
-const Container = styled.div`
-  padding: 0 15px;
-`;
-
-const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #df0043);
-  padding: 5px 20px;
-  color: white;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Title = styled.h1`
-  font-size: 26px;
-  font-weight: 600;
-  font-family: "Poppins";
-`;
-
-const IconWrapper = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
-const IconBtn = styled.img`
-  height: 28px;
-  width: 28px;
-  cursor: pointer;
-`;
-
-const Divider = styled.div`
-  width: 4px;
-  height: 20px;
-  background-color: white;
-  margin: 0 10px;
-  position: relative;
-  right: 0px;
-  top: 5px;
-`;
-
-const SectionTitle = styled.h2`
-  color: #002e9f;
-  font-size: 20px;
-  font-weight: bold;
-  margin: 40px 0 30px;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-`;
-
-const FormGroup = styled.div`
-  flex: 1;
-  min-width: 250px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Label = styled.label`
-  font-size: 20px;
-  margin-bottom: 8px;
-`;
-
-const Input = styled.input`
-  padding: 12px;
-  background: #f1f2f7;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  width: 30%;
-`;
-
-const Select = styled.select`
-  padding: 12px;
-  background: #f1f2f7;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-`;
-
-const ButtonGroup = styled.div`
-  margin-top: 40px;
-  display: flex;
-  gap: 20px;
-`;
-
-const SaveButton = styled.button`
-  background: #d6004c;
-  color: white;
-  border: none;
-  padding: 12px 40px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-`;
-
-const ResetButton = styled.button`
-  background: #002e9f;
-  color: white;
-  border: none;
-  padding: 12px 40px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-`;
-// Styled component for the message
-export const SuccessMessage = styled.div`
-  margin-top: 16px;
-  color: green;
-  font-weight: bold;
-  text-align: center;
-`;
-
-
-const studentNames = ["John Doe", "Jane Smith", "Alex Johnson"];
-const classOptions = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
-const sectionOptions = ["A", "B", "C", "D"];
+import { getAllClassSections, getStudentsByClassAndSection, promoteStudentsAPI } from "../api/ClientApi";
 
 const Promotion = () => {
-  const navigate = useNavigate();
+  const [classSections, setClassSections] = useState([]);
+  const [sectionOptions, setSectionOptions] = useState([]);
+
+  const [fromClass, setFromClass] = useState("");
+  const [fromSection, setFromSection] = useState("");
+  const [toClass, setToClass] = useState("");
+  const [toSection, setToSection] = useState("");
+
+  const [students, setStudents] = useState([]);
+  const [excludedIds, setExcludedIds] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = (e) => {
-    e.preventDefault();
+  // Fetch class and section options
+  useEffect(() => {
+    const fetchClassSections = async () => {
+      try {
+        const data = await getAllClassSections();
+        setClassSections(data);
+      } catch (error) {
+        console.error("Failed to fetch class sections:", error);
+      }
+    };
+    fetchClassSections();
+  }, []);
 
-    // Add form validation or data submission logic here if needed
+  // Extract unique classes
+  const classOptions = Array.from(
+    new Set(classSections.map((item) => item.className))
+  );
 
-    setSuccessMessage("Promotion saved successfully!");
+  // Filter sections based on selected class
+  const getSectionsForClass = (className) => {
+    return Array.from(
+      new Set(
+        classSections
+          .filter((item) => item.className === className)
+          .map((item) => item.section_name)
+      )
+    );
+  };
 
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 3000);
+  const handleLoadStudents = async () => {
+    if (fromClass && fromSection) {
+      try {
+        const students = await getStudentsByClassAndSection(fromClass, fromSection);
+        if (students?.length) {
+          setStudents(students);
+          setExcludedIds([]);
+        } else {
+          alert("No students found.");
+          setStudents([]);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to load students.");
+      }
+    } else {
+      alert("Please select From Class and Section");
+    }
+  };
+  const toggleStudent = (admission_no) => {
+    setExcludedIds((prev) =>
+      prev.includes(admission_no)
+        ? prev.filter((id) => id !== admission_no)
+        : [...prev, admission_no]
+    );
+  };
+
+
+
+  const handlePromote = async () => {
+    if (!toClass || !toSection) {
+      alert("Please select To Class and To Section");
+      return;
+    }
+
+    const promoteList = students
+      .filter((s) => !excludedIds.includes(s.admission_no))
+      .map((s) => s.admission_no);
+
+    if (promoteList.length === 0) {
+      alert("No students selected for promotion.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const payload = {
+        from_class: fromClass,
+        from_section: fromSection,
+        to_class: toClass,
+        to_section: toSection,
+        academic_year: "2024-2025",
+        admission_no: promoteList,
+      };
+
+      const res = await promoteStudentsAPI(payload);
+      setSuccessMessage(res?.message || "Promotion successful.");
+      setStudents([]);
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to promote students.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Container>
-      <Header>
-        <Title>Promotion</Title>
-        <IconWrapper>
-          <div onClick={() => navigate("/admin-dashboard")} style={{ cursor: "pointer" }}>
-            <IconBtn src={homeIcon} alt="Home" title="Home" />
-          </div>
-          <Divider />
-          <div onClick={() => navigate(-1)} style={{ cursor: "pointer" }}>
-            <IconBtn src={backIcon} alt="Back" title="Back" />
-          </div>
-        </IconWrapper>
-      </Header>
+      <h2>Promote Students</h2>
 
-      <SectionTitle>Student Promotion</SectionTitle>
+      <FormGroup>
+        <label>From Class:</label>
+        <select value={fromClass} onChange={(e) => {
+          setFromClass(e.target.value);
+          setFromSection(""); // reset section
+        }}>
+          <option value="">Select</option>
+          {classOptions.map((cls) => (
+            <option key={cls} value={cls}>{cls}</option>
+          ))}
+        </select>
 
-      <Form onSubmit={handleSave}>
-        <FormGroup>
-          <Label>Name *</Label>
-          <Select required>
-            <option value="">Please Select Name</option>
-            {studentNames.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
+        <label>Section:</label>
+        <select value={fromSection} onChange={(e) => setFromSection(e.target.value)}>
+          <option value="">Select</option>
+          {getSectionsForClass(fromClass).map((sec) => (
+            <option key={sec} value={sec}>{sec}</option>
+          ))}
+        </select>
 
-        <FormGroup>
-          <Label>Class *</Label>
-          <Select defaultValue="X" required>
-            {classOptions.map((cls) => (
-              <option key={cls} value={cls}>
-                {cls}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
+        <button onClick={handleLoadStudents}>Load Students</button>
+      </FormGroup>
 
-        <FormGroup>
-          <Label>Section *</Label>
-          <Select defaultValue="D" required>
-            {sectionOptions.map((sec) => (
-              <option key={sec} value={sec}>
-                {sec}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
+      {students.length > 0 && (
+        <>
+          <Table>
+            <thead>
+              <tr>
+                <th>Admission No</th>
+                <th>Name</th>
+                <th>Roll No</th>
+                <th>Phone</th>
+                <th>DOB</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((s) => (
+                <TableRow
+                  key={s.admission_no}
+                  onClick={() => toggleStudent(s.admission_no)}
+                  red={excludedIds.includes(s.admission_no)}
+                >
+                  <td>{s.admission_no}</td>
+                  <td>{s.student_name}</td>
+                  <td>{s.roll_no}</td>
+                  <td>{s.phone_no}</td>
+                  <td>{s.dob}</td>
+                </TableRow>
+              ))}
+            </tbody>
+          </Table>
 
-        <FormGroup>
-          <Label>Current Class</Label>
-          <Select>
-            <option>Please Select Class</option>
-            {classOptions.map((cls) => (
-              <option key={cls} value={cls}>
-                {cls}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
+          <FormGroup>
+            <label>To Class:</label>
+            <select value={toClass} onChange={(e) => {
+              setToClass(e.target.value);
+              setToSection(""); // reset section
+            }}>
+              <option value="">Select</option>
+              {classOptions.map((cls) => (
+                <option key={cls} value={cls}>{cls}</option>
+              ))}
+            </select>
 
-        <FormGroup>
-          <Label>Promotion To Class *</Label>
-          <Select required>
-            <option>Please Select</option>
-            {classOptions.map((cls) => (
-              <option key={cls} value={cls}>
-                {cls}
-              </option>
-            ))}
-          </Select>
-        </FormGroup>
+            <label>Section:</label>
+            <select value={toSection} onChange={(e) => setToSection(e.target.value)}>
+              <option value="">Select</option>
+              {getSectionsForClass(toClass).map((sec) => (
+                <option key={sec} value={sec}>{sec}</option>
+              ))}
+            </select>
 
-        <FormGroup>
-          <Label>Roll Number *</Label>
-          <Input type="text" placeholder="" required />
-        </FormGroup>
+            <button onClick={handlePromote} disabled={loading}>
+              {loading ? "Promoting..." : "Promote"}
+            </button>
+          </FormGroup>
+        </>
+      )}
 
-        <ButtonGroup>
-          <SaveButton type="submit">Save</SaveButton>
-          <ResetButton type="reset">Reset</ResetButton>
-        </ButtonGroup>
-
-        {successMessage && (
-          <SuccessMessage>{successMessage}</SuccessMessage>
-        )}
-      </Form>
+      {successMessage && <Success>{successMessage}</Success>}
     </Container>
   );
 };
 
 export default Promotion;
+
+// Styled Components (unchanged)
+const Container = styled.div`
+  max-width: 900px;
+  margin: auto;
+  padding: 1rem;
+`;
+
+const FormGroup = styled.div`
+  margin: 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  label {
+    margin-right: 5px;
+  }
+  select, button {
+    padding: 5px 10px;
+  }
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+  }
+`;
+
+const TableRow = styled.tr`
+  background-color: ${(props) => (props.red ? "red" : "white")};
+  cursor: pointer;
+`;
+
+const Success = styled.div`
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #d4edda;
+  color: #155724;
+`;

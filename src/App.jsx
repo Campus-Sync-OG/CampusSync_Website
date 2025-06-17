@@ -440,7 +440,7 @@ const App = () => {
             }
           />
            <Route
-            path="/chatbot"
+            path="/teacher-chatbot"
             element={
               <TeacherLayout>
                  <ChatPage/>
