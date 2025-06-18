@@ -474,6 +474,15 @@ export const getStudentAssignmentsByTeacher = async (params) => {
     throw error;
   }
 };
+export const getStudentFeeStatus = async (admission_no) => {
+  try {
+    const response = await api.get(`/fee/student-fee-status/${admission_no}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching fee status:", error);
+    throw error;
+  }
+};
 
 // Inside component or event handler
 
