@@ -552,20 +552,21 @@ const Header = ({
         </LogoSection>
 
         <HeaderRight>
-          {back_location.pathname !== "/principal-dashboard" && (
-            <IconButton>
-              <MeesageIcon
-                onClick={() => {
-                  const role = localStorage.getItem("role")?.toLowerCase();
-                  if (role === "teacher") {
-                    navigate("/teacher-chatbot");
-                  } else {
-                    navigate("/chatbot");
-                  }
-                }}
-              />
-            </IconButton>
-          )}
+          {back_location.pathname !== "/principal-dashboard" &&
+            back_location.pathname !== "/admin-dashboard" && (
+              <IconButton>
+                <MeesageIcon
+                  onClick={() => {
+                    const role = localStorage.getItem("role")?.toLowerCase();
+                    if (role === "teacher") {
+                      navigate("/teacher-chatbot");
+                    } else {
+                      navigate("/chatbot");
+                    }
+                  }}
+                />
+              </IconButton>
+            )}
 
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />
