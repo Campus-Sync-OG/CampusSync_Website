@@ -504,24 +504,29 @@ const redirectToProfile = (userRole) => {
   };
 
   // 🔁 Dashboard redirection logic (keep unchanged)
-  const redirectToDashboard = (userRole) => {
-    switch (userRole) {
-      case "admin":
-        navigate("/admin-dashboard");
-        break;
-      case "principal":
-        navigate("/principal-dashboard");
-        break;
-      case "teacher":
-        navigate("/teacher-dashboard");
-        break;
-      case "student":
-        navigate("/dashboard");
-        break;
-      default:
-        navigate("/login");
-    }
-  };
+ const redirectToDashboard = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userRole = user?.role?.toLowerCase();
+  const userState = { user };
+
+  switch (userRole) {
+    case "student":
+      navigate("/dashboard", { state: userState });
+      break;
+    case "teacher":
+      navigate("/teacher-dashboard", { state: userState });
+      break;
+    case "principal":
+      navigate("/principal-dashboard", { state: userState });
+      break;
+    case "admin":
+      navigate("/admin-dashboard", { state: userState });
+      break;
+    default:
+      console.warn("Unknown role, redirecting to login");
+      navigate("/login");
+  }
+};
 
   useEffect(() => {
     setIsPopupVisible(false);
@@ -535,7 +540,7 @@ const redirectToProfile = (userRole) => {
   return (
     <>
       <HeaderContainer>
-        <LogoSection onClick={handleProfileClick}>
+        <LogoSection onClick={redirectToDashboard}>
           <Logo src={logo} alt="Campus Sync Logo" />
           <Divider />
           <SchoolDetails onClick={handleProfileClick}>
