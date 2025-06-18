@@ -431,6 +431,10 @@ export const createStudentDocument = (body) =>
 
 export const updateStudentDocumentByAdmissionNo = (admission_no, body) =>
   api.put(`/studentdocuments/update/${admission_no}`, body).then((res) => res.data);
+
+export const fetchAllStudentDocuments = () =>
+  api.get('/studentdocuments/all').then((res) => res.data);
+
 // Inside component or event handler
 
 export default api;

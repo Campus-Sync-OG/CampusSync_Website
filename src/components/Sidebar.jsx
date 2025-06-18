@@ -450,6 +450,13 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Study Module</Label>
             </SidebarItem>
+             <SidebarItem to="/documentview" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>My Documents</Label>
+            </SidebarItem>
+
 
             <SidebarItem to="/gallery" onClick={() => setMobileOpen(false)}>
               <Icon>
@@ -582,6 +589,13 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
+            <SidebarItem to="/documentview" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={expanded}>My Documents </Label>
+            </SidebarItem>
+
 
             <SidebarItem to="/gallery" expanded={expanded}>
               <Icon>

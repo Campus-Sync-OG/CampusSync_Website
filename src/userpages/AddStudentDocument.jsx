@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
@@ -160,6 +161,7 @@ const StudentCertificates = () => {
   const [className, setClassName] = useState('');
   const [section, setSection] = useState('');
   const [certificates, setCertificates] = useState({ ...defaultCertificates });
+  const navigate = useNavigate();
 
 const [showNewCertInput, setShowNewCertInput] = useState(false);
 const [newCertificate, setNewCertificate] = useState('');
@@ -298,6 +300,13 @@ const addNewCertificate = () => {
     <Button type="button" onClick={addNewCertificate}>Confirm Add</Button>
   </InputGroup>
 )}
+<Button
+  type="button"
+  onClick={() => navigate('/admin-Studentdocumentview')}
+  color=" #002087"
+>
+  View All
+</Button>
       </InputGroup>
 <InputGroup> {studentName && (
   <div>
