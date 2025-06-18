@@ -7,7 +7,6 @@ import { fetchAllLeaves, reviewLeave } from "../api/ClientApi"; // Adjust the im
 
 // Sample mock leave applications
 
-
 const PrincipalLeavePanel = () => {
   const navigate = useNavigate();
   const [leaves, setLeaves] = useState([]);
@@ -131,6 +130,7 @@ export const Header = styled.div`
 export const Title = styled.h1`
   font-size: 24px;
   font-weight: bold;
+  font-family: "Poppins";
 `;
 
 export const Wrapper = styled.div`
@@ -175,73 +175,119 @@ export const PanelTitle = styled.h2`
   text-align: center;
   margin-bottom: 30px;
   color: #2c3e50;
+  font-family: "Poppins";
 `;
 
 export const LeaveCard = styled.div`
-  background-color: #ffffff;
-  border-radius: 16px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: #f0f4ff;
+  border-radius: 20px;
   padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px 15px;
+  box-shadow: 8px 8px 16px #d1d9e6, -8px -8px 16px #ffffff;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: 4px 4px 10px #d1d9e6, -4px -4px 10px #ffffff;
+  }
 `;
 
 export const CardHeader = styled.div`
+  grid-column: span 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 12px;
+  font-family: "Poppins";
+
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #283593;
+    margin: 0;
+  }
 `;
 
 export const StatusBadge = styled.span`
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
   font-weight: 600;
   color: white;
   background-color: ${({ status }) =>
     status === "Approved"
-      ? "#2ecc71"
+      ? "#4caf50"
       : status === "Rejected"
-      ? "#e74c3c"
-      : "#f1c40f"};
+      ? "#f44336"
+      : "#ffb300"};
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 `;
 
 export const LeaveInfo = styled.div`
-  margin-top: 15px;
-  line-height: 1.6;
-  font-size: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(140px, 1fr));
+  gap: 10px;
+  font-size: 20px;
+  margin-top: 10px;
+  color: #333;
+  font-family: "Poppins";
+
+  p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "Poppins";
+
+    strong {
+      color: #002087;
+      font-weight: 600;
+      min-width: 65px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ActionButtons = styled.div`
+  grid-column: span 2;
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 15px;
 `;
 
 export const ApproveButton = styled.button`
   background-color: #002087;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
+  color: #fff;
   border: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-weight: bold;
   cursor: pointer;
-  font-weight: 600;
+  transition: 0.3s ease;
 
   &:hover {
-    background-color: #27ae60;
+    background-color: #26a69a;
   }
 `;
 
 export const RejectButton = styled.button`
   background-color: #df0043;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 10px;
+  color: #fff;
   border: none;
+  padding: 10px 24px;
+  border-radius: 50px;
+  font-weight: bold;
   cursor: pointer;
-  font-weight: 600;
+  transition: 0.3s ease;
 
   &:hover {
-    background-color: #c0392b;
+    background-color: #b71c1c;
   }
 `;
 
