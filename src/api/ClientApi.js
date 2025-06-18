@@ -484,6 +484,16 @@ export const getStudentFeeStatus = async (admission_no) => {
   }
 };
 
+export const createFeePlanForClassSection = async (payload) => {
+  try {
+    const res = await api.post("/fee/fee-plan", payload);
+    return res.data;
+  } catch (err) {
+    console.error("API Error: createFeePlanForClassSection", err);
+    throw err.response?.data || { error: "Server error" };
+  }
+};
+
 // Inside component or event handler
 
 export default api;
