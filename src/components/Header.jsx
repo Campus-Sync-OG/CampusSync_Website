@@ -268,7 +268,6 @@ const IconButton = styled.button`
   }
 `;
 
-
 const MeesageIcon = styled(TbMessageChatbot)`
   font-size: 20px;
   color: rgb(233, 30, 30);
@@ -470,7 +469,7 @@ const Header = ({
       navigate("/notifications");
     }
   };
-const redirectToProfile = (userRole) => {
+  const redirectToProfile = (userRole) => {
     switch (userRole) {
       case "student":
         navigate("/profile/my-profile");
@@ -478,7 +477,7 @@ const redirectToProfile = (userRole) => {
       case "teacher":
         navigate("/profile/teacher-profile");
         break;
-       case "principal":
+      case "principal":
         navigate("/profile/principalprofile");
         break;
       default:
@@ -504,29 +503,29 @@ const redirectToProfile = (userRole) => {
   };
 
   // 🔁 Dashboard redirection logic (keep unchanged)
- const redirectToDashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userRole = user?.role?.toLowerCase();
-  const userState = { user };
+  const redirectToDashboard = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userRole = user?.role?.toLowerCase();
+    const userState = { user };
 
-  switch (userRole) {
-    case "student":
-      navigate("/dashboard", { state: userState });
-      break;
-    case "teacher":
-      navigate("/teacher-dashboard", { state: userState });
-      break;
-    case "principal":
-      navigate("/principal-dashboard", { state: userState });
-      break;
-    case "admin":
-      navigate("/admin-dashboard", { state: userState });
-      break;
-    default:
-      console.warn("Unknown role, redirecting to login");
-      navigate("/login");
-  }
-};
+    switch (userRole) {
+      case "student":
+        navigate("/dashboard", { state: userState });
+        break;
+      case "teacher":
+        navigate("/teacher-dashboard", { state: userState });
+        break;
+      case "principal":
+        navigate("/principal-dashboard", { state: userState });
+        break;
+      case "admin":
+        navigate("/admin-dashboard", { state: userState });
+        break;
+      default:
+        console.warn("Unknown role, redirecting to login");
+        navigate("/login");
+    }
+  };
 
   useEffect(() => {
     setIsPopupVisible(false);
@@ -553,18 +552,20 @@ const redirectToProfile = (userRole) => {
         </LogoSection>
 
         <HeaderRight>
-          <IconButton>
-            <MeesageIcon
-              onClick={() => {
-                const role = localStorage.getItem("role")?.toLowerCase();
-                if (role === "teacher") {
-                  navigate("/teacher-chatbot");
-                } else {
-                  navigate("/chatbot");
-                }
-              }}
-            />
-          </IconButton>
+          {back_location.pathname !== "/principal-dashboard" && (
+            <IconButton>
+              <MeesageIcon
+                onClick={() => {
+                  const role = localStorage.getItem("role")?.toLowerCase();
+                  if (role === "teacher") {
+                    navigate("/teacher-chatbot");
+                  } else {
+                    navigate("/chatbot");
+                  }
+                }}
+              />
+            </IconButton>
+          )}
 
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />
