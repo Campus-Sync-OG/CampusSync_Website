@@ -88,6 +88,7 @@ import ChatPage from "./components/ChatPage";
 import PrincipalProfile from "./principal/PrincipalProfile";
 import StudentDocument from "./userpages/AddStudentDocument";
 import TeacherViewAssignment from "./teacher/TeacherViewAssignment";
+import AnnouncementPage from "./pages/AnnouncementPage";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -183,6 +184,14 @@ const App = () => {
             element={
               <Layout>
                 <AttendancePage />
+              </Layout>
+            }
+          />
+           <Route
+            path="/announcement"
+            element={
+              <Layout>
+                <AnnouncementPage />
               </Layout>
             }
           />

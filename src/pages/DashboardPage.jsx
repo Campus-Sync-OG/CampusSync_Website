@@ -238,6 +238,7 @@ const PopupBox = styled.div`
     font-size: 14px;
     border-radius: 8px;
     cursor: pointer;
+    gap:10px;
 
     &:hover {
       background-color: #001764;
@@ -813,6 +814,10 @@ const DashboardPage = () => {
             {/* <p><strong>{new Date(latestAnnouncement.date).toLocaleDateString("en-IN")}</strong></p> */}
             <p>{latestAnnouncement.message}</p>
             <button onClick={() => setShowPopup(false)}>Close</button>
+             <button onClick={() => {
+          setShowPopup(false);
+          navigate("/announcement");
+        }}>Close</button>
           </PopupBox>
         </PopupOverlay>
       )}
