@@ -118,43 +118,53 @@ const FeePaymentForm = () => {
 
   const handleFeeSelect = (fee) => {
     setSelectedFee(fee);
+
     if (fee.feestype === "Uniform" && fee.item_details) {
-      setUniformItems(
-        fee.item_details.map(item => ({
-          ...item,
-          selected: false,
-          quantity: 1
-        }))
-      );
+      const items = fee.item_details.map(item => ({
+        item_name: item.item_name,
+        amount: item.amount,
+        selected: false,
+        quantity: 1
+      }));
+      setUniformItems(items);
       setPaidAmount(0);
     } else {
-      setPaidAmount(fee.due_amount);
       setUniformItems([]);
+      setPaidAmount(fee.due_amount);
     }
   };
 
   const toggleUniformItem = (idx) => {
-    setUniformItems(prev => {
-      const updated = [...prev];
-      updated[idx].selected = !updated[idx].selected;
-      return updated;
-    });
+    setUniformItems(prev =>
+      prev.map((item, i) =>
+        i === idx ? {
+          ...item,
+          selected: !item.selected,
+          quantity: !item.selected ? 1 : item.quantity
+        } : item
+      )
+    );
   };
 
+
   const changeUniformQuantity = (idx, delta) => {
-    setUniformItems(prev => {
-      const updated = [...prev];
-      if (!updated[idx].selected) return prev;
-      updated[idx].quantity = Math.max(1, updated[idx].quantity + delta);
-      return updated;
-    });
+    setUniformItems(prev =>
+      prev.map((item, i) => {
+        if (i === idx && item.selected) {
+          return { ...item, quantity: Math.max(1, item.quantity + delta) };
+        }
+        return item;
+      })
+    );
   };
 
   const getUniformGrandTotal = () => {
-    return uniformItems.reduce((sum, item) => {
-      return sum + (item.selected ? item.amount * item.quantity : 0);
-    }, 0);
+    return uniformItems.reduce((sum, item) => (
+      sum + (item.selected ? item.amount * item.quantity : 0)
+    ), 0);
   };
+
+
 
   const handlePayment = async () => {
     if (!selectedFee) {
@@ -277,7 +287,7 @@ const FeePaymentForm = () => {
             </>
           )}
 
-          {selectedFee.feestype === "Uniform" && uniformItems.length > 0 && (
+          {selectedFee?.feestype === "Uniform" && uniformItems.length > 0 && (
             <Table>
               <thead>
                 <tr>
@@ -301,12 +311,14 @@ const FeePaymentForm = () => {
                     <td>{item.item_name}</td>
                     <td>{item.amount} ₹</td>
                     <td>
-                      {item.selected && (
+                      {item.selected ? (
                         <>
                           <Button onClick={() => changeUniformQuantity(idx, -1)}>-</Button>
                           {item.quantity}
                           <Button onClick={() => changeUniformQuantity(idx, 1)}>+</Button>
                         </>
+                      ) : (
+                        "-"
                       )}
                     </td>
                     <td>{item.selected ? item.amount * item.quantity : 0} ₹</td>
@@ -315,12 +327,13 @@ const FeePaymentForm = () => {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="4" style={{ textAlign: "right" }}><b>Total</b></td>
+                  <td colSpan="4" align="right"><b>Total</b></td>
                   <td><b>{getUniformGrandTotal()} ₹</b></td>
                 </tr>
               </tfoot>
             </Table>
           )}
+
 
           <Button onClick={handlePayment}>Proceed to Pay</Button>
         </>
