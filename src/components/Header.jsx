@@ -486,6 +486,20 @@ const Header = ({
     }
   };
 
+  const handleChatbotClick = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const rawRole = user?.role || "";
+    const role = rawRole.trim().toLowerCase();
+
+    console.log("Normalized role:", role);
+
+    const path = role === "teacher" ? "/teacher-chatbot" : "/chatbot";
+
+    if (back_location.pathname !== path) {
+      navigate(path);
+    }
+  };
+
   // 👤 Called on profile click
   const handleProfileClick = () => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -554,7 +568,7 @@ const Header = ({
         <HeaderRight>
           {back_location.pathname !== "/principal-dashboard" &&
             back_location.pathname !== "/admin-dashboard" && (
-              <IconButton>
+              <IconButton onClick={handleChatbotClick}>
                 <MeesageIcon
                   onClick={() => {
                     const role = localStorage.getItem("role")?.toLowerCase();
