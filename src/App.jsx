@@ -88,6 +88,8 @@ import ChatPage from "./components/ChatPage";
 import PrincipalProfile from "./principal/PrincipalProfile";
 import StudentDocument from "./userpages/AddStudentDocument";
 import TeacherViewAssignment from "./teacher/TeacherViewAssignment";
+import StudentFeeDetails from "./userpages/StudentFeeDetails";
+
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -661,6 +663,14 @@ const App = () => {
               </AdminLayout>
             }
           />
+          <Route
+            path="/admin-Studentfee"
+            element={
+              <AdminLayout>
+                <StudentFeeDetails />
+              </AdminLayout>
+            }
+          />
           {/*  principal & Pages (Uses Aminsidebar) */}
           <Route
             path="/principal-dashboard"
@@ -775,6 +785,7 @@ const App = () => {
               </principalLayout>
             }
           />
+
 
           <Route
             path="/principal-leave-panel"

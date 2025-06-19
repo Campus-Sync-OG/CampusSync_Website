@@ -494,6 +494,16 @@ export const createFeePlanForClassSection = async (payload) => {
   }
 };
 
+export const getStudentFeeDetails = async (admission_no) => {
+  try {
+    const response = await api.get(`/fee/student-fee/${admission_no}`);
+    return response.data;  // Return data so React page can handle it
+  } catch (error) {
+    // You can choose to throw error or return error response
+    throw error.response ? error.response.data : { error: 'Network error' };
+  }
+};
+
 // Inside component or event handler
 
 export default api;

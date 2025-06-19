@@ -103,53 +103,33 @@ const AdminFee = () => {
         <Row>
           <Field>
             <Label>Admission Number *</Label>
-            <Input
-              name="admission_no"
-              value={formData.admission_no}
-              onChange={handleChange}
-              required
-            />
+            <Input name="admission_no" value={formData.admission_no} onChange={handleChange} required />
           </Field>
 
           <Field>
             <Label>Fee Type *</Label>
-            <Select
-              name="feestype"
-              value={formData.feestype}
-              onChange={handleChange}
-              required
-            >
+            <Select name="feestype" value={formData.feestype} onChange={handleChange} required>
               <option value="">Select Fee Type</option>
               <option value="Tuition">Tuition</option>
+              <option value="Exam">Exam</option>
               <option value="Transport">Transport</option>
               <option value="Uniform">Uniform</option>
-              <option value="Exam">Exam</option>
             </Select>
           </Field>
 
           <Field>
             <Label>Class *</Label>
-            <Select
-              name="class_name"
-              value={formData.class_name}
-              onChange={handleChange}
-              required
-            >
+            <Select name="class_name" value={formData.class_name} onChange={handleChange} required>
               <option value="">Select Class</option>
               {[...Array(10)].map((_, i) => (
-                <option key={i} value={`Class ${i + 1}`}>{`Class ${i + 1}`}</option>
+                <option key={i + 1} value={`Class ${i + 1}`}>{`Class ${i + 1}`}</option>
               ))}
             </Select>
           </Field>
 
           <Field>
             <Label>Section *</Label>
-            <Select
-              name="section_name"
-              value={formData.section_name}
-              onChange={handleChange}
-              required
-            >
+            <Select name="section_name" value={formData.section_name} onChange={handleChange} required>
               <option value="">Select Section</option>
               <option value="A">A</option>
               <option value="B">B</option>
@@ -158,50 +138,80 @@ const AdminFee = () => {
           </Field>
 
           <Field>
-            <Label>Paid Amount *</Label>
-            <Input
-              name="paid_amount"
-              type="number"
-              value={formData.paid_amount}
-              onChange={handleChange}
-              required
-            />
-          </Field>
-
-          <Field>
             <Label>Payment Date *</Label>
-            <Input
-              name="pay_date"
-              type="date"
-              value={formData.pay_date}
-              onChange={handleChange}
-              required
-            />
-          </Field>
-
-          <Field>
-            <Label>Receipt Number *</Label>
-            <Input
-              name="receipt_no"
-              value={formData.receipt_no}
-              onChange={handleChange}
-              required
-            />
+            <Input name="pay_date" type="date" value={formData.pay_date} onChange={handleChange} required />
           </Field>
 
           <Field>
             <Label>Payment Method *</Label>
-            <Select
-              name="pay_method"
-              value={formData.pay_method}
-              onChange={handleChange}
-              required
-            >
+            <Select name="pay_method" value={formData.pay_method} onChange={handleChange} required>
               <option value="Cash">Cash</option>
               <option value="Online">Online</option>
               <option value="Bank Transfer">Bank Transfer</option>
             </Select>
           </Field>
+
+          <Field>
+            <Label>Paid Amount *</Label>
+            <Input name="paid_amount" type="number" value={formData.paid_amount} onChange={handleChange} required />
+          </Field>
+
+          <Field>
+            <Label>Receipt Number *</Label>
+            <Input name="receipt_no" value={formData.receipt_no} onChange={handleChange} required />
+          </Field>
+
+          <Field>
+            <Label>Status *</Label>
+            <Select name="status" value={formData.status} onChange={handleChange} required>
+              <option value="Paid">Paid</option>
+              <option value="Unpaid">Unpaid</option>
+            </Select>
+          </Field>
+
+          {(formData.feestype === "Tuition" || formData.feestype === "All") && (
+            <Field>
+              <Label>Tuition Fee</Label>
+              <Input name="tuition_fee" type="number" value={formData.tuition_fee} onChange={handleChange} />
+            </Field>
+          )}
+
+          {(formData.feestype === "Transport" || formData.feestype === "All") && (
+            <Field>
+              <Label>Transport Fee</Label>
+              <Input name="transport_fee" type="number" value={formData.transport_fee} onChange={handleChange} />
+            </Field>
+          )}
+
+          {(formData.feestype === "Uniform" || formData.feestype === "All") && (
+            <>
+              <Field>
+                <Label>Shirt Price</Label>
+                <Input name="shirt" type="number" value={formData.shirt} onChange={handleChange} />
+              </Field>
+
+              <Field>
+                <Label>Pant Price</Label>
+                <Input name="pant" type="number" value={formData.pant} onChange={handleChange} />
+              </Field>
+
+              <Field>
+                <Label>Tie Price</Label>
+                <Input name="tie" type="number" value={formData.tie} onChange={handleChange} />
+              </Field>
+
+              <Field>
+                <Label>Shoe Price</Label>
+                <Input name="shoe" type="number" value={formData.shoe} onChange={handleChange} />
+              </Field>
+
+              <Field>
+                <Label>Total Uniform Fee</Label>
+                <Input name="uniform_fee" type="number" value={formData.uniform_fee} readOnly />
+              </Field>
+            </>
+          )}
+
         </Row>
 
         <ButtonContainer>
