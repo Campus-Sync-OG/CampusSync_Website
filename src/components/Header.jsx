@@ -256,6 +256,7 @@ const IconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 10px;
 
   &:hover {
     background-color: #357ab8;
@@ -265,6 +266,26 @@ const IconButton = styled.button`
     color: white;
     width: 24px;
     height: 24px;
+  }
+  @media (max-width: 768px) {
+    position: relative;
+    left: 55%;
+    top: 5px;
+    svg {
+      color: white;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  @media (max-width: 480px) {
+    position: relative;
+    left: 40%;
+    top: 5px;
+    svg {
+      color: white;
+      width: 20px;
+      height: 20px;
+    }
   }
 `;
 
