@@ -132,13 +132,14 @@ const MobileMenu = styled.div`
 const MobileDropdown = styled.div`
   display: ${(props) => (props.open ? "block" : "none")};
   position: fixed;
-  top: 0; // Changed from 160px to make full height
+  top: 0;
   left: 0;
   background: #002087;
   width: 200px;
-  height: 100vh; // Full viewport height
+  height: 100vh;
   padding: 20px;
   z-index: 1002;
+  overflow-y: auto; /* ✅ Add this */
   animation: ${(props) => (props.open ? slideIn : slideOut)} 0.3s ease forwards;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 
@@ -226,34 +227,6 @@ const Label = styled.span`
   visibility: ${(props) => (props.expanded ? "visible" : "hidden")};
   transition: opacity 0.3s ease;
   opacity: ${(props) => (props.expanded ? "1" : "0")};
-`;
-
-const DropdownIcon = styled(FaCaretDown)`
-  margin-left: auto;
-  font-size: 1.2rem;
-  transition: transform 0.3s ease, color 0.3s ease;
-  transform: ${(props) => (props.open ? "rotate(90deg)" : "rotate(0)")};
-  color: ${(props) => (props.open ? "#df0043" : "red")};
-`;
-
-const Dropdown = styled.div`
-  display: ${(props) => (props.show ? "block" : "none")};
-  margin-left: ${(props) => (props.expanded ? "2rem" : "0")};
-  transition: all 0.3s ease;
-`;
-
-const ChildArrow = styled(FaAngleRight)`
-  font-size: 14px;
-  color: #fff;
-  margin-right: 8px;
-  transition: transform 0.3s ease;
-
-  ${(props) =>
-    props.active &&
-    `
-    transform: rotate(90deg);
-    color: white;
-  `}
 `;
 
 const MobileBackdrop = styled.div`
@@ -362,24 +335,6 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>StudentInformation</Label>
             </SidebarItem>
-            <SidebarItem
-              to="/admin-teacher-data"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <RiDatabase2Line />
-              </Icon>
-              <Label expanded={true}>Teachers data</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-student-data"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <GrDatabase />
-              </Icon>
-              <Label expanded={true}>Students data</Label>
-            </SidebarItem>
 
             <SidebarItem
               to="/admin-feedback"
@@ -400,24 +355,7 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Time Table</Label>
             </SidebarItem>
-            <SidebarItem
-              to="/admin-announcement"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={true}>Announcement</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-notification"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <FiImage />
-              </Icon>
-              <Label expanded={true}>Notification</Label>
-            </SidebarItem>
+
             <SidebarItem
               to="/admin-subjects"
               onClick={() => setMobileOpen(false)}
@@ -470,11 +408,11 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Fees</Label>
             </SidebarItem>
-           <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
+            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
-              <Label expanded={expanded}>Upload Documents</Label>
+              <Label expanded={true}>Upload Documents</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -485,6 +423,46 @@ const Sidebar = () => {
                 <RiGalleryLine />
               </Icon>
               <Label expanded={true}>Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/admin-student-data"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <GrDatabase />
+              </Icon>
+              <Label expanded={true}>Students data</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/admin-teacher-data"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiDatabase2Line />
+              </Icon>
+              <Label expanded={true}>Teachers data</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/admin-announcement"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={true}>Announcement</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/admin-notification"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={true}>Notification</Label>
             </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
@@ -525,20 +503,6 @@ const Sidebar = () => {
               <Label expanded={expanded}>TeacherInformation</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-teacher-data" expanded={expanded}>
-              <Icon>
-                <RiDatabase2Line />
-              </Icon>
-              <Label expanded={expanded}>Teachers Data</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-students-data" expanded={expanded}>
-              <Icon>
-                <GrDatabase />
-              </Icon>
-              <Label expanded={expanded}>Students Data</Label>
-            </SidebarItem>
-
             <SidebarItem to="/admin-student-information" expanded={expanded}>
               <Icon>
                 <PiStudentThin />
@@ -553,13 +517,6 @@ const Sidebar = () => {
               <Label expanded={expanded}>Subjects</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-notification" expanded={expanded}>
-              <Icon>
-                <LiaCalendarCheck />
-              </Icon>
-              <Label expanded={expanded}>Notification</Label>
-            </SidebarItem>
-
             <SidebarItem to="/admin-timetable" expanded={expanded}>
               <Icon>
                 <AiOutlineForm />
@@ -572,13 +529,6 @@ const Sidebar = () => {
                 <MdOutlineFeedback />
               </Icon>
               <Label expanded={expanded}>Feedback</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-announcement" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Announcement</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-promotion" expanded={expanded}>
@@ -615,11 +565,39 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
-             <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
+            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Upload Documents</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-announcement" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Announcement</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-notification" expanded={expanded}>
+              <Icon>
+                <LiaCalendarCheck />
+              </Icon>
+              <Label expanded={expanded}>Notification</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-teacher-data" expanded={expanded}>
+              <Icon>
+                <RiDatabase2Line />
+              </Icon>
+              <Label expanded={expanded}>Teachers Data</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-students-data" expanded={expanded}>
+              <Icon>
+                <GrDatabase />
+              </Icon>
+              <Label expanded={expanded}>Students Data</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-gallery" expanded={expanded}>
