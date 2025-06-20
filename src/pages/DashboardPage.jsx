@@ -13,7 +13,7 @@ import Confetti from "react-confetti";
 // Styled Components
 const PageContainer = styled.div`
   flex: 1;
-  padding: 0 15px;
+  padding: 0 20px;
   width: 98.5%;
   margin: 40px 15px;
 
@@ -206,7 +206,7 @@ const PopupOverlay = styled.div`
 
 const PopupBox = styled.div`
   background-color: white;
-  padding: 30px;
+  padding: 25px;
   border-radius: 15px;
   width: 90%;
   max-width: 500px;
