@@ -324,16 +324,6 @@ const PrincipalSidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/principal-academics"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <TbFileSpreadsheet />
-              </Icon>
-              <Label expanded={true}>Academics</Label>
-            </SidebarItem>
-
-            <SidebarItem
               to="/principal-studentinfo"
               onClick={() => setMobileOpen(false)}
             >
@@ -357,7 +347,7 @@ const PrincipalSidebar = () => {
               <Icon>
                 <LiaSchoolSolid />
               </Icon>
-              <Label expanded={expanded}>Attendance Report</Label>
+              <Label expanded={true}>Attendance Report</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -381,6 +371,26 @@ const PrincipalSidebar = () => {
             </SidebarItem>
 
             <SidebarItem
+              to="/principal-feedback"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={true}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/principal-academics"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>Academics</Label>
+            </SidebarItem>
+            
+            <SidebarItem
               to="/principal-subjects"
               onClick={() => setMobileOpen(false)}
             >
@@ -398,16 +408,6 @@ const PrincipalSidebar = () => {
                 <LiaCalendarCheck />
               </Icon>
               <Label expanded={true}>Fees</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              to="/principal-feedback"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={true}>Feedback</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -435,13 +435,6 @@ const PrincipalSidebar = () => {
                 <LiaPaletteSolid />
               </Icon>
               <Label expanded={expanded}>Dashboard</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/principal-academics" expanded={expanded}>
-              <Icon>
-                <MdOutlineAssignment />
-              </Icon>
-              <Label expanded={expanded}>Academics</Label>
             </SidebarItem>
 
             <SidebarItem to="/principal-teacherinfo" expanded={expanded}>
@@ -481,11 +474,33 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Notification</Label>
             </SidebarItem>
 
+            <SidebarItem to="/principal-feedback" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/principal-leave-panel" expanded={expanded}>
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={expanded}>LeavesPannel</Label>
+            </SidebarItem>
+
+            
             <SidebarItem to="/principal-subjects" expanded={expanded}>
               <Icon>
                 <FiImage />
               </Icon>
               <Label expanded={expanded}>Subjects</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/principal-academics" expanded={expanded}>
+              <Icon>
+                <MdOutlineAssignment />
+              </Icon>
+              <Label expanded={expanded}>Academics</Label>
             </SidebarItem>
 
             <SidebarItem to="/principal-fees" expanded={expanded}>
@@ -495,25 +510,11 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
 
-            <SidebarItem to="/principal-feedback" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Feedback</Label>
-            </SidebarItem>
-
             <SidebarItem to="/principal-announcement" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Announcement</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/principal-leave-panel" expanded={expanded}>
-              <Icon>
-                <FiImage />
-              </Icon>
-              <Label expanded={expanded}>LeavesPannel</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>
