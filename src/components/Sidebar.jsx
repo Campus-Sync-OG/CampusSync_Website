@@ -391,11 +391,22 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-            <SidebarItem to="/achievement" onClick={() => setMobileOpen(false)}>
+            <SidebarItem to="/leave" onClick={() => setMobileOpen(false)}>
               <Icon>
-                <SlBadge />
+                <RiCalendarEventFill />
               </Icon>
-              <Label expanded={true}>Achievement</Label>
+              <Label expanded={true}>Leave Application</Label>
+            </SidebarItem>
+
+            
+            <SidebarItem
+              to="/study-module"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Study Module</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -406,22 +417,13 @@ const Sidebar = () => {
                 <AiOutlineForm />
               </Icon>
               <Label expanded={true}>Forms/Feedback</Label>
-            </SidebarItem>
+            </SidebarItem>      
 
-            <SidebarItem to="/leave" onClick={() => setMobileOpen(false)}>
+            <SidebarItem to="/achievement" onClick={() => setMobileOpen(false)}>
               <Icon>
-                <RiCalendarEventFill />
+                <SlBadge />
               </Icon>
-              <Label expanded={true}>Leave Application</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/study-module"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={true}>Study Module</Label>
+              <Label expanded={true}>Achievement</Label>
             </SidebarItem>
 
             <SidebarItem to="/gallery" onClick={() => setMobileOpen(false)}>
@@ -529,25 +531,14 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-            <SidebarItem to="/achievement" expanded={expanded}>
-              <Icon>
-                <SlBadge />
-              </Icon>
-              <Label expanded={expanded}>Achievement</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/forms-feedback" expanded={expanded}>
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={expanded}>Forms/Feedback</Label>
-            </SidebarItem>
-            <SidebarItem to="/leave" expanded={expanded}>
+                        <SidebarItem to="/leave" expanded={expanded}>
               <Icon>
                 <RiCalendarEventFill />
               </Icon>
               <Label expanded={expanded}>Leave Application</Label>
             </SidebarItem>
+
+        
 
             <SidebarItem to="/study-module" expanded={expanded}>
               <Icon>
@@ -555,6 +546,22 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
+          
+
+            <SidebarItem to="/forms-feedback" expanded={expanded}>
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={expanded}>Forms/Feedback</Label>
+            </SidebarItem>
+
+              <SidebarItem to="/achievement" expanded={expanded}>
+              <Icon>
+                <SlBadge />
+              </Icon>
+              <Label expanded={expanded}>Achievement</Label>
+            </SidebarItem>
+
 
             <SidebarItem to="/gallery" expanded={expanded}>
               <Icon>

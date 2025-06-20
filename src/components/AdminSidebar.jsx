@@ -308,13 +308,13 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/admin-school-information"
+              to="/admin-student-information"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FaSchool />
+                <PiStudentThin />
               </Icon>
-              <Label expanded={true}>SchoolInformation</Label>
+              <Label expanded={true}>Add Student Info</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -324,26 +324,31 @@ const Sidebar = () => {
               <Icon>
                 <GiTeacher />
               </Icon>
-              <Label expanded={true}>TeacherInformation</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-student-information"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <PiStudentThin />
-              </Icon>
-              <Label expanded={true}>StudentInformation</Label>
+              <Label expanded={true}>Add Teacher Info</Label>
             </SidebarItem>
 
             <SidebarItem
-              to="/admin-feedback"
+              to="/admin-school-information"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <MdOutlineFeedback />
+                <FaSchool />
               </Icon>
-              <Label expanded={true}>Feedback</Label>
+              <Label expanded={true}>Add School Info</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Upload Documents</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-fee" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Fees</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -357,24 +362,6 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/admin-subjects"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <MdSubject />
-              </Icon>
-              <Label expanded={true}>Subjects</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-promotion"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={true}>Promotion</Label>
-            </SidebarItem>
-            <SidebarItem
               to="/admin-addsubject"
               onClick={() => setMobileOpen(false)}
             >
@@ -383,6 +370,17 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Add Subject</Label>
             </SidebarItem>
+
+            <SidebarItem
+              to="/admin-subjects"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <MdSubject />
+              </Icon>
+              <Label expanded={true}>Subjects</Label>
+            </SidebarItem>
+
             <SidebarItem
               to="/admin-subjectlist"
               onClick={() => setMobileOpen(false)}
@@ -392,6 +390,7 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Subject List</Label>
             </SidebarItem>
+
             <SidebarItem
               to="/admin-studymodule"
               onClick={() => setMobileOpen(false)}
@@ -402,17 +401,24 @@ const Sidebar = () => {
               <Label expanded={true}>Study Module</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-fee" onClick={() => setMobileOpen(false)}>
+            <SidebarItem
+              to="/admin-promotion"
+              onClick={() => setMobileOpen(false)}
+            >
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
-              <Label expanded={true}>Fees</Label>
+              <Label expanded={true}>Promotion</Label>
             </SidebarItem>
-            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
+
+            <SidebarItem
+              to="/admin-feedback"
+              onClick={() => setMobileOpen(false)}
+            >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <MdOutlineFeedback />
               </Icon>
-              <Label expanded={true}>Upload Documents</Label>
+              <Label expanded={true}>Feedback</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -489,32 +495,39 @@ const Sidebar = () => {
               <Label expanded={expanded}>UserCreation</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-school-information" expanded={expanded}>
+            <SidebarItem to="/admin-student-information" expanded={expanded}>
               <Icon>
-                <FaSchool />
+                <PiStudentThin />
               </Icon>
-              <Label expanded={expanded}>School Information</Label>
+              <Label expanded={expanded}> Add Student Info</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-teacher-information" expanded={expanded}>
               <Icon>
                 <GiTeacher />
               </Icon>
-              <Label expanded={expanded}>TeacherInformation</Label>
+              <Label expanded={expanded}>Add Teacher Infor</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-student-information" expanded={expanded}>
+            <SidebarItem to="/admin-school-information" expanded={expanded}>
               <Icon>
-                <PiStudentThin />
+                <FaSchool />
               </Icon>
-              <Label expanded={expanded}>Student Information</Label>
+              <Label expanded={expanded}>Add School Info</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-subjects" expanded={expanded}>
+            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
               <Icon>
-                <MdSubject />
+                <HiDocumentCurrencyRupee />
               </Icon>
-              <Label expanded={expanded}>Subjects</Label>
+              <Label expanded={expanded}>Upload Documents</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-fee" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-timetable" expanded={expanded}>
@@ -524,25 +537,18 @@ const Sidebar = () => {
               <Label expanded={expanded}>Timetable</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-feedback" expanded={expanded}>
-              <Icon>
-                <MdOutlineFeedback />
-              </Icon>
-              <Label expanded={expanded}>Feedback</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-promotion" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Promotion</Label>
-            </SidebarItem>
-
             <SidebarItem to="/admin-addsubject" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Add Subject</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-subjects" expanded={expanded}>
+              <Icon>
+                <MdSubject />
+              </Icon>
+              <Label expanded={expanded}>Subjects</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-subjectlist" expanded={expanded}>
@@ -559,17 +565,25 @@ const Sidebar = () => {
               <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-fee" expanded={expanded}>
+            <SidebarItem to="/admin-promotion" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
-              <Label expanded={expanded}>Fees</Label>
+              <Label expanded={expanded}>Promotion</Label>
             </SidebarItem>
-            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
+
+            <SidebarItem to="/admin-feedback" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <MdOutlineFeedback />
               </Icon>
-              <Label expanded={expanded}>Upload Documents</Label>
+              <Label expanded={expanded}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-gallery" expanded={expanded}>
+              <Icon>
+                <RiGalleryLine />
+              </Icon>
+              <Label expanded={expanded}>Admin Gallery</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-announcement" expanded={expanded}>
@@ -598,13 +612,6 @@ const Sidebar = () => {
                 <GrDatabase />
               </Icon>
               <Label expanded={expanded}>Students Data</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-gallery" expanded={expanded}>
-              <Icon>
-                <RiGalleryLine />
-              </Icon>
-              <Label expanded={expanded}>Admin Gallery</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>

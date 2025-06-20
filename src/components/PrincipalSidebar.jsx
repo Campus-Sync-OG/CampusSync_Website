@@ -323,16 +323,7 @@ const PrincipalSidebar = () => {
               <Label expanded={true}>Dashboard</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/principal-studentinfo"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <MdOutlineAssignment />
-              </Icon>
-              <Label expanded={true}>Student Data</Label>
-            </SidebarItem>
-
+            
             <SidebarItem
               to="/principal-teacherinfo"
               onClick={() => setMobileOpen(false)}
@@ -343,11 +334,54 @@ const PrincipalSidebar = () => {
               <Label expanded={true}>Teacher Data</Label>
             </SidebarItem>
 
+            <SidebarItem
+              to="/principal-studentinfo"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <MdOutlineAssignment />
+              </Icon>
+              <Label expanded={true}>Student Data</Label>
+            </SidebarItem>
+
+
             <SidebarItem to="/principal-attendance" expanded={expanded}>
               <Icon>
                 <LiaSchoolSolid />
               </Icon>
               <Label expanded={true}>Attendance Report</Label>
+            </SidebarItem>
+
+            
+            <SidebarItem
+              to="/principal-addnotification"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={true}>Notification</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/principal-leave-panel"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={true}>LeavesPannel</Label>
+            </SidebarItem>
+
+            
+            <SidebarItem
+              to="/principal-feedback"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={true}>Feedback</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -360,25 +394,7 @@ const PrincipalSidebar = () => {
               <Label expanded={true}>Gallery</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/principal-addnotification"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <FiImage />
-              </Icon>
-              <Label expanded={true}>Notification</Label>
-            </SidebarItem>
 
-            <SidebarItem
-              to="/principal-feedback"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={true}>Feedback</Label>
-            </SidebarItem>
 
             <SidebarItem
               to="/principal-academics"
@@ -389,7 +405,7 @@ const PrincipalSidebar = () => {
               </Icon>
               <Label expanded={true}>Academics</Label>
             </SidebarItem>
-            
+
             <SidebarItem
               to="/principal-subjects"
               onClick={() => setMobileOpen(false)}
@@ -460,25 +476,11 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Attendance Report</Label>
             </SidebarItem>
 
-            <SidebarItem to="/Principal-gallery" expanded={expanded}>
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={expanded}>Gallery</Label>
-            </SidebarItem>
-
             <SidebarItem to="/principal-addnotification" expanded={expanded}>
               <Icon>
                 <FiImage />
               </Icon>
               <Label expanded={expanded}>Notification</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/principal-feedback" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Feedback</Label>
             </SidebarItem>
 
             <SidebarItem to="/principal-leave-panel" expanded={expanded}>
@@ -488,7 +490,22 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>LeavesPannel</Label>
             </SidebarItem>
 
+
+            <SidebarItem to="/principal-feedback" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Feedback</Label>
+            </SidebarItem>
+
             
+            <SidebarItem to="/Principal-gallery" expanded={expanded}>
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={expanded}>Gallery</Label>
+            </SidebarItem>
+
             <SidebarItem to="/principal-subjects" expanded={expanded}>
               <Icon>
                 <FiImage />
