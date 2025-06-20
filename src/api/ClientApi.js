@@ -504,6 +504,26 @@ export const getStudentFeeDetails = async (admission_no) => {
   }
 };
 
+export const getFeeStatusByClassSection = async ({ class_name, section_name, feestype }) => {
+  try {
+    const response = await api.get('/fee/fee-status', {
+      params: {
+        class_name,
+        section_name,
+        feestype
+      }
+    });
+    return response.data;
+  } catch (error) {
+    // Handle and re-throw meaningful error
+    if (error.response && error.response.data) {
+      throw error.response.data;
+    } else {
+      throw { error: "Network or server error" };
+    }
+  }
+};
+
 // Inside component or event handler
 
 export default api;

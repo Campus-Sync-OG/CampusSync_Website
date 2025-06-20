@@ -1,99 +1,285 @@
 import React, { useState } from 'react';
-import { getStudentFeeDetails } from '../api/ClientApi'; // Adjust the import path as necessary
+import { getFeeStatusByClassSection, getStudentFeeDetails } from '../api/ClientApi'; // adjust path
+import styled from 'styled-components';
+
 
 const StudentFeeDetails = () => {
-  const [admissionNo, setAdmissionNo] = useState('');
-  const [studentData, setStudentData] = useState(null);
-  const [error, setError] = useState('');
+    const [filters, setFilters] = useState({
+        class_name: '',
+        section_name: '',
+        feestype: ''
+    });
+    const [report, setReport] = useState(null);
+    const [studentDetail, setStudentDetail] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [error, setError] = useState('');
 
-  const fetchFeeDetails = async () => {
-    try {
-      const data = await getStudentFeeDetails(admissionNo);
-      // Ensure empty arrays if missing
-      setStudentData({
-        ...data,
-        fees: data.fees || [],
-        history: data.history || []
-      });
-      setError('');
-    } catch (err) {
-      setStudentData(null);
-      setError(err.error || 'Something went wrong');
-    }
-  };
+    const fetchStatus = async () => {
+        try {
+            const data = await getFeeStatusByClassSection(filters);
+            setReport(data);
+            setStudentDetail(null);
+            setShowModal(false);
+            setError('');
+        } catch (err) {
+            setReport(null);
+            setStudentDetail(null);
+            setShowModal(false);
+            setError(err.error || 'Something went wrong');
+        }
+    };
 
-  return (
-    <div style={{ padding: '20px' }}>
-      <h2>Student Fee Details</h2>
+    const fetchStudentDetail = async (admission_no) => {
+        try {
+            const data = await getStudentFeeDetails(admission_no);
+            setStudentDetail({
+                ...data,
+                fees: data.fees || [],
+                history: data.history || []
+            });
+            setShowModal(true);
+            setError('');
+        } catch (err) {
+            setStudentDetail(null);
+            setShowModal(false);
+            setError(err.error || 'Something went wrong');
+        }
+    };
 
-      <div style={{ marginBottom: '10px' }}>
-        <input
-          type="text"
-          placeholder="Enter Admission No"
-          value={admissionNo}
-          onChange={(e) => setAdmissionNo(e.target.value)}
-          style={{ padding: '5px', marginRight: '10px' }}
-        />
-        <button onClick={fetchFeeDetails}>Fetch Details</button>
-      </div>
+    return (
+        <Container>
+            <Title>Fee Status By Class & Section</Title>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+            <FilterRow>
+                <Select value={filters.class_name} onChange={e => setFilters({ ...filters, class_name: e.target.value })}>
+                    <option value="">Select Class</option>
+                    {[...Array(12)].map((_, i) => (
+                        <option key={i + 1} value={i + 1}>{i + 1}</option>
+                    ))}
+                </Select>
 
-      {studentData && studentData.fees.length > 0 && (
-        <>
-          <h4>Fee Summary</h4>
-          <table border="1" cellPadding="5" style={{ borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th>Fee Type</th>
-                <th>Total Fee</th>
-                <th>Paid</th>
-                <th>Due</th>
-              </tr>
-            </thead>
-            <tbody>
-              {studentData.fees.map((fee, idx) => (
-                <tr key={idx}>
-                  <td>{fee.type}</td>
-                  <td>{fee.total}</td>
-                  <td>{fee.paid}</td>
-                  <td>{fee.total - fee.paid}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
+                <Select value={filters.section_name} onChange={e => setFilters({ ...filters, section_name: e.target.value })}>
+                    <option value="">Select Section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </Select>
 
-      {studentData && studentData.history.length > 0 && (
-        <>
-          <h4 style={{ marginTop: '20px' }}>Payment History</h4>
-          <table border="1" cellPadding="5" style={{ borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Fee Type</th>
-                <th>Method</th>
-                <th>Amount</th>
-                <th>Receipt No</th>
-              </tr>
-            </thead>
-            <tbody>
-              {studentData.history.map((h, idx) => (
-                <tr key={idx}>
-                  <td>{h.date}</td>
-                  <td>{h.fee_type}</td>
-                  <td>{h.pay_method}</td>
-                  <td>{h.paid_amount}</td>
-                  <td>{h.receipt_no || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
-    </div>
-  );
+                <Select value={filters.feestype} onChange={e => setFilters({ ...filters, feestype: e.target.value })}>
+                    <option value="">Select Fee Type</option>
+                    <option value="Tuition">Tuition</option>
+                    <option value="Transport">Transport</option>
+                    <option value="Books">Books</option>
+                    <option value="Uniform">Uniform</option>
+                </Select>
+
+                <Button onClick={fetchStatus}>Fetch Fee Status</Button>
+            </FilterRow>
+
+            {error && <ErrorText>{error}</ErrorText>}
+
+            {report && (
+                <>
+                    <SubTitle>Summary: Paid - {report.paid_count} | Due - {report.due_count}</SubTitle>
+                    <Table>
+                        <thead>
+                            <tr>
+                                <Th>Admission No</Th>
+                                <Th>Total Fee</Th>
+                                <Th>Paid</Th>
+                                <Th>Due</Th>
+                                <Th>Due Date</Th>
+                                <Th>Action</Th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {report.details.map((s, idx) => {
+                                const Row = s.due_amount > 0 ? HighlightRow : NormalRow;
+                                return (
+                                    <Row key={idx}>
+                                        <Td>{s.admission_no}</Td>
+                                        <Td>{s.total_fee}</Td>
+                                        <Td>{s.paid_amount}</Td>
+                                        <Td>{s.due_amount}</Td>
+                                        <Td>{s.due_date ? s.due_date.split('T')[0] : ''}</Td>
+                                        <Td>
+                                            <Button onClick={() => fetchStudentDetail(s.admission_no)}>View</Button>
+                                        </Td>
+                                    </Row>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </>
+            )}
+
+            {showModal && studentDetail && (
+                <ModalOverlay>
+                    <ModalContent>
+                        <CloseButton onClick={() => setShowModal(false)}>X</CloseButton>
+
+                        <SubTitle>Student Fee Detail: {studentDetail.name} ({studentDetail.admission_no})</SubTitle>
+                        <Table>
+                            <thead>
+                                <tr>
+                                    <Th>Type</Th>
+                                    <Th>Total</Th>
+                                    <Th>Paid</Th>
+                                    <Th>Due</Th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {studentDetail.fees.map((fee, idx) => (
+                                    <NormalRow key={idx}>
+                                        <Td>{fee.type}</Td>
+                                        <Td>{fee.total}</Td>
+                                        <Td>{fee.paid}</Td>
+                                        <Td>{fee.due}</Td>
+                                    </NormalRow>
+                                ))}
+                            </tbody>
+                        </Table>
+
+                        <SubTitle>Payment History</SubTitle>
+                        <Table>
+                            <thead>
+                                <tr>
+                                    <Th>Date</Th>
+                                    <Th>Method</Th>
+                                    <Th>Amount</Th>
+                                    <Th>Receipt No</Th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {studentDetail.history.map((h, idx) => (
+                                    <NormalRow key={idx}>
+                                        <Td>{h.date}</Td>
+                                        <Td>{h.pay_method}</Td>
+                                        <Td>{h.paid_amount}</Td>
+                                        <Td>{h.receipt_no || 'N/A'}</Td>
+                                    </NormalRow>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </ModalContent>
+                </ModalOverlay>
+            )}
+        </Container>
+    );
 };
 
 export default StudentFeeDetails;
+
+
+export const Container = styled.div`
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+  background: #f9f9f9;
+  border-radius: 8px;
+`;
+
+export const Title = styled.h2`
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+`;
+
+export const FilterRow = styled.div`
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+`;
+
+export const Select = styled.select`
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+export const Button = styled.button`
+  padding: 0.5rem 1.2rem;
+  background:  #002087;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background:  #002087;
+  }
+`;
+
+export const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: white;
+  border-radius: 5px;
+  overflow: hidden;
+`;
+
+export const Th = styled.th`
+  background:  #002087;
+  color: white;
+  padding: 0.8rem;
+`;
+
+export const Td = styled.td`
+  padding: 0.8rem;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+`;
+
+export const HighlightRow = styled.tr`
+  background-color:rgb(216, 178, 178);
+`;
+
+export const NormalRow = styled.tr`
+  background-color: #fff;
+`;
+
+export const SubTitle = styled.h3`
+  margin-top: 2rem;
+  color: #333;
+`;
+
+export const ErrorText = styled.p`
+  color: red;
+  text-align: center;
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+export const ModalContent = styled.div`
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+`;
+
+export const CloseButton = styled.button`
+  position: absolute;
+  top: 10px; 
+  right: 10px;
+  background: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+`;

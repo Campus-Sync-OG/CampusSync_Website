@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
-import { createFeePlanForClassSection, addFee } from "../api/ClientApi";  // Update this path as per your project
+import { createFeePlanForClassSection, createFeeOrder, generateReceipt } from "../api/ClientApi";  // Update this path as per your project
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 
@@ -52,36 +52,65 @@ const AdminFee = () => {
 
     setFormData(updatedForm);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await addFee(formData);
+      if (!formData.admission_no) {
+        alert("Admission No is required");
+        return;
+      }
+      if (!formData.feestype) {
+        alert("Fee type is required");
+        return;
+      }
+
+      const { admission_no, ...otherData } = formData;
+
+      // Step 1: Submit the fee order
+      const feeResponse = await createFeeOrder(otherData, admission_no);
+
       alert("Fees submitted successfully!");
+
+      // Step 2: Generate the receipt
+      const receiptUrl = await generateReceipt({
+        admission_no,
+        feestype: formData.feestype
+      });
+
+      // Step 3: Show or open receipt
+      if (receiptUrl) {
+        alert("Receipt generated successfully!");
+        console.log("Receipt URL:", receiptUrl);
+        // Optionally open or display link
+        window.open(receiptUrl, "_blank");
+      }
+
+      // Step 4: Reset form
       setFormData({
         admission_no: "",
         pay_date: "",
         pay_method: "Cash",
         paid_amount: "",
-        receipt_no: "",
         status: "Paid",
         feestype: "",
         class_name: "",
         section_name: "",
-        tuition_fee: "",
-        transport_fee: "",
-        shirt: "",
-        pant: "",
-        tie: "",
-        shoe: "",
-        uniform_fee: ""
+        tuition_amount: "",
+        transport_amount: "",
+        book_amount: "",
+        uniform_details: {
+          shirt: "",
+          pant: "",
+          tie: "",
+          shoe: ""
+        }
       });
     } catch (err) {
-      console.error("Submission failed:", err);
-      alert(err.response?.data?.message || "Fee submission failed.");
+      console.error("Submission or receipt generation failed:", err);
+      alert(err.error || err.message || "An error occurred.");
     }
   };
-
 
   return (
     <Container>
@@ -122,7 +151,7 @@ const AdminFee = () => {
             <Select name="class_name" value={formData.class_name} onChange={handleChange} required>
               <option value="">Select Class</option>
               {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={`Class ${i + 1}`}>{`Class ${i + 1}`}</option>
+                <option key={i + 1} value={` ${i + 1}`}>{` ${i + 1}`}</option>
               ))}
             </Select>
           </Field>
@@ -154,11 +183,6 @@ const AdminFee = () => {
           <Field>
             <Label>Paid Amount *</Label>
             <Input name="paid_amount" type="number" value={formData.paid_amount} onChange={handleChange} required />
-          </Field>
-
-          <Field>
-            <Label>Receipt Number *</Label>
-            <Input name="receipt_no" value={formData.receipt_no} onChange={handleChange} required />
           </Field>
 
           <Field>
@@ -239,6 +263,7 @@ const AdminFee = () => {
 
       {showModal && (
         <ModalOverlay>
+          <LargeModalContent>
           <ModalContent>
             <h3>Add Fee Plan</h3>
 
@@ -322,11 +347,22 @@ const AdminFee = () => {
 
             {["Books", "Uniform"].includes(feePlanData.feestype) && (
               <>
-                <Label>Item Details</Label>
+                <Label>{feePlanData.feestype} Item Details</Label>
                 {feePlanData.items.map((item, idx) => (
                   <ModalRow key={idx}>
                     <ModalField>
-                      <Input value={item.item_name} readOnly />
+                      <Input
+                        placeholder="Item Name"
+                        value={item.item_name}
+                        onChange={e => {
+                          const updatedItems = [...feePlanData.items];
+                          updatedItems[idx].item_name = e.target.value;
+                          setFeePlanData(prev => ({
+                            ...prev,
+                            items: updatedItems
+                          }));
+                        }}
+                      />
                     </ModalField>
                     <ModalField>
                       <Input
@@ -345,11 +381,36 @@ const AdminFee = () => {
                         }}
                       />
                     </ModalField>
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        const updatedItems = feePlanData.items.filter((_, i) => i !== idx);
+                        const sum = updatedItems.reduce((acc, itm) => acc + (itm.amount || 0), 0);
+                        setFeePlanData(prev => ({
+                          ...prev,
+                          items: updatedItems,
+                          total_fee: sum
+                        }));
+                      }}
+                    >
+                      Remove
+                    </Button>
                   </ModalRow>
                 ))}
+
+                <Button
+                  type="button"
+                  onClick={() =>
+                    setFeePlanData(prev => ({
+                      ...prev,
+                      items: [...prev.items, { item_name: "", amount: 0 }]
+                    }))
+                  }
+                >
+                  Add {feePlanData.feestype} Item
+                </Button>
               </>
             )}
-
 
 
             {["Tuition", "Transport"].includes(feePlanData.feestype) && (
@@ -391,6 +452,7 @@ const AdminFee = () => {
               <Button type="button" onClick={() => setShowModal(false)}>Cancel</Button>
             </div>
           </ModalContent>
+          </LargeModalContent>
         </ModalOverlay>
       )}
 
@@ -532,6 +594,14 @@ export const ModalField = styled.div`
   flex: 1 1 48%;
   display: flex;
   flex-direction: column;
+`;
+
+export const LargeModalContent = styled(ModalContent)`
+  width: 800px;
+  max-width: 95%;
+  height: auto;
+  max-height: 90vh;
+  overflow-y: auto;
 `;
 
 
