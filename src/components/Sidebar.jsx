@@ -353,27 +353,6 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-            <SidebarItem to="/attendance" onClick={() => setMobileOpen(false)}>
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={true}>Attendance</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/school/assignment" expanded={expanded}>
-              <Icon>
-                <MdAssignment />
-              </Icon>
-              <Label expanded={true}>Assignment</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/academics" onClick={() => setMobileOpen(false)}>
-              <Icon>
-                <TbFileSpreadsheet />
-              </Icon>
-              <Label expanded={true}>Academics</Label>
-            </SidebarItem>
-
             <SidebarItem as="div" onClick={() => toggleDropdown("school")}>
               <Icon>
                 <LiaSchoolSolid />
@@ -387,6 +366,7 @@ const Sidebar = () => {
                 onClick={() => setMobileOpen(false)}
               >
                 <ChildArrow />
+                 <Label expanded={true}>calender of event</Label>
               </SidebarItem>
               <SidebarItem
                 to="/school/circular"
@@ -410,13 +390,6 @@ const Sidebar = () => {
                 <Label expanded={true}>Certificate Request</Label>
               </SidebarItem>
             </Dropdown>
-
-            <SidebarItem to="/fees" onClick={() => setMobileOpen(false)}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={true}>Fees</Label>
-            </SidebarItem>
 
             <SidebarItem to="/achievement" onClick={() => setMobileOpen(false)}>
               <Icon>
@@ -456,6 +429,34 @@ const Sidebar = () => {
                 <FiImage />
               </Icon>
               <Label expanded={true}>Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/school/assignment" expanded={expanded}>
+              <Icon>
+                <MdAssignment />
+              </Icon>
+              <Label expanded={true}>Assignment</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/fees" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Fees</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/academics" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>Academics</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/attendance" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Attendance</Label>
             </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
@@ -497,27 +498,6 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-            <SidebarItem to="/attendance" expanded={expanded}>
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={expanded}>Attendance</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/school/assignment" expanded={expanded}>
-              <Icon>
-                <MdAssignment />
-              </Icon>
-              <Label expanded={expanded}>Assignment</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/academics" expanded={expanded}>
-              <Icon>
-                <TbFileSpreadsheet />
-              </Icon>
-              <Label expanded={expanded}>Academics</Label>
-            </SidebarItem>
-
             {/* My School Dropdown */}
             <SidebarItem
               as="div"
@@ -548,13 +528,6 @@ const Sidebar = () => {
                 <Label expanded={expanded}>Certificate Request</Label>
               </SidebarItem>
             </Dropdown>
-
-            <SidebarItem to="/fees" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Fees</Label>
-            </SidebarItem>
 
             <SidebarItem to="/achievement" expanded={expanded}>
               <Icon>
@@ -588,6 +561,34 @@ const Sidebar = () => {
                 <FiImage />
               </Icon>
               <Label expanded={expanded}>Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/school/assignment" expanded={expanded}>
+              <Icon>
+                <MdAssignment />
+              </Icon>
+              <Label expanded={expanded}>Assignment</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/fees" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Fees</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/academics" expanded={expanded}>
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={expanded}>Academics</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/attendance" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={expanded}>Attendance</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>
