@@ -349,16 +349,6 @@ const Sidebar = () => {
             </Dropdown>
 
             <SidebarItem
-              to="/teacher-attendance"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={true}>Attendance</Label>
-            </SidebarItem>
-
-            <SidebarItem
               to="/teacher-attendance-download"
               onClick={() => setMobileOpen(false)}
             >
@@ -386,16 +376,6 @@ const Sidebar = () => {
                 <TbFileSpreadsheet />
               </Icon>
               <Label expanded={true}>Academics</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              to="/teacher-assignment"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <MdOutlineAssignment />
-              </Icon>
-              <Label expanded={true}>Assignment</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -428,6 +408,43 @@ const Sidebar = () => {
               <Label expanded={true}>Circular</Label>
             </SidebarItem>
 
+            <SidebarItem to="/teacherform" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={true}>Forms</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/teacher-fees"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Fees</Label>
+            </SidebarItem>
+
+             <SidebarItem
+              to="/teacher-attendance"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>Attendance</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/teacher-assignment"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <MdOutlineAssignment />
+              </Icon>
+              <Label expanded={true}>Assignment</Label>
+            </SidebarItem>
+
             <SidebarItem
               to="/teacher-subjects"
               onClick={() => setMobileOpen(false)}
@@ -446,23 +463,6 @@ const Sidebar = () => {
                 <LiaCalendarCheck />
               </Icon>
               <Label expanded={true}>Time Table</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/teacherform" onClick={() => setMobileOpen(false)}>
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={true}>Forms</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              to="/teacher-fees"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={true}>Fees</Label>
             </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
@@ -503,12 +503,7 @@ const Sidebar = () => {
                 <Label expanded={expanded}>School Info</Label>
               </SidebarItem>
             </Dropdown>
-            <SidebarItem to="/teacher-attendance" expanded={expanded}>
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={expanded}>Attendance</Label>
-            </SidebarItem>
+            
 
             <SidebarItem to="/teacher-attendance-download" expanded={expanded}>
               <Icon>
@@ -519,7 +514,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/teacher-achievement" expanded={expanded}>
               <Icon>
-                 <SlBadge />
+                <SlBadge />
               </Icon>
               <Label expanded={expanded}>Achievement</Label>
             </SidebarItem>
@@ -531,12 +526,6 @@ const Sidebar = () => {
               <Label expanded={expanded}>Academics</Label>
             </SidebarItem>
 
-            <SidebarItem to="/teacher-assignments" expanded={expanded}>
-              <Icon>
-                <MdOutlineAssignment />
-              </Icon>
-              <Label expanded={expanded}>Assignment</Label>
-            </SidebarItem>
             <SidebarItem to="/teacher-levaveapplication" expanded={expanded}>
               <Icon>
                 <FiImage />
@@ -544,14 +533,13 @@ const Sidebar = () => {
               <Label expanded={expanded}>Leave Request</Label>
             </SidebarItem>
             {/* My School Dropdown */}
-           
-              <SidebarItem to="/teacher-myclass" expanded={expanded}>
-                <Icon>
-                  <LiaSchoolSolid />
-                </Icon>
-                <Label expanded={expanded}>My Class</Label>
-              </SidebarItem>
-           
+
+            <SidebarItem to="/teacher-myclass" expanded={expanded}>
+              <Icon>
+                <LiaSchoolSolid />
+              </Icon>
+              <Label expanded={expanded}>My Class</Label>
+            </SidebarItem>
 
             <SidebarItem to="/teacher-calendar-of-event" expanded={expanded}>
               <Icon>
@@ -567,20 +555,6 @@ const Sidebar = () => {
               <Label expanded={expanded}>Circular</Label>
             </SidebarItem>
 
-            <SidebarItem to="/teacher-subjects" expanded={expanded}>
-              <Icon>
-                <LiaBookSolid />
-              </Icon>
-              <Label expanded={expanded}>Subjects</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/teacher-timetable" expanded={expanded}>
-              <Icon>
-                <LiaCalendarCheck />
-              </Icon>
-              <Label expanded={expanded}>Time Table</Label>
-            </SidebarItem>
-
             <SidebarItem to="/teacher-form" expanded={expanded}>
               <Icon>
                 <AiOutlineForm />
@@ -593,6 +567,34 @@ const Sidebar = () => {
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Fees</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/teacher-attendance" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={expanded}>Attendance</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/teacher-subjects" expanded={expanded}>
+              <Icon>
+                <LiaBookSolid />
+              </Icon>
+              <Label expanded={expanded}>Subjects</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/teacher-assignments" expanded={expanded}>
+              <Icon>
+                <MdOutlineAssignment />
+              </Icon>
+              <Label expanded={expanded}>Assignment</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/teacher-timetable" expanded={expanded}>
+              <Icon>
+                <LiaCalendarCheck />
+              </Icon>
+              <Label expanded={expanded}>Time Table</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>
