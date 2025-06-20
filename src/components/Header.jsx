@@ -8,6 +8,7 @@ import { CgProfile } from "react-icons/cg";
 import { FiSettings } from "react-icons/fi";
 import { TbLogout } from "react-icons/tb";
 import { TbMessageChatbot } from "react-icons/tb";
+import { FaBullhorn } from "react-icons/fa"
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import NotificationPopupPage from "./notificationpopup";
 
@@ -293,6 +294,11 @@ const MeesageIcon = styled(TbMessageChatbot)`
   font-size: 20px;
   color: rgb(233, 30, 30);
 `;
+const SpeakerIcon = styled(FaBullhorn)`
+  font-size: 18px;
+
+`;
+
 
 const DividerRight = styled.div`
   height: 30px;
@@ -405,6 +411,26 @@ const MenuButton = styled.div`
     position: relative;
     top: 5px;
     left: 10px;
+  }
+`;
+const SpeakerWrapper = styled.div`
+  background-color: #f5f5f5; /* off-white background */
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #e0e0e0; /* subtle hover effect */
+  }
+
+  svg {
+  
+    width: 24px;
+    height: 24px;
   }
 `;
 
@@ -587,6 +613,10 @@ const Header = ({
         </LogoSection>
 
         <HeaderRight>
+         <SpeakerWrapper onClick={() => navigate("/announcement")}>
+      <SpeakerIcon />
+    </SpeakerWrapper>
+
           {back_location.pathname !== "/principal-dashboard" &&
             back_location.pathname !== "/admin-dashboard" && (
               <IconButton onClick={handleChatbotClick}>
