@@ -1,6 +1,7 @@
 // App.js
 import React, { useState, useEffect } from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
+
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
@@ -10,6 +11,23 @@ import {
   getAssignmentsByAdmissionNo,
   studentUploadAssignment,
 } from "../api/ClientApi"; // Adjust the import path as necessary
+
+const moveDot = keyframes`
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    left: 60%;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+`;
 
 // Global style to reset box sizing and overflow
 const GlobalStyle = createGlobalStyle`
@@ -116,13 +134,19 @@ const SubjectsList = styled.ul`
 `;
 
 const SubjectItem = styled.li`
-  padding: 10px;
+  position: relative;
+  padding: 10px 20px;
   margin: 5px 0;
   border: 1px solid #ccc;
   cursor: pointer;
+  overflow: hidden;
+
+  &:hover .animated-dot {
+    animation: ${moveDot} 5s ease-in-out;
+  }
 
   &:hover {
-    background: #f0f0f0;
+    background-color: #f9f9f9;
   }
 `;
 
@@ -245,6 +269,19 @@ const App = () => {
     }
   };
 
+  const lightColors = [
+    "#ffe4e1", // Light pink
+    "#e0ffff", // Light cyan
+    "#f0fff0", // Honeydew
+    "#f5f5dc", // Beige
+    "#f0f8ff", // Alice Blue
+    "#fdf5e6", // Old Lace
+    "#fffacd", // Lemon Chiffon
+    "#e6e6fa", // Lavender
+    "#f0ffff", // Azure
+    "#fafad2", // Light Goldenrod Yellow
+  ];
+
   return (
     <>
       <GlobalStyle />
@@ -343,8 +380,24 @@ const App = () => {
                   <SubjectItem
                     key={index}
                     onClick={() => fetchAssignments(subject_name)}
+                    style={{
+                      backgroundColor: lightColors[index % lightColors.length],
+                    }}
                   >
                     {subject_name}
+                    <span
+                      className="animated-dot"
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: 0,
+                        width: "8px",
+                        height: "8px",
+                        backgroundColor: "#df0043",
+                        borderRadius: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    ></span>
                   </SubjectItem>
                 ))}
               </SubjectsList>
