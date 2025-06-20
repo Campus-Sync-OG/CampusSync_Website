@@ -405,8 +405,7 @@ const Sidebar = () => {
               <Label expanded={true}>Achievement</Label>
             </SidebarItem>
 
-         
-             <SidebarItem
+            <SidebarItem
               to="/teacher-circular"
               onClick={() => setMobileOpen(false)}
             >
@@ -425,17 +424,6 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Calendar Of Events</Label>
             </SidebarItem>
-
-             <SidebarItem
-              to="/teacher-attendance-download"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={true}>Attendance Download</Label>
-            </SidebarItem>
-           
 
             <SidebarItem
               to="/teacher-attendance"
@@ -550,15 +538,13 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Forms</Label>
             </SidebarItem>
-            
+
             <SidebarItem to="/teacher-achievement" expanded={expanded}>
               <Icon>
                 <SlBadge />
               </Icon>
               <Label expanded={expanded}>Achievement</Label>
             </SidebarItem>
-
-
 
             {/* My School Dropdown */}
 
@@ -574,14 +560,6 @@ const Sidebar = () => {
                 <MdBlurCircular />
               </Icon>
               <Label expanded={expanded}>Circular</Label>
-            </SidebarItem>
-
-            
-            <SidebarItem to="/teacher-attendance-download" expanded={expanded}>
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={expanded}>Attendance Download</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-attendance" expanded={expanded}>
