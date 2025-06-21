@@ -113,17 +113,45 @@ const TeacherDashboard = () => {
 
   return (
     <div>
-      {showPopup && latestAnnouncement && (
-        <PopupOverlay>
-          <PopupBox>
-            <h1>Announcement</h1>
-            <h3>{latestAnnouncement.title}</h3>
-            {/* <p><strong>{new Date(latestAnnouncement.date).toLocaleDateString("en-IN")}</strong></p> */}
-            <p>{latestAnnouncement.message}</p>
-            <button onClick={() => setShowPopup(false)}>Close</button>
-          </PopupBox>
-        </PopupOverlay>
-      )}
+     {showPopup && latestAnnouncement && (
+  <PopupOverlay>
+    <PopupBox style={{ position: 'relative' }}>
+      
+      {/* Close button */}
+      <button 
+        onClick={() => setShowPopup(false)}
+         style={{
+         position: 'absolute',
+          top: '10px',
+          right: '10px',
+          width: '30px',
+          height: '30px',
+          borderRadius: '4px',
+          border: 'none',
+          backgroundColor: '#002087',
+          color: '#fff',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        &times;
+      </button>
+
+      {/* Centered Title */}
+      <h1 style={{ textAlign: 'center' }}>Announcement</h1>
+      
+      <h3>{latestAnnouncement.title}</h3>
+      <p>{latestAnnouncement.message}</p>
+      
+    </PopupBox>
+  </PopupOverlay>
+)}
+
+
 
       <DashboardContainer>
         {/* Welcome Card */}
@@ -665,10 +693,12 @@ const PopupBox = styled.div`
   background-color: white;
   padding: 30px;
   border-radius: 15px;
-  width: 90%;
-  max-width: 500px;
+  width: 40%;
+  max-width: 350px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-height:200px;
+  height:50%;
 
   h1 {
     color: red;
