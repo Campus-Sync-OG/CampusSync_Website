@@ -793,7 +793,7 @@ const DashboardPage = () => {
 
   return (
     <> 
-      {/* {isBirthday && showBirthdayWish && (
+      {isBirthday && showBirthdayWish && (
         <BirthdayPopup>
           <Confetti width={width} height={height} />
           <BirthdayCard>
@@ -806,7 +806,7 @@ const DashboardPage = () => {
             </BirthdayButton>
           </BirthdayCard>
         </BirthdayPopup>
-      )} */}
+      )}
      {showPopup && latestAnnouncement && (
   <PopupOverlay>
     <PopupBox style={{ position: 'relative' }}>
