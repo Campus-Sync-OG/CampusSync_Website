@@ -167,6 +167,7 @@ export const InputField = styled.input`
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 16px;
+  max-width:550px;
 `;
 
 export const TextArea = styled.textarea`
@@ -181,6 +182,7 @@ export const Select = styled.select`
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 16px;
+  max-width:570px;
 `;
 
 export const SubmitButton = styled.button`
