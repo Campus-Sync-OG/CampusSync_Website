@@ -8,9 +8,10 @@ import { CgProfile } from "react-icons/cg";
 import { FiSettings } from "react-icons/fi";
 import { TbLogout } from "react-icons/tb";
 import { TbMessageChatbot } from "react-icons/tb";
-import { FaBullhorn } from "react-icons/fa"
+import { FaBullhorn } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import NotificationPopupPage from "./notificationpopup";
+import { IoMdHelpCircleOutline } from "react-icons/io";
 
 // styled-components (unchanged)
 const HeaderContainer = styled.header`
@@ -296,9 +297,7 @@ const MeesageIcon = styled(TbMessageChatbot)`
 `;
 const SpeakerIcon = styled(FaBullhorn)`
   font-size: 18px;
-
 `;
-
 
 const DividerRight = styled.div`
   height: 30px;
@@ -428,7 +427,27 @@ const SpeakerWrapper = styled.div`
   }
 
   svg {
-  
+    width: 24px;
+    height: 24px;
+  }
+`;
+
+const Help = styled.div`
+  background-color: #f5f5f5; /* off-white background */
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+
+  &:hover {
+    background-color: #e0e0e0; /* subtle hover effect */
+  }
+
+  svg {
     width: 24px;
     height: 24px;
   }
@@ -613,9 +632,9 @@ const Header = ({
         </LogoSection>
 
         <HeaderRight>
-         <SpeakerWrapper onClick={() => navigate("/announcement")}>
-      <SpeakerIcon />
-    </SpeakerWrapper>
+          <SpeakerWrapper onClick={() => navigate("/announcement")}>
+            <SpeakerIcon />
+          </SpeakerWrapper>
 
           {back_location.pathname !== "/principal-dashboard" &&
             back_location.pathname !== "/admin-dashboard" && (
@@ -632,6 +651,9 @@ const Header = ({
                 />
               </IconButton>
             )}
+          <Help>
+            <IoMdHelpCircleOutline />
+          </Help>
 
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />
