@@ -476,6 +476,55 @@ export const getStudentAssignmentsByTeacher = async (params) => {
 };
 export const fetchAllStudentDocuments = () =>
   api.get('/studentdocuments/all').then((res) => res.data);
+export const getStudentFeeStatus = async (admission_no) => {
+  try {
+    const response = await api.get(`/fee/student-fee-status/${admission_no}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching fee status:", error);
+    throw error;
+  }
+};
+
+export const createFeePlanForClassSection = async (payload) => {
+  try {
+    const res = await api.post("/fee/fee-plan", payload);
+    return res.data;
+  } catch (err) {
+    console.error("API Error: createFeePlanForClassSection", err);
+    throw err.response?.data || { error: "Server error" };
+  }
+};
+
+export const getStudentFeeDetails = async (admission_no) => {
+  try {
+    const response = await api.get(`/fee/student-fee/${admission_no}`);
+    return response.data;  // Return data so React page can handle it
+  } catch (error) {
+    // You can choose to throw error or return error response
+    throw error.response ? error.response.data : { error: 'Network error' };
+  }
+};
+
+export const getFeeStatusByClassSection = async ({ class_name, section_name, feestype }) => {
+  try {
+    const response = await api.get('/fee/fee-status', {
+      params: {
+        class_name,
+        section_name,
+        feestype
+      }
+    });
+    return response.data;
+  } catch (error) {
+    // Handle and re-throw meaningful error
+    if (error.response && error.response.data) {
+      throw error.response.data;
+    } else {
+      throw { error: "Network or server error" };
+    }
+  }
+};
 
 // Inside component or event handler
 

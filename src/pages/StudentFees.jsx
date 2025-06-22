@@ -5,6 +5,7 @@ import {
   verifyFeePayment,
   getFeesByAdmissionNo,
   generateReceipt,
+  getStudentFeeStatus
 } from "../api/ClientApi";
 
 const Container = styled.div`
@@ -92,200 +93,149 @@ const Button = styled.button`
 `;
 
 const FeePaymentForm = () => {
-  const defaultUniformRates = {
-    shirt: 500,
-    pant: 600,
-    tie: 300,
-    sweater: 700,
-    shoes: 800,
-  };
-
   const [admission_no, setAdmissionNo] = useState(null);
-  const [student, setStudent] = useState({
-    admission_no: "",
-    class_name: "",
-    section_name: "",
-  });
-  const [selectedFeeType, setSelectedFeeType] = useState("");
-  const [dueDates, setDueDates] = useState([]);
   const [fees, setFees] = useState([]);
-  const [lastPayment, setLastPayment] = useState(null);
-  const [formData, setFormData] = useState({
-    due_date: "",
-    paid_amount: 0,
-    uniform_selection: {
-      shirt: { selected: false, quantity: 1 },
-      pant: { selected: false, quantity: 1 },
-      tie: { selected: false, quantity: 1 },
-      sweater: { selected: false, quantity: 1 },
-      shoes: { selected: false, quantity: 1 },
-    },
-  });
-
-  const getDueDates = async () => {
-    return ["2025-06-15", "2025-07-01", "2025-08-01"];
-  };
+  const [selectedFee, setSelectedFee] = useState(null);
+  const [paidAmount, setPaidAmount] = useState(0);
+  const [uniformItems, setUniformItems] = useState([]);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
     if (userData?.unique_id) {
       setAdmissionNo(userData.unique_id);
-      getFeesByAdmissionNo(userData.unique_id).then((res) => {
-        setFees(res.data || []);
-        setStudent({
-          admission_no: userData.unique_id,
-          class_name: res.data?.[0]?.class_name || "",
-          section_name: res.data?.[0]?.section_name || "",
-        });
-      });
+      loadFeeData(userData.unique_id);
     }
-    getDueDates().then(setDueDates);
   }, []);
 
-  const handleFeeTypeChange = (e) => {
-    const type = e.target.value;
-    setSelectedFeeType(type);
-    const unpaidFee = fees.find(
-      (f) => f.feestype === type && f.total_amount - (f.paid_amount || 0) > 0
+  const loadFeeData = async (adm_no) => {
+    const res = await getStudentFeeStatus(adm_no);
+    if (res.success) {
+      setFees(res.data || []);
+    } else {
+      alert(res.error);
+    }
+  };
+
+  const handleFeeSelect = (fee) => {
+    setSelectedFee(fee);
+
+    if (fee.feestype === "Uniform" && fee.item_details) {
+      const items = fee.item_details.map(item => ({
+        item_name: item.item_name,
+        amount: item.amount,
+        selected: false,
+        quantity: 1
+      }));
+      setUniformItems(items);
+      setPaidAmount(0);
+    } else {
+      setUniformItems([]);
+      setPaidAmount(fee.due_amount);
+    }
+  };
+
+  const toggleUniformItem = (idx) => {
+    setUniformItems(prev =>
+      prev.map((item, i) =>
+        i === idx ? {
+          ...item,
+          selected: !item.selected,
+          quantity: !item.selected ? 1 : item.quantity
+        } : item
+      )
     );
+  };
 
-    if (unpaidFee) {
-      setFormData((prev) => ({
-        ...prev,
-        due_date: unpaidFee.due_date,
-        paid_amount: unpaidFee.total_amount - (unpaidFee.paid_amount || 0),
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        paid_amount: 0,
-      }));
+
+  const changeUniformQuantity = (idx, delta) => {
+    setUniformItems(prev =>
+      prev.map((item, i) => {
+        if (i === idx && item.selected) {
+          return { ...item, quantity: Math.max(1, item.quantity + delta) };
+        }
+        return item;
+      })
+    );
+  };
+
+  const getUniformGrandTotal = () => {
+    return uniformItems.reduce((sum, item) => (
+      sum + (item.selected ? item.amount * item.quantity : 0)
+    ), 0);
+  };
+
+
+
+  const handlePayment = async () => {
+    if (!selectedFee) {
+      alert("Please select a fee type to pay.");
+      return;
     }
-  };
 
-  const handleFormChange = (e) => {
-    const { name, value, checked, type } = e.target;
+    let finalAmount = paidAmount;
+    let uniformDetails = null;
 
-    if (name.startsWith("uniform_selection.")) {
-      const [, item, field] = name.split(".");
-      setFormData((fd) => ({
-        ...fd,
-        uniform_selection: {
-          ...fd.uniform_selection,
-          [item]: {
-            ...fd.uniform_selection[item],
-            [field]: field === "selected" ? checked : parseInt(value || 1),
-          },
-        },
-      }));
-    } else {
-      setFormData((fd) => ({
-        ...fd,
-        [name]: type === "number" ? parseFloat(value || 0) : value,
-      }));
+    if (selectedFee.feestype === "Uniform") {
+      finalAmount = getUniformGrandTotal();
+      uniformDetails = uniformItems
+        .filter(item => item.selected)
+        .map(item => ({
+          item_name: item.item_name,
+          amount: item.amount,
+          quantity: item.quantity,
+          total: item.amount * item.quantity
+        }));
+
+      if (finalAmount === 0) {
+        alert("Please select at least one uniform item.");
+        return;
+      }
     }
-  };
 
-  const getUniformTotal = () =>
-    Object.entries(formData.uniform_selection)
-      .filter(([, data]) => data.selected)
-      .reduce(
-        (sum, [item, data]) => sum + defaultUniformRates[item] * data.quantity,
-        0
-      );
-
-  const getFeeSummaryAmount = () => {
-    if (selectedFeeType === "Uniform") return getUniformTotal();
-    if (selectedFeeType === "Multiple")
-      return 100 + 100 + 100 + getUniformTotal();
-    return formData.paid_amount;
-  };
-
-  const handlePayment = async (e) => {
-    e.preventDefault();
-    const payload = {
-      ...student,
-      feestype: selectedFeeType,
-      due_date: formData.due_date,
-      paid_amount: formData.paid_amount,
-      uniform_details: formData.uniform_selection,
-      total_fee: getFeeSummaryAmount(),
-    };
     try {
+      const payload = {
+        admission_no,
+        feestype: selectedFee.feestype,
+        paid_amount: finalAmount,
+        due_date: selectedFee.due_date,
+        uniform_details: uniformDetails
+      };
+
       const orderRes = await createFeeOrder(payload, admission_no);
       const options = {
-        key: "rzp_test_FFJX9DG8jkqrES", // Replace with your Razorpay key
+        key: "rzp_test_FFJX9DG8jkqrES",
         amount: orderRes.order.amount,
         currency: "INR",
         order_id: orderRes.order.id,
         name: "Your School Name",
         description: "Fee Payment",
         handler: async (response) => {
-          const verify = {
+          await verifyFeePayment({
             ...response,
-            admission_no: student.admission_no,
-          };
-
-          await verifyFeePayment(verify);
-          const receiptWindow = window.open("", "_blank");
-
-          try {
-            const receiptUrl = await generateReceipt({
-              admission_no: student.admission_no,
-              feestype: selectedFeeType,
-            });
-
-            window.open(receiptUrl, "_blank"); // 👈 Opens PDF in new tab
-
-            const link = document.createElement("a");
-            link.href = receiptUrl;
-            link.download = receiptUrl.split("/").pop(); // Extract filename
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-          } catch (err) {
-            alert("Receipt not available.");
-            console.error("Receipt error:", err);
-          }
-
-          setLastPayment({
-            response,
-            feestype: selectedFeeType,
+            admission_no
           });
 
-          const refreshed = await getFeesByAdmissionNo(admission_no);
-          setFees(refreshed.data || []);
+          const receiptUrl = await generateReceipt({
+            admission_no,
+            feestype: selectedFee.feestype,
+          });
+
+          if (receiptUrl) {
+            window.open(receiptUrl, "_blank");
+          }
+
+          await loadFeeData(admission_no);
+          setSelectedFee(null);
+          setPaidAmount(0);
+          setUniformItems([]);
         },
-        theme: { color: "#0a66c2" },
+        theme: { color: "#0a66c2" }
       };
+
       new window.Razorpay(options).open();
     } catch (err) {
       console.error("Payment error:", err);
-    }
-  };
-
-  const handleManualReceipt = async () => {
-    if (!lastPayment) {
-      alert("No payment found to generate receipt.");
-      return;
-    }
-
-    try {
-      const receiptWindow = window.open("", "_blank");
-      const receiptData = await generateReceipt({
-        admission_no: student.admission_no,
-        feestype: lastPayment.feestype,
-        pay_response: lastPayment.response,
-      });
-
-      if (receiptData?.receiptUrl) {
-        receiptWindow.location.href = receiptData.receiptUrl;
-      } else {
-        receiptWindow.document.body.innerHTML = "<p>Receipt not found.</p>";
-      }
-    } catch (err) {
-      alert("Error generating receipt. Please try again.");
-      console.error(err);
+      alert("Payment failed");
     }
   };
 
@@ -293,200 +243,99 @@ const FeePaymentForm = () => {
     <Container>
       <Title>Student Fee Payment</Title>
 
-      <Label>Select Fee Type</Label>
-      <Select value={selectedFeeType} onChange={handleFeeTypeChange}>
-        <option value="">-- Select Fee Type --</option>
-        <option value="Tuition">Tuition</option>
-        <option value="Books">Books</option>
-        <option value="Transport">Transport</option>
-        <option value="Uniform">Uniform</option>
-        <option value="Multiple">Multiple</option>
-      </Select>
+      <Table>
+        <thead>
+          <tr>
+            <th>Fee Type</th>
+            <th>Total</th>
+            <th>Paid</th>
+            <th>Pending</th>
+            <th>Due Date</th>
+            <th>Pay Now</th>
+          </tr>
+        </thead>
+        <tbody>
+          {fees.map((fee, idx) => (
+            <tr key={idx}>
+              <td>{fee.feestype}</td>
+              <td>{fee.total_fee} ₹</td>
+              <td>{fee.paid_amount} ₹</td>
+              <td>{fee.due_amount} ₹</td>
+              <td>{fee.due_date.split("T")[0]}</td>
+              <td>
+                <Button onClick={() => handleFeeSelect(fee)}>Select</Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
 
-      {selectedFeeType && (
+      {selectedFee && (
         <>
-          <Table>
-            <thead>
-              <tr>
-                <th>Due Date</th>
-                <th>Receipt Book</th>
-                <th>Fee Name</th>
-                <th>Total</th>
-                <th>Paid</th>
-                <th>Pending</th>
-                <th>Select</th>
-              </tr>
-            </thead>
-            <tbody>
-              {fees
-                .filter((f) => f.feestype === selectedFeeType)
-                .map((fee, i) => {
-                  const pending = fee.total_amount - (fee.paid_amount || 0);
-                  return (
-                    <tr key={i}>
-                      <td>{fee.due_date}</td>
-                      <td>
-                        {fee.receipt_book ||
-                          `${fee.feestype.toUpperCase()} FEE (2025-26)`}
-                      </td>
-                      <td>{fee.term_name || `${fee.feestype} Fee`}</td>
-                      <td>{fee.total_amount} ₹</td>
-                      <td>{fee.paid_amount || 0} ₹</td>
-                      <td>{pending} ₹</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          name="selected_fee"
-                          onChange={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              due_date: fee.due_date,
-                              paid_amount: pending,
-                            }))
-                          }
-                        />
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </Table>
+          <p><b>Selected Fee Type:</b> {selectedFee.feestype}</p>
+          <p><b>Due Date:</b> {selectedFee.due_date.split("T")[0]}</p>
+          <p><b>Pending:</b> {selectedFee.due_amount} ₹</p>
 
-          {selectedFeeType === "Uniform" && (
+          {selectedFee.feestype !== "Uniform" && (
+            <>
+              <p>Enter Paid Amount:</p>
+              <Input
+                type="number"
+                value={paidAmount}
+                onChange={(e) => setPaidAmount(parseFloat(e.target.value))}
+              />
+            </>
+          )}
+
+          {selectedFee?.feestype === "Uniform" && uniformItems.length > 0 && (
             <Table>
               <thead>
                 <tr>
                   <th>Select</th>
                   <th>Item</th>
                   <th>Price</th>
+                  <th>Quantity</th>
                   <th>Total</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(defaultUniformRates).map(([item, rate]) => {
-                  const selected = formData.uniform_selection[item].selected;
-                  const quantity = formData.uniform_selection[item].quantity;
-
-                  const handleQuantityChange = (delta) => {
-                    if (!selected) return;
-                    setFormData((fd) => {
-                      const newQty = Math.max(
-                        1,
-                        fd.uniform_selection[item].quantity + delta
-                      );
-                      return {
-                        ...fd,
-                        uniform_selection: {
-                          ...fd.uniform_selection,
-                          [item]: {
-                            ...fd.uniform_selection[item],
-                            quantity: newQty,
-                          },
-                        },
-                      };
-                    });
-                  };
-
-                  return (
-                    <tr key={item}>
-                      <td>
-                        <input
-                          type="checkbox"
-                          name={`uniform_selection.${item}.selected`}
-                          checked={selected}
-                          onChange={handleFormChange}
-                        />
-                      </td>
-                      <td>
-                        {item.charAt(0).toUpperCase() + item.slice(1)}{" "}
-                        {selected && (
-                          <span style={{ marginLeft: "10px" }}>
-                            <button
-                              type="button"
-                              onClick={() => handleQuantityChange(-1)}
-                              style={{ padding: "2px 6px", marginRight: "5px" }}
-                            >
-                              −
-                            </button>
-                            {quantity}
-                            <button
-                              type="button"
-                              onClick={() => handleQuantityChange(1)}
-                              style={{ padding: "2px 6px", marginLeft: "5px" }}
-                            >
-                              +
-                            </button>
-                          </span>
-                        )}
-                      </td>
-                      <td>{rate} ₹</td>
-                      <td>{selected ? rate * quantity : 0} ₹</td>
-                    </tr>
-                  );
-                })}
+                {uniformItems.map((item, idx) => (
+                  <tr key={idx}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={item.selected}
+                        onChange={() => toggleUniformItem(idx)}
+                      />
+                    </td>
+                    <td>{item.item_name}</td>
+                    <td>{item.amount} ₹</td>
+                    <td>
+                      {item.selected ? (
+                        <>
+                          <Button onClick={() => changeUniformQuantity(idx, -1)}>-</Button>
+                          {item.quantity}
+                          <Button onClick={() => changeUniformQuantity(idx, 1)}>+</Button>
+                        </>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td>{item.selected ? item.amount * item.quantity : 0} ₹</td>
+                  </tr>
+                ))}
               </tbody>
               <tfoot>
                 <tr>
-                  <td
-                    colSpan="3"
-                    style={{ textAlign: "right", fontWeight: "bold" }}
-                  >
-                    Total
-                  </td>
-                  <td style={{ fontWeight: "bold" }}>{getUniformTotal()} ₹</td>
+                  <td colSpan="4" align="right"><b>Total</b></td>
+                  <td><b>{getUniformGrandTotal()} ₹</b></td>
                 </tr>
               </tfoot>
             </Table>
           )}
 
-          <Label>Due Date</Label>
-          <Select
-            name="due_date"
-            value={formData.due_date}
-            onChange={handleFormChange}
-            required
-          >
-            <option value="">-- Select Due Date --</option>
-            {dueDates.map((d, i) => (
-              <option key={i} value={d}>
-                {d}
-              </option>
-            ))}
-          </Select>
 
-          <Label>Paid Amount</Label>
-          <Input
-            type="number"
-            name="paid_amount"
-            value={formData.paid_amount}
-            onChange={handleFormChange}
-            required
-          />
-
-          <Button type="submit" onClick={handlePayment}>
-            Proceed to Pay
-          </Button>
-
-          {/* 🆕 Button to manually regenerate receipt */}
-          {lastPayment !== null && (
-            <div style={{ marginTop: "20px", textAlign: "center" }}>
-              <Button
-                type="button"
-                onClick={handleManualReceipt}
-                style={{
-                  backgroundColor: "#28a745",
-                  color: "white",
-                  padding: "10px 20px",
-                  fontSize: "16px",
-                  cursor: "pointer",
-                  border: "none",
-                  borderRadius: "4px",
-                }}
-              >
-                Generate Receipt Again
-              </Button>
-            </div>
-          )}
+          <Button onClick={handlePayment}>Proceed to Pay</Button>
         </>
       )}
     </Container>
