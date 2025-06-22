@@ -89,6 +89,8 @@ import PrincipalProfile from "./principal/PrincipalProfile";
 import StudentDocument from "./userpages/AddStudentDocument";
 import TeacherViewAssignment from "./teacher/TeacherViewAssignment";
 import AnnouncementPage from "./pages/AnnouncementPage";
+import StudentDocumentView from "./userpages/StudentDocumentView";
+import DocumentView from "./pages/DocumentView";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -342,6 +344,14 @@ const App = () => {
             element={
               <Layout>
                 <StudyModulePage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/documentview"
+            element={
+              <Layout>
+                <DocumentView/>
               </Layout>
             }
           />
@@ -667,6 +677,14 @@ const App = () => {
             element={
               <AdminLayout>
                 <StudentDocument />
+              </AdminLayout>
+            }
+          />
+           <Route
+            path="/admin-Studentdocumentview"
+            element={
+              <AdminLayout>
+                <StudentDocumentView />
               </AdminLayout>
             }
           />

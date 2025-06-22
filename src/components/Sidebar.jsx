@@ -408,6 +408,13 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Study Module</Label>
             </SidebarItem>
+             <SidebarItem to="/documentview" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={true}>My Documents</Label>
+            </SidebarItem>
+
 
             <SidebarItem
               to="/forms-feedback"
@@ -560,6 +567,12 @@ const Sidebar = () => {
                 <SlBadge />
               </Icon>
               <Label expanded={expanded}>Achievement</Label>
+                         </SidebarItem>
+            <SidebarItem to="/documentview" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={expanded}>My Documents </Label>
             </SidebarItem>
 
 

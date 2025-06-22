@@ -474,6 +474,8 @@ export const getStudentAssignmentsByTeacher = async (params) => {
     throw error;
   }
 };
+export const fetchAllStudentDocuments = () =>
+  api.get('/studentdocuments/all').then((res) => res.data);
 
 // Inside component or event handler
 
