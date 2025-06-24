@@ -249,12 +249,6 @@ const AdminCalendarPanel = () => {
             <option key={role} value={role}>{role}</option>
           ))}
         </Select>
-        <Input
-          name="color"
-          value={form.color}
-          onChange={handleChange}
-          placeholder="Hex Color (optional)"
-        />
         <Textarea
           name="description"
           value={form.description}
