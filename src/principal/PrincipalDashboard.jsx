@@ -354,8 +354,8 @@ const DashboardCard = styled.div`
   transition: transform 0.2s;
   cursor: pointer;
   height: 155px;
-  width:85%;
-  gap:10px;
+  width:87%;
+  
   margin:8px;
   &:hover {
     transform: scale(1.05);
@@ -521,7 +521,7 @@ const StyledCalendar = styled(Calendar)`
   border-radius: 8px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   padding: 5px;
-  height: 150vh;
+  height: 35vh;
 
   .react-calendar__navigation {
     margin-bottom: 2px; /* Reduce gap between month and days */

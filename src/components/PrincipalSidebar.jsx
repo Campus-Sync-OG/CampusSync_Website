@@ -46,32 +46,18 @@ const SidebarWrapper = styled.div`
   color: white;
   border-radius: 9px;
   transition: width 0.3s ease;
-  overflow-y: auto; /* Enable vertical scroll */
+  overflow: hidden;
   position: relative;
   height: 86.5vh; /* Fixed height */
   z-index: 1000;
 
   @media (max-width: 1024px) {
-    height: 92vh;
+    height: 165vh;
   }
+
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
     display: none;
-  }
-
-  /* Optional: Style the scrollbar */
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #001a5c;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: grey;
-    border-radius: 3px;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background: #ff0066;
   }
 `;
 
@@ -100,10 +86,10 @@ const MobileMenu = styled.div`
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
     top: 88px; // Changed from -110px to position properly
-    left: 28px;
+    left: 30px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
-    z-index: 1001;
+    z-index: 1;
     border-radius: 5px;
 
     // Increase the icon size in the JSX component
@@ -114,16 +100,10 @@ const MobileMenu = styled.div`
   }
 
   @media (max-width: 480px) {
-    display: block;
-    position: absolute; // Changed from relative to fixed for better positioning
-    top: 85px; // Changed from -110px to position properly
-    left: 8px;
+    left: 10px;
   }
-  @media (max-width: 320px) {
-    display: block;
-    position: absolute; // Changed from relative to fixed for better positioning
-    top: 98px; // Changed from -110px to position properly
-    left: 8px;
+  @media (max-width: 380px) {
+    left: 10px;
   }
 `;
 
@@ -167,18 +147,35 @@ const MobileDropdown = styled.div`
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Always left-aligned in mobile
+  align-items: flex-start;
   padding: 1rem;
   gap: 1rem;
   white-space: nowrap;
-  min-height: 100%; // Ensure content fills available space
-  overflow: visible !important; // Override any hidden overflow
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Enable vertical scrolling */
+  flex: 1; /* Take remaining space */
   font-family: "Poppins", sans-serif;
 
-  // Mobile-specific adjustments
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #002087;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #002087;
   }
 `;
 

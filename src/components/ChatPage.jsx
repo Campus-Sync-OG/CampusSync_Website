@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef } from "react";
+import styled from "styled-components";
 import {
   sendMessageToClassTeacher,
   teacherReplyToStudent,
   fetchChatMessages,
   fetchTeacherInbox,
-  fetchStudentMessages
+  fetchStudentMessages,
 } from "../api/ClientApi";
 
 const ChatContainer = styled.div`
@@ -27,7 +27,7 @@ const Sidebar = styled.div`
 
 const SidebarHeader = styled.div`
   padding: 15px;
-  background: #4a90e2;
+  background: #002087;
   color: white;
   font-weight: bold;
   text-align: center;
@@ -36,9 +36,9 @@ const SidebarHeader = styled.div`
 const InboxItem = styled.div`
   padding: 15px;
   cursor: pointer;
-  background: ${props => (props.active ? '#dcefff' : 'transparent')};
+  background: ${(props) => (props.active ? "#dcefff" : "transparent")};
   border-bottom: 1px solid #ddd;
-  font-weight: ${props => (props.active ? 'bold' : 'normal')};
+  font-weight: ${(props) => (props.active ? "bold" : "normal")};
 
   &:hover {
     background: #e0eefa;
@@ -50,11 +50,15 @@ const ChatArea = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
+
+  @media (max-width: 420px) {
+    width: 72%;
+  }
 `;
 
 const ChatHeader = styled.div`
   padding: 15px;
-  background: #6fcf97;
+  background: #df0043;
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
@@ -72,18 +76,18 @@ const ChatBody = styled.div`
 const MessageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${props => (props.isCurrentUser ? 'flex-end' : 'flex-start')};
+  align-items: ${(props) => (props.isCurrentUser ? "flex-end" : "flex-start")};
   margin-bottom: 15px;
 `;
 
 const MessageBubble = styled.div`
-  background-color: ${props => (props.isCurrentUser ? '#daf7dc' : '#e1ecf4')};
+  background-color: ${(props) => (props.isCurrentUser ? "#daf7dc" : "#e1ecf4")};
   color: #333;
   padding: 12px 16px;
   border-radius: 20px;
   max-width: 75%;
   font-size: 0.95rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const Timestamp = styled.div`
@@ -130,25 +134,25 @@ const SendButton = styled.button`
 `;
 
 const ChatPage = () => {
-  const [role, setRole] = useState('');
-  const [empId, setEmpId] = useState('');
-  const [admissionNo, setAdmissionNo] = useState('');
+  const [role, setRole] = useState("");
+  const [empId, setEmpId] = useState("");
+  const [admissionNo, setAdmissionNo] = useState("");
   const [inboxList, setInboxList] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const chatRef = useRef(null);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
+    const userData = JSON.parse(localStorage.getItem("user"));
     if (!userData) {
-      alert('Unauthorized. Please login.');
+      alert("Unauthorized. Please login.");
       return;
     }
 
     setRole(userData.role);
 
-    if (userData.role === 'teacher') {
+    if (userData.role === "teacher") {
       setEmpId(userData.unique_id);
       fetchTeacherInbox(userData.unique_id)
         .then((res) => {
@@ -160,34 +164,34 @@ const ChatPage = () => {
             }))
           );
         })
-        .catch((err) => console.error('Failed to fetch inbox', err));
-    } else if (userData.role === 'student') {
+        .catch((err) => console.error("Failed to fetch inbox", err));
+    } else if (userData.role === "student") {
       setAdmissionNo(userData.unique_id);
       fetchStudentMessages(userData.unique_id)
         .then((res) => setMessages(res.data.chat))
-        .catch((err) => console.error('Failed to load chat', err));
+        .catch((err) => console.error("Failed to load chat", err));
     }
   }, []);
 
   useEffect(() => {
-    if (selectedStudent && role === 'teacher') {
+    if (selectedStudent && role === "teacher") {
       fetchChatMessages(selectedStudent.admission_no, empId)
         .then((res) => setMessages(res.data.chat))
-        .catch((err) => console.error('Failed to load chat', err));
+        .catch((err) => console.error("Failed to load chat", err));
     }
   }, [selectedStudent, empId, role]);
 
   // 🔁 Auto-refresh chat every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      if (role === 'teacher' && selectedStudent) {
+      if (role === "teacher" && selectedStudent) {
         fetchChatMessages(selectedStudent.admission_no, empId)
           .then((res) => setMessages(res.data.chat))
-          .catch((err) => console.error('Auto-refresh failed', err));
-      } else if (role === 'student' && admissionNo) {
+          .catch((err) => console.error("Auto-refresh failed", err));
+      } else if (role === "student" && admissionNo) {
         fetchStudentMessages(admissionNo)
           .then((res) => setMessages(res.data.chat))
-          .catch((err) => console.error('Auto-refresh failed', err));
+          .catch((err) => console.error("Auto-refresh failed", err));
       }
     }, 3000); // Every 3 seconds
 
@@ -204,15 +208,18 @@ const ChatPage = () => {
     if (!input.trim()) return;
 
     try {
-      if (role === 'teacher' && selectedStudent) {
+      if (role === "teacher" && selectedStudent) {
         await teacherReplyToStudent({
           emp_id: empId,
           admission_no: selectedStudent.admission_no,
           message: input,
         });
-        const res = await fetchChatMessages(selectedStudent.admission_no, empId);
+        const res = await fetchChatMessages(
+          selectedStudent.admission_no,
+          empId
+        );
         setMessages(res.data.chat);
-      } else if (role === 'student') {
+      } else if (role === "student") {
         await sendMessageToClassTeacher({
           admission_no: admissionNo,
           message: input,
@@ -221,14 +228,14 @@ const ChatPage = () => {
         setMessages(res.data.chat);
       }
 
-      setInput('');
+      setInput("");
     } catch (err) {
-      console.error('Send error', err);
+      console.error("Send error", err);
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -238,7 +245,7 @@ const ChatPage = () => {
 
   return (
     <ChatContainer>
-      {role === 'teacher' && (
+      {role === "teacher" && (
         <Sidebar>
           <SidebarHeader>Inbox</SidebarHeader>
           {Array.isArray(inboxList) && inboxList.length > 0 ? (
@@ -252,31 +259,35 @@ const ChatPage = () => {
               </InboxItem>
             ))
           ) : (
-            <div style={{ padding: '1rem', color: '#999' }}>No messages</div>
+            <div style={{ padding: "1rem", color: "#999" }}>No messages</div>
           )}
         </Sidebar>
       )}
 
       <ChatArea>
         <ChatHeader>
-          {role === 'teacher'
+          {role === "teacher"
             ? selectedStudent
               ? `Chat with ${selectedStudent.name}`
-              : 'Select a student'
-            : 'Chat with Class Teacher'}
+              : "Select a student"
+            : "Chat with Class Teacher"}
         </ChatHeader>
 
         <ChatBody ref={chatRef}>
           {messages.map((msg, idx) => {
             const isMe =
-              role === 'teacher' ? msg.from === 'teacher' : msg.from === 'student';
+              role === "teacher"
+                ? msg.from === "teacher"
+                : msg.from === "student";
             return (
               <MessageWrapper key={idx} isCurrentUser={isMe}>
-                <MessageBubble isCurrentUser={isMe}>{msg.message}</MessageBubble>
+                <MessageBubble isCurrentUser={isMe}>
+                  {msg.message}
+                </MessageBubble>
                 <Timestamp>
                   {new Date(msg.timestamp).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
+                    hour: "2-digit",
+                    minute: "2-digit",
                   })}
                 </Timestamp>
               </MessageWrapper>
@@ -293,7 +304,7 @@ const ChatPage = () => {
           />
           <SendButton
             onClick={handleSend}
-            disabled={!input.trim() || (role === 'teacher' && !selectedStudent)}
+            disabled={!input.trim() || (role === "teacher" && !selectedStudent)}
           >
             Send
           </SendButton>
