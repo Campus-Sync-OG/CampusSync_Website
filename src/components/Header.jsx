@@ -11,7 +11,6 @@ import { TbMessageChatbot } from "react-icons/tb";
 import { FaBullhorn } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import NotificationPopupPage from "./notificationpopup";
-import { IoMdHelpCircleOutline } from "react-icons/io";
 
 // styled-components (unchanged)
 const HeaderContainer = styled.header`
@@ -86,6 +85,7 @@ const Divider = styled.div`
     position: relative;
     right: 60px;
   }
+  
 `;
 
 const SchoolDetails = styled.div`
@@ -140,7 +140,6 @@ const HeaderRight = styled.div`
   justify-content: flex-end;
 
   @media (max-width: 768px) {
-    margin-top: 10px;
     width: 100%;
     justify-content: space-between;
   }
@@ -160,7 +159,7 @@ const NotificationButton = styled.div`
 
   @media (max-width: 768px) {
     position: relative;
-    left: 237px;
+    left: 230px;
     top: 3px;
   }
   @media (max-width: 480px) {
@@ -168,16 +167,17 @@ const NotificationButton = styled.div`
     left: 83px;
     top: 3px;
   }
-  @media (max-width: 380px) {
+  @media (max-width: 420px) {
     position: relative;
-    left: 83px;
+    left: 78px;
     top: 3px;
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 79px;
-    top: 0px;
+    left: 60px;
+    top: 3px;
   }
+
 `;
 
 const NotificationButtonIcon = styled(FaBell)`
@@ -208,7 +208,7 @@ const IconButton = styled.button`
   }
   @media (max-width: 768px) {
     position: relative;
-    left: 59%;
+    left: 47%;
     top: 5px;
     svg {
       color: white;
@@ -218,13 +218,18 @@ const IconButton = styled.button`
   }
   @media (max-width: 480px) {
     position: relative;
-    left: 40%;
+    left: 30%;
     top: 5px;
     svg {
       color: white;
       width: 20px;
       height: 20px;
     }
+  }
+  @media (max-width: 320px) {
+    position: relative;
+    left: 25%;
+    top: 5px;
   }
 `;
 
@@ -245,7 +250,7 @@ const DividerRight = styled.div`
   @media (max-width: 768px) {
     top: 5px;
     position: relative;
-    left: 68px;
+    left: 107px;
   }
   @media (max-width: 480px) {
     top: 5px;
@@ -257,11 +262,12 @@ const DividerRight = styled.div`
     position: relative;
     left: 36px;
   }
-  @media (max-width: 320px) {
-    top: 0px;
+  @media (max-width: 380px) {
+    top: 2px;
     position: relative;
-    left: 42px;
+    left: 33px;
   }
+ 
 `;
 
 const ProfileSection = styled.div`
@@ -322,14 +328,14 @@ const DropdownItem = styled.div`
 const MenuButton = styled.div`
   display: none;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 30px;
   color: red;
 
   @media (max-width: 768px) {
     display: block;
     position: relative;
     top: 8px;
-    right: 70px;
+    right: 10px;
   }
   @media (max-width: 480px) {
     display: block;
@@ -372,36 +378,18 @@ const SpeakerWrapper = styled.div`
 
   @media (max-width: 768px) {
     position: relative;
-    left: 61%;
-    top: 7px;
+    left: 62%;
+    top: 5px;
   }
-`;
-
-const Help = styled.div`
-  background-color: #f5f5f5;
-  padding: 10px 14px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-
-  &:hover {
-    background-color: #e0e0e0;
-  }
-
-  svg {
-    width: 24px;
-    height: 24px;
-    color: rgb(233, 30, 30); /* Now matches notification icon */
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: 460px) {
     position: relative;
-    left: 29%;
-    top: 7px;
+    left: 38%;
+    top: 5px;
+  }
+  @media (max-width: 320px) {
+    position: relative;
+    left: 28%;
+    top: 5px;
   }
 `;
 
@@ -564,25 +552,26 @@ const Header = ({
             <SpeakerIcon />
           </SpeakerWrapper>
 
-          {back_location.pathname !== "/principal-dashboard" &&
-            back_location.pathname !== "/admin-dashboard" && (
-              <IconButton onClick={handleChatbotClick}>
-                <MeesageIcon
-                  onClick={() => {
-                    const role = localStorage.getItem("role")?.toLowerCase();
-                    if (role === "teacher") {
-                      navigate("/teacher-chatbot");
-                    } else {
-                      navigate("/chatbot");
-                    }
-                  }}
-                />
-              </IconButton>
-            )}
-          <Help>
-            <IoMdHelpCircleOutline />
-          </Help>
+          <IconButton>
+            <MeesageIcon
+              onClick={() => {
+                const user = JSON.parse(localStorage.getItem("user"));
+                const role = user?.role?.trim().toLowerCase();
 
+                if (role === "teacher") {
+                  navigate("/teacher-chatbot");
+                } else if (role === "student") {
+                  navigate("/chatbot");
+                } else if (role === "principal" || role === "admin") {
+                  alert(
+                    "Chatbot is not available for Principal and Admin users."
+                  );
+                } else {
+                  alert("Unknown role. Access denied.");
+                }
+              }}
+            />
+          </IconButton>
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />
           </NotificationButton>
