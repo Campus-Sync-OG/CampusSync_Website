@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import logo from "../assets/images/logo.png";
 import defaultProfile from "../assets/images/profile.png";
@@ -146,69 +146,6 @@ const HeaderRight = styled.div`
   }
 `;
 
-const SearchBarContainer = styled.div`
-  position: relative;
-  margin-right: 15px;
-
-  input {
-    padding: 8px 15px;
-    padding-left: 35px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    width: 300px;
-  }
-
-  i {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    color: gray;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    width: 100px;
-    left: 130px;
-    top: 5px;
-    input {
-      width: 300px;
-      height: 20px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    width: 130px;
-    left: 100px;
-    top: 5px;
-    input {
-      width: 80px;
-      height: 20px;
-    }
-  }
-
-  @media (max-width: 380px) {
-    width: 100px;
-    left: 80px;
-    top: 5px;
-    input {
-      width: 80px;
-      height: 20px;
-    }
-  }
-  @media (max-width: 320px) {
-    width: 100px;
-    left: 70px;
-    top: 0px;
-    input {
-      width: 80px;
-      height: 20px;
-    }
-  }
-`;
-
 const NotificationButton = styled.div`
   margin-right: 15px;
   display: flex;
@@ -223,7 +160,7 @@ const NotificationButton = styled.div`
 
   @media (max-width: 768px) {
     position: relative;
-    left: 233px;
+    left: 237px;
     top: 3px;
   }
   @media (max-width: 480px) {
@@ -271,7 +208,7 @@ const IconButton = styled.button`
   }
   @media (max-width: 768px) {
     position: relative;
-    left: 55%;
+    left: 59%;
     top: 5px;
     svg {
       color: white;
@@ -297,6 +234,7 @@ const MeesageIcon = styled(TbMessageChatbot)`
 `;
 const SpeakerIcon = styled(FaBullhorn)`
   font-size: 18px;
+  color: rgb(233, 30, 30);
 `;
 
 const DividerRight = styled.div`
@@ -307,7 +245,7 @@ const DividerRight = styled.div`
   @media (max-width: 768px) {
     top: 5px;
     position: relative;
-    left: 76px;
+    left: 68px;
   }
   @media (max-width: 480px) {
     top: 5px;
@@ -412,6 +350,7 @@ const MenuButton = styled.div`
     left: 10px;
   }
 `;
+
 const SpeakerWrapper = styled.div`
   background-color: #f5f5f5; /* off-white background */
   padding: 10px 14px;
@@ -430,10 +369,16 @@ const SpeakerWrapper = styled.div`
     width: 24px;
     height: 24px;
   }
+
+  @media (max-width: 768px) {
+    position: relative;
+    left: 61%;
+    top: 7px;
+  }
 `;
 
 const Help = styled.div`
-  background-color: #f5f5f5; /* off-white background */
+  background-color: #f5f5f5;
   padding: 10px 14px;
   border-radius: 50%;
   cursor: pointer;
@@ -444,12 +389,19 @@ const Help = styled.div`
   margin: 10px;
 
   &:hover {
-    background-color: #e0e0e0; /* subtle hover effect */
+    background-color: #e0e0e0;
   }
 
   svg {
     width: 24px;
     height: 24px;
+    color: rgb(233, 30, 30); /* Now matches notification icon */
+  }
+
+  @media (max-width: 768px) {
+    position: relative;
+    left: 29%;
+    top: 7px;
   }
 `;
 
@@ -461,68 +413,11 @@ const Header = ({
 }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const back_location = useLocation();
   const [role, setRole] = useState(null);
+  const dropdownRef = useRef(null);
 
-  const searchRoutes = {
-    dashboard: "/dashboard",
-    attendance: "/attendance",
-    assignment: "/school/assignment",
-    achievement: "/achievement",
-    profile: "/profile/my-profile",
-    parent: "/profile/parent-info",
-    academics: "/academics",
-    forms: "/forms-feedback",
-    gallery: "/gallery",
-    certificate: "/school/certificate-request",
-    "teacher dashboard": "/teacher-dashboard",
-    "teacher timetable": "/teacher-timetable",
-    "teacher attendance": "/teacher-attendance",
-    "teacher assignment": "/teacher-assignments",
-    "teacher form": "/teacher-form",
-    "teacher notification": "/teacher-notification",
-    "student details": "/studentdetails",
-  };
-
-  const handleSearch = () => {
-    const key = searchTerm.toLowerCase().trim();
-    const Role = localStorage.getItem("role")?.toLowerCase();
-
-    const studentRoutes = [
-      "dashboard",
-      "attendance",
-      "assignment",
-      "achievement",
-      "profile",
-      "parent",
-      "academics",
-      "forms",
-      "gallery",
-      "certificate",
-    ];
-
-    const teacherRoutes = [
-      "teacher dashboard",
-      "teacher timetable",
-      "teacher attendance",
-      "teacher assignment",
-      "teacher form",
-      "teacher notification",
-      "student details",
-    ];
-
-    const isStudentRoute = Role !== "teacher" && studentRoutes.includes(key);
-    const isTeacherRoute = Role === "teacher" && teacherRoutes.includes(key);
-
-    if (isStudentRoute || isTeacherRoute) {
-      navigate(searchRoutes[key]);
-      setSearchTerm("");
-    } else {
-      alert("Page not found or access denied.");
-    }
-  };
 
   const toggleDropdown = () => setIsDropdownVisible(!isDropdownVisible);
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
@@ -616,6 +511,25 @@ const Header = ({
     console.log("Loaded role:", storedRole);
     setRole(storedRole?.toLowerCase());
   }, []);
+
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target) &&
+      !event.target.closest(".profile-section") && // avoids closing when clicking on profile pic
+      !event.target.closest(".menu-button") // avoids closing when clicking on menu icon
+    ) {
+      setIsDropdownVisible(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+
   return (
     <>
       <HeaderContainer>
@@ -661,16 +575,16 @@ const Header = ({
 
           <DividerRight />
 
-          <ProfileSection onClick={toggleDropdown}>
+          <ProfileSection onClick={toggleDropdown} className="profile-section">
             <ProfilePic src={profilePic} alt="Profile" />
             <DropdownIcon />
           </ProfileSection>
 
-          <MenuButton onClick={toggleDropdown}>
+          <MenuButton onClick={toggleDropdown} className="menu-button">
             <FaEllipsisV />
           </MenuButton>
 
-          <DropdownMenu visible={isDropdownVisible}>
+          <DropdownMenu ref={dropdownRef} visible={isDropdownVisible}>
             <DropdownItem onClick={handleProfileClick}>
               <CgProfile />
               Profile
