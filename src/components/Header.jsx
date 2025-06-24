@@ -418,7 +418,6 @@ const Header = ({
   const [role, setRole] = useState(null);
   const dropdownRef = useRef(null);
 
-
   const toggleDropdown = () => setIsDropdownVisible(!isDropdownVisible);
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
 
@@ -513,22 +512,22 @@ const Header = ({
   }, []);
 
   useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target) &&
-      !event.target.closest(".profile-section") && // avoids closing when clicking on profile pic
-      !event.target.closest(".menu-button") // avoids closing when clicking on menu icon
-    ) {
-      setIsDropdownVisible(false);
-    }
-  };
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest(".profile-section") && // avoids closing when clicking on profile pic
+        !event.target.closest(".menu-button") // avoids closing when clicking on menu icon
+      ) {
+        setIsDropdownVisible(false);
+      }
+    };
 
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -546,7 +545,22 @@ const Header = ({
         </LogoSection>
 
         <HeaderRight>
-          <SpeakerWrapper onClick={() => navigate("/announcement")}>
+          <SpeakerWrapper
+            onClick={() => {
+              const user = JSON.parse(localStorage.getItem("user"));
+              const role = user?.role?.toLowerCase();
+
+              if (role === "teacher") {
+                navigate("/teacher/announcement");
+              } else if (role === "principal") {
+                navigate("/principal/announcement");
+              } else if (role === "admin") {
+                navigate("/admin/announcement");
+              } else {
+                navigate("/announcement"); // fallback
+              }
+            }}
+          >
             <SpeakerIcon />
           </SpeakerWrapper>
 

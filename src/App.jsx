@@ -471,6 +471,15 @@ const App = () => {
               </TeacherLayout>
             }
           />
+           <Route
+            path="/teacher/announcement"
+            element={
+              <TeacherLayout>
+                 <AnnouncementPage />
+                {/* Chatbot component can be added here */}
+              </TeacherLayout>
+            }
+          />
           <Route
             path="/teacher-academics"
             element={
@@ -557,6 +566,14 @@ const App = () => {
             element={
               <AdminLayout>
                 <TeachersData />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/announcement"
+            element={
+              <AdminLayout>
+                <AnnouncementPage />
               </AdminLayout>
             }
           />
@@ -720,6 +737,14 @@ const App = () => {
             element={
               <PrincipalLayout>
                 <TeacherInfo />
+              </PrincipalLayout>
+            }
+          />
+          <Route
+            path="/principal/announcement"
+            element={
+              <PrincipalLayout>
+                <AnnouncementPage />
               </PrincipalLayout>
             }
           />
