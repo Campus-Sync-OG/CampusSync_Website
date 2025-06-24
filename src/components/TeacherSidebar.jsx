@@ -539,6 +539,13 @@ const Sidebar = () => {
               <Label expanded={expanded}>Forms</Label>
             </SidebarItem>
 
+                <SidebarItem to="/teacher-student-leaves" expanded={expanded}>
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={expanded}>Studnet Leaves</Label>
+            </SidebarItem>
+
             <SidebarItem to="/teacher-achievement" expanded={expanded}>
               <Icon>
                 <SlBadge />

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { submitLeaveApplication } from "../api/ClientApi"; // Adjust path as needed
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 
 const StudentLeaveApplication = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     leaveType: "",
     fromDate: "",
@@ -29,76 +31,111 @@ const StudentLeaveApplication = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+   const getAdmissionNo = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.unique_id || "";
+  };
+  const admission_no = getAdmissionNo();
+  console.log("Admission No:", admission_no);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
+
+    try {
+      const payload = {
+        admission_no, // adjust based on how you store admission_no
+        reason: formData.reason,
+        from_date: formData.fromDate,
+        to_date: formData.toDate,
+        leave_type: formData.leaveType,
+      };
+
+      const response = await submitLeaveApplication(payload);
+      setSuccessMessage(response.message);
+      alert(response.message);
+      setFormData({
+        leaveType: "",
+        fromDate: "",
+        toDate: "",
+        reason: "",
+      });
+      setErrors({});
+    } catch (err) {
+      console.error("Failed to submit leave application:", err);
+      alert("Failed to submit leave application.");
+    }
   };
+
   return (
-    <>
-      <FormContainer>
-        <HeaderWrapper>
-          <Header>
-            <Title>Student Leave Application</Title>
-            <Wrapper>
-              <Link to="/dashboard">
-                <Icons>
-                  <img src={home} alt="home" />
-                </Icons>
-              </Link>
-              <Divider />
-              <Icons onClick={() => navigate(-1)}>
-                <img src={back} alt="back" />
+    <FormContainer>
+      <HeaderWrapper>
+        <Header>
+          <Title>Student Leave Application</Title>
+          <Wrapper>
+            <Link to="/dashboard">
+              <Icons>
+                <img src={home} alt="home" />
               </Icons>
-            </Wrapper>
-          </Header>
-        </HeaderWrapper>
-        <StyledForm onSubmit={handleSubmit}>
-          <Label>Leave Type</Label>
-          <Select
-            name="leaveType"
-            value={formData.leaveType}
-            onChange={handleChange}
-          >
-            <option value="">Select Leave Type</option>
-            <option value="Casual">Casual Leave</option>
-            <option value="Sick">Sick Leave</option>
-          </Select>
-          {errors.leaveType && <ErrorText>{errors.leaveType}</ErrorText>}
+            </Link>
+            <Divider />
+            <Icons onClick={() => navigate(-1)}>
+              <img src={back} alt="back" />
+            </Icons>
+          </Wrapper>
+        </Header>
+      </HeaderWrapper>
 
-          <Label>From Date</Label>
-          <InputField
-            type="date"
-            name="fromDate"
-            value={formData.fromDate}
-            onChange={handleChange}
-          />
-          {errors.fromDate && <ErrorText>{errors.fromDate}</ErrorText>}
+      {successMessage && <SuccessText>{successMessage}</SuccessText>}
 
-          <Label>To Date</Label>
-          <InputField
-            type="date"
-            name="toDate"
-            value={formData.toDate}
-            onChange={handleChange}
-          />
-          {errors.toDate && <ErrorText>{errors.toDate}</ErrorText>}
+      <StyledForm onSubmit={handleSubmit}>
+        <Label>Leave Type</Label>
+        <Select
+          name="leaveType"
+          value={formData.leaveType}
+          onChange={handleChange}
+        >
+          <option value="">Select Leave Type</option>
+          <option value="Casual">Casual Leave</option>
+          <option value="Sick">Sick Leave</option>
+        </Select>
+        {errors.leaveType && <ErrorText>{errors.leaveType}</ErrorText>}
 
-          <Label>Reason</Label>
-          <TextArea
-            name="reason"
-            value={formData.reason}
-            onChange={handleChange}
-            rows="4"
-          />
-          {errors.reason && <ErrorText>{errors.reason}</ErrorText>}
+        <Label>From Date</Label>
+        <InputField
+          type="date"
+          name="fromDate"
+          value={formData.fromDate}
+          onChange={handleChange}
+        />
+        {errors.fromDate && <ErrorText>{errors.fromDate}</ErrorText>}
 
-          <SubmitButton type="submit">Apply for Leave</SubmitButton>
-        </StyledForm>
-      </FormContainer>
-    </>
+        <Label>To Date</Label>
+        <InputField
+          type="date"
+          name="toDate"
+          value={formData.toDate}
+          onChange={handleChange}
+        />
+        {errors.toDate && <ErrorText>{errors.toDate}</ErrorText>}
+
+        <Label>Reason</Label>
+        <TextArea
+          name="reason"
+          value={formData.reason}
+          onChange={handleChange}
+          rows="4"
+        />
+        {errors.reason && <ErrorText>{errors.reason}</ErrorText>}
+
+        <SubmitButton type="submit">Apply for Leave</SubmitButton>
+      </StyledForm>
+    </FormContainer>
   );
 };
 
 export default StudentLeaveApplication;
+
 
 export const FormContainer = styled.div`
   padding: 0 15px;
@@ -206,3 +243,11 @@ export const ErrorText = styled.p`
   font-size: 14px;
   margin-top: 5px;
 `;
+
+const SuccessText = styled.div`
+  color: green;
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+`;
+

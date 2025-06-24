@@ -597,6 +597,26 @@ export const getEvent = async () => {
   return response.data;
 };
 
+export const submitLeaveApplication = async (leaveData) => {
+  try {
+    const response = await api.post("/students/student-leave", leaveData);
+    return response.data;
+  } catch (error) {
+    console.error("Error submitting leave application:", error);
+    throw error;  // Let the caller handle any UI error
+  }
+};
+
+export const getClassLeaves = async (emp_id) => {
+  try {
+    const response = await api.get(`/teachers/leaves/${emp_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher leaves:", error);
+    throw error;
+  }
+};
+
 // Inside component or event handler
 
 export default api;
