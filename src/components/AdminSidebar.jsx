@@ -106,7 +106,7 @@ const MobileMenu = styled.div`
     left: 58px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
-    z-index: 1001;
+    z-index: 1;
     border-radius: 5px;
 
     // Increase the icon size in the JSX component
