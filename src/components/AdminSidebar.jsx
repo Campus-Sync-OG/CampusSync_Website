@@ -607,6 +607,13 @@ const Sidebar = () => {
               <Label expanded={expanded}>Notification</Label>
             </SidebarItem>
 
+               <SidebarItem to="/admin-calendar" expanded={expanded}>
+              <Icon>
+                <LiaCalendarCheck />
+              </Icon>
+              <Label expanded={expanded}>Calendar of Events</Label>
+            </SidebarItem>
+
             <SidebarItem to="/admin-teacher-data" expanded={expanded}>
               <Icon>
                 <RiDatabase2Line />

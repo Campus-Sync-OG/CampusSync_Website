@@ -92,6 +92,8 @@ import AnnouncementPage from "./pages/AnnouncementPage";
 import StudentDocumentView from "./userpages/StudentDocumentView";
 import DocumentView from "./pages/DocumentView";
 import StudentFeeDetails from "./userpages/StudentFeeDetails";
+import AdminCalendarPanel from "./userpages/AdminCalendarPanel";
+import StudentCalendarOfEvent from "./pages/StudentCalendarOfEvent";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -204,6 +206,15 @@ const App = () => {
             element={
               <Layout>
                 <AssignmentPage />
+              </Layout>
+            }
+          />
+
+           <Route
+            path="/school/calendar"
+            element={
+              <Layout>
+                <StudentCalendarOfEvent />
               </Layout>
             }
           />
@@ -687,6 +698,15 @@ const App = () => {
             element={
               <AdminLayout>
                 <StudentDocumentView />
+              </AdminLayout>
+            }
+          />
+
+           <Route
+            path="/admin-calendar"
+            element={
+              <AdminLayout>
+                <AdminCalendarPanel />
               </AdminLayout>
             }
           />

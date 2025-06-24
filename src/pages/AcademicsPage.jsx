@@ -1,81 +1,88 @@
-// Import back icon
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import homeIcon from "../assets/images/home.png"; // Import home icon
-import backIcon from "../assets/images/back.png"; // Import back icon
+import styled from "styled-components";
+import homeIcon from "../assets/images/home.png";
+import backIcon from "../assets/images/back.png";
+import { fetchExamFormats, generateMarksheet } from "../api/ClientApi";  // Your API utility
+
 
 const Academics = () => {
   const [filter, setFilter] = useState("All");
+  const [examNames, setExamNames] = useState([]);
   const navigate = useNavigate();
-  const [results] = useState([
-    {
-      className: "X",
-      assessmentName: "Formative Assessment 1",
-      date: "02/05/2001",
-      resultUrl: "/results/assessment1.pdf",
-    },
-    {
-      className: "X",
-      assessmentName: "Formative Assessment 2",
-      date: "02/05/2001",
-      resultUrl: "/results/assessment2.pdf",
-    },
-    {
-      className: "X",
-      assessmentName: "Formative Assessment 3",
-      date: "02/05/2001",
-      resultUrl: "/results/assessment3.pdf",
-    },
-    {
-      className: "X",
-      assessmentName: "Summative Assessment 1",
-      date: "02/05/2001",
-      resultUrl: "/results/assessment4.pdf",
-    },
-    {
-      className: "X",
-      assessmentName: "Summative Assessment 2",
-      date: "02/05/2001",
-      resultUrl: "/results/assessment5.pdf",
-    },
-  ]);
 
-  const filteredResults =
-    filter === "All"
-      ? results
-      : results.filter((item) => item.assessmentName.includes(filter));
+  useEffect(() => {
+    const loadExamNames = async () => {
+      const formats = await fetchExamFormats();
+      if (formats.length > 0) {
+        const names = Array.from(new Set(formats.map(f => f.exam_name)));
+        setExamNames(names);
+      }
+    };
+    loadExamNames();
+  }, []);
 
-  const handleHomeClick = () => {
-    console.log("Home icon clicked");
-    navigate("/dashboard");
-  };
-
+  const handleHomeClick = () => navigate("/dashboard");
   const handleBackClick = () => navigate(-1);
 
-  return (
-    <div className="academics-page">
-      <div className="main-layout">
-        <div className="main-content">
-          <div className="navigation-container">
-            <h2 className="nav-title">Academics</h2>
-            <div className="nav-icons-container">
-              <img
-                src={homeIcon}
-                alt="Home"
-                className="nav-icon"
-                onClick={handleHomeClick}
-              />
-              <div className="icon-divider"></div>
-              <img
-                src={backIcon}
-                alt="Back"
-                className="nav-icon"
-                onClick={handleBackClick}
-              />
-            </div>
-          </div>
+  const getAdmissionNo = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.unique_id || "";
+  };
 
-          <div className="filter-container">
+  const handleView = async (examName) => {
+    const admission_no = getAdmissionNo();
+    if (!admission_no) {
+      alert("Missing admission number. Please log in again.");
+      return;
+    }
+    const url = await generateMarksheet(admission_no, examName);
+    if (url) {
+      window.open(url, "_blank");
+    } else {
+      alert("Failed to generate or view marksheet.");
+    }
+  };
+
+  const handleDownload = async (examName) => {
+    const admission_no = getAdmissionNo();
+    if (!admission_no) {
+      alert("Missing admission number. Please log in again.");
+      return;
+    }
+    const url = await generateMarksheet(admission_no, examName);
+    if (url) {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Marksheet_${admission_no}_${examName}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert("Failed to generate or download marksheet.");
+    }
+  };
+
+  // Determine what to display
+  const displayResults = 
+    filter === "All"
+      ? examNames
+      : examNames.filter(name => name === filter);
+
+  return (
+    <Page>
+      <MainLayout>
+        <MainContent>
+          <NavContainer>
+            <NavTitle>Academics</NavTitle>
+            <NavIcons>
+              <NavIcon src={homeIcon} alt="Home" onClick={handleHomeClick} />
+              <IconDivider />
+              <NavIcon src={backIcon} alt="Back" onClick={handleBackClick} />
+            </NavIcons>
+          </NavContainer>
+
+          <FilterContainer>
             <label htmlFor="assessmentFilter">Assessment Type: </label>
             <select
               id="assessmentFilter"
@@ -83,211 +90,185 @@ const Academics = () => {
               onChange={(e) => setFilter(e.target.value)}
             >
               <option value="All">All</option>
-              <option value="Formative">Formative Assessment</option>
-              <option value="Summative">Summative Assessment</option>
+              {examNames.map((name, index) => (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              ))}
             </select>
-          </div>
+          </FilterContainer>
 
-          {filteredResults.length > 0 ? (
-            <div className="content">
-              <table className="results-table">
+          <Content>
+            {displayResults.length > 0 ? (
+              <ResultsTable>
                 <thead>
                   <tr>
-                    <th>Class</th>
-                    <th>Assessment Name</th>
-                    <th>Date</th>
+                    <th>Exam Name</th>
                     <th>View</th>
-                    <th>Result</th>
+                    <th>Download</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredResults.map((result, index) => (
-                    <tr key={result.id}>
-                      <td>{result.className}</td>
-                      <td>{result.assessmentName}</td>
-                      <td>{result.date}</td>
+                  {displayResults.map((name, index) => (
+                    <tr key={index}>
+                      <td>{name}</td>
                       <td>
-                        <span
-                          className="view-link"
-                          onClick={() => navigate(`/view-result/${result.id}`)}
-                        >
-                          View
-                        </span>
+                        <ViewLink onClick={() => handleView(name)}>View</ViewLink>
                       </td>
                       <td>
-                        <a
-                          href={result.resultUrl}
-                          download
-                          className="download-link"
-                        >
-                          Download
-                        </a>
+                        <DownloadLink onClick={() => handleDownload(name)}>Download</DownloadLink>
                       </td>
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
-          ) : (
-            <p className="no-results">
-              No results found for the selected filter.
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+              </ResultsTable>
+            ) : (
+              <NoResults>No exams available.</NoResults>
+            )}
+          </Content>
+        </MainContent>
+      </MainLayout>
+    </Page>
   );
 };
 
 export default Academics;
 
-/* CSS */
-const styles = `
- // @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-   .achievement-page {
-     display: flex;
-     flex-direction: column;
-     height: 100vh;
-     overflow:hidden;
-   }
- 
-   .main-layout {
-     display: flex;
-     flex: 1;
-    
-   }
- 
-   .sidebar {
-     width: 250px;
-     background-color: #f4f4f4;
-     border-right: 1px solid #ddd;
-   }
- 
-   .main-content {
-     flex: 1;
-     padding: 0 15px;
-     background-color: #f9f9f9;
-     overflow-y:auto;
-     scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  
+
+// styled components (same as before — no change required)
+
+
+// STYLED COMPONENTS
+
+const Page = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+`;
+
+const MainLayout = styled.div`
+  display: flex;
+  flex: 1;
+`;
+
+const MainContent = styled.div`
+  flex: 1;
+  padding: 0 15px;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none;
   }
-   }
- 
-   .navigation-container {
-     display: flex;
-   align-items: center;
-   justify-content: space-between;
-    background: linear-gradient(90deg, #002087, #df0043);
-   padding: 15px 20px;
-   border-radius: 10px; /* Optional for rounded corners */
-   color: white; /* Text color */
-   }
-   .nav-icons-container {
-   display: flex; /* Ensures icons and divider are in a horizontal row */
-   align-items: center; /* Ensures vertical alignment of items */
- }
- 
-  .nav-title {
-   font-size: 26px;
-   font-weight: 600;
-   font-family: "Poppins";
- }
- .nav-icon {
-     width: 25px;
-     height: 25px;
-     cursor: pointer;
-   display: flex;
-   align-items: center; /* Ensures icons and divider are vertically aligned */
-   gap: 10px; 
-   padding:10px;
-   }
-   .icon-divider {
-   width: 1px; /* Thickness of the white line */
-   height: 20px; /* Adjust to match the size of icons */
-   background-color: white; /* White line */
- }
- 
-   .content {
-     background-color: white;
-     padding: 20px;
-     border-radius: 8px;
-     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-     overflow: scroll;
-   }
- 
-   .filter-container {
+`;
+
+const NavContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 15px 20px;
+  border-radius: 10px;
+  color: white;
+`;
+
+const NavTitle = styled.h2`
+  font-size: 26px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+`;
+
+const NavIcons = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const NavIcon = styled.img`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  padding: 10px;
+`;
+
+const IconDivider = styled.div`
+  width: 1px;
+  height: 20px;
+  background-color: white;
+`;
+
+const FilterContainer = styled.div`
   margin-bottom: 15px;
   margin-top: 50px;
   display: flex;
   align-items: center;
   gap: 10px;
-}
 
-.filter-container label {
-  
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.filter-container select {
-  padding: 5px 10px;
-  font-family: 'Poppins', sans-serif;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
- 
-  .results-table {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 1px;
-    overflow: hidden;
-    font-family: 'Poppins';
-    font-size:16px;
+  label {
+    font-size: 16px;
+    font-weight: 500;
   }
 
-  .results-table th {
+  select {
+    padding: 5px 10px;
+    font-family: 'Poppins', sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+`;
+
+const Content = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const ResultsTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+
+  th {
     background-color: #002087;
     color: white;
     padding: 12px;
     text-align: center;
-    
   }
 
-  .results-table td {
+  td {
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    font-size:16px;
     text-align: center;
   }
+`;
 
-  .download-link {
-    color:rgb(255, 0, 0);
-    text-decoration: none;
-    font-weight: bold;
-  }
+const DownloadLink = styled.a`
+  color: red;
+  font-weight: bold;
+  text-decoration: none;
 
-  .download-link:hover {
+  &:hover {
     text-decoration: underline;
   }
-    .view-link {
-  color: blue; /* Make it look like "Download" */
+`;
+
+const ViewLink = styled.span`
+  color: blue;
   cursor: pointer;
   text-decoration: none;
-}
 
-.view-link:hover {
-  text-decoration: underline;
-}
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
- `;
-
-// Inject CSS
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
+const NoResults = styled.p`
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+`;

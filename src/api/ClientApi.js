@@ -526,6 +526,77 @@ export const getFeeStatusByClassSection = async ({ class_name, section_name, fee
   }
 };
 
+export const generateMarksheet = async (admission_no, exam_format) => {
+  try {
+    const response = await api.get(`/academics/marksheet/${admission_no}/${exam_format}`);
+    if (response.data.success) {
+      return response.data.marksheetUrl;
+    }
+    return null;
+  } catch (err) {
+    console.error("generateMarksheet error:", err);
+    return null;
+  }
+};
+
+export const fetchExamFormats = async () => {
+  try {
+    const res = await api.get("/exam/exam-format");
+
+    // If response is directly an array
+    if (Array.isArray(res.data)) {
+      return res.data;
+    } 
+
+    // In case backend changes in future
+    if (res.data.success && res.data.data) {
+      return res.data.data;
+    }
+
+    console.error("Unexpected API response:", res.data);
+    return [];
+  } catch (err) {
+    if (err.response) {
+      console.error("Error response from server:", err.response.status, err.response.data);
+    } else if (err.request) {
+      console.error("No response received:", err.request);
+    } else {
+      console.error("Error setting up request:", err.message);
+    }
+    return [];
+  }
+};
+
+
+export const getAllEvents = async (role = "") => {
+  const url = role ? `/calendar/events?role=${role}` : "/events";
+  const response = await api.get(url);
+  return response.data;
+};
+
+// Create a single event
+export const createEvent = async (eventData) => {
+  const response = await api.post("/calendar/events", eventData);
+  return response.data;
+};
+
+// Create multiple events (bulk create)
+export const createBulkEvents = async (events) => {
+  const response = await api.post("/calendar/events/bulk", { events });
+  return response.data;
+};
+
+// Delete an event
+export const deleteEvent = async (id) => {
+  const response = await api.delete(`/calendar/events/${id}`);
+  return response.data;
+};
+
+export const getEvent = async () => {
+  const response = await api.get("/calendar/get-events");
+  return response.data;
+};
+
 // Inside component or event handler
 
 export default api;
