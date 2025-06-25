@@ -193,7 +193,7 @@ const App = () => {
               </Layout>
             }
           />
-           <Route
+          <Route
             path="/announcement"
             element={
               <Layout>
@@ -210,7 +210,7 @@ const App = () => {
             }
           />
 
-           <Route
+          <Route
             path="/school/calendar"
             element={
               <Layout>
@@ -304,13 +304,13 @@ const App = () => {
             path="/chatbot"
             element={
               <Layout>
-                 <ChatPage/>
+                <ChatPage />
                 {/* Chatbot component can be added here */}
               </Layout>
             }
           />
           <Route
-            path="/notifications"
+            path="/notification"
             element={
               <Layout>
                 <NotificationPage />
@@ -364,7 +364,7 @@ const App = () => {
             path="/documentview"
             element={
               <Layout>
-                <DocumentView/>
+                <DocumentView />
               </Layout>
             }
           />
@@ -473,20 +473,20 @@ const App = () => {
               </TeacherLayout>
             }
           />
-           <Route
+          <Route
             path="/teacher-chatbot"
             element={
               <TeacherLayout>
-                 <ChatPage/>
+                <ChatPage />
                 {/* Chatbot component can be added here */}
               </TeacherLayout>
             }
           />
-           <Route
+          <Route
             path="/teacher/announcement"
             element={
               <TeacherLayout>
-                 <AnnouncementPage />
+                <AnnouncementPage />
                 {/* Chatbot component can be added here */}
               </TeacherLayout>
             }
@@ -710,7 +710,7 @@ const App = () => {
               </AdminLayout>
             }
           />
-           <Route
+          <Route
             path="/admin-Studentdocumentview"
             element={
               <AdminLayout>
@@ -719,7 +719,7 @@ const App = () => {
             }
           />
 
-           <Route
+          <Route
             path="/admin-calendar"
             element={
               <AdminLayout>
@@ -732,6 +732,14 @@ const App = () => {
             element={
               <AdminLayout>
                 <StudentFeeDetails />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-notification"
+            element={
+              <AdminLayout>
+                <NotificationPage />
               </AdminLayout>
             }
           />
@@ -852,12 +860,13 @@ const App = () => {
           <Route
             path="/principal-notification"
             element={
-              <principalLayout>
+              <PrincipalLayout>
+                {" "}
+                {/* ✅ FIXED */}
                 <NotificationPage />
-              </principalLayout>
+              </PrincipalLayout>
             }
           />
-
 
           <Route
             path="/principal-leave-panel"
