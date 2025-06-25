@@ -109,13 +109,15 @@ const IconDivider = styled.div`
   background-color: white;
 `;
 
+
 const FeePaymentForm = () => {
   const [admission_no, setAdmissionNo] = useState(null);
   const [fees, setFees] = useState([]);
   const [selectedFee, setSelectedFee] = useState(null);
   const [paidAmount, setPaidAmount] = useState(0);
   const [uniformItems, setUniformItems] = useState([]);
-  const navigate = useNavigate(); // ⬅ Required for navigation
+  const [feeRecords, setFeeRecords] = useState([]);
+  const navigate = useNavigate();
 
   const handleHomeClick = () => navigate("/dashboard");
   const handleBackClick = () => navigate(-1);
@@ -125,6 +127,7 @@ const FeePaymentForm = () => {
     if (userData?.unique_id) {
       setAdmissionNo(userData.unique_id);
       loadFeeData(userData.unique_id);
+      loadFeeRecords(userData.unique_id);
     }
   }, []);
 
@@ -134,6 +137,13 @@ const FeePaymentForm = () => {
       setFees(res.data || []);
     } else {
       alert(res.error);
+    }
+  };
+
+  const loadFeeRecords = async (adm_no) => {
+    const res = await getFeesByAdmissionNo(adm_no);
+    if (res.success) {
+      setFeeRecords(res.data || []);
     }
   };
 
@@ -158,25 +168,18 @@ const FeePaymentForm = () => {
   const toggleUniformItem = (idx) => {
     setUniformItems((prev) =>
       prev.map((item, i) =>
-        i === idx
-          ? {
-              ...item,
-              selected: !item.selected,
-              quantity: !item.selected ? 1 : item.quantity,
-            }
-          : item
+        i === idx ? { ...item, selected: !item.selected } : item
       )
     );
   };
 
   const changeUniformQuantity = (idx, delta) => {
     setUniformItems((prev) =>
-      prev.map((item, i) => {
-        if (i === idx && item.selected) {
-          return { ...item, quantity: Math.max(1, item.quantity + delta) };
-        }
-        return item;
-      })
+      prev.map((item, i) =>
+        i === idx && item.selected
+          ? { ...item, quantity: Math.max(1, item.quantity + delta) }
+          : item
+      )
     );
   };
 
@@ -185,6 +188,15 @@ const FeePaymentForm = () => {
       (sum, item) => sum + (item.selected ? item.amount * item.quantity : 0),
       0
     );
+  };
+
+  const handleGenerateReceipt = async (feestype) => {
+    try {
+      const res = await generateReceipt({ admission_no, feestype });
+      if (res) window.open(res, "_blank");
+    } catch (err) {
+      alert("Failed to generate receipt");
+    }
   };
 
   const handlePayment = async () => {
@@ -380,6 +392,41 @@ const FeePaymentForm = () => {
 
           <Button onClick={handlePayment}>Proceed to Pay</Button>
         </>
+
+      )}
+
+      {feeRecords.length > 0 && (
+        <div>
+          <h3 style={{ marginTop: "40px" }}>Paid Fee Records</h3>
+          <Table>
+            <thead>
+              <tr>
+                <th>Sl No</th>
+                <th>Fee Type</th>
+                <th>Paid Amount</th>
+                <th>Payment Date</th>
+                <th>Method</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tbody>
+              {feeRecords.map((record, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{record.feestype}</td>
+                  <td>{record.paid_amount} ₹</td>
+                  <td>{record.pay_date?.split("T")[0]}</td>
+                  <td>{record.pay_method}</td>
+                  <td>
+                    <Button onClick={() => handleGenerateReceipt(record.feestype)}>
+                      Generate Receipt
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       )}
     </Container>
   );
