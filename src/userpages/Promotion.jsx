@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getAllClassSections, getStudentsByClassAndSection, promoteStudentsAPI } from "../api/ClientApi";
+import {
+  getAllClassSections,
+  getStudentsByClassAndSection,
+  promoteStudentsAPI,
+} from "../api/ClientApi";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
@@ -51,7 +55,10 @@ const Promotion = () => {
   const handleLoadStudents = async () => {
     if (fromClass && fromSection) {
       try {
-        const students = await getStudentsByClassAndSection(fromClass, fromSection);
+        const students = await getStudentsByClassAndSection(
+          fromClass,
+          fromSection
+        );
         if (students?.length) {
           setStudents(students);
           setExcludedIds([]);
@@ -74,8 +81,6 @@ const Promotion = () => {
         : [...prev, admission_no]
     );
   };
-
-
 
   const handlePromote = async () => {
     if (!toClass || !toSection) {
@@ -133,21 +138,31 @@ const Promotion = () => {
       </Header>
       <FormGroup>
         <label>From Class:</label>
-        <select value={fromClass} onChange={(e) => {
-          setFromClass(e.target.value);
-          setFromSection(""); // reset section
-        }}>
+        <select
+          value={fromClass}
+          onChange={(e) => {
+            setFromClass(e.target.value);
+            setFromSection(""); // reset section
+          }}
+        >
           <option value="">Select</option>
           {classOptions.map((cls) => (
-            <option key={cls} value={cls}>{cls}</option>
+            <option key={cls} value={cls}>
+              {cls}
+            </option>
           ))}
         </select>
 
         <label>Section:</label>
-        <select value={fromSection} onChange={(e) => setFromSection(e.target.value)}>
+        <select
+          value={fromSection}
+          onChange={(e) => setFromSection(e.target.value)}
+        >
           <option value="">Select</option>
           {getSectionsForClass(fromClass).map((sec) => (
-            <option key={sec} value={sec}>{sec}</option>
+            <option key={sec} value={sec}>
+              {sec}
+            </option>
           ))}
         </select>
 
@@ -185,21 +200,31 @@ const Promotion = () => {
 
           <FormGroup>
             <label>To Class:</label>
-            <select value={toClass} onChange={(e) => {
-              setToClass(e.target.value);
-              setToSection(""); // reset section
-            }}>
+            <select
+              value={toClass}
+              onChange={(e) => {
+                setToClass(e.target.value);
+                setToSection(""); // reset section
+              }}
+            >
               <option value="">Select</option>
               {classOptions.map((cls) => (
-                <option key={cls} value={cls}>{cls}</option>
+                <option key={cls} value={cls}>
+                  {cls}
+                </option>
               ))}
             </select>
 
             <label>Section:</label>
-            <select value={toSection} onChange={(e) => setToSection(e.target.value)}>
+            <select
+              value={toSection}
+              onChange={(e) => setToSection(e.target.value)}
+            >
               <option value="">Select</option>
               {getSectionsForClass(toClass).map((sec) => (
-                <option key={sec} value={sec}>{sec}</option>
+                <option key={sec} value={sec}>
+                  {sec}
+                </option>
               ))}
             </select>
 
@@ -219,18 +244,11 @@ export default Promotion;
 
 // Styled Components (unchanged)
 const Container = styled.div`
- position: relative;
-  max-width: 1000px;
-  margin: 30px auto;
-  padding: 2rem;
-  background: #f9fafb;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-  bottom: 60px;
+  padding: 0 1.5rem;
 `;
 
 const FormGroup = styled.div`
-position: relative;
+  position: relative;
   background: #ffffff;
   padding: 20px;
   margin-bottom: 25px;
@@ -265,7 +283,7 @@ position: relative;
 
   button {
     padding: 10px 18px;
-    background-color:  #00166b;
+    background-color: #00166b;
     color: #fff;
     border: none;
     font-size: 15px;
@@ -274,7 +292,7 @@ position: relative;
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color:  #c9302c;
+      background-color: #c9302c;
     }
 
     &:disabled {
@@ -292,7 +310,8 @@ const Table = styled.table`
   overflow: hidden;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 
-  th, td {
+  th,
+  td {
     padding: 12px 16px;
     text-align: center;
     border-bottom: 1px solid #dee2e6;
@@ -358,7 +377,7 @@ const Header = styled.div`
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
   padding: 1px 20px;
-  border-radius: 15px;
+  border-radius: 10px;
   color: white;
 `;
 

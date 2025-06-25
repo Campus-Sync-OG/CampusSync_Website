@@ -506,7 +506,7 @@ const Sidebar = () => {
               <Icon>
                 <GiTeacher />
               </Icon>
-              <Label expanded={expanded}>Add Teacher Infor</Label>
+              <Label expanded={expanded}>Add Teacher Info</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-school-information" expanded={expanded}>
@@ -579,7 +579,7 @@ const Sidebar = () => {
               <Label expanded={expanded}>Feedback</Label>
             </SidebarItem>
 
-              <SidebarItem to="/admin-studentfee" expanded={expanded}>
+            <SidebarItem to="/admin-studentfee" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
@@ -607,7 +607,7 @@ const Sidebar = () => {
               <Label expanded={expanded}>Add Notification</Label>
             </SidebarItem>
 
-               <SidebarItem to="/admin-calendar" expanded={expanded}>
+            <SidebarItem to="/admin-calendar" expanded={expanded}>
               <Icon>
                 <LiaCalendarCheck />
               </Icon>

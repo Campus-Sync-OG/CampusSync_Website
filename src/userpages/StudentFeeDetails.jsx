@@ -53,27 +53,8 @@ const StudentFeeDetails = () => {
 
   return (
     <Container>
-      <Header
-        style={{
-          background: "linear-gradient(90deg, #002087, #df0043)",
-          padding: "22px 20px",
-          borderRadius: "10px",
-          color: "white",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "20px",
-            fontWeight: 300,
-            margin: 0,
-            fontFamily: "Poppins",
-          }}
-        >
-          Fee Status By Class & Section
-        </h2>
+      <Header>
+        <h2>Fee Status By Class & Section</h2>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <div
             onClick={() => navigate("/admin-dashboard")}
@@ -97,7 +78,6 @@ const StudentFeeDetails = () => {
           </div>
         </div>
       </Header>
-
 
       <FilterRow>
         <Select
@@ -359,11 +339,17 @@ export const CloseButton = styled.button`
 `;
 export const Header = styled.div`
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 22px 20px;
+  padding: 5px 20px;
   border-radius: 10px;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    font-family: "Poppins";
+  }
 `;

@@ -117,24 +117,8 @@ const AdminFee = () => {
 
   return (
     <Container>
-      <Header
-        style={{
-          background: "linear-gradient(90deg, #002087, #df0043)",
-          padding: "22px 20px",
-          borderRadius: "10px",
-          color: "white",
-        }}
-      >
-        <Title
-          style={{
-            fontSize: "20px",
-            fontWeight: 300,
-            margin: 0,
-            fontFamily: "Poppins",
-          }}
-        >
-          Fees
-        </Title>
+      <Header>
+        <Title>Fees</Title>
         <Wrapper>
           <Icons onClick={() => navigate("/admin-dashboard")}>
             <img src={home} alt="home" />
@@ -619,15 +603,20 @@ export const Container = styled.div`
 
 export const Header = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-bottom: 30px;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 20px 20px;
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 10px;
 `;
 
 export const Title = styled.h2`
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
+  margin: 0;
 `;
 
 export const Wrapper = styled.div`
@@ -697,7 +686,8 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Button = styled.button`
-  background: ${({ primary }) => (primary ? " rgb(223, 0, 67)" : " rgb(0, 32, 135)")};
+  background: ${({ primary }) =>
+    primary ? " rgb(223, 0, 67)" : " rgb(0, 32, 135)"};
   color: ${({ primary }) => (primary ? " #fff" : " #fff")};
   border: none;
   padding: 0.6rem 1.5rem;
