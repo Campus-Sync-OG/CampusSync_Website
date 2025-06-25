@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { fetchStudentDocumentByAdmissionNo, fetchStudentByAdmissionNo,createStudentDocument, updateStudentDocumentByAdmissionNo } from '../api/ClientApi'; 
+import {
+  fetchStudentDocumentByAdmissionNo,
+  fetchStudentByAdmissionNo,
+  createStudentDocument,
+  updateStudentDocumentByAdmissionNo,
+} from "../api/ClientApi";
 
 const Container = styled.div`
-  
-  margin: auto;
-  padding: 1rem;
+  padding: 0 1.5rem;
 `;
 
 const InputGroup = styled.div`
@@ -17,10 +20,7 @@ const InputGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
-
 `;
-
-
 
 const Button = styled.button`
   padding: 10px 25px;
@@ -33,7 +33,6 @@ const Button = styled.button`
   margin-top: 10px;
 `;
 
-
 const Header = styled.div`
   display: flex;
   align-items: center;
@@ -45,8 +44,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: 300;
+  font-size: 26px;
+  font-weight: 600;
   font-family: "Poppins";
   margin: 0;
 `;
@@ -148,85 +147,82 @@ const StyledInput = styled.input`
 `;
 
 const StudentCertificates = () => {
-    
- const defaultCertificates = {
-  caste_certificate: false,
-  income_certificate: false,
-  birth_certificate: false,
-  transfer_certificate: false,
-  aadhar_card: false
-};
-  const [admissionNo, setAdmissionNo] = useState('');
-  const [studentName, setStudentName] = useState('');
-  const [className, setClassName] = useState('');
-  const [section, setSection] = useState('');
+  const defaultCertificates = {
+    caste_certificate: false,
+    income_certificate: false,
+    birth_certificate: false,
+    transfer_certificate: false,
+    aadhar_card: false,
+  };
+  const [admissionNo, setAdmissionNo] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [className, setClassName] = useState("");
+  const [section, setSection] = useState("");
   const [certificates, setCertificates] = useState({ ...defaultCertificates });
   const navigate = useNavigate();
 
-const [showNewCertInput, setShowNewCertInput] = useState(false);
-const [newCertificate, setNewCertificate] = useState('');
-const addNewCertificate = () => {
-  const certKey = newCertificate.trim().toLowerCase().replace(/\s+/g, '_');
+  const [showNewCertInput, setShowNewCertInput] = useState(false);
+  const [newCertificate, setNewCertificate] = useState("");
+  const addNewCertificate = () => {
+    const certKey = newCertificate.trim().toLowerCase().replace(/\s+/g, "_");
 
-  if (certKey && !certificates.hasOwnProperty(certKey)) {
-    setCertificates((prev) => ({
-      ...prev,
-      [certKey]: false
-    }));
-    setNewCertificate('');
-    setShowNewCertInput(false);
-  }
-};
+    if (certKey && !certificates.hasOwnProperty(certKey)) {
+      setCertificates((prev) => ({
+        ...prev,
+        [certKey]: false,
+      }));
+      setNewCertificate("");
+      setShowNewCertInput(false);
+    }
+  };
 
   const fetchStudentData = async () => {
     try {
       // Fetch student name
       const student = await fetchStudentByAdmissionNo(admissionNo);
-      
 
-      setStudentName(student?.student_name || 'Name not found');
-      setClassName(student?.class || '');
-      setSection(student?.section || '');
+      setStudentName(student?.student_name || "Name not found");
+      setClassName(student?.class || "");
+      setSection(student?.section || "");
       // Fetch certificate document (if exists)
-     const doc = await fetchStudentDocumentByAdmissionNo(admissionNo);
+      const doc = await fetchStudentDocumentByAdmissionNo(admissionNo);
 
       if (doc) {
         setClassName(doc.class);
         setSection(doc.section);
-          setCertificates({
-    ...defaultCertificates,
-    ...doc.certificate_status
-  });
-
+        setCertificates({
+          ...defaultCertificates,
+          ...doc.certificate_status,
+        });
       } else {
         setCertificates({
           caste_certificate: false,
           income_certificate: false,
           birth_certificate: false,
           transfer_certificate: false,
-          aadhar_card: false
+          aadhar_card: false,
         });
       }
     } catch (error) {
-    console.error('Error fetching student:', error);
+      console.error("Error fetching student:", error);
 
-    if (error.response?.status === 404) {
-      alert('Student not found.');
-    } else {
-      alert('Error fetching student.');
+      if (error.response?.status === 404) {
+        alert("Student not found.");
+      } else {
+        alert("Error fetching student.");
+      }
+
+      setStudentName("");
+      setClassName("");
+      setSection("");
+      setCertificates({ ...defaultCertificates });
     }
-
-    setStudentName('');
-    setClassName('');
-    setSection('');
-    setCertificates({ ...defaultCertificates });
-  }
-};
+  };
 
   const handleCheckboxChange = (type) => {
     setCertificates((prev) => ({
       ...prev,
-      [type]: !prev[type]
+      [type]: !prev[type],
     }));
   };
 
@@ -236,24 +232,24 @@ const addNewCertificate = () => {
         admission_no: admissionNo,
         class: className,
         section,
-        certificate_status: certificates
+        certificate_status: certificates,
       };
 
       // Try to POST new or PUT update
-       await createStudentDocument(body);
-      alert('Data submitted successfully!');
+      await createStudentDocument(body);
+      alert("Data submitted successfully!");
     } catch (error) {
       if (error.response?.status === 400) {
         // Already exists → update it
         await updateStudentDocumentByAdmissionNo(admissionNo, {
-    certificate_status: certificates,
-    class: className,
-    section,
-  });
-        alert('Updated existing record successfully!');
+          certificate_status: certificates,
+          class: className,
+          section,
+        });
+        alert("Updated existing record successfully!");
       } else {
-        console.error('Submit error:', error);
-        alert('Error submitting data.');
+        console.error("Submit error:", error);
+        alert("Error submitting data.");
       }
     }
   };
@@ -261,97 +257,104 @@ const addNewCertificate = () => {
   return (
     <Container>
       <Header>
-             <Title>Student Document Upload</Title>
-             <Wrapper>
-               <Icons onClick={() => navigate("/admin-dashboard")}>
-                 <img src={home} alt="home" />
-               </Icons>
-               <Divider />
-               <Icons onClick={() => navigate(-1)}>
-                 <img src={back} alt="back" />
-               </Icons>
-             </Wrapper>
-           </Header>
+        <Title>Student Document Upload</Title>
+        <Wrapper>
+          <Icons onClick={() => navigate("/admin-dashboard")}>
+            <img src={home} alt="home" />
+          </Icons>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
       <InputGroup>
-       <Label>Admission No:</Label>
-    <StyledInput
-      type="text"
-      value={admissionNo}
-      onChange={(e) => setAdmissionNo(e.target.value)}
-      placeholder="Enter Admission No"
-    />
+        <Label>Admission No:</Label>
+        <StyledInput
+          type="text"
+          value={admissionNo}
+          onChange={(e) => setAdmissionNo(e.target.value)}
+          placeholder="Enter Admission No"
+        />
         <Button onClick={fetchStudentData}>Search</Button>
-         <Button
-    type="button"
-    onClick={() => setShowNewCertInput(!showNewCertInput)}
-    color=" #df0043"
-  >
-    + Add Certificate
-  </Button>
-  
-{showNewCertInput && (
-  <InputGroup>
-    <StyledInput
-      type="text"
-      value={newCertificate}
-      onChange={(e) => setNewCertificate(e.target.value)}
-      placeholder="e.g. sports_certificate"
-    />
-    <Button type="button" onClick={addNewCertificate}>Confirm Add</Button>
-  </InputGroup>
-)}
-<Button
-  type="button"
-  onClick={() => navigate('/admin-Studentdocumentview')}
-  color=" #002087"
->
-  View All
-</Button>
+        <Button
+          type="button"
+          onClick={() => setShowNewCertInput(!showNewCertInput)}
+          color=" #df0043"
+        >
+          + Add Certificate
+        </Button>
+
+        {showNewCertInput && (
+          <InputGroup>
+            <StyledInput
+              type="text"
+              value={newCertificate}
+              onChange={(e) => setNewCertificate(e.target.value)}
+              placeholder="e.g. sports_certificate"
+            />
+            <Button type="button" onClick={addNewCertificate}>
+              Confirm Add
+            </Button>
+          </InputGroup>
+        )}
+        <Button
+          type="button"
+          onClick={() => navigate("/admin-Studentdocumentview")}
+          color=" #002087"
+        >
+          View All
+        </Button>
       </InputGroup>
-<InputGroup> {studentName && (
-  <div>
-    <Label>Student Name: <strong>{studentName}</strong></Label>
-    <Label>Class: <strong>{className}</strong></Label>
-    <Label>Section: <strong>{section}</strong></Label>
-  </div>
-)}</InputGroup>
-     
-
-      
-
+      <InputGroup>
+        {" "}
+        {studentName && (
+          <div>
+            <Label>
+              Student Name: <strong>{studentName}</strong>
+            </Label>
+            <Label>
+              Class: <strong>{className}</strong>
+            </Label>
+            <Label>
+              Section: <strong>{section}</strong>
+            </Label>
+          </div>
+        )}
+      </InputGroup>
 
       <TableWrapper>
-  <TableContainer>
-    <Table>
-      <TheadWrapper>
-        <tr>
-          <Th>Certificate Type</Th>
-          <Th>Status</Th>
-        </tr>
-      </TheadWrapper>
-      <tbody>
-        {Object.entries(certificates).map(([type, status]) => (
-          <tr key={type}>
-            <Td>{type.replace(/_/g, ' ').toUpperCase()}</Td>
-            <Td>
-              <input
-                type="checkbox"
-                checked={status}
-                onChange={() => handleCheckboxChange(type)}
-                style={{
-                  width: '20px',
-                  height: '20px',
-                  accentColor: '#00b300', // ✅ Green checkbox
-                  cursor: 'pointer'
-                }}
-              />
-            </Td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
-  </TableContainer>
-</TableWrapper>
+        <TableContainer>
+          <Table>
+            <TheadWrapper>
+              <tr>
+                <Th>Certificate Type</Th>
+                <Th>Status</Th>
+              </tr>
+            </TheadWrapper>
+            <tbody>
+              {Object.entries(certificates).map(([type, status]) => (
+                <tr key={type}>
+                  <Td>{type.replace(/_/g, " ").toUpperCase()}</Td>
+                  <Td>
+                    <input
+                      type="checkbox"
+                      checked={status}
+                      onChange={() => handleCheckboxChange(type)}
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        accentColor: "#00b300", // ✅ Green checkbox
+                        cursor: "pointer",
+                      }}
+                    />
+                  </Td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </TableContainer>
+      </TableWrapper>
 
       <Button onClick={handleSubmit}>Submit</Button>
     </Container>

@@ -155,7 +155,7 @@ const MainLayout = styled.div`
 
 const MainContent = styled.div`
   flex: 1;
-  padding: 0 15px;
+  padding: 0px 15px;
   background-color: #f9f9f9;
   overflow-y: auto;
   scrollbar-width: none;
@@ -170,7 +170,7 @@ const NavContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 15px 20px;
+  padding: 1px 20px;
   border-radius: 10px;
   color: white;
 `;

@@ -15,7 +15,7 @@ const Header = styled.div`
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
   padding: 1px 20px;
-  border-radius: 15px;
+  border-radius: 10px;
   color: white;
 `;
 

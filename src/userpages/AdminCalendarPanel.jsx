@@ -7,7 +7,7 @@ import { Link,useNavigate } from "react-router-dom";
 
 // Styled Components (same as before + refresh button)
 const Container = styled.div`
-  padding: 0 30px;
+  padding: 0 20px;
 `;
 
 const Heading = styled.h2`
@@ -95,19 +95,17 @@ const EmptyMessage = styled.p`
 
 const Header = styled.div`
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 10px 20px;
+  padding: 1px 20px;
   color: white;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
-  width: 96%;
 `;
 
 
 const Title = styled.h2`
   font-size: 25px;
   font-weight: 600;
-  margin: 0;
   font-family: "Poppins";
 `;
 const IconGroup = styled.div`

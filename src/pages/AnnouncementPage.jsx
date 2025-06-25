@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { fetchAnnouncements } from "../api/ClientApi"; // Adjust path as needed
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
@@ -12,9 +13,8 @@ const getRandomPastelColor = () => {
 // Styled Components
 const PageWrapper = styled.div`
   padding: 20px;
-  font:Poppins;
+  font: Poppins;
 `;
-
 
 const CardGrid = styled.div`
   display: grid;
@@ -33,8 +33,6 @@ const AnnouncementCard = styled.div`
     transform: translateY(-5px);
   }
 `;
-
-
 
 const Message = styled.p`
   margin: 0;
@@ -55,7 +53,7 @@ const Header = styled.div`
   padding: 22px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom:20px;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
@@ -88,37 +86,62 @@ const Icons = styled.div`
 `;
 // Main Component
 const AnnouncementPage = () => {
+  const navigate = useNavigate();
   const [announcements, setAnnouncements] = useState([]);
 
- useEffect(() => {
-  fetchAnnouncements().then((data) => {
-    const sortedData = data.sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-    setAnnouncements(sortedData);
-  });
-}, []);
+  useEffect(() => {
+    fetchAnnouncements().then((data) => {
+      const sortedData = data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
+      setAnnouncements(sortedData);
+    });
+  }, []);
 
   return (
     <PageWrapper>
-       <Header>
-              <Title>Announcements</Title>
-              <Wrapper>
-                <Icons onClick={() => navigate("/student-dashboard")}>
-                  <img src={home} alt="home" />
-                </Icons>
-                <Divider />
-                <Icons onClick={() => navigate(-1)}>
-                  <img src={back} alt="back" />
-                </Icons>
-              </Wrapper>
-            </Header>
+      <Header>
+        <Title>Announcements</Title>
+        <Wrapper>
+          <Icons
+            onClick={() => {
+              const user = JSON.parse(localStorage.getItem("user"));
+              const role = user?.role?.trim().toLowerCase();
+
+              if (role === "teacher") {
+                navigate("/teacher-dashboard");
+              } else if (role === "student") {
+                navigate("/dashboard");
+              } else if (role === "principal") {
+                navigate("/principal-dashboard");
+              } else if (role === "admin") {
+                navigate("/admin-dashboard");
+              } else {
+                alert("Unknown role. Cannot navigate to home.");
+              }
+            }}
+          >
+            <img src={home} alt="home" />
+          </Icons>
+
+          <Divider />
+
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
       <CardGrid>
         {announcements.map((announcement) => (
-          <AnnouncementCard key={announcement.id} bgColor={getRandomPastelColor()}>
+          <AnnouncementCard
+            key={announcement.id}
+            bgColor={getRandomPastelColor()}
+          >
             <Title>{announcement.title}</Title>
             <Message>{announcement.message}</Message>
-            <DateText>{new Date(announcement.createdAt).toLocaleString()}</DateText>
+            <DateText>
+              {new Date(announcement.createdAt).toLocaleString()}
+            </DateText>
           </AnnouncementCard>
         ))}
       </CardGrid>

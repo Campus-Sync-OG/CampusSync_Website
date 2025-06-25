@@ -468,7 +468,7 @@ const Sidebar = () => {
               <Icon>
                 <FiImage />
               </Icon>
-              <Label expanded={true}>Notification</Label>
+              <Label expanded={true}>Add Notification</Label>
             </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
@@ -506,7 +506,7 @@ const Sidebar = () => {
               <Icon>
                 <GiTeacher />
               </Icon>
-              <Label expanded={expanded}>Add Teacher Infor</Label>
+              <Label expanded={expanded}>Add Teacher Info</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-school-information" expanded={expanded}>
@@ -579,7 +579,7 @@ const Sidebar = () => {
               <Label expanded={expanded}>Feedback</Label>
             </SidebarItem>
 
-              <SidebarItem to="/admin-studentfee" expanded={expanded}>
+            <SidebarItem to="/admin-studentfee" expanded={expanded}>
               <Icon>
                 <HiDocumentCurrencyRupee />
               </Icon>
@@ -600,14 +600,14 @@ const Sidebar = () => {
               <Label expanded={expanded}>Announcement</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-notification" expanded={expanded}>
+            <SidebarItem to="/admin-add-notification" expanded={expanded}>
               <Icon>
                 <LiaCalendarCheck />
               </Icon>
-              <Label expanded={expanded}>Notification</Label>
+              <Label expanded={expanded}>Add Notification</Label>
             </SidebarItem>
 
-               <SidebarItem to="/admin-calendar" expanded={expanded}>
+            <SidebarItem to="/admin-calendar" expanded={expanded}>
               <Icon>
                 <LiaCalendarCheck />
               </Icon>

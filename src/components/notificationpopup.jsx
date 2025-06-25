@@ -21,20 +21,16 @@ const NotificationPopupPage = ({ onClose }) => {
     const rawRole = user?.role || "";
     const role = rawRole.trim().toLowerCase();
 
-    console.log("Normalized role:", role);
-
     if (role === "teacher") {
-      console.log("Navigating to teacher page");
       navigate("/teacher-notification");
     } else if (role === "student") {
-      console.log("Navigating to student page");
-      navigate("/notifications");
-    } else if (role === "principal") {
-      console.log("Navigating to principal page");
-      navigate("/principal-notification");
-    } else {
-      console.warn("Unknown role, navigating to fallback");
       navigate("/notification");
+    } else if (role === "principal") {
+      navigate("/principal-notification");
+    } else if (role === "admin") {
+      navigate("/admin-notification");
+    } else {
+      alert("Unknown role. Cannot open notification page.");
     }
   };
 
