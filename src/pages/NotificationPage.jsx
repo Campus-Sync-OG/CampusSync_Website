@@ -15,9 +15,23 @@ const NotificationsPage = () => {
         const loggedInUser = JSON.parse(localStorage.getItem("user"));
         const role = loggedInUser?.role;
 
-        const allNotifications = await fetchAllNotifications(role);
+        let allNotifications = await fetchAllNotifications(role);
+
         if (Array.isArray(allNotifications)) {
-          setNotifications(allNotifications.reverse());
+          // ✅ Remove duplicates based on title + message
+          const uniqueNotifications = [];
+          const seen = new Set();
+
+          for (const notif of allNotifications) {
+            const key = `${notif.title}-${notif.message}`;
+            if (!seen.has(key)) {
+              seen.add(key);
+              uniqueNotifications.push(notif);
+            }
+          }
+
+          // ✅ Optional: Reverse for latest-first order
+          setNotifications(uniqueNotifications.reverse());
         } else {
           console.error("Unexpected notification format:", allNotifications);
         }
@@ -28,6 +42,7 @@ const NotificationsPage = () => {
 
     loadNotifications();
   }, []);
+
 
   const getRandomColor = () => {
     const pastelColors = [

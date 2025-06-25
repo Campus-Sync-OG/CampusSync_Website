@@ -92,8 +92,9 @@ export const fetchAnnouncements = () =>
 export const fetchTeacherProfile = (emp_id) =>
   api.get(`/teachers/${emp_id}`).then((res) => res.data);
 
-export const fetchAchievements = async () =>
-  api.get("/teachers/certificates").then((res) => res.data.certificates);
+export const fetchAchievements = async (emp_id) =>
+  api.get(`/teachers/certificates/${emp_id}`).then((res) => res.data.certificates);
+
 
 export const fetchAcademics = async () =>
   api.get("/academics/list").then((res) => res.data);
