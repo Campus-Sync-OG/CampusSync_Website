@@ -621,7 +621,7 @@ const App = () => {
             }
           />
           <Route
-            path="/admin-notification"
+            path="/admin-add-notification"
             element={
               <AdminLayout>
                 <AdminNotification />

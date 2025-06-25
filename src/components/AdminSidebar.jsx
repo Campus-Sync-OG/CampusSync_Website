@@ -468,7 +468,7 @@ const Sidebar = () => {
               <Icon>
                 <FiImage />
               </Icon>
-              <Label expanded={true}>Notification</Label>
+              <Label expanded={true}>Add Notification</Label>
             </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
@@ -600,11 +600,11 @@ const Sidebar = () => {
               <Label expanded={expanded}>Announcement</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-notification" expanded={expanded}>
+            <SidebarItem to="/admin-add-notification" expanded={expanded}>
               <Icon>
                 <LiaCalendarCheck />
               </Icon>
-              <Label expanded={expanded}>Notification</Label>
+              <Label expanded={expanded}>Add Notification</Label>
             </SidebarItem>
 
                <SidebarItem to="/admin-calendar" expanded={expanded}>

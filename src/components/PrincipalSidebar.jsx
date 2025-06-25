@@ -357,7 +357,7 @@ const PrincipalSidebar = () => {
               <Icon>
                 <FiImage />
               </Icon>
-              <Label expanded={true}>Notification</Label>
+              <Label expanded={true}>Add Notification</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -477,7 +477,7 @@ const PrincipalSidebar = () => {
               <Icon>
                 <FiImage />
               </Icon>
-              <Label expanded={expanded}>Notification</Label>
+              <Label expanded={expanded}>Add Notification</Label>
             </SidebarItem>
 
             <SidebarItem to="/principal-leave-panel" expanded={expanded}>
