@@ -592,12 +592,12 @@ const Header = ({
               <CgProfile />
               Profile
             </DropdownItem>
-            <Link to="/settings" style={{ textDecoration: "none" }}>
+            {/* <Link to="/settings" style={{ textDecoration: "none" }}>
               <DropdownItem>
                 <FiSettings />
                 Settings
               </DropdownItem>
-            </Link>
+            </Link> */}
             <Link to="/login" style={{ textDecoration: "none" }}>
               <DropdownItem>
                 <TbLogout />

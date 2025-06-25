@@ -5,35 +5,17 @@ import {
   verifyFeePayment,
   getFeesByAdmissionNo,
   generateReceipt,
-  getStudentFeeStatus
+  getStudentFeeStatus,
 } from "../api/ClientApi";
 
+import { useNavigate } from "react-router-dom";
+import homeIcon from "../assets/images/home.png";
+import backIcon from "../assets/images/back.png";
+
 const Container = styled.div`
-  padding: 40px 20px;
-  max-width: 1000px;
+  padding: 0px 15px;
   margin: auto;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-`;
-
-const Title = styled.h2`
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #0a66c2;
-`;
-
-const Label = styled.label`
-  display: block;
-  margin-top: 1rem;
-  font-weight: 600;
-`;
-
-const Select = styled.select`
-  width: 100%;
-  padding: 10px;
-  margin-top: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+  
 `;
 
 const Input = styled.input`
@@ -92,12 +74,51 @@ const Button = styled.button`
   }
 `;
 
+const NavContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 30px;
+`;
+
+const NavTitle = styled.h2`
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+`;
+
+const NavIcons = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const NavIcon = styled.img`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  padding: 10px;
+`;
+
+const IconDivider = styled.div`
+  width: 1px;
+  height: 20px;
+  background-color: white;
+`;
+
 const FeePaymentForm = () => {
   const [admission_no, setAdmissionNo] = useState(null);
   const [fees, setFees] = useState([]);
   const [selectedFee, setSelectedFee] = useState(null);
   const [paidAmount, setPaidAmount] = useState(0);
   const [uniformItems, setUniformItems] = useState([]);
+  const navigate = useNavigate(); // ⬅ Required for navigation
+
+  const handleHomeClick = () => navigate("/dashboard");
+  const handleBackClick = () => navigate(-1);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -120,11 +141,11 @@ const FeePaymentForm = () => {
     setSelectedFee(fee);
 
     if (fee.feestype === "Uniform" && fee.item_details) {
-      const items = fee.item_details.map(item => ({
+      const items = fee.item_details.map((item) => ({
         item_name: item.item_name,
         amount: item.amount,
         selected: false,
-        quantity: 1
+        quantity: 1,
       }));
       setUniformItems(items);
       setPaidAmount(0);
@@ -135,20 +156,21 @@ const FeePaymentForm = () => {
   };
 
   const toggleUniformItem = (idx) => {
-    setUniformItems(prev =>
+    setUniformItems((prev) =>
       prev.map((item, i) =>
-        i === idx ? {
-          ...item,
-          selected: !item.selected,
-          quantity: !item.selected ? 1 : item.quantity
-        } : item
+        i === idx
+          ? {
+              ...item,
+              selected: !item.selected,
+              quantity: !item.selected ? 1 : item.quantity,
+            }
+          : item
       )
     );
   };
 
-
   const changeUniformQuantity = (idx, delta) => {
-    setUniformItems(prev =>
+    setUniformItems((prev) =>
       prev.map((item, i) => {
         if (i === idx && item.selected) {
           return { ...item, quantity: Math.max(1, item.quantity + delta) };
@@ -159,12 +181,11 @@ const FeePaymentForm = () => {
   };
 
   const getUniformGrandTotal = () => {
-    return uniformItems.reduce((sum, item) => (
-      sum + (item.selected ? item.amount * item.quantity : 0)
-    ), 0);
+    return uniformItems.reduce(
+      (sum, item) => sum + (item.selected ? item.amount * item.quantity : 0),
+      0
+    );
   };
-
-
 
   const handlePayment = async () => {
     if (!selectedFee) {
@@ -178,12 +199,12 @@ const FeePaymentForm = () => {
     if (selectedFee.feestype === "Uniform") {
       finalAmount = getUniformGrandTotal();
       uniformDetails = uniformItems
-        .filter(item => item.selected)
-        .map(item => ({
+        .filter((item) => item.selected)
+        .map((item) => ({
           item_name: item.item_name,
           amount: item.amount,
           quantity: item.quantity,
-          total: item.amount * item.quantity
+          total: item.amount * item.quantity,
         }));
 
       if (finalAmount === 0) {
@@ -198,7 +219,7 @@ const FeePaymentForm = () => {
         feestype: selectedFee.feestype,
         paid_amount: finalAmount,
         due_date: selectedFee.due_date,
-        uniform_details: uniformDetails
+        uniform_details: uniformDetails,
       };
 
       const orderRes = await createFeeOrder(payload, admission_no);
@@ -212,7 +233,7 @@ const FeePaymentForm = () => {
         handler: async (response) => {
           await verifyFeePayment({
             ...response,
-            admission_no
+            admission_no,
           });
 
           const receiptUrl = await generateReceipt({
@@ -229,7 +250,7 @@ const FeePaymentForm = () => {
           setPaidAmount(0);
           setUniformItems([]);
         },
-        theme: { color: "#0a66c2" }
+        theme: { color: "#0a66c2" },
       };
 
       new window.Razorpay(options).open();
@@ -241,7 +262,14 @@ const FeePaymentForm = () => {
 
   return (
     <Container>
-      <Title>Student Fee Payment</Title>
+      <NavContainer>
+        <NavTitle>Student Fee Payment</NavTitle>
+        <NavIcons>
+          <NavIcon src={homeIcon} alt="Home" onClick={handleHomeClick} />
+          <IconDivider />
+          <NavIcon src={backIcon} alt="Back" onClick={handleBackClick} />
+        </NavIcons>
+      </NavContainer>
 
       <Table>
         <thead>
@@ -272,9 +300,15 @@ const FeePaymentForm = () => {
 
       {selectedFee && (
         <>
-          <p><b>Selected Fee Type:</b> {selectedFee.feestype}</p>
-          <p><b>Due Date:</b> {selectedFee.due_date.split("T")[0]}</p>
-          <p><b>Pending:</b> {selectedFee.due_amount} ₹</p>
+          <p>
+            <b>Selected Fee Type:</b> {selectedFee.feestype}
+          </p>
+          <p>
+            <b>Due Date:</b> {selectedFee.due_date.split("T")[0]}
+          </p>
+          <p>
+            <b>Pending:</b> {selectedFee.due_amount} ₹
+          </p>
 
           {selectedFee.feestype !== "Uniform" && (
             <>
@@ -313,9 +347,15 @@ const FeePaymentForm = () => {
                     <td>
                       {item.selected ? (
                         <>
-                          <Button onClick={() => changeUniformQuantity(idx, -1)}>-</Button>
+                          <Button
+                            onClick={() => changeUniformQuantity(idx, -1)}
+                          >
+                            -
+                          </Button>
                           {item.quantity}
-                          <Button onClick={() => changeUniformQuantity(idx, 1)}>+</Button>
+                          <Button onClick={() => changeUniformQuantity(idx, 1)}>
+                            +
+                          </Button>
                         </>
                       ) : (
                         "-"
@@ -327,13 +367,16 @@ const FeePaymentForm = () => {
               </tbody>
               <tfoot>
                 <tr>
-                  <td colSpan="4" align="right"><b>Total</b></td>
-                  <td><b>{getUniformGrandTotal()} ₹</b></td>
+                  <td colSpan="4" align="right">
+                    <b>Total</b>
+                  </td>
+                  <td>
+                    <b>{getUniformGrandTotal()} ₹</b>
+                  </td>
                 </tr>
               </tfoot>
             </Table>
           )}
-
 
           <Button onClick={handlePayment}>Proceed to Pay</Button>
         </>
