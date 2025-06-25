@@ -664,6 +664,18 @@ export const deleteForms = async (id) => {
   }
 };
 
+export const getTimetableByClassSection = async (class_name, section_name) => {
+  try {
+    const response = await api.get(`/timetable/class-section`, {
+      params: { class_name, section_name },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching timetable:", error);
+    throw error.response?.data || { error: "Unable to fetch timetable" };
+  }
+};
+
 
 // Inside component or event handler
 
