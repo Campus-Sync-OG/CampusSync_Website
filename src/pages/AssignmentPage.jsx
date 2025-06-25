@@ -191,7 +191,7 @@ const FileInput = styled.input`
 
 const UploadButton = styled.button`
   padding: 5px 10px;
-  background: #007bff;
+  background: #002087;
   color: white;
   border: none;
   cursor: pointer;
@@ -331,15 +331,18 @@ const App = () => {
                         <td>
                           {item.attachment ? (
                             <a href={item.attachment} download>
-                              <img
-                                src="https://img.icons8.com/ios-glyphs/30/000000/download--v1.png"
-                                alt="Download"
+                              <button
                                 style={{
-                                  width: "20px",
-                                  height: "20px",
+                                  padding: "5px 10px",
+                                  backgroundColor: "rgb(233, 30, 30)",
+                                  color: "white",
+                                  border: "none",
+                                  borderRadius: "4px",
                                   cursor: "pointer",
                                 }}
-                              />
+                              >
+                                Download
+                              </button>
                             </a>
                           ) : (
                             "N/A"
