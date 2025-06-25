@@ -92,8 +92,9 @@ export const fetchAnnouncements = () =>
 export const fetchTeacherProfile = (emp_id) =>
   api.get(`/teachers/${emp_id}`).then((res) => res.data);
 
-export const fetchAchievements = async () =>
-  api.get("/teachers/certificates").then((res) => res.data.certificates);
+export const fetchAchievements = async (emp_id) =>
+  api.get(`/teachers/certificates/${emp_id}`).then((res) => res.data.certificates);
+
 
 export const fetchAcademics = async () =>
   api.get("/academics/list").then((res) => res.data);
@@ -208,7 +209,12 @@ export const saveSubjects = async (subject_names) => {
 };
 
 export const createTeacher = async (formData) => {
-  return api.post("/teachers/create", formData).then((res) => res.data);
+  return api.post("/teachers/create", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })
+    .then((res) => res.data);
 };
 
 export const createStudent = (formData) =>
@@ -376,7 +382,7 @@ export const fetchPDFUrl = async (subtitles) => {
 };
 
 
-export const  fetchSubTopics= (examName, subjectName,topicName) =>
+export const fetchSubTopics = (examName, subjectName, topicName) =>
   api
     .get(`/studymodules/modules/topics/${examName}/${subjectName}/${topicName}`)
     .then((res) => res.data);
@@ -429,7 +435,7 @@ export const fetchStudentMessages = async (admission_no) => {
   return api.get(`/chat/student/${admission_no}`);
 };
 
-export const  promoteStudentsAPI = async (promotionData) => {
+export const promoteStudentsAPI = async (promotionData) => {
   return api
     .post("/promotion/promote", promotionData)
     .then((res) => res.data)
@@ -546,7 +552,7 @@ export const fetchExamFormats = async () => {
     // If response is directly an array
     if (Array.isArray(res.data)) {
       return res.data;
-    } 
+    }
 
     // In case backend changes in future
     if (res.data.success && res.data.data) {
@@ -616,6 +622,48 @@ export const getClassLeaves = async (emp_id) => {
     throw error;
   }
 };
+
+export const fetchGalleryImages = async () => {
+  try {
+    const response = await api.get("/image/gallery");
+    return response.data.gallery; // Array of images/videos with metadata
+  } catch (error) {
+    console.error("Failed to fetch gallery images:", error.message);
+    throw error;
+  }
+};
+
+export const createForm = async (formData) => {
+  try {
+    const response = await api.post("/forms/create", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating form:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getForms = async () => {
+  try {
+    const response = await api.get("/forms/getall");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+    throw error;
+  }
+};
+
+// api/ClientApi.js
+export const deleteForms = async (id) => {
+  try {
+    const response = await api.delete(`/forms/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting form:", error);
+    throw error;
+  }
+};
+
 
 // Inside component or event handler
 

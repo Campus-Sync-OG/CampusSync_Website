@@ -8,13 +8,13 @@ import {
   createParent,
   getAllClassSections,
 } from "../api/ClientApi"; // Adjust the import based on your API structure
-
+ 
 const Container = styled.div`
-  padding:  0 15px;
+  padding: 0 15px;
   flex-direction: column;
   height: 70vh;
 `;
-
+ 
 const Header = styled.div`
   background: linear-gradient(90deg, #002087, #df0043);
   padding: 5px 20px;
@@ -24,52 +24,52 @@ const Header = styled.div`
   align-items: center;
   border-radius: 10px;
 `;
-
+ 
 const Title = styled.h1`
-   font-size: 26px;
+  font-size: 26px;
   font-weight: 600;
   font-family: "Poppins";
 `;
-
+ 
 const Form = styled.form`
   margin-top: 20px;
 `;
-
+ 
 const SectionTitle = styled.h2`
   color: #002e9f;
   font-size: 18px;
 `;
-
+ 
 const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
 `;
-
+ 
 const VerticalDivider = styled.div`
   height: 25px;
   width: 2px;
   background-color: white;
 `;
-
+ 
 const IconBtn = styled.img`
   width: 25px;
   height: 25px;
   cursor: pointer;
 `;
-
+ 
 const Row = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 15px;
-
+ 
   & > div {
     flex: 1 1 30%;
     margin: 10px;
     min-width: 250px;
   }
 `;
-
+ 
 const Input = styled.input`
   padding: 12px;
   width: 90%;
@@ -78,12 +78,12 @@ const Input = styled.input`
   background-color: #f1f2f7;
   font-size: 14px;
   outline: none;
-
+ 
   &::placeholder {
     color: #888;
   }
 `;
-
+ 
 const Select = styled.select`
   padding: 12px;
   width: 100%;
@@ -94,13 +94,13 @@ const Select = styled.select`
   color: #333;
   outline: none;
 `;
-
+ 
 const ButtonGroup = styled.div`
   margin-top: 30px;
   display: flex;
   gap: 15px;
 `;
-
+ 
 const Button = styled.button`
   padding: 12px 30px;
   border: none;
@@ -111,15 +111,14 @@ const Button = styled.button`
     props.variant === "reset" ? "#002e9f" : "#d60000"};
   cursor: pointer;
 `;
-
+ 
 const ImageContainer = styled.div`
   margin: 30px 0;
   display: flex;
   gap: 30px;
   align-items: center;
 `;
-
-
+ 
 const ProfilePreview = styled.div`
   width: 150px;
   height: 150px;
@@ -130,14 +129,14 @@ const ProfilePreview = styled.div`
   justify-content: center;
   overflow: hidden;
   background: #e0e0e0;
-
+ 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 `;
-
+ 
 const StudentInformation = () => {
   const [formData, setFormData] = useState({
     admission_no: "",
@@ -160,41 +159,41 @@ const StudentInformation = () => {
     mother_email: "",
     address: "",
   });
-
+ 
   const [photo, setPhoto] = useState(null);
   const [classSections, setClassSections] = useState([]);
   const [selectedClassSection, setSelectedClassSection] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [photoFile, setPhotoFile] = useState(null);
-
+ 
   const navigate = useNavigate();
-
+ 
   // Fetch class and section data
   useEffect(() => {
     const fetchClassSections = async () => {
       try {
         const data = await getAllClassSections();
         setClassSections(data);
-
+ 
         const uniqueClasses = Array.from(
           new Set(data.map((item) => item.className))
         ).map((cls) => ({ className: cls }));
-
+ 
         const uniqueSections = Array.from(
           new Set(data.map((item) => item.section_name))
         ).map((sec) => ({ section_name: sec }));
-
+ 
         setClassSections(uniqueClasses);
         setSelectedClassSection(uniqueSections);
       } catch (error) {
         console.error("Failed to fetch class sections:", error);
       }
     };
-
+ 
     fetchClassSections();
   }, []);
-
+ 
   // Sync selected class/section to formData
   useEffect(() => {
     setFormData((prev) => ({
@@ -203,14 +202,12 @@ const StudentInformation = () => {
       section: selectedSection,
     }));
   }, [selectedClass, selectedSection]);
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -235,7 +232,7 @@ const StudentInformation = () => {
         mother_email,
         address,
       } = formData;
-
+ 
       // Create FormData for student (including photo)
       const studentFormData = new FormData();
       studentFormData.append("admission_no", admission_no);
@@ -245,13 +242,13 @@ const StudentInformation = () => {
       studentFormData.append("dob", dob);
       studentFormData.append("gender", gender);
       studentFormData.append("status", status);
-      studentFormData.append("class", className); // Adjust key if needed
+      studentFormData.append("class", className);
       studentFormData.append("section", section);
       studentFormData.append("roll_no", roll_no);
       studentFormData.append("blood_group", blood_group);
       studentFormData.append("religion", religion);
-      studentFormData.append("images", photoFile);
-
+      studentFormData.append("photo", photoFile); // ✅ this is what backend expects
+ 
       // Parent payload (sent as JSON)
       const parentPayload = {
         admission_no,
@@ -264,10 +261,10 @@ const StudentInformation = () => {
         address,
         religion,
       };
-
+ 
       await createStudent(studentFormData); // Send FormData
       await createParent(parentPayload);
-
+ 
       alert("Student and Parent saved successfully");
       navigate("/admin-student-information");
     } catch (err) {
@@ -277,12 +274,19 @@ const StudentInformation = () => {
   };
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: files ? files[0] : value,
-    }));
+ 
+    if (name === "photo" && files.length > 0) {
+      const file = files[0];
+      setPhotoFile(file); // store the actual file for upload
+      setPhoto(URL.createObjectURL(file)); // for preview
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
-
+ 
   return (
     <Container>
       <Header>
@@ -300,14 +304,14 @@ const StudentInformation = () => {
           </div>
         </IconWrapper>
       </Header>
-
+ 
       <Form onSubmit={handleSubmit}>
         <SectionTitle>Add New Students</SectionTitle>
         <ImageContainer>
           <ProfilePreview>
-            {formData.photo && (
+            {photo && (
               <img
-                src={URL.createObjectURL(formData.photo)}
+                src={photo}
                 alt="Preview"
                 style={{ width: 100, height: 100 }}
               />
@@ -324,7 +328,7 @@ const StudentInformation = () => {
             />
           </div>
         </ImageContainer>
-
+ 
         <Row>
           <div>
             <label>Admission No *</label>
@@ -345,7 +349,7 @@ const StudentInformation = () => {
             />
           </div>
         </Row>
-
+ 
         <Row>
           <div>
             <label>Gender *</label>
@@ -392,7 +396,7 @@ const StudentInformation = () => {
             </Select>
           </div>
         </Row>
-
+ 
         <Row>
           <div>
             <label>Roll No</label>
@@ -435,7 +439,7 @@ const StudentInformation = () => {
             </Select>
           </div>
         </Row>
-
+ 
         <Row>
           <div>
             <label>Phone No *</label>
@@ -455,9 +459,9 @@ const StudentInformation = () => {
             />
           </div>
         </Row>
-
+ 
         <SectionTitle>Parents Information</SectionTitle>
-
+ 
         <Row>
           <div>
             <label>Father's Name</label>
@@ -484,7 +488,7 @@ const StudentInformation = () => {
             />
           </div>
         </Row>
-
+ 
         <Row>
           <div>
             <label>Mother's Name</label>
@@ -511,7 +515,7 @@ const StudentInformation = () => {
             />
           </div>
         </Row>
-
+ 
         <Row>
           <div>
             <label>Address *</label>
@@ -523,7 +527,7 @@ const StudentInformation = () => {
             />
           </div>
         </Row>
-
+ 
         <ButtonGroup>
           <Button type="submit">Save</Button>
           <Button type="reset" variant="reset">
@@ -534,5 +538,5 @@ const StudentInformation = () => {
     </Container>
   );
 };
-
+ 
 export default StudentInformation;
