@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { FaPlay, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { fetchGalleryImages } from "../api/ClientApi"; // Adjust the import path as needed
 
 // Styled Components
 const Container = styled.div`
@@ -143,27 +144,33 @@ const IconImage = styled.img`
   cursor: pointer;
 `;
 
+const VideoItem = styled.video`
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+`;
+
 const GalleryPage = () => {
   const navigate = useNavigate();
-  const videoRef = useRef(null);
-  const [showPlayButton, setShowPlayButton] = useState(true);
-  const [modalImage, setModalImage] = useState(null);
+  const [modalMedia, setModalMedia] = useState(null);
+  const [galleryImages, setGalleryImages] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handlePlayVideo = () => {
-    if (videoRef.current) {
-      videoRef.current.play();
-      setShowPlayButton(false);
-    }
-  };
-  const imageUrls = [
-    "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg", // Laptop on Desk
-    "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg", // Office Setup
-    "https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg", // Mountain View
-    "https://images.pexels.com/photos/459225/pexels-photo-459225.jpeg", // City at Night
-    "https://images.pexels.com/photos/34950/pexels-photo.jpg", // Ocean View
-    "https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg", // Forest Path
-    "https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg", // Beach Scene
-  ];
+  useEffect(() => {
+    const loadGallery = async () => {
+      try {
+        const images = await fetchGalleryImages();
+        setGalleryImages(images || []);
+      } catch (err) {
+        console.error("Failed to load gallery:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGallery();
+  }, []);
 
   return (
     <Container>
@@ -182,36 +189,74 @@ const GalleryPage = () => {
       </Header>
 
       {/* Video Banner */}
-      <Banner>
-        <Video ref={videoRef} controls>
-          <source
-            src="https://www.w3schools.com/html/mov_bbb.mp4"
-            type="video/mp4"
-          />
-          Your browser does not support the video tag.
-        </Video>
-        <PlayButton show={showPlayButton} onClick={handlePlayVideo}>
-          <FaPlay />
-        </PlayButton>
-      </Banner>
+      {!loading && galleryImages.length > 0 && (() => {
+        const firstVideo = galleryImages.find(item =>
+          item.url.endsWith(".mp4")
+        );
+        return firstVideo ? (
+          <Banner>
+            <Video controls>
+              <source src={firstVideo.url} type="video/mp4" />
+              Your browser does not support the video tag.
+            </Video>
+          </Banner>
+        ) : null;
+      })()}
 
+      {/* Gallery Grid */}
       <GalleryGrid>
-        {imageUrls.map((url, index) => (
-          <GalleryItem
-            key={index}
-            src={url}
-            alt={`Gallery Image ${index + 1}`}
-            onClick={() => setModalImage(url)}
-          />
-        ))}
+        {loading ? (
+          <p>Loading gallery...</p>
+        ) : (
+          galleryImages
+            .filter((item, index, arr) => {
+              // Remove the first video shown in banner from the grid
+              const firstVideoIndex = arr.findIndex(i => i.url.endsWith(".mp4"));
+              return !(item.url.endsWith(".mp4") && index === firstVideoIndex);
+            })
+            .map((item, index) => {
+              const isVideo = item.url.endsWith(".mp4");
+              const isImage = /\.(jpg|jpeg|png|webp|gif)$/i.test(item.metadata?.originalName || "");
+
+              if (isVideo) {
+                return (
+                  <VideoItem
+                    key={index}
+                    src={item.url}
+                    onClick={() => setModalMedia({ type: "video", url: item.url })}
+                    controls
+                  />
+                );
+              }
+
+              if (isImage) {
+                return (
+                  <GalleryItem
+                    key={index}
+                    src={item.url}
+                    alt={item.metadata?.originalName || `Gallery ${index + 1}`}
+                    onClick={() => setModalMedia({ type: "image", url: item.url })}
+                  />
+                );
+              }
+
+              return null;
+            })
+        )}
       </GalleryGrid>
 
-      {/* Image Modal */}
-      {modalImage && (
-        <Modal onClick={() => setModalImage(null)}>
+      {/* Modal */}
+      {modalMedia && (
+        <Modal onClick={() => setModalMedia(null)}>
           <ModalContent>
-            <CloseButton onClick={() => setModalImage(null)} />
-            <ModalImage src={modalImage} alt="Gallery Preview" />
+            <CloseButton onClick={() => setModalMedia(null)}>×</CloseButton>
+            {modalMedia.type === "image" ? (
+              <ModalImage src={modalMedia.url} alt="Preview" />
+            ) : (
+              <ModalVideo controls autoPlay>
+                <source src={modalMedia.url} type="video/mp4" />
+              </ModalVideo>
+            )}
           </ModalContent>
         </Modal>
       )}

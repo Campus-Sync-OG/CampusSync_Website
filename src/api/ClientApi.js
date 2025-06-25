@@ -617,6 +617,17 @@ export const getClassLeaves = async (emp_id) => {
   }
 };
 
+export const fetchGalleryImages = async () => {
+  try {
+    const response = await api.get("/image/gallery");
+    return response.data.gallery; // Array of images/videos with metadata
+  } catch (error) {
+    console.error("Failed to fetch gallery images:", error.message);
+    throw error;
+  }
+};
+
+
 // Inside component or event handler
 
 export default api;
