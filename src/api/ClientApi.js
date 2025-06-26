@@ -676,6 +676,29 @@ export const getTimetableByClassSection = async (class_name, section_name) => {
   }
 };
 
+export const uploadWithMetadata = async (file, metadata = {}) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Add metadata fields to FormData
+    Object.entries(metadata).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    // Send multipart/form-data request
+    const response = await api.post("/users/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // override JSON header
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error?.response?.data?.message || "Upload failed");
+  }
+};
+
 
 // Inside component or event handler
 

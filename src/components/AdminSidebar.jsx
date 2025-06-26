@@ -6,6 +6,7 @@ import {
   FaCaretDown,
   FaAngleRight,
   FaAngleLeft,
+   FaUsers,
 } from "react-icons/fa6";
 
 import { LiaPaletteSolid } from "react-icons/lia";
@@ -15,16 +16,23 @@ import { RiDatabase2Line } from "react-icons/ri";
 import { RiGalleryLine } from "react-icons/ri";
 import { MdSubject } from "react-icons/md";
 import { MdOutlineFeedback } from "react-icons/md";
-
+import { VscFileSubmodule } from "react-icons/vsc";
 import { HiDocumentCurrencyRupee } from "react-icons/hi2";
+import { LiaBookSolid } from "react-icons/lia";
 import { TbFileSpreadsheet } from "react-icons/tb";
 import { FaSchool } from "react-icons/fa6";
 import { PiStudentThin } from "react-icons/pi";
 import { AiOutlineForm } from "react-icons/ai";
 import { FiImage } from "react-icons/fi";
 import { LiaCalendarCheck } from "react-icons/lia";
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import { CiViewList } from "react-icons/ci";
+import { FaBookReader } from "react-icons/fa";
+import { CiMoneyCheck1 } from "react-icons/ci";
+import { TfiAnnouncement } from "react-icons/tfi";
+import { MdOutlineNotificationAdd } from "react-icons/md";
+import { SlEvent } from "react-icons/sl";
 import { Link } from "react-router-dom";
-
 // Animation for mobile sidebar
 const slideIn = keyframes`
   from {
@@ -302,7 +310,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <TbFileSpreadsheet />
+                <FaUsers />
               </Icon>
               <Label expanded={true}>User Creation</Label>
             </SidebarItem>
@@ -337,9 +345,10 @@ const Sidebar = () => {
               <Label expanded={true}>Add School Info</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
+            <SidebarItem to="/admin-studentdocuments"  onClick={() => setMobileOpen(false)}
+              >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <IoDocumentAttachOutline />
               </Icon>
               <Label expanded={true}>Upload Documents</Label>
             </SidebarItem>
@@ -356,7 +365,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <AiOutlineForm />
+                 <LiaCalendarCheck />
               </Icon>
               <Label expanded={true}>Time Table</Label>
             </SidebarItem>
@@ -366,27 +375,19 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <LiaBookSolid  />
               </Icon>
               <Label expanded={true}>Add Subject</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/admin-subjects"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <MdSubject />
-              </Icon>
-              <Label expanded={true}>Subjects</Label>
-            </SidebarItem>
+        
 
             <SidebarItem
               to="/admin-subjectlist"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <CiViewList />
               </Icon>
               <Label expanded={true}>Subject List</Label>
             </SidebarItem>
@@ -396,9 +397,18 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <VscFileSubmodule />
               </Icon>
               <Label expanded={true}>Study Module</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-studentfee"
+             onClick={() => setMobileOpen(false)}
+              >
+              <Icon>
+                <CiMoneyCheck1 />
+              </Icon>
+              <Label expanded={expanded}>Student Fee Details</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -406,10 +416,12 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <FaBookReader />
               </Icon>
               <Label expanded={true}>Promotion</Label>
             </SidebarItem>
+
+
 
             <SidebarItem
               to="/admin-feedback"
@@ -419,6 +431,14 @@ const Sidebar = () => {
                 <MdOutlineFeedback />
               </Icon>
               <Label expanded={true}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-calendar" onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <SlEvent />
+              </Icon>
+              <Label expanded={expanded}>Calendar of Events</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -456,7 +476,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <AiOutlineForm />
+                <TfiAnnouncement />
               </Icon>
               <Label expanded={true}>Announcement</Label>
             </SidebarItem>
@@ -466,7 +486,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FiImage />
+                <MdOutlineNotificationAdd />
               </Icon>
               <Label expanded={true}>Add Notification</Label>
             </SidebarItem>
@@ -490,7 +510,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-usercreation" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <FaUsers />
               </Icon>
               <Label expanded={expanded}>UserCreation</Label>
             </SidebarItem>
@@ -518,7 +538,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <IoDocumentAttachOutline />
               </Icon>
               <Label expanded={expanded}>Upload Documents</Label>
             </SidebarItem>
@@ -532,42 +552,36 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-timetable" expanded={expanded}>
               <Icon>
-                <AiOutlineForm />
+                 <LiaCalendarCheck />
               </Icon>
               <Label expanded={expanded}>Timetable</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-addsubject" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+               <LiaBookSolid />
               </Icon>
               <Label expanded={expanded}>Add Subject</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-subjects" expanded={expanded}>
-              <Icon>
-                <MdSubject />
-              </Icon>
-              <Label expanded={expanded}>Subjects</Label>
-            </SidebarItem>
-
             <SidebarItem to="/admin-subjectlist" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <CiViewList />
               </Icon>
               <Label expanded={expanded}>SubjectList</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-studymodule" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+               <VscFileSubmodule />
               </Icon>
               <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-promotion" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <FaBookReader />
+
               </Icon>
               <Label expanded={expanded}>Promotion</Label>
             </SidebarItem>
@@ -581,7 +595,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-studentfee" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <CiMoneyCheck1 />
               </Icon>
               <Label expanded={expanded}>Student Fee Details</Label>
             </SidebarItem>
@@ -594,22 +608,21 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem to="/admin-announcement" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
+              <Icon><TfiAnnouncement />
               </Icon>
               <Label expanded={expanded}>Announcement</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-add-notification" expanded={expanded}>
               <Icon>
-                <LiaCalendarCheck />
+                <MdOutlineNotificationAdd />
               </Icon>
               <Label expanded={expanded}>Add Notification</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-calendar" expanded={expanded}>
               <Icon>
-                <LiaCalendarCheck />
+                <SlEvent />
               </Icon>
               <Label expanded={expanded}>Calendar of Events</Label>
             </SidebarItem>
