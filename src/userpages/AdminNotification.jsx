@@ -14,7 +14,7 @@ import {
 } from "../api/ClientApi"; // Import from your centralized API file
 
 const Container = styled.div`
-  padding: 0.5rem;
+  padding: 0 1.2rem;
   font-family: Poppins;
 `;
 
@@ -24,16 +24,16 @@ const Header = styled.div`
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
   padding: 25px 20px;
-  border-radius: 15px;
+  border-radius: 10px;
   color: white;
   margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-family: "Poppins";
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   margin: 0;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`

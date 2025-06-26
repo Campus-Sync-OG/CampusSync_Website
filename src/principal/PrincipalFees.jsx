@@ -22,8 +22,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   margin: 0;
 `;
 
@@ -50,10 +50,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 5px;
-  background: white;
-  flex-direction: column;
-  height: 70vh;
+  padding: 0 1.2rem;
 `;
 
 const SearchBar = styled.div`

@@ -52,7 +52,7 @@ const Icons = styled.div`
 `;
 
 const CalendarContainer = styled.div`
-  padding: 0 15px;
+  padding: 0 1.2rem;
   flex-direction: column;
   height: 70vh;
 `;

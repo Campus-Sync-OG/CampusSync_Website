@@ -17,7 +17,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 600;
   font-family: "Poppins";
   margin: 0;

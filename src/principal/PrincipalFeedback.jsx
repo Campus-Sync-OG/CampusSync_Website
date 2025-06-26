@@ -5,10 +5,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllFeedback } from "../api/ClientApi";
 const Container = styled.div`
-  padding: 0.5rem;
-  font-family: Poppins;
-  flex-direction: column;
-  height: 70vh;
+  padding: 0 1.2rem;
 `;
 
 const Header = styled.div`
@@ -25,8 +22,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   margin: 0;
 `;
 

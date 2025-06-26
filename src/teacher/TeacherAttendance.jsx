@@ -10,10 +10,7 @@ import backIcon from "../assets/images/back.png";
 
 // Styled Components
 const PageContainer = styled.div`
-  padding: 0 10px;
-  font-family: "Poppins", sans-serif;
-  max-height: 90vh;
-  overflow-y: auto;
+  padding: 0 1.2rem;
   @media (max-width: 426px) {
     max-height: 400px;
     overflow-y: auto;

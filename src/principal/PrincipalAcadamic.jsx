@@ -6,11 +6,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 
 const Container = styled.div`
-  padding: 0.5rem;
-  max-height: 90vh;
-  overflow-y: auto;
-  flex-direction: column;
-  height: 70vh;
+  padding: 0 1.2rem;
 `;
 
 const FilterSection = styled.div`
@@ -94,8 +90,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   font-family: "Poppins";
   margin: 0;
 `;

@@ -7,12 +7,7 @@ import back from "../assets/images/back.png";
 import { getAllClassSections, fetchStudents } from "../api/ClientApi";
 
 const Container = styled.div`
-  padding: 0.5rem;
-  max-height: 90vh;
-  overflow-y: auto;
-  font-family: poppins;
-  flex-direction: column;
-  height: 70vh;
+  padding:  0 1.2rem;
 `;
 
 const Table = styled.table`
@@ -55,7 +50,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 25px 20px;
+  padding: 22px 20px;
   border-radius: 10px;
   color: white;
   margin-left: 0px;
@@ -63,8 +58,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   font-family: "Poppins";
   margin: 0;
 `;

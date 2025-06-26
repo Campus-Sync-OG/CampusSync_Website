@@ -45,7 +45,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 1.2rem;
 `;
 
 const FormBox = styled.div`

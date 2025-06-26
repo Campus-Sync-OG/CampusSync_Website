@@ -51,22 +51,21 @@ const PrincipalLeavePanel = () => {
   };
   return (
     <>
-      <Header>
-        <Title>Leave Applications</Title>
-        <Wrapper>
-          <Link to="/principal-dashboard">
-            <Icons>
-              <img src={home} alt="home" />
-            </Icons>
-          </Link>
-          <Divider />
-          <Icons onClick={() => navigate(-1)}>
-            <img src={back} alt="back" />
-          </Icons>
-        </Wrapper>
-      </Header>
-
       <PanelContainer>
+        <Header>
+          <Title>Leave Applications</Title>
+          <Wrapper>
+            <Link to="/principal-dashboard">
+              <Icons>
+                <img src={home} alt="home" />
+              </Icons>
+            </Link>
+            <Divider />
+            <Icons onClick={() => navigate(-1)}>
+              <img src={back} alt="back" />
+            </Icons>
+          </Wrapper>
+        </Header>
         {leaves.length === 0 ? (
           <NoData>No leave applications found.</NoData>
         ) : (
@@ -119,18 +118,18 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 10px 20px;
+  padding: 5px 20px;
   border-radius: 10px;
   color: white;
   font-family: "Poppins";
-  font-size: 20px;
   margin: 5px;
 `;
 
 export const Title = styled.h1`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   font-family: "Poppins";
+   font-weight: 600;
 `;
 
 export const Wrapper = styled.div`
@@ -157,7 +156,7 @@ export const Divider = styled.div`
 // Page content styles
 export const PanelContainer = styled.div`
   overflow-y: auto;
-  height: 70vh;
+   padding: 0 1.2rem;
 
   /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
   &::-webkit-scrollbar {

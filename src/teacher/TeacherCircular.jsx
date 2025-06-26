@@ -6,7 +6,7 @@ import back from "../assets/images/back.png";
 import { getAllClassSections, uploadCircular } from "../api/ClientApi";
 
 const Container = styled.div`
-  padding: 0 15px;
+  padding: 0 1.2rem;
 `;
 
 const Header = styled.div`

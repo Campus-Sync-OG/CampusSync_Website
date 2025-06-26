@@ -368,8 +368,7 @@ export default TeacherAttendanceDownload;
 // Styled components declarations (you can keep your existing ones)
 
 const Container = styled.div`
-  padding: 0 10px;
-  max-width: 100%;
+  padding: 0 15px;
 `;
 const Content = styled.div`
   margin-top: 20px;
@@ -391,7 +390,7 @@ const Label = styled.label`
 const Select = styled.select`
   margin-top: 5px;
   padding: 6px 10px;
-  border-radius: 4px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 14px;
   font-family: "Poppins", sans-serif;
@@ -435,6 +434,7 @@ const HeaderTitle = styled.h2`
   color: white;
   font-size: 26px;
   font-family: "Poppins";
+   font-weight: 600;
 `;
 
 const IconsContainer = styled.div`

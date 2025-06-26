@@ -6,7 +6,7 @@ import back from "../assets/images/back.png";
 import { postAnnouncement } from '../api/ClientApi';
 
 const Container = styled.div`
-  padding: 0.5rem;
+  padding: 0 1.2rem;
   font-family: Poppins;
 `;
 
@@ -22,8 +22,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   margin: 0;
 `;
 
