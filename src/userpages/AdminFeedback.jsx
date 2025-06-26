@@ -149,7 +149,7 @@ const AdminFeedback = () => {
         <thead>
           <tr>
             <Th>Sl no</Th>
-            <Th>Date</Th>
+            <Th></Th>
             <Th>Reason</Th>
           </tr>
         </thead>
