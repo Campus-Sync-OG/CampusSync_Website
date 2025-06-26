@@ -15,6 +15,9 @@ import { TbFileSpreadsheet } from "react-icons/tb";
 import { AiOutlineForm } from "react-icons/ai";
 import { FiImage } from "react-icons/fi";
 import { MdAssignment } from "react-icons/md";
+import { VscFileSubmodule } from "react-icons/vsc";
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import { IoCalendarSharp } from "react-icons/io5";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 
@@ -337,6 +340,15 @@ const Sidebar = () => {
                 <ChildArrow />
                 <Label expanded={true}>My Profile</Label>
               </SidebarItem>
+
+               <SidebarItem to="/documentview"  onClick={() => setMobileOpen(false)}
+              >
+              <Icon>
+               <IoDocumentAttachOutline />
+              </Icon>
+              <Label expanded={true}>My Documents</Label>
+            </SidebarItem>
+
               <SidebarItem
                 to="/profile/parent-info"
                 onClick={() => setMobileOpen(false)}
@@ -404,13 +416,13 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <RiCalendarEventFill />
+               <VscFileSubmodule />
               </Icon>
               <Label expanded={true}>Study Module</Label>
             </SidebarItem>
              <SidebarItem to="/documentview" expanded={expanded}>
               <Icon>
-                <RiCalendarEventFill />
+               <IoDocumentAttachOutline />
               </Icon>
               <Label expanded={true}>My Documents</Label>
             </SidebarItem>
@@ -463,7 +475,8 @@ const Sidebar = () => {
 
             <SidebarItem to="/attendance" onClick={() => setMobileOpen(false)}>
               <Icon>
-                <RiCalendarEventFill />
+                <IoCalendarSharp />
+
               </Icon>
               <Label expanded={true}>Attendance</Label>
             </SidebarItem>
@@ -549,7 +562,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/study-module" expanded={expanded}>
               <Icon>
-                <RiCalendarEventFill />
+             <VscFileSubmodule />
               </Icon>
               <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
@@ -606,7 +619,8 @@ const Sidebar = () => {
 
             <SidebarItem to="/attendance" expanded={expanded}>
               <Icon>
-                <RiCalendarEventFill />
+                <IoCalendarSharp />
+
               </Icon>
               <Label expanded={expanded}>Attendance</Label>
             </SidebarItem>
