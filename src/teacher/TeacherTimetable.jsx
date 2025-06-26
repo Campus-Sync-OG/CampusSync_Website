@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { getTimetableByClassSection } from "../api/ClientApi";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png";
+import { Link, useNavigate } from "react-router-dom";
 
 const TimetableViewer = () => {
+  const navigate = useNavigate();
+
   const [className, setClassName] = useState("");
   const [sectionName, setSectionName] = useState("");
   const [schedule, setSchedule] = useState({});
@@ -22,7 +27,9 @@ const TimetableViewer = () => {
   };
 
   // Create a list of all unique time slots
-  const allTimes = Object.values(schedule).flat().map((s) => s.time);
+  const allTimes = Object.values(schedule)
+    .flat()
+    .map((s) => s.time);
   const uniqueTimes = [...new Set(allTimes)].sort((a, b) => {
     const parseTime = (t) => {
       const [time, period] = t.split(" ");
@@ -34,34 +41,58 @@ const TimetableViewer = () => {
     return parseTime(a) - parseTime(b);
   });
 
-
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   return (
     <Container>
-      <Title>📘 View Class Timetable</Title>
+      <Header>
+        <Title>View Class Timetable</Title>
+        <Wrapper>
+          <Link to="/teacher-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
       <Form>
-        <Select value={className} onChange={(e) => setClassName(e.target.value)}>
+        <Select
+          value={className}
+          onChange={(e) => setClassName(e.target.value)}
+        >
           <option value="">Select Class</option>
           {classOptions.map((cls) => (
             <option key={cls} value={cls}>
-             {cls}
+              {cls}
             </option>
           ))}
         </Select>
 
-        <Select value={sectionName} onChange={(e) => setSectionName(e.target.value)}>
+        <Select
+          value={sectionName}
+          onChange={(e) => setSectionName(e.target.value)}
+        >
           <option value="">Select Section</option>
           {sectionOptions.map((sec) => (
             <option key={sec} value={sec}>
-               {sec}
+              {sec}
             </option>
           ))}
         </Select>
 
         <Button onClick={fetchTimetable}>Load Timetable</Button>
       </Form>
-
 
       {error && <ErrorText>{error}</ErrorText>}
 
@@ -87,7 +118,9 @@ const TimetableViewer = () => {
                     <td
                       key={`${i}-${j}`}
                       style={{
-                        backgroundColor: isBreak ? "#002087" : colorPalette[j % colorPalette.length],
+                        backgroundColor: isBreak
+                          ? "#002087"
+                          : colorPalette[j % colorPalette.length],
                         color: isBreak ? "white" : "black",
                         fontWeight: isBreak ? "bold" : "normal",
                       }}
@@ -110,15 +143,45 @@ export default TimetableViewer;
 // ---------------- Styled Components ----------------
 
 const Container = styled.div`
-  padding: 30px;
-  max-width: 950px;
+  padding: 0 15px;
   margin: auto;
   font-family: "Poppins", sans-serif;
 `;
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Icons = styled.div`
+  cursor: pointer;
+  margin: 0 10px;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 30px;
+  background-color: white;
+`;
+
 const Title = styled.h2`
   text-align: center;
-  color: #002087;
   margin-bottom: 25px;
 `;
 
@@ -192,5 +255,10 @@ const Select = styled.select`
 `;
 
 const colorPalette = [
-  "#E0F7FA", "#F1F8E9", "#FFF3E0", "#FBE9E7", "#E8F5E9", "#EDE7F6",
+  "#E0F7FA",
+  "#F1F8E9",
+  "#FFF3E0",
+  "#FBE9E7",
+  "#E8F5E9",
+  "#EDE7F6",
 ];
