@@ -20,6 +20,8 @@ import { Link } from "react-router-dom";
 import { CiCalendarDate } from "react-icons/ci";
 import { LiaBookSolid } from "react-icons/lia";
 import { MdBlurCircular } from "react-icons/md";
+import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
+import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 
 // Animation for mobile sidebar
 const slideIn = keyframes`
@@ -383,7 +385,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <VscGitPullRequestGoToChanges />
               </Icon>
               <Label expanded={true}>Leave Request </Label>
             </SidebarItem>
@@ -393,6 +395,13 @@ const Sidebar = () => {
                 <AiOutlineForm />
               </Icon>
               <Label expanded={true}>Forms</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/teacher-student-leaves" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <VscGitPullRequestNewChanges />
+              </Icon>
+              <Label expanded={true}>Student Leave</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -450,7 +459,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FiImage />
+                 <LiaBookSolid />
               </Icon>
               <Label expanded={true}>Subjects</Label>
             </SidebarItem>
@@ -527,7 +536,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/teacher-levaveapplication" expanded={expanded}>
               <Icon>
-                <FiImage />
+               <VscGitPullRequestGoToChanges />
               </Icon>
               <Label expanded={expanded}>Leave Request</Label>
             </SidebarItem>
@@ -541,9 +550,9 @@ const Sidebar = () => {
 
                 <SidebarItem to="/teacher-student-leaves" expanded={expanded}>
               <Icon>
-                <AiOutlineForm />
+                <VscGitPullRequestNewChanges />
               </Icon>
-              <Label expanded={expanded}>Studnet Leaves</Label>
+              <Label expanded={expanded}>Student Leaves</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-achievement" expanded={expanded}>
