@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
-import { useNavigate } from 'react-router-dom';
-import { getAllTeachers } from '../api/ClientApi';
+import { useNavigate } from "react-router-dom";
+import { getAllTeachers } from "../api/ClientApi";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 const TeacherInfo = () => {
@@ -28,11 +28,12 @@ const TeacherInfo = () => {
   }, []);
 
   const filteredTeachers = useMemo(() => {
-    return teacherList.filter((t) =>
-      t.emp_name && t.emp_name.toLowerCase().includes(searchName.toLowerCase())
+    return teacherList.filter(
+      (t) =>
+        t.emp_name &&
+        t.emp_name.toLowerCase().includes(searchName.toLowerCase())
     );
   }, [teacherList, searchName]);
-
 
   if (loading) {
     return <div>Loading teachers...</div>; // Simple loading state
@@ -86,7 +87,7 @@ const TeacherInfo = () => {
               <th>ID</th>
               <th>Name</th>
               <th>Email</th>
-              
+
               <th>Address</th>
               <th>Joining Date</th>
               <th>Phone</th>
@@ -99,7 +100,11 @@ const TeacherInfo = () => {
                 <td>{teacher.emp_name}</td>
                 <td>{teacher.email}</td>
                 <td>{teacher.address}</td>
-                <td>{teacher.joining_date ? teacher.joining_date.slice(0, 10) : ''}</td>
+                <td>
+                  {teacher.joining_date
+                    ? teacher.joining_date.slice(0, 10)
+                    : ""}
+                </td>
 
                 <td>{teacher.phone_no}</td>
               </tr>
@@ -109,13 +114,15 @@ const TeacherInfo = () => {
       </TableContainer>
 
       {/* Pagination */}
-      <Pagination>
-        <span>Previous</span>
-        <Page active>1</Page>
-        <Page>2</Page>
-        <Page>3</Page>
-        <span>Next</span>
-      </Pagination>
+      {filteredTeachers.length > 10 && (
+        <Pagination>
+          <span>Previous</span>
+          <Page active>1</Page>
+          <Page>2</Page>
+          <Page>3</Page>
+          <span>Next</span>
+        </Pagination>
+      )}
     </Container>
   );
 };
@@ -124,13 +131,15 @@ export default TeacherInfo;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 20px;
-  font-family: "Poppins", sans-serif;
+  padding: 5px;
+  font-family: "Poppins";
   background: #f9f9f9;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const NavContainer = styled.div`
-  background: linear-gradient(90deg, #002087, #d9534f);
+  background: linear-gradient(90deg, #002087, #df0043);
   padding: 10px 20px;
   border-radius: 10px;
   display: flex;
@@ -140,7 +149,8 @@ const NavContainer = styled.div`
 
 const Title = styled.h2`
   color: #fff;
-  font-size: 18px;
+  font-size: 20px;
+  font-family: "Poppins";
   font-weight: bold;
 `;
 

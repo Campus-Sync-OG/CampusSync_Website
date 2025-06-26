@@ -6,6 +6,7 @@ import {
   FaCaretDown,
   FaAngleRight,
   FaAngleLeft,
+   FaUsers,
 } from "react-icons/fa6";
 
 import { LiaPaletteSolid } from "react-icons/lia";
@@ -15,16 +16,23 @@ import { RiDatabase2Line } from "react-icons/ri";
 import { RiGalleryLine } from "react-icons/ri";
 import { MdSubject } from "react-icons/md";
 import { MdOutlineFeedback } from "react-icons/md";
-
+import { VscFileSubmodule } from "react-icons/vsc";
 import { HiDocumentCurrencyRupee } from "react-icons/hi2";
+import { LiaBookSolid } from "react-icons/lia";
 import { TbFileSpreadsheet } from "react-icons/tb";
 import { FaSchool } from "react-icons/fa6";
 import { PiStudentThin } from "react-icons/pi";
 import { AiOutlineForm } from "react-icons/ai";
 import { FiImage } from "react-icons/fi";
 import { LiaCalendarCheck } from "react-icons/lia";
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import { CiViewList } from "react-icons/ci";
+import { FaBookReader } from "react-icons/fa";
+import { CiMoneyCheck1 } from "react-icons/ci";
+import { TfiAnnouncement } from "react-icons/tfi";
+import { MdOutlineNotificationAdd } from "react-icons/md";
+import { SlEvent } from "react-icons/sl";
 import { Link } from "react-router-dom";
-
 // Animation for mobile sidebar
 const slideIn = keyframes`
   from {
@@ -53,10 +61,24 @@ const SidebarWrapper = styled.div`
   color: white;
   border-radius: 9px;
   transition: width 0.3s ease;
-  overflow: hidden;
+  overflow-y: auto; /* Enable vertical scroll */
   position: relative;
-  height: 100vh; /* Fixed height */
+  height: 86.5vh; /* Fixed height */
   z-index: 1000;
+  /* Optional: Style the scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #001a5c;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #ff0066;
+  }
 
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
@@ -92,7 +114,7 @@ const MobileMenu = styled.div`
     left: 58px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
-    z-index: 1001;
+    z-index: 1;
     border-radius: 5px;
 
     // Increase the icon size in the JSX component
@@ -101,21 +123,33 @@ const MobileMenu = styled.div`
       height: 40px; // Increase icon size
     }
   }
+  @media (max-width: 768px) {
+    left: 30px;
+    top: 90px;
+  }
+  @media (max-width: 380px) {
+    left: 10px;
+    top: 90px;
+  }
+  @media (max-width: 320px) {
+    left: 10px;
+    top: 98px;
+  }
 `;
 
 const MobileDropdown = styled.div`
   display: ${(props) => (props.open ? "block" : "none")};
   position: fixed;
-  top: 0; // Changed from 160px to make full height
+  top: 0;
   left: 0;
   background: #002087;
   width: 200px;
-  height: 100vh; // Full viewport height
+  height: 100vh;
   padding: 20px;
   z-index: 1002;
+  overflow-y: auto; /* ✅ Add this */
   animation: ${(props) => (props.open ? slideIn : slideOut)} 0.3s ease forwards;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  overflow-y: auto; // Enable scrolling
 
   // Custom scrollbar styling
   &::-webkit-scrollbar {
@@ -143,35 +177,18 @@ const MobileDropdown = styled.div`
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-start; // Always left-aligned in mobile
   padding: 1rem;
   gap: 1rem;
   white-space: nowrap;
-  overflow-y: auto; /* Enable vertical scrolling */
-  overflow-x: none; /* Enable vertical scrolling */
-  flex: 1; /* Take remaining space */
+  min-height: 100%; // Ensure content fills available space
+  overflow: visible !important; // Override any hidden overflow
   font-family: "Poppins", sans-serif;
 
+  // Mobile-specific adjustments
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
-  }
-
-  &::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #002087;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #002087;
-    border-radius: 3px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #002087;
   }
 `;
 
@@ -218,34 +235,6 @@ const Label = styled.span`
   visibility: ${(props) => (props.expanded ? "visible" : "hidden")};
   transition: opacity 0.3s ease;
   opacity: ${(props) => (props.expanded ? "1" : "0")};
-`;
-
-const DropdownIcon = styled(FaCaretDown)`
-  margin-left: auto;
-  font-size: 1.2rem;
-  transition: transform 0.3s ease, color 0.3s ease;
-  transform: ${(props) => (props.open ? "rotate(90deg)" : "rotate(0)")};
-  color: ${(props) => (props.open ? "#df0043" : "red")};
-`;
-
-const Dropdown = styled.div`
-  display: ${(props) => (props.show ? "block" : "none")};
-  margin-left: ${(props) => (props.expanded ? "2rem" : "0")};
-  transition: all 0.3s ease;
-`;
-
-const ChildArrow = styled(FaAngleRight)`
-  font-size: 14px;
-  color: #fff;
-  margin-right: 8px;
-  transition: transform 0.3s ease;
-
-  ${(props) =>
-    props.active &&
-    `
-    transform: rotate(90deg);
-    color: white;
-  `}
 `;
 
 const MobileBackdrop = styled.div`
@@ -315,24 +304,17 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Dashboard</Label>
             </SidebarItem>
+
             <SidebarItem
-              to="/admin-school-information"
+              to="/admin-usercreation"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FaSchool />
+                <FaUsers />
               </Icon>
-              <Label expanded={true}>SchoolInformation</Label>
+              <Label expanded={true}>User Creation</Label>
             </SidebarItem>
-            <SidebarItem
-              to="/admin-teacher-information"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <GiTeacher />
-              </Icon>
-              <Label expanded={true}>TeacherInformation</Label>
-            </SidebarItem>
+
             <SidebarItem
               to="/admin-student-information"
               onClick={() => setMobileOpen(false)}
@@ -340,35 +322,107 @@ const Sidebar = () => {
               <Icon>
                 <PiStudentThin />
               </Icon>
-              <Label expanded={true}>StudentInformation</Label>
+              <Label expanded={true}>Add Student Info</Label>
             </SidebarItem>
+
             <SidebarItem
-              to="/admin-teacher-data"
+              to="/admin-teacher-information"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <RiDatabase2Line />
+                <GiTeacher />
               </Icon>
-              <Label expanded={true}>Teachers data</Label>
+              <Label expanded={true}>Add Teacher Info</Label>
             </SidebarItem>
+
             <SidebarItem
-              to="/admin-student-data"
+              to="/admin-school-information"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <GrDatabase />
+                <FaSchool />
               </Icon>
-              <Label expanded={true}>Students data</Label>
+              <Label expanded={true}>Add School Info</Label>
             </SidebarItem>
+
+            <SidebarItem to="/admin-studentdocuments"  onClick={() => setMobileOpen(false)}
+              >
+              <Icon>
+                <IoDocumentAttachOutline />
+              </Icon>
+              <Label expanded={true}>Upload Documents</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-fee" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Fees</Label>
+            </SidebarItem>
+
             <SidebarItem
-              to="/admin-gallery"
+              to="/admin-timetable"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <RiGalleryLine />
+                 <LiaCalendarCheck />
               </Icon>
-              <Label expanded={true}>Gallery</Label>
+              <Label expanded={true}>Time Table</Label>
             </SidebarItem>
+
+            <SidebarItem
+              to="/admin-addsubject"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <LiaBookSolid  />
+              </Icon>
+              <Label expanded={true}>Add Subject</Label>
+            </SidebarItem>
+
+        
+
+            <SidebarItem
+              to="/admin-subjectlist"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <CiViewList />
+              </Icon>
+              <Label expanded={true}>Subject List</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/admin-studymodule"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <VscFileSubmodule />
+              </Icon>
+              <Label expanded={true}>Study Module</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-studentfee"
+             onClick={() => setMobileOpen(false)}
+              >
+              <Icon>
+                <CiMoneyCheck1 />
+              </Icon>
+              <Label expanded={expanded}>Student Fee Details</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/admin-promotion"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <FaBookReader />
+              </Icon>
+              <Label expanded={true}>Promotion</Label>
+            </SidebarItem>
+
+
+
             <SidebarItem
               to="/admin-feedback"
               onClick={() => setMobileOpen(false)}
@@ -378,84 +432,63 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Feedback</Label>
             </SidebarItem>
-           
+
+            <SidebarItem to="/admin-calendar" onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <SlEvent />
+              </Icon>
+              <Label expanded={expanded}>Calendar of Events</Label>
+            </SidebarItem>
+
             <SidebarItem
-              to="/admin-usercreation"
+              to="/admin-gallery"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <TbFileSpreadsheet />
+                <RiGalleryLine />
               </Icon>
-              <Label expanded={true}>User Creation</Label>
+              <Label expanded={true}>Gallery</Label>
             </SidebarItem>
+
             <SidebarItem
-              to="/admin-timetable"
+              to="/admin-student-data"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <AiOutlineForm />
+                <GrDatabase />
               </Icon>
-              <Label expanded={true}>Time Table</Label>
+              <Label expanded={true}>Students data</Label>
             </SidebarItem>
+
+            <SidebarItem
+              to="/admin-teacher-data"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiDatabase2Line />
+              </Icon>
+              <Label expanded={true}>Teachers data</Label>
+            </SidebarItem>
+
             <SidebarItem
               to="/admin-announcement"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <AiOutlineForm />
+                <TfiAnnouncement />
               </Icon>
               <Label expanded={true}>Announcement</Label>
             </SidebarItem>
+
             <SidebarItem
               to="/admin-notification"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <FiImage />
+                <MdOutlineNotificationAdd />
               </Icon>
-              <Label expanded={true}>Notification</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-subjects"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <MdSubject />
-              </Icon>
-              <Label expanded={true}>Subjects</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-promotion"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={true}>Promotion</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-addsubject"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={true}>Add Subject</Label>
-            </SidebarItem>
-            <SidebarItem
-              to="/admin-subjectlist"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={true}>Subject List</Label>
-            </SidebarItem>
-            <SidebarItem to="/admin-fee" onClick={() => setMobileOpen(false)}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={true}>Fees</Label>
+              <Label expanded={true}>Add Notification</Label>
             </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
@@ -475,21 +508,123 @@ const Sidebar = () => {
               <Label expanded={expanded}>Dashboard</Label>
             </SidebarItem>
 
+            <SidebarItem to="/admin-usercreation" expanded={expanded}>
+              <Icon>
+                <FaUsers />
+              </Icon>
+              <Label expanded={expanded}>UserCreation</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-student-information" expanded={expanded}>
+              <Icon>
+                <PiStudentThin />
+              </Icon>
+              <Label expanded={expanded}> Add Student Info</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-teacher-information" expanded={expanded}>
+              <Icon>
+                <GiTeacher />
+              </Icon>
+              <Label expanded={expanded}>Add Teacher Info</Label>
+            </SidebarItem>
+
             <SidebarItem to="/admin-school-information" expanded={expanded}>
               <Icon>
                 <FaSchool />
               </Icon>
-              <Label expanded={expanded}>School Information</Label>
+              <Label expanded={expanded}>Add School Info</Label>
             </SidebarItem>
 
-            <SidebarItem
-              to="/admin-teacher-information"
-              onClick={() => setMobileOpen(false)}
-            >
+            <SidebarItem to="/admin-studentdocuments" expanded={expanded}>
               <Icon>
-                <GiTeacher />
+                <IoDocumentAttachOutline />
               </Icon>
-              <Label expanded={expanded}>TeacherInformation</Label>
+              <Label expanded={expanded}>Upload Documents</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-fee" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Fees</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-timetable" expanded={expanded}>
+              <Icon>
+                 <LiaCalendarCheck />
+              </Icon>
+              <Label expanded={expanded}>Timetable</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-addsubject" expanded={expanded}>
+              <Icon>
+               <LiaBookSolid />
+              </Icon>
+              <Label expanded={expanded}>Add Subject</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-subjectlist" expanded={expanded}>
+              <Icon>
+                <CiViewList />
+              </Icon>
+              <Label expanded={expanded}>SubjectList</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-studymodule" expanded={expanded}>
+              <Icon>
+               <VscFileSubmodule />
+              </Icon>
+              <Label expanded={expanded}>Study Module</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-promotion" expanded={expanded}>
+              <Icon>
+                <FaBookReader />
+
+              </Icon>
+              <Label expanded={expanded}>Promotion</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-feedback" expanded={expanded}>
+              <Icon>
+                <MdOutlineFeedback />
+              </Icon>
+              <Label expanded={expanded}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-studentfee" expanded={expanded}>
+              <Icon>
+                <CiMoneyCheck1 />
+              </Icon>
+              <Label expanded={expanded}>Student Fee Details</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-gallery" expanded={expanded}>
+              <Icon>
+                <RiGalleryLine />
+              </Icon>
+              <Label expanded={expanded}>Admin Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-announcement" expanded={expanded}>
+              <Icon><TfiAnnouncement />
+              </Icon>
+              <Label expanded={expanded}>Announcement</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-add-notification" expanded={expanded}>
+              <Icon>
+                <MdOutlineNotificationAdd />
+              </Icon>
+              <Label expanded={expanded}>Add Notification</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-calendar" expanded={expanded}>
+              <Icon>
+                <SlEvent />
+              </Icon>
+              <Label expanded={expanded}>Calendar of Events</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-teacher-data" expanded={expanded}>
@@ -504,96 +639,6 @@ const Sidebar = () => {
                 <GrDatabase />
               </Icon>
               <Label expanded={expanded}>Students Data</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              as="div"
-              expanded={expanded}
-              onClick={() => toggleDropdown("school")}
-            >
-              <SidebarItem to="/admin-student-information" expanded={expanded}>
-                <Icon>
-                  <PiStudentThin />
-                </Icon>
-                <Label expanded={expanded}>Student Information</Label>
-              </SidebarItem>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-gallery" expanded={expanded}>
-              <Icon>
-                <RiGalleryLine />
-              </Icon>
-              <Label expanded={expanded}>Admin Gallery</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-subjects" expanded={expanded}>
-              <Icon>
-                <MdSubject />
-              </Icon>
-              <Label expanded={expanded}>Subjects</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-notification" expanded={expanded}>
-              <Icon>
-                <LiaCalendarCheck />
-              </Icon>
-              <Label expanded={expanded}>Notification</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-timetable" expanded={expanded}>
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={expanded}>Timetable</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-feedback" expanded={expanded}>
-              <Icon>
-                <MdOutlineFeedback />
-              </Icon>
-              <Label expanded={expanded}>Feedback</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-announcement" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Announcement</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-promotion" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Promotion</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-usercreation" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>UserCreation</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-addsubject" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Add Subject</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-subjectlist" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>SubjectList</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/admin-fee" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>

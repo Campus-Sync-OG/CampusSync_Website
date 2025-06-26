@@ -1,21 +1,25 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllFeedback } from "../api/ClientApi";
 const Container = styled.div`
-  padding: 2rem;
+  padding: 0.5rem;
   font-family: Poppins;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 25px 20px;
   border-radius: 15px;
+  font-family: "Poppins";
+  fon-size: 20px;
   color: white;
   margin-bottom: 30px;
 `;
@@ -104,19 +108,16 @@ const Td = styled.td`
   border-bottom: 1px solid #ddd;
 `;
 
-
-
 const PrincipalFeedback = () => {
   const navigate = useNavigate();
   const [feedbackList, setFeedbackList] = useState([]);
-  
 
   useEffect(() => {
     // Fetch feedback data when component mounts
     const fetchFeedbacks = async () => {
       try {
-        const data = await getAllFeedback();  // Call the API function
-        setFeedbackList(data);  // Set the feedback data to state
+        const data = await getAllFeedback(); // Call the API function
+        setFeedbackList(data); // Set the feedback data to state
       } catch (error) {
         console.error("Error fetching feedback:", error);
       }
@@ -144,22 +145,20 @@ const PrincipalFeedback = () => {
 
       <SectionTitle>Feedback List</SectionTitle>
 
-      
-
       <Table>
         <thead>
           <tr>
             <Th>Sl no</Th>
-           
+
             <Th>Reason</Th>
           </tr>
         </thead>
         <tbody>
-        {feedbackList.length > 0 ? (
+          {feedbackList.length > 0 ? (
             feedbackList.map((item, index) => (
               <tr key={index}>
                 <Td>{item.id}</Td>
-                
+
                 <Td>{item.message}</Td>
               </tr>
             ))

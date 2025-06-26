@@ -2,74 +2,77 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   font-family: "Poppins", sans-serif;
   background: #f9f9f9;
+  flex-direction: column;
+  height: 70vh;
 `;
- 
+
 const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
- 
+
 const Title = styled.h2`
   color: #fff;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 25px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
- 
+
 const IconsContainer = styled.div`
   display: flex;
   align-items: center;
 `;
- 
+
 const ImageIcon = styled.img`
   width: 25px;
   height: 25px;
   margin: 0 8px;
   cursor: pointer;
 `;
- 
+
 const VerticalDivider = styled.div`
   height: 25px;
   width: 2px;
   background-color: white;
 `;
- 
+
 const SectionTitle = styled.h3`
   margin: 20px 0 10px;
   font-weight: bold;
   color: #002087;
 `;
- 
+
 const SearchRow = styled.div`
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
   flex-wrap: wrap;
 `;
- 
+
 const SearchInput = styled.input`
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
   width: 200px;
 `;
- 
+
 const SelectBox = styled.select`
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
   width: 200px;
 `;
- 
+
 const SearchButton = styled.button`
   background: #d9534f;
   border: none;
@@ -79,18 +82,18 @@ const SearchButton = styled.button`
   font-weight: bold;
   cursor: pointer;
 `;
- 
+
 const TableContainer = styled.div`
   overflow-x: auto;
 `;
- 
+
 const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
   background: white;
   border-radius: 10px;
   overflow: hidden;
- 
+
   th,
   td {
     padding: 12px;
@@ -98,18 +101,18 @@ const StyledTable = styled.table`
     border-bottom: 1px solid #e0e0e0;
     font-size: 14px;
   }
- 
+
   th {
     background: #f5f5f5;
     color: #d6004c;
     font-weight: bold;
   }
- 
+
   tr:hover {
     background: #f1f1f1;
   }
 `;
- 
+
 const Pagination = styled.div`
   display: flex;
   gap: 10px;
@@ -117,14 +120,14 @@ const Pagination = styled.div`
   margin-top: 20px;
   align-items: center;
   color: gray;
- 
+
   span {
     cursor: pointer;
     font-size: 50px;
     color: #002087;
   }
 `;
- 
+
 const Page = styled.div`
   padding: 6px 12px;
   border: 1px solid #d9534f;
@@ -134,8 +137,7 @@ const Page = styled.div`
   cursor: pointer;
   font-weight: bold;
 `;
- 
- 
+
 const romanClasses = [
   "I",
   "II",
@@ -149,11 +151,11 @@ const romanClasses = [
   "X",
 ];
 const sections = ["A", "B", "C"];
- 
+
 const StudentData = () => {
   const navigate = useNavigate();
- 
-  const studentList = Array.from({ length: 34 }, (_, i) => ({
+
+  const studentList = Array.from({ length: 3 }, (_, i) => ({
     id: i + 1,
     name: "Daniel Grant",
     gender: "Male",
@@ -164,31 +166,31 @@ const StudentData = () => {
     dob: "02/05/2001",
     phone: "+123 9988568",
   }));
- 
+
   const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
- 
+
   const totalPages = Math.ceil(studentList.length / itemsPerPage);
- 
+
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
- 
+
   const filteredData = studentList.filter(
     (student) =>
       student.name.toLowerCase().includes(searchName.toLowerCase()) &&
       (selectedClass === "" || student.class === selectedClass)
   );
- 
+
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
- 
+
   return (
     <Container>
       <Header>
@@ -203,9 +205,9 @@ const StudentData = () => {
           <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
         </IconsContainer>
       </Header>
- 
+
       <SectionTitle>All Students Data</SectionTitle>
- 
+
       <SearchRow>
         <SearchInput
           type="text"
@@ -226,7 +228,7 @@ const StudentData = () => {
         </SelectBox>
         <SearchButton>SEARCH</SearchButton>
       </SearchRow>
- 
+
       <TableContainer>
         <StyledTable>
           <thead>
@@ -259,23 +261,24 @@ const StudentData = () => {
           </tbody>
         </StyledTable>
       </TableContainer>
- 
-      <Pagination>
-        <span onClick={() => handlePageChange(currentPage - 1)}>&lt;</span>
-        {[...Array(totalPages)].map((_, i) => (
-          <Page
-            key={i}
-            active={currentPage === i + 1}
-            onClick={() => handlePageChange(i + 1)}
-          >
-            {i + 1}
-          </Page>
-        ))}
-        <span onClick={() => handlePageChange(currentPage + 1)}>&gt;</span>
-      </Pagination>
+
+      {totalPages > 1 && (
+        <Pagination>
+          <span onClick={() => handlePageChange(currentPage - 1)}>&lt;</span>
+          {[...Array(totalPages)].map((_, i) => (
+            <Page
+              key={i}
+              active={currentPage === i + 1}
+              onClick={() => handlePageChange(i + 1)}
+            >
+              {i + 1}
+            </Page>
+          ))}
+          <span onClick={() => handlePageChange(currentPage + 1)}>&gt;</span>
+        </Pagination>
+      )}
     </Container>
   );
 };
- 
+
 export default StudentData;
- 

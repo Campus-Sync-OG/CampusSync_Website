@@ -1,54 +1,58 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { submitFeedback } from "../api/ClientApi";
+import { submitFeedback ,getForms} from "../api/ClientApi";
+import { useNavigate } from "react-router-dom";
 
 // Styled Components
 const Container = styled.div`
-  max-width: 900px;
   margin: auto;
-  background: white;
-  padding: 20px;
+  padding: 0 15px;
   border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  max-height: 80vh; /* Set max height for scroll */
   overflow-y: auto; /* Enable vertical scroll */
 
   /* Hide scrollbar */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
-  
+
   &::-webkit-scrollbar {
     display: none; /* Chrome, Safari */
   }
 `;
 
-
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(to right, #002f86, #d30046);
-  border-radius: 8px 8px 0 0;
+  padding: 1px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  border-radius: 10px;
 `;
 
 const Title = styled.h2`
   color: white;
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconWrapper = styled.div`
   display: flex;
-  gap: 15px;
+  gap: 10px;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 20px;
+  background-color: white;
+  margin: 0 10px;
 `;
 
 const IconImage = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 
@@ -144,23 +148,41 @@ const ErrorText = styled.p`
   text-align: center;
 `;
 
-
 const SuccessText = styled.p`
   color: green;
 `;
 
-
 export default function FeedbackForm() {
+  const navigate = useNavigate();
   const [feedbackText, setFeedbackText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [tableData, setTableData] = useState([]);
 
-  const tableData = [
-    { id: 1, title: "Annual day 2024 experience feedback", link: "www.forms.a23.com", status: "Not Filled" },
-    { id: 2, title: "Dance Club membership form", link: "www.forms.a23.com", status: "Filled" },
-    { id: 3, title: "National olympiad participation", link: "www.forms.a23.com", status: "Filled" },
-  ];
+  useEffect(() => {
+    loadForms();
+  }, []);
+
+  const loadForms = async () => {
+    try {
+      const res = await getForms();
+      const now = new Date();
+      const updatedForms = res.forms.map((form) => {
+        const start = new Date(form.start_date);
+        const end = new Date(form.end_date);
+        return {
+          id: form.id,
+          title: form.title,
+          link: form.link,
+          status:form.status
+        };
+      });
+      setTableData(updatedForms.reverse());
+    } catch (err) {
+      console.error("Error fetching forms:", err);
+    }
+  };
 
   const handleSubmit = async () => {
     if (feedbackText.trim() === "") return;
@@ -170,12 +192,10 @@ export default function FeedbackForm() {
       setErrorMsg("");
       setSuccessMsg("");
 
-      const payload = { message: feedbackText };
-
-      await submitFeedback(payload);
+      await submitFeedback({ message: feedbackText });
 
       setSuccessMsg("Feedback submitted successfully!");
-      setFeedbackText("");  // Reset the feedback text after submission
+      setFeedbackText(""); // Reset input
     } catch (error) {
       setErrorMsg("Failed to submit feedback. Please try again.");
       console.error("Feedback Error:", error);
@@ -187,14 +207,13 @@ export default function FeedbackForm() {
   return (
     <Container>
       <Header>
-        <Title>Forms/Feedback</Title>
+        <Title>Forms / Feedback</Title>
         <IconWrapper>
-          <Link to="/dashboard">
-            <IconImage src={home} alt="home" />
-          </Link>
-          <Link to="/dashboard">
+          <Link to="/dashboard"><IconImage src={home} alt="home" /></Link>
+          <Divider />
+          <div onClick={() => navigate(-1)}>
             <IconImage src={back} alt="back" />
-          </Link>
+          </div>
         </IconWrapper>
       </Header>
 
@@ -209,27 +228,26 @@ export default function FeedbackForm() {
         <Button onClick={handleSubmit} disabled={submitting}>
           {submitting ? "Submitting..." : "Submit"}
         </Button>
-
         {successMsg && <SuccessText>{successMsg}</SuccessText>}
         {errorMsg && <ErrorText>{errorMsg}</ErrorText>}
       </Section>
 
       <Table>
-        <TableHead>
+        <thead>
           <TableRow>
             <TableHeader>Sl no</TableHeader>
             <TableHeader>Form Title</TableHeader>
             <TableHeader>Link</TableHeader>
             <TableHeader>Status</TableHeader>
           </TableRow>
-        </TableHead>
+        </thead>
         <tbody>
           {tableData.map((row, index) => (
             <TableRow key={row.id}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{row.title}</TableCell>
               <TableCell>
-                <ExternalLink href={`http://${row.link}`} target="_blank">
+                <ExternalLink href={row.link} target="_blank">
                   {row.link}
                 </ExternalLink>
               </TableCell>

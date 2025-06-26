@@ -250,7 +250,7 @@ const AdminTimetable = () => {
 export default AdminTimetable;
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
 `;
 
 const AddSlotButton = styled.button`
@@ -282,18 +282,18 @@ const RemoveSlotButton = styled.button`
 `;
 
 const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   color: white;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconGroup = styled.div`

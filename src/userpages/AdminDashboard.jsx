@@ -114,12 +114,18 @@ export default TeacherDashboard;
 const DashboardContainer = styled.div`
   flex: 1;
   width: 100%;
-  padding: 20px;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: -10px;
   overflow-y: auto;
+  max-height: 90vh;
+  overflow-x: hidden;
+  
+  @media (max-width: 320px) {
+    width: 100%;
+    overflow-x: hidden;
+  }
 `;
 
 const WelcomeCard = styled.div`
@@ -176,7 +182,9 @@ const WelcomeCard = styled.div`
   }
   @media (max-width: 1024px) {
     margin: 0;
+    margin-bottom: 10px;
     width: 94%;
+    padding-left: 10px;
   }
   @media (max-width: 768px) {
     flex-direction: column;
@@ -199,9 +207,9 @@ const WelcomeCard = styled.div`
       margin-left: auto;
     }
   }
-  @media (max-width: 426px) {
+  @media (max-width: 480px) {
     width: 90%;
-    margin-left: -20px;
+    margin-left: 0px;
 
     .welcome-text {
       font-size: 17px;
@@ -216,14 +224,19 @@ const WelcomeCard = styled.div`
       margin: 0;
     }
   }
+
+  @media (max-width: 380px) {
+    width: 90%;
+    margin-left: 0px;
+  }
 `;
 
 const MainContent = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
   gap: 30px;
+  margin-left: 0;
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -241,18 +254,28 @@ const CardGrid = styled.div`
   gap: 10px;
   //max-width:650px;
   margin-bottom: 10px;
-  padding: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+
+  @media (max-width: 1366px) {
+    gap: 0;
+    padding-top: 0;
+    padding-left: 0;
+    margin: 0;
+    height: 30%;
+  }
 
   @media (max-width: 1024px) {
     width: 100%;
-    gap: 20px;
-    margin: 0;
+    gap: 10px;
+    margin-left: 10px;
   }
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr; /* Stack cards */
-    gap: 20px;
-    max-width: auto;
+    margin-left: 20px;
+    width: auto;
   }
+
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
     margin-left: -10px;
@@ -276,31 +299,43 @@ const DashboardCard = styled.div`
   justify-content: space-between;
   transition: transform 0.2s;
   cursor: pointer;
-  height: 170px;
+  height: 155px;
   width:85%;
   gap:10px;
-  margin:10px;
+  margin:8px;
   &:hover {
     transform: scale(1.05);
   }
 
   img {
-    width: 190px;
-    height: 180px;
-    margin-left:auto;
-    margin-right:10px;
-    margin-top:10px;
-
+    width: 220px;
+    height: 190px;
+    margin:0;
+    position: relative;
+    left:10px;
+    padding:0;
+    bottom:10px;
   }
   
   p {
     flex:1;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     text-align: left; 
     margin:0;
+    padding:0;
     font-family: 'Poppins', sans-serif;
+    color: white;
   }
+
+   @media(max-width:1366px){
+    height:120px;
+    img {
+      width:170px;
+      height:140px;
+    }
+  }
+
   @media (max-width: 1024px) {
     gap:5px;
     margin:0;
@@ -308,21 +343,38 @@ const DashboardCard = styled.div`
    
   }
   @media (max-width: 768px) {
-    gap:10px;
+    gap:5px;
     margin:0;
-    width:85%;
+    width:80%;
+    img{
+    position:relative;
+    left: -15px;
+    }
     
   }
-  @media (max-width: 426px) {
+  @media (max-width: 480px) {
     grid-template-columns: 1fr; /* Stack cards */
     gap:20px;
-    margin:15px;
-    width:80%;
+    margin-left:28px;
+    width:75%;
   }
-     @media (max-width: 376px) {
+
+   @media (max-width: 420px) {
     margin:0;
-    margin-left:-10px;
-    width:90%;
+    margin-left:10px;
+    width:84%;
+    height:150px;
+    img {
+    width: 150px;
+    height: 150px;
+    margin-left:auto;
+
+  }
+  }
+     @media (max-width: 380px) {
+    margin:0;
+    margin-left:10px;
+    width:82%;
     height:150px;
     img {
     width: 150px;
@@ -333,9 +385,9 @@ const DashboardCard = styled.div`
   }
    @media (max-width: 320px) {
     margin:0;
-    margin-left:-10px;
-    width:85%;
-    height:150px;
+    margin-left:10px;
+    width:74%;
+    height:140px;
     img {
     width: 130px;
     height: 130px;
@@ -345,30 +397,41 @@ const DashboardCard = styled.div`
 `;
 
 const CalendarSection = styled.div`
-  width: 30%;
+  width: 35%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: left;
   flex-direction: column;
-  margin-top: 0;
+  position: relative;
+  right: 15px;
+
+  @media (max-width: 1366px) {
+    width: 22%;
+  }
+
   @media (max-width: 1024px) {
     width: 45%;
-
-    margin-left: 20px;
+    margin-left: 200px;
+    bottom: 15px;
   }
   @media (max-width: 768px) {
     width: 100%;
     margin-top: 15px;
+    margin-left: 35px;
   }
-  @media (max-width: 426px) {
+  @media (max-width: 480px) {
     width: 90%;
-    margin-left: 10px;
+    margin-left: 35px;
     margin-right: 15px;
     margin-top: 0;
   }
   @media (max-width: 376px) {
-    margin-left: 0;
+    margin-left: 45px;
+  }
+  @media (max-width: 320px) {
+    margin-left: 40px;
+    overflow-x: hidden;
   }
 `;
 
@@ -385,13 +448,23 @@ const CalendarCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-  height: 420px;
+  height: 385px;
 
   h3 {
-    margin-bottom: 8px;
+    margin-top: 1px;
     align-text: left;
     font-family: "Poppins", sans-serif;
+    color: white;
   }
+
+  @media (max-width: 1366px) {
+    height: 310px;
+
+    h3 {
+      margin-top: 0;
+    }
+  }
+
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -406,7 +479,7 @@ const StyledCalendar = styled(Calendar)`
   border-radius: 8px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   padding: 5px;
-
+  height: 70vh;
   .react-calendar__navigation {
     margin-bottom: 2px; /* Reduce gap between month and days */
     padding-bottom: 0; /* Minimize extra space */
@@ -429,6 +502,15 @@ const StyledCalendar = styled(Calendar)`
   .react-calendar__navigation button {
     font-size: 12px;
     padding: 2px;
+  }
+
+  @media (max-width: 1366px) {
+    padding: 0;
+
+    .react-calendar__tile {
+      font-size: 9px; /* Reduce font size to fit */
+      padding: 0px;
+    }
   }
 `;
 

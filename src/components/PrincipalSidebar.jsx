@@ -17,6 +17,14 @@ import { FiImage } from "react-icons/fi";
 import { MdOutlineAssignment } from "react-icons/md";
 import { LiaCalendarCheck } from "react-icons/lia";
 import { Link } from "react-router-dom";
+import { RiDatabase2Line } from "react-icons/ri";
+import { GrDatabase } from "react-icons/gr";
+import { TbReportAnalytics } from "react-icons/tb";
+import { MdOutlineNotificationAdd } from "react-icons/md";
+import { TfiAnnouncement } from "react-icons/tfi";
+import { LiaBookSolid } from "react-icons/lia";
+import { MdOutlineFeedback } from "react-icons/md";
+import { BsFileMedical } from "react-icons/bs";
 
 // Animation for mobile sidebar
 const slideIn = keyframes`
@@ -48,14 +56,19 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 120vh;
+  height: 86.5vh; /* Fixed height */
   z-index: 1000;
+
+  @media (max-width: 1024px) {
+    height: 165vh;
+  }
 
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
     display: none;
   }
 `;
+
 const MobileBackButton = styled.div`
   display: flex;
   align-items: center;
@@ -81,10 +94,10 @@ const MobileMenu = styled.div`
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
     top: 88px; // Changed from -110px to position properly
-    left: 58px;
+    left: 30px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
-    z-index: 1001;
+    z-index: 1;
     border-radius: 5px;
 
     // Increase the icon size in the JSX component
@@ -92,6 +105,13 @@ const MobileMenu = styled.div`
       width: 40px; // Increase icon size
       height: 40px; // Increase icon size
     }
+  }
+
+  @media (max-width: 480px) {
+    left: 10px;
+  }
+  @media (max-width: 380px) {
+    left: 10px;
   }
 `;
 
@@ -135,18 +155,35 @@ const MobileDropdown = styled.div`
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Always left-aligned in mobile
+  align-items: flex-start;
   padding: 1rem;
   gap: 1rem;
   white-space: nowrap;
-  min-height: 100%; // Ensure content fills available space
-  overflow: visible !important; // Override any hidden overflow
-    font-family: 'Poppins', sans-serif; 
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Enable vertical scrolling */
+  flex: 1; /* Take remaining space */
+  font-family: "Poppins", sans-serif;
 
-  // Mobile-specific adjustments
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #002087;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #002087;
   }
 `;
 
@@ -282,13 +319,80 @@ const PrincipalSidebar = () => {
           </MobileBackButton>
           <SidebarContent expanded={true}>
             <SidebarItem
-              to="/teacher-dashboard"
+              to="/principal-dashboard"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
                 <LiaPaletteSolid />
               </Icon>
               <Label expanded={true}>Dashboard</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/principal-teacherinfo"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <RiDatabase2Line />
+              </Icon>
+              <Label expanded={true}>Teachers Data</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/principal-studentinfo"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <GrDatabase />
+              </Icon>
+              <Label expanded={true}>Student Data</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/principal-attendance" expanded={expanded}>
+              <Icon>
+                <TbReportAnalytics />
+              </Icon>
+              <Label expanded={true}>Attendance Report</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/principal-addnotification"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <MdOutlineNotificationAdd />
+              </Icon>
+              <Label expanded={true}>Add Notification</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/principal-leave-panel"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+               <BsFileMedical />
+              </Icon>
+              <Label expanded={true}>Leaves Request</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/principal-feedback"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                 <MdOutlineFeedback />
+              </Icon>
+              <Label expanded={true}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem
+              to="/Principal-gallery"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <FiImage />
+              </Icon>
+              <Label expanded={true}>Gallery</Label>
             </SidebarItem>
 
             <SidebarItem
@@ -302,41 +406,11 @@ const PrincipalSidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/principal-studentinfo"
+              to="/principal-subjects"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <MdOutlineAssignment />
-              </Icon>
-              <Label expanded={true}>Student Data</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              to="/principal-teacherinfo"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <MdOutlineAssignment />
-              </Icon>
-              <Label expanded={true}>Teacher Data</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              to="/principal-addnotification"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <FiImage />
-              </Icon>
-              <Label expanded={true}>Notification</Label>
-            </SidebarItem>
-
-            <SidebarItem
-              to="/principal-assignedsubjects"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <FiImage />
+               <LiaBookSolid />
               </Icon>
               <Label expanded={true}>Subjects</Label>
             </SidebarItem>
@@ -352,21 +426,11 @@ const PrincipalSidebar = () => {
             </SidebarItem>
 
             <SidebarItem
-              to="/principal-feedback"
-              onClick={() => setMobileOpen(false)}
-            >
-              <Icon>
-                <AiOutlineForm />
-              </Icon>
-              <Label expanded={true}>Feedback</Label>
-            </SidebarItem>
-
-            <SidebarItem
               to="/principal-announcement"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <TfiAnnouncement />
               </Icon>
               <Label expanded={true}>Announcement</Label>
             </SidebarItem>
@@ -388,53 +452,69 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Dashboard</Label>
             </SidebarItem>
 
-            <SidebarItem to="/principal-academics" expanded={expanded}>
-              <Icon>
-                <MdOutlineAssignment />
-              </Icon>
-              <Label expanded={expanded}>Academics</Label>
-            </SidebarItem>
-
             <SidebarItem to="/principal-teacherinfo" expanded={expanded}>
               <Icon>
-                <TbFileSpreadsheet />
+                <RiDatabase2Line />
               </Icon>
               <Label expanded={expanded}>Teachers Data</Label>
             </SidebarItem>
 
             {/* My School Dropdown */}
-            <SidebarItem
-              as="div"
-              expanded={expanded}
-              onClick={() => toggleDropdown("school")}
-            >
-              <SidebarItem to="/principal-studentinfo" expanded={expanded}>
-                <Icon>
-                  <LiaSchoolSolid />
-                </Icon>
-                <Label expanded={expanded}>Student Data</Label>
-              </SidebarItem>
+
+            <SidebarItem to="/principal-studentinfo" expanded={expanded}>
+              <Icon>
+                <GrDatabase />
+              </Icon>
+              <Label expanded={expanded}>Student Data</Label>
             </SidebarItem>
 
-            <SidebarItem to="/Principal-gallery" expanded={expanded}>
+            <SidebarItem to="/principal-attendance" expanded={expanded}>
               <Icon>
-                <AiOutlineForm />
+                <TbReportAnalytics />
               </Icon>
-              <Label expanded={expanded}>Gallery</Label>
+              <Label expanded={expanded}>Attendance Report</Label>
             </SidebarItem>
 
             <SidebarItem to="/principal-addnotification" expanded={expanded}>
               <Icon>
+                <MdOutlineNotificationAdd />
+              </Icon>
+              <Label expanded={expanded}>Add Notification</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/principal-leave-panel" expanded={expanded}>
+              <Icon>
+               <BsFileMedical />
+              </Icon>
+              <Label expanded={expanded}>Leaves Request</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/principal-feedback" expanded={expanded}>
+              <Icon>
+                 <MdOutlineFeedback />
+              </Icon>
+              <Label expanded={expanded}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/Principal-gallery" expanded={expanded}>
+              <Icon>
                 <FiImage />
               </Icon>
-              <Label expanded={expanded}>Notification</Label>
+              <Label expanded={expanded}>Gallery</Label>
             </SidebarItem>
 
             <SidebarItem to="/principal-subjects" expanded={expanded}>
               <Icon>
-                <FiImage />
+               <LiaBookSolid />
               </Icon>
               <Label expanded={expanded}>Subjects</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/principal-academics" expanded={expanded}>
+              <Icon>
+                <MdOutlineAssignment />
+              </Icon>
+              <Label expanded={expanded}>Academics</Label>
             </SidebarItem>
 
             <SidebarItem to="/principal-fees" expanded={expanded}>
@@ -444,16 +524,9 @@ const PrincipalSidebar = () => {
               <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
 
-            <SidebarItem to="/principal-feedback" expanded={expanded}>
-              <Icon>
-                <HiDocumentCurrencyRupee />
-              </Icon>
-              <Label expanded={expanded}>Feedback</Label>
-            </SidebarItem>
-
             <SidebarItem to="/principal-announcement" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <TfiAnnouncement />
               </Icon>
               <Label expanded={expanded}>Announcement</Label>
             </SidebarItem>

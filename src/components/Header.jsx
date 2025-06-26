@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import logo from "../assets/images/logo.png";
 import defaultProfile from "../assets/images/profile.png";
@@ -7,6 +7,8 @@ import { FaBell, FaCaretDown, FaEllipsisV } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { FiSettings } from "react-icons/fi";
 import { TbLogout } from "react-icons/tb";
+import { TbMessageChatbot } from "react-icons/tb";
+import { FaBullhorn } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import NotificationPopupPage from "./notificationpopup";
 
@@ -19,7 +21,8 @@ const HeaderContainer = styled.header`
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   flex-wrap: nowrap;
-  position: sticky;
+  // position: sticky;
+  font-family: "Roboto", sans-serif;
 
   @media (max-width: 768px) {
     flex-wrap: wrap;
@@ -31,6 +34,7 @@ const LogoSection = styled.div`
   position: relative;
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   @media (max-width: 768px) {
     justify-content: flex-end;
@@ -49,6 +53,22 @@ const Logo = styled.img`
   margin-right: 18px;
   filter: brightness(0) saturate(100%) invert(17%) sepia(86%) saturate(7470%)
     hue-rotate(345deg) brightness(99%) contrast(104%);
+
+  @media (max-width: 768px) {
+    position: relative;
+    right: 15px;
+  }
+  @media (max-width: 480px) {
+    position: relative;
+    right: 45px;
+  }
+  @media (max-width: 380px) {
+    position: relative;
+    right: 45px;
+  }
+  @media (max-width: 320px) {
+    margin-right: 7px;
+  }
 `;
 
 const Divider = styled.div`
@@ -56,6 +76,16 @@ const Divider = styled.div`
   width: 2px;
   background-color: #e91e63;
   margin: 0 15px;
+
+  @media (max-width: 480px) {
+    position: relative;
+    right: 60px;
+  }
+  @media (max-width: 380px) {
+    position: relative;
+    right: 60px;
+  }
+  
 `;
 
 const SchoolDetails = styled.div`
@@ -73,9 +103,12 @@ const SchoolDetails = styled.div`
     margin: 0;
     font-size: 14px;
     color: gray;
+    font-style: italic;
   }
 
   @media (max-width: 480px) {
+    position: relative;
+    right: 40px;
     h1 {
       font-size: 16px;
     }
@@ -83,6 +116,15 @@ const SchoolDetails = styled.div`
     p {
       font-size: 12px;
     }
+  }
+
+  @media (max-width: 380px) {
+    position: relative;
+    right: 40px;
+  }
+  @media (max-width: 320px) {
+    position: relative;
+    right: 50px;
   }
 `;
 
@@ -98,61 +140,8 @@ const HeaderRight = styled.div`
   justify-content: flex-end;
 
   @media (max-width: 768px) {
-    margin-top: 10px;
     width: 100%;
     justify-content: space-between;
-  }
-`;
-
-const SearchBarContainer = styled.div`
-  position: relative;
-  margin-right: 15px;
-
-  input {
-    padding: 8px 15px;
-    padding-left: 35px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    font-size: 14px;
-    width: 300px;
-  }
-
-  i {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    color: gray;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    width: 100px;
-    left: 130px;
-    top: 10px;
-    input {
-      width: 200px;
-      height: 20px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    width: 110px;
-    left: 100px;
-    input {
-      width: 100px;
-      height: 20px;
-    }
-  }
-
-  @media (max-width: 320px) {
-    width: 100px;
-    left: 100px;
-    input {
-      width: 80px;
-      height: 20px;
-    }
   }
 `;
 
@@ -170,28 +159,86 @@ const NotificationButton = styled.div`
 
   @media (max-width: 768px) {
     position: relative;
-    left: 170px;
-    top: 10px;
+    left: 230px;
+    top: 3px;
   }
   @media (max-width: 480px) {
     position: relative;
-    left: 80px;
-    top: 10px;
+    left: 83px;
+    top: 3px;
   }
-  @media (max-width: 380px) {
+  @media (max-width: 420px) {
     position: relative;
-    left: 90px;
-    top: 10px;
+    left: 78px;
+    top: 3px;
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 100px;
-    top: 10px;
+    left: 60px;
+    top: 3px;
   }
+
 `;
 
 const NotificationButtonIcon = styled(FaBell)`
   font-size: 20px;
+  color: rgb(233, 30, 30);
+`;
+
+const IconButton = styled.button`
+  background-color: #4a90e2;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+
+  &:hover {
+    background-color: #357ab8;
+  }
+
+  svg {
+    color: white;
+    width: 24px;
+    height: 24px;
+  }
+  @media (max-width: 768px) {
+    position: relative;
+    left: 47%;
+    top: 5px;
+    svg {
+      color: white;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  @media (max-width: 480px) {
+    position: relative;
+    left: 30%;
+    top: 5px;
+    svg {
+      color: white;
+      width: 20px;
+      height: 20px;
+    }
+  }
+  @media (max-width: 320px) {
+    position: relative;
+    left: 25%;
+    top: 5px;
+  }
+`;
+
+const MeesageIcon = styled(TbMessageChatbot)`
+  font-size: 20px;
+  color: rgb(233, 30, 30);
+`;
+const SpeakerIcon = styled(FaBullhorn)`
+  font-size: 18px;
   color: rgb(233, 30, 30);
 `;
 
@@ -201,19 +248,26 @@ const DividerRight = styled.div`
   background-color: rgb(233, 30, 30);
   margin: 0 15px;
   @media (max-width: 768px) {
-    top: 10px;
+    top: 5px;
     position: relative;
+    left: 107px;
+  }
+  @media (max-width: 480px) {
+    top: 5px;
+    position: relative;
+    left: 36px;
   }
   @media (max-width: 380px) {
-    top: 10px;
+    top: 5px;
     position: relative;
-    left: 25px;
+    left: 36px;
   }
-  @media (max-width: 320px) {
-    top: 10px;
+  @media (max-width: 380px) {
+    top: 2px;
     position: relative;
-    left: 50px;
+    left: 33px;
   }
+ 
 `;
 
 const ProfileSection = styled.div`
@@ -274,32 +328,68 @@ const DropdownItem = styled.div`
 const MenuButton = styled.div`
   display: none;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 30px;
   color: red;
 
   @media (max-width: 768px) {
     display: block;
     position: relative;
-    top: 10px;
-    right: 160px;
+    top: 8px;
+    right: 10px;
   }
   @media (max-width: 480px) {
     display: block;
     position: relative;
     top: 10px;
-    right: 50px;
+    right: 0px;
   }
   @media (max-width: 380px) {
     display: block;
     position: relative;
-    top: 13px;
-    right: 20px;
+    top: 10px;
+    right: 0px;
   }
   @media (max-width: 320px) {
     display: block;
     position: relative;
-    top: 13px;
-    right: -20px;
+    top: 5px;
+    left: 10px;
+  }
+`;
+
+const SpeakerWrapper = styled.div`
+  background-color: #f5f5f5; /* off-white background */
+  padding: 10px 14px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #e0e0e0; /* subtle hover effect */
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  @media (max-width: 768px) {
+    position: relative;
+    left: 62%;
+    top: 5px;
+  }
+  @media (max-width: 460px) {
+    position: relative;
+    left: 38%;
+    top: 5px;
+  }
+  @media (max-width: 320px) {
+    position: relative;
+    left: 28%;
+    top: 5px;
   }
 `;
 
@@ -311,101 +401,129 @@ const Header = ({
 }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const back_location = useLocation();
-
-  const searchRoutes = {
-    dashboard: "/dashboard",
-    attendance: "/attendance",
-    assignment: "/school/assignment",
-    achievement: "/achievement",
-    profile: "/profile/my-profile",
-    parent: "/profile/parent-info",
-    academics: "/academics",
-    forms: "/forms-feedback",
-    gallery: "/gallery",
-    certificate: "/school/certificate-request",
-    "teacher dashboard": "/teacher-dashboard",
-    "teacher timetable": "/teacher-timetable",
-    "teacher attendance": "/teacher-attendance",
-    "teacher assignment": "/teacher-assignments",
-    "teacher form": "/teacher-form",
-    "teacher notification": "/teacher-notification",
-    "student details": "/studentdetails",
-  };
-
-  const handleSearch = () => {
-    const key = searchTerm.toLowerCase().trim();
-    const role = localStorage.getItem("role");
-
-    const studentRoutes = [
-      "dashboard",
-      "attendance",
-      "assignment",
-      "achievement",
-      "profile",
-      "parent",
-      "academics",
-      "forms",
-      "gallery",
-      "certificate",
-    ];
-
-    const teacherRoutes = [
-      "teacher dashboard",
-      "teacher timetable",
-      "teacher attendance",
-      "teacher assignment",
-      "teacher form",
-      "teacher notification",
-      "student details",
-    ];
-
-    const isStudentRoute = role !== "teacher" && studentRoutes.includes(key);
-    const isTeacherRoute = role === "teacher" && teacherRoutes.includes(key);
-
-    if (isStudentRoute || isTeacherRoute) {
-      const path = searchRoutes[key];
-      navigate(path);
-      setSearchTerm("");
-    } else {
-      alert("Page not found or access denied.");
-    }
-  };
+  const [role, setRole] = useState(null);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => setIsDropdownVisible(!isDropdownVisible);
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
 
   const handleViewAllNotifications = () => {
-    const rawRole = localStorage.getItem("role");
-    console.log("Raw role:", rawRole, typeof rawRole);
-
-    const role = rawRole?.trim().toLowerCase();
-    console.log("Normalized role:", role);
-
-    if (role === "teacher") {
-      console.log("Navigating to teacher page");
+    const Role = localStorage.getItem("role")?.trim().toLowerCase();
+    if (Role === "teacher") {
       navigate("/teacher-notification");
     } else {
-      console.log("Navigating to student/other notification page");
       navigate("/notifications");
     }
   };
+  const redirectToProfile = (userRole) => {
+    switch (userRole) {
+      case "student":
+        navigate("/profile/my-profile");
+        break;
+      case "teacher":
+        navigate("/profile/teacher-profile");
+        break;
+      case "principal":
+        navigate("/profile/principalprofile");
+        break;
+      default:
+        console.warn("Unknown role, redirecting to login");
+        navigate("/login");
+    }
+  };
 
+  const handleChatbotClick = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const rawRole = user?.role || "";
+    const role = rawRole.trim().toLowerCase();
 
+    console.log("Normalized role:", role);
+
+    const path = role === "teacher" ? "/teacher-chatbot" : "/chatbot";
+
+    if (back_location.pathname !== path) {
+      navigate(path);
+    }
+  };
+
+  // 👤 Called on profile click
+  const handleProfileClick = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userRole = user?.role?.toLowerCase();
+
+    console.log("Profile click role:", userRole);
+
+    if (!userRole) {
+      console.warn("Role not set, redirecting to login");
+      navigate("/login");
+      return;
+    }
+
+    redirectToProfile(userRole); // ✅ Delegate to separate function
+  };
+
+  // 🔁 Dashboard redirection logic (keep unchanged)
+  const redirectToDashboard = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userRole = user?.role?.toLowerCase();
+    const userState = { user };
+
+    switch (userRole) {
+      case "student":
+        navigate("/dashboard", { state: userState });
+        break;
+      case "teacher":
+        navigate("/teacher-dashboard", { state: userState });
+        break;
+      case "principal":
+        navigate("/principal-dashboard", { state: userState });
+        break;
+      case "admin":
+        navigate("/admin-dashboard", { state: userState });
+        break;
+      default:
+        console.warn("Unknown role, redirecting to login");
+        navigate("/login");
+    }
+  };
 
   useEffect(() => {
     setIsPopupVisible(false);
   }, [back_location]);
 
+  useEffect(() => {
+    const storedRole = localStorage.getItem("role");
+    console.log("Loaded role:", storedRole);
+    setRole(storedRole?.toLowerCase());
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest(".profile-section") && // avoids closing when clicking on profile pic
+        !event.target.closest(".menu-button") // avoids closing when clicking on menu icon
+      ) {
+        setIsDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <HeaderContainer>
-        <LogoSection>
+        <LogoSection onClick={redirectToDashboard}>
           <Logo src={logo} alt="Campus Sync Logo" />
           <Divider />
-          <SchoolDetails>
+          <SchoolDetails onClick={handleProfileClick}>
             <SlogoImage src={schoolLogo} alt="School Logo" />
             <div>
               <h1>{schoolName}</h1>
@@ -415,45 +533,71 @@ const Header = ({
         </LogoSection>
 
         <HeaderRight>
-          <SearchBarContainer>
-            <input
-              type="text"
-              placeholder="Search"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
-            <i className="fas fa-search" onClick={handleSearch}></i>
-          </SearchBarContainer>
+          <SpeakerWrapper
+            onClick={() => {
+              const user = JSON.parse(localStorage.getItem("user"));
+              const role = user?.role?.toLowerCase();
 
+              if (role === "teacher") {
+                navigate("/teacher/announcement");
+              } else if (role === "principal") {
+                navigate("/principal/announcement");
+              } else if (role === "admin") {
+                navigate("/admin/announcement");
+              } else {
+                navigate("/announcement"); // fallback
+              }
+            }}
+          >
+            <SpeakerIcon />
+          </SpeakerWrapper>
+
+          <IconButton>
+            <MeesageIcon
+              onClick={() => {
+                const user = JSON.parse(localStorage.getItem("user"));
+                const role = user?.role?.trim().toLowerCase();
+
+                if (role === "teacher") {
+                  navigate("/teacher-chatbot");
+                } else if (role === "student") {
+                  navigate("/chatbot");
+                } else if (role === "principal" || role === "admin") {
+                  alert(
+                    "Chatbot is not available for Principal and Admin users."
+                  );
+                } else {
+                  alert("Unknown role. Access denied.");
+                }
+              }}
+            />
+          </IconButton>
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />
           </NotificationButton>
 
           <DividerRight />
 
-          <ProfileSection onClick={toggleDropdown}>
+          <ProfileSection onClick={toggleDropdown} className="profile-section">
             <ProfilePic src={profilePic} alt="Profile" />
             <DropdownIcon />
           </ProfileSection>
 
-          <MenuButton onClick={toggleDropdown}>
+          <MenuButton onClick={toggleDropdown} className="menu-button">
             <FaEllipsisV />
           </MenuButton>
 
-          <DropdownMenu visible={isDropdownVisible}>
-            <Link to="/profile/my-profile" style={{ textDecoration: "none" }}>
-              <DropdownItem>
-                <CgProfile />
-                Profile
-              </DropdownItem>
-            </Link>
-            <Link to="/settings" style={{ textDecoration: "none" }}>
+          <DropdownMenu ref={dropdownRef} visible={isDropdownVisible}>
+            <DropdownItem onClick={handleProfileClick}>
+              <CgProfile />
+              Profile
+            </DropdownItem>
+            {/* <Link to="/settings" style={{ textDecoration: "none" }}>
               <DropdownItem>
                 <FiSettings />
                 Settings
               </DropdownItem>
-            </Link>
+            </Link> */}
             <Link to="/login" style={{ textDecoration: "none" }}>
               <DropdownItem>
                 <TbLogout />

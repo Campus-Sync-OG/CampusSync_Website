@@ -3,11 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { assignSubject, getAllClassSections, getAllSubjects, getAllTeachers } from "../api/ClientApi";
-
+import {
+  assignSubject,
+  getAllClassSections,
+  getAllSubjects,
+  getAllTeachers,
+} from "../api/ClientApi";
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   width: 95%;
 `;
 
@@ -15,16 +19,16 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 22px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 10px;
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   margin: 0;
 `;
 
@@ -182,13 +186,17 @@ const AddSubject = () => {
       const assignmentsToSend = Object.values(grouped);
 
       for (const entry of assignmentsToSend) {
-        await assignSubject(entry.teacher, [
-          {
-            class_name: entry.class_name,
-            section: entry.section,
-            subjects: entry.subjects,
-          },
-        ], user.unique_id);
+        await assignSubject(
+          entry.teacher,
+          [
+            {
+              class_name: entry.class_name,
+              section: entry.section,
+              subjects: entry.subjects,
+            },
+          ],
+          user.unique_id
+        );
       }
 
       alert("Subjects assigned successfully!");
@@ -206,10 +214,16 @@ const AddSubject = () => {
     const fetchClassSections = async () => {
       try {
         const data = await getAllClassSections();
-        setClassSections(Array.from(new Set(data.map(item => item.className)))
-          .map(cls => ({ className: cls })));
-        setSelectedClassSection(Array.from(new Set(data.map(item => item.section_name)))
-          .map(sec => ({ section_name: sec })));
+        setClassSections(
+          Array.from(new Set(data.map((item) => item.className))).map(
+            (cls) => ({ className: cls })
+          )
+        );
+        setSelectedClassSection(
+          Array.from(new Set(data.map((item) => item.section_name))).map(
+            (sec) => ({ section_name: sec })
+          )
+        );
       } catch (error) {
         console.error("Failed to fetch class sections:", error);
       }
@@ -260,7 +274,11 @@ const AddSubject = () => {
       <form onSubmit={handleSubmit}>
         <FormRow>
           <Field>
-            <Select name="class" value={formData.class} onChange={handleInputChange}>
+            <Select
+              name="class"
+              value={formData.class}
+              onChange={handleInputChange}
+            >
               <option>Select Class</option>
               {classSections.map((item) => (
                 <option key={item.className} value={item.className}>
@@ -271,7 +289,11 @@ const AddSubject = () => {
           </Field>
 
           <Field>
-            <Select name="section" value={formData.section} onChange={handleInputChange}>
+            <Select
+              name="section"
+              value={formData.section}
+              onChange={handleInputChange}
+            >
               <option>Select Section</option>
               {selectedClassSection.map((section) => (
                 <option key={section.section_name} value={section.section_name}>
@@ -282,7 +304,11 @@ const AddSubject = () => {
           </Field>
 
           <Field>
-            <Select name="teacher" value={formData.teacher} onChange={handleInputChange}>
+            <Select
+              name="teacher"
+              value={formData.teacher}
+              onChange={handleInputChange}
+            >
               <option value="">Select Teacher</option>
               {teacherList.map((emp, index) => (
                 <option key={index} value={emp.emp_id}>
@@ -293,7 +319,11 @@ const AddSubject = () => {
           </Field>
 
           <Field>
-            <Select name="subject" value={formData.subject} onChange={handleInputChange}>
+            <Select
+              name="subject"
+              value={formData.subject}
+              onChange={handleInputChange}
+            >
               <option value="">Select Subject</option>
               {subjectList.map((sub, index) => (
                 <option key={index} value={sub}>
@@ -305,7 +335,9 @@ const AddSubject = () => {
         </FormRow>
 
         <ButtonContainer>
-          <Button color="#df0043" onClick={handleSave} type="button">Save</Button>
+          <Button color="#df0043" onClick={handleSave} type="button">
+            Save
+          </Button>
           <Button color="#df0043" type="submit" disabled={loading}>
             {loading ? "Assigning..." : "Assign"}
           </Button>

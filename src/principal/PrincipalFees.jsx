@@ -1,22 +1,24 @@
-import React, { useEffect, useState }from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { getAllFees ,getAllClassSections} from "../api/ClientApi";
+import { getAllFees, getAllClassSections } from "../api/ClientApi";
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 25px 20px;
   border-radius: 10px;
   color: white;
   margin-left: 0px;
-  width:96%;
+  width: 96%;
   margin-bottom: 10px;
+  font-size: 20px;
+  font-family: "Poppins";
 `;
 
 const Title = styled.h2`
@@ -48,8 +50,10 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 5px;
   background: white;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const SearchBar = styled.div`
@@ -78,7 +82,7 @@ const SearchBar = styled.div`
   @media (max-width: 420px) {
     flex-direction: column;
     align-items: stretch;
-    
+
     input,
     select,
     button {
@@ -86,7 +90,6 @@ const SearchBar = styled.div`
     }
   }
 `;
-
 
 const Table = styled.table`
   width: 100%;
@@ -149,21 +152,27 @@ const PrincipalFees = () => {
   const fetchClassSections = async () => {
     try {
       const data = await getAllClassSections();
-      console.log("Class Sections:", data); 
+      console.log("Class Sections:", data);
       setClassSections(data);
     } catch (error) {
       console.error("Error fetching class sections:", error);
     }
   };
 
-  const uniqueClasses = [...new Set(classSections.map((item) => item.className))];
-  const uniqueSections = [...new Set(
-    classSections
-      .filter((item) =>
-        selectedClass ? String(item.className) === String(selectedClass) : true
-      )
-      .map((item) => item.section_name) // fix here
-  )];
+  const uniqueClasses = [
+    ...new Set(classSections.map((item) => item.className)),
+  ];
+  const uniqueSections = [
+    ...new Set(
+      classSections
+        .filter((item) =>
+          selectedClass
+            ? String(item.className) === String(selectedClass)
+            : true
+        )
+        .map((item) => item.section_name) // fix here
+    ),
+  ];
 
   const filteredReceipts = receipts.filter((receipt) => {
     const matchName = (receipt.student?.student_name || "")
@@ -195,7 +204,7 @@ const PrincipalFees = () => {
       <Header>
         <Title>Fees</Title>
         <Wrapper>
-          <Link to="/teacher-dashboard">
+          <Link to="/principal-dashboard">
             <Icons>
               <img src={home} alt="home" />
             </Icons>

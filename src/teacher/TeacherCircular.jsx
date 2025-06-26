@@ -5,22 +5,25 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllClassSections, uploadCircular } from "../api/ClientApi";
 
+const Container = styled.div`
+  padding: 0 15px;
+`;
+
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 5px 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 10px;
-  width: 95%;
+  margin-bottom: 20px;
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
@@ -36,18 +39,13 @@ const Divider = styled.div`
 `;
 
 const Icons = styled.div`
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   img {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
   }
-`;
-
-const Container = styled.div`
-  padding: 20px;
-  width: 95%;
 `;
 
 const Form = styled.form`
@@ -122,7 +120,7 @@ const Label = styled.label`
   font-size: 18px;
 `;
 
-const TeacherCircular = () => {
+const PrincipalCircular = () => {
   const navigate = useNavigate();
 
   const [forms, setForms] = useState([
@@ -204,23 +202,21 @@ const TeacherCircular = () => {
   };
 
   return (
-    <>
-      <Container>
-        <Header>
-          <Title>Circular</Title>
-          <Wrapper>
-            <Link to="/teacher-dashboard">
-              <Icons>
-                <img src={home} alt="home" />
-              </Icons>
-            </Link>
-            <Divider />
-            <Icons onClick={() => navigate(-1)}>
-              <img src={back} alt="back" />
+    <Container>
+      <Header>
+        <Title>Circular</Title>
+        <Wrapper>
+          <Link to="/teacher-dashboard">
+            <Icons>
+              <img src={home} alt="home" />
             </Icons>
-          </Wrapper>
-        </Header>
-      </Container>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
+      </Header>
 
       <Form onSubmit={handleSubmit}>
         {forms.map((form, index) => (
@@ -320,8 +316,8 @@ const TeacherCircular = () => {
           class and section.
         </Note>
       </Form>
-    </>
+    </Container>
   );
 };
 
-export default TeacherCircular;
+export default PrincipalCircular;

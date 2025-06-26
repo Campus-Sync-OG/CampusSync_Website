@@ -5,7 +5,14 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { fetchTimetableByAdmissionNo } from "../api/ClientApi"; // Adjust the import path as necessary
 
-const colors = ["#FFDAB9", "#E6E6FA", "#F0FFF0", "#FFFACD", "#D3D3D3", "#FFB6C1"];
+const colors = [
+  "#FFDAB9",
+  "#E6E6FA",
+  "#F0FFF0",
+  "#FFFACD",
+  "#D3D3D3",
+  "#FFB6C1",
+];
 
 const Timetable = () => {
   const navigate = useNavigate();
@@ -28,50 +35,56 @@ const Timetable = () => {
         const { schedule } = res;
         console.log("Fetched timetable:", schedule);
         setSchedule(schedule);
-  
+
         // Extract unique days and time slots from schedule
         const fetchedDays = Object.keys(schedule);
-  
+
         // Sort days in correct weekly order
-        const weekdayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const weekdayOrder = [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
         const sortedDays = fetchedDays.sort(
           (a, b) => weekdayOrder.indexOf(a) - weekdayOrder.indexOf(b)
         );
         setDays(sortedDays);
-  
+
         // Extract and sort time slots with AM/PM handling
         const fetchedTimeSlots = new Set();
-        fetchedDays.forEach(day => {
-          schedule[day].forEach(entry => {
+        fetchedDays.forEach((day) => {
+          schedule[day].forEach((entry) => {
             fetchedTimeSlots.add(entry.time);
           });
         });
-  
+
         const sortedTimeSlots = Array.from(fetchedTimeSlots).sort((a, b) => {
           const toMinutes = (timeStr) => {
             const [time, modifier] = timeStr.split(" ");
             let [hours, minutes] = time.split(":").map(Number);
-  
+
             if (modifier === "PM" && hours !== 12) hours += 12;
             if (modifier === "AM" && hours === 12) hours = 0;
-  
+
             return hours * 60 + minutes;
           };
-  
+
           return toMinutes(a) - toMinutes(b);
         });
-  
+
         setTimeSlots(sortedTimeSlots);
       } catch (error) {
         console.error("Failed to load timetable:", error);
       }
     };
-  
+
     if (admission_no) {
       fetchData();
     }
   }, [admission_no]);
-  
 
   return (
     <Container>
@@ -98,13 +111,17 @@ const Timetable = () => {
         <tbody>
           {days.map((day, dayIdx) => (
             <tr key={day}>
-              <DayHeader style={{ backgroundColor: colors[dayIdx % colors.length] }}>
+              <DayHeader
+                style={{ backgroundColor: colors[dayIdx % colors.length] }}
+              >
                 {day}
               </DayHeader>
               {timeSlots.map((time, colIdx) => {
                 const subject =
-                  schedule[day]?.find(entry => entry.time === time)?.subject || "";
-                const isBreak = subject === "Snacks Break" || subject === "Lunch Break";
+                  schedule[day]?.find((entry) => entry.time === time)
+                    ?.subject || "";
+                const isBreak =
+                  subject === "Snacks Break" || subject === "Lunch Break";
                 return (
                   <td
                     key={`${day}-${colIdx}`}
@@ -132,12 +149,12 @@ const Timetable = () => {
 export default Timetable;
 // Styled Components
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   color: white;
   border-radius: 10px;
   display: flex;
@@ -146,8 +163,9 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconGroup = styled.div`
@@ -157,8 +175,8 @@ const IconGroup = styled.div`
 `;
 
 const Icon = styled.img`
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 

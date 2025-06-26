@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllFees } from "../api/ClientApi"; // adjust the path as needed
@@ -10,19 +10,16 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
   color: white;
-  margin-left: 0px;
-  width:96%;
-  margin-bottom: 10px;
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
@@ -48,8 +45,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
-  background: white;
+  padding: 0 15px;
 `;
 
 const SearchBar = styled.div`
@@ -78,7 +74,7 @@ const SearchBar = styled.div`
   @media (max-width: 420px) {
     flex-direction: column;
     align-items: stretch;
-    
+
     input,
     select,
     button {
@@ -135,13 +131,11 @@ const TeacherFee = () => {
   const classes = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
   const sections = ["A", "B", "C"];
 
- 
-
   useEffect(() => {
     const fetchFees = async () => {
       try {
         const data = await getAllFees();
-        
+
         if (Array.isArray(data)) {
           setReceipts(data); // Set the data directly into state
         } else {
@@ -155,18 +149,15 @@ const TeacherFee = () => {
     };
 
     fetchFees();
-  }, []); 
+  }, []);
   // Empty array ensures this runs only once
   const filteredReceipts = receipts.filter((receipt) => {
-   
     const student = receipt.student || {}; // Access student details, assuming `student` object exists
     return (
       (selectedClass ? student.class === selectedClass : true) &&
-      (selectedSection ? student.section === selectedSection : true)&&
+      (selectedSection ? student.section === selectedSection : true) &&
       (searchName
-        ? student.student_name
-            .toLowerCase()
-            .includes(searchName.toLowerCase()) // Case-insensitive search
+        ? student.student_name.toLowerCase().includes(searchName.toLowerCase()) // Case-insensitive search
         : true)
     );
   });
@@ -288,9 +279,7 @@ const TeacherFee = () => {
         </tbody>
       </Table>
 
-      <Note>
-        {/* add you note here  */}
-      </Note>
+      <Note>{/* add you note here  */}</Note>
     </Container>
   );
 };

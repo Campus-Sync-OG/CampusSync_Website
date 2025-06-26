@@ -113,17 +113,45 @@ const TeacherDashboard = () => {
 
   return (
     <div>
-      {showPopup && latestAnnouncement && (
-        <PopupOverlay>
-          <PopupBox>
-            <h1>Announcement</h1>
-            <h3>{latestAnnouncement.title}</h3>
-            {/* <p><strong>{new Date(latestAnnouncement.date).toLocaleDateString("en-IN")}</strong></p> */}
-            <p>{latestAnnouncement.message}</p>
-            <button onClick={() => setShowPopup(false)}>Close</button>
-          </PopupBox>
-        </PopupOverlay>
-      )}
+     {showPopup && latestAnnouncement && (
+  <PopupOverlay>
+    <PopupBox style={{ position: 'relative' }}>
+      
+      {/* Close button */}
+      <button 
+        onClick={() => setShowPopup(false)}
+         style={{
+         position: 'absolute',
+          top: '10px',
+          right: '10px',
+          width: '30px',
+          height: '30px',
+          borderRadius: '4px',
+          border: 'none',
+          backgroundColor: '#002087',
+          color: '#fff',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        &times;
+      </button>
+
+      {/* Centered Title */}
+      <h1 style={{ textAlign: 'center' }}>Announcement</h1>
+      
+      <h3>{latestAnnouncement.title}</h3>
+      <p>{latestAnnouncement.message}</p>
+      
+    </PopupBox>
+  </PopupOverlay>
+)}
+
+
 
       <DashboardContainer>
         {/* Welcome Card */}
@@ -144,28 +172,28 @@ const TeacherDashboard = () => {
         <MainContent>
           <CardGrid>
             <Link to="/teacher-assignments" style={{ textDecoration: "none" }}>
-              <DashboardCard color="#FA807D">
+              <DashboardCard color="#9865F6">
                 <p>Assignments</p>
                 <img src={assignmentImage} alt="Assignments" />
               </DashboardCard>
             </Link>
 
             <Link to="/teacher-timetable" style={{ textDecoration: "none" }}>
-              <DashboardCard color="#7E81EC">
+              <DashboardCard color="#FE8906">
                 <p>Timetable</p>
                 <img src={timetableImage} alt="Timetable" />
               </DashboardCard>
             </Link>
 
             <Link to="/teacher-subjects" style={{ textDecoration: "none" }}>
-              <DashboardCard color="#77EAD0">
+              <DashboardCard color="#D5321A">
                 <p>Subjects</p>
                 <img src={subjectImage} alt="Subjects" />
               </DashboardCard>
             </Link>
 
             <Link to="/teacher-attendance" style={{ textDecoration: "none" }}>
-              <DashboardCard color="#BD7BF9">
+              <DashboardCard color="#5DC355">
                 <p>Attendance </p>
                 <img src={attendanceImage} alt="Attendance" />
               </DashboardCard>
@@ -192,13 +220,21 @@ export default TeacherDashboard;
 const DashboardContainer = styled.div`
   flex: 1;
   width: 100%;
-  padding: 20px;
+  // padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: -10px;
+  margin-left: 0px;
+  overflow-x: hidden;
+  max-height: 84vh;
   overflow-y: auto;
-  max-height: 90vh;
+
+  @media (max-width: 1024px) {
+    max-height: 170vh;
+  }
+  @media (max-width: 426px) {
+    max-height: 270vh;
+  }
 `;
 
 const WelcomeCard = styled.div`
@@ -206,6 +242,8 @@ const WelcomeCard = styled.div`
   color: white;
   display: flex;
   justify-content: space-between;
+  margin-top: 10px;
+  margin-left: 20px;
   padding: 20px;
   border-radius: 27px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -255,7 +293,9 @@ const WelcomeCard = styled.div`
   }
   @media (max-width: 1024px) {
     margin: 0;
+    margin-bottom: 10px;
     width: 94%;
+    padding-left: 10px;
   }
   @media (max-width: 768px) {
     flex-direction: column;
@@ -280,19 +320,28 @@ const WelcomeCard = styled.div`
   }
   @media (max-width: 426px) {
     width: 90%;
-    margin-left: -20px;
-
+    margin-right: px;
+    padding-bottom: 43px;
     .welcome-text {
       font-size: 17px;
     }
     .image {
-      height: 70px;
-      width: 70px;
+      height: 100px;
+      width: 130px;
       margin-right: 10px;
     }
     .date {
       font-size: 12px;
       margin: 0;
+    }
+  }
+
+  @media (max-width: 420px) {
+    width: 91%;
+    margin-bottom: 10px;
+    .image {
+      position: relative;
+      top: 20px;
     }
   }
 `;
@@ -301,8 +350,13 @@ const MainContent = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 0px;
+  margin-left: 10px;
   gap: 30px;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -310,6 +364,11 @@ const MainContent = styled.div`
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: center;
+  }
+  @media (max-width: 426px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
   }
 `;
 
@@ -319,24 +378,29 @@ const CardGrid = styled.div`
   width: 100%;
   gap: 10px;
   //max-width:650px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   padding: 10px;
+
+  @media (max-width: 1366px) {
+    gap: 0;
+    padding-top: 0;
+    padding-left: 0;
+    margin: 0;
+  }
 
   @media (max-width: 1024px) {
     width: 100%;
-    gap: 20px;
-    margin: 0;
+    gap: 7px;
+    margin-left: 6px;
   }
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr; /* Stack cards */
-    gap: 20px;
+    margin-left: 20px;
     max-width: auto;
   }
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
-    margin-left: -10px;
-    gap: 20px;
-    width: auto;
+    gap: 0px;
   }
   @media (max-width: 376px) {
     width: 100%;
@@ -346,7 +410,7 @@ const CardGrid = styled.div`
 
 const DashboardCard = styled.div`
   background: ${(props) => props.color || "#ffffff"};
-  color: black;
+   color: white; 
   border-radius: 10px;
   padding: 20px;
   text-align:left;
@@ -355,7 +419,7 @@ const DashboardCard = styled.div`
   justify-content: space-between;
   transition: transform 0.2s;
   cursor: pointer;
-  height: 170px;
+  height: 150px;
   width:85%;
   gap:10px;
   margin:10px;
@@ -365,7 +429,7 @@ const DashboardCard = styled.div`
 
   img {
     width: 200px;
-    height: 180px;
+    height: 170px;
     margin-left:auto;
 
   }
@@ -378,6 +442,16 @@ const DashboardCard = styled.div`
     margin:0;
     font-family: 'Poppins', sans-serif;
   }
+
+
+    @media(max-width:1366px){
+    height:120px;
+    img {
+      width:170px;
+      height:140px;
+    }
+  }
+
   @media (max-width: 1024px) {
     gap:5px;
     margin:0;
@@ -390,16 +464,16 @@ const DashboardCard = styled.div`
     width:85%;
     
   }
+
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
-    gap:20px;
-    margin:15px;
-    width:80%;
+    width:85%;
+    margin-bottom:20px;
   }
+
      @media (max-width: 376px) {
     margin:0;
-    margin-left:-10px;
-    width:90%;
+    width:85%;
     height:150px;
     img {
     width: 150px;
@@ -410,8 +484,8 @@ const DashboardCard = styled.div`
   }
    @media (max-width: 320px) {
     margin:0;
-    margin-left:-10px;
-    width:85%;
+    margin-left:0px;
+    width:80%;
     height:150px;
     img {
     width: 130px;
@@ -429,23 +503,31 @@ const CalendarSection = styled.div`
   text-align: left;
   flex-direction: column;
   margin-top: 0;
+
+  @media (max-width: 1366px) {
+    width: 22%;
+  }
+
   @media (max-width: 1024px) {
     width: 45%;
-
-    margin-left: 20px;
+    margin-left: 200px;
   }
   @media (max-width: 768px) {
     width: 100%;
-    margin-top: 15px;
+    margin-left: 20px;
   }
   @media (max-width: 426px) {
-    width: 90%;
-    margin-left: 10px;
-    margin-right: 15px;
+    width: 85%;
+    margin-left: 25px;
     margin-top: 0;
   }
-  @media (max-width: 376px) {
-    margin-left: 0;
+  @media (max-width: 480px) {
+    width: 95%;
+    margin-left: 20px;
+  }
+  @media (max-width: 320px) {
+    width: 95%;
+    margin-left: 25px;
   }
 `;
 
@@ -461,14 +543,26 @@ const CalendarCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0;
-  height: 420px;
+  margin-top: 2px;
+  margin-right: 30px;
+  height: 380px;
 
   h3 {
     margin-bottom: 8px;
     align-text: left;
     font-family: "Poppins", sans-serif;
+    color: white;
   }
+
+  @media (max-width: 1366px) {
+    margin-top: 10px;
+    height: 300px;
+
+    h3 {
+      margin-top: 0;
+    }
+  }
+
   @media (max-width: 768px) {
     width: 100%;
   }
@@ -499,13 +593,22 @@ const StyledCalendar = styled(Calendar)`
   }
 
   .react-calendar__month-view {
-    height: 250px; /* Ensure the calendar stays within 200px */
+    height: 190px; /* Ensure the calendar stays within 200px */
     margin: 0;
   }
 
   .react-calendar__navigation button {
     font-size: 12px;
     padding: 2px;
+  }
+
+  @media (max-width: 1366px) {
+    padding: 0;
+
+    .react-calendar__tile {
+      font-size: 9px; /* Reduce font size to fit */
+      padding: 0px;
+    }
   }
 `;
 
@@ -590,10 +693,12 @@ const PopupBox = styled.div`
   background-color: white;
   padding: 30px;
   border-radius: 15px;
-  width: 90%;
-  max-width: 500px;
+  width: 40%;
+  max-width: 350px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-height:200px;
+  height:50%;
 
   h1 {
     color: red;

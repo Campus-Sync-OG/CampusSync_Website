@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 import { createTeacher } from "../api/ClientApi"; // Adjust the import based on your API structure
@@ -236,25 +236,27 @@ export default TeacherInformation;
 // ---------------- Styled Components ----------------
 
 const Container = styled.div`
-  padding: 2rem;
+  padding: 0rem 1rem;
   background: #f0f2f5;
   font-family: Arial, sans-serif;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const NavContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+   display: flex;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 0px 20px;
   border-radius: 10px;
-  margin-bottom: 20px;
+  color: white;
 `;
 
 const Title = styled.h2`
   color: white;
   font-size: 25px;
-  font-weight: bold;
+  font-weight: 600;
   font-family: Poppins;
 `;
 

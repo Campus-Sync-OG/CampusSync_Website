@@ -3,20 +3,25 @@ import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 import { useNavigate } from "react-router-dom";
+import { uploadWithMetadata } from "../api/ClientApi"; // Adjust the import path as necessary
 
 const Container = styled.div`
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 0 15px;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(to right, #002e9f, #cc027c);
-  padding: 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 2px 20px;
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 10px;
+  h1 {
+    font-size: 26px;
+    font-weight: 600;
+    font-family: "Poppins";
+  }
 `;
 
 const Form = styled.form`
@@ -100,49 +105,49 @@ const Divider = styled.div`
 `;
 
 const AdminGallery = () => {
-  const [images, setImages] = useState([]);
-  const [videos, setVideos] = useState([]);
+  const navigate = useNavigate();
+
+  const [imageFiles, setImageFiles] = useState([]);
+  const [imageMetadata, setImageMetadata] = useState({ date: "", title: "" });
+
+  const [videoFiles, setVideoFiles] = useState([]);
+  const [videoMetadata, setVideoMetadata] = useState({ date: "", title: "" });
+
+  const handleImageChange = (e) => {
+    setImageFiles([...e.target.files]);
+  };
+
+  const handleVideoChange = (e) => {
+    setVideoFiles([...e.target.files]);
+  };
 
   const handleImageUpload = async (e) => {
     e.preventDefault();
-
-    for (const file of images) {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const response = await axios.post("/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+    try {
+      for (const file of imageFiles) {
+        await uploadWithMetadata(file, {
+          ...imageMetadata,
+          type: "image",
         });
-
-        console.log("Upload success:", response.data);
-        alert("Image uploaded successfully.");
-      } catch (error) {
-        console.error("Upload failed:", error);
-        alert("Failed to upload image.");
       }
+      alert("All images uploaded successfully!");
+    } catch (err) {
+      alert("Image upload failed: " + err.message);
     }
   };
-  const navigate = useNavigate();
 
   const handleVideoUpload = async (e) => {
     e.preventDefault();
-
-    for (const file of videos) {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const response = await axios.post("/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+    try {
+      for (const file of videoFiles) {
+        await uploadWithMetadata(file, {
+          ...videoMetadata,
+          type: "video",
         });
-
-        console.log("Video uploaded:", response.data);
-        alert("Video uploaded successfully.");
-      } catch (error) {
-        console.error("Video upload failed:", error);
-        alert("Failed to upload video.");
       }
+      alert("All videos uploaded successfully!");
+    } catch (err) {
+      alert("Video upload failed: " + err.message);
     }
   };
 
@@ -150,12 +155,8 @@ const AdminGallery = () => {
     <Container>
       <Header>
         <h1>Gallery</h1>
-       
         <IconButtons>
-          <div
-            onClick={() => navigate("/admin-dashboard")}
-            style={{ cursor: "pointer" }}
-          >
+          <div onClick={() => navigate("/admin-dashboard")} style={{ cursor: "pointer" }}>
             <IconBtn src={homeIcon} alt="Home" title="Home" />
           </div>
           <Divider />
@@ -165,57 +166,63 @@ const AdminGallery = () => {
         </IconButtons>
       </Header>
 
-      <Form>
+      <Form onSubmit={handleImageUpload}>
         <SectionTitle>Add Images</SectionTitle>
         <Row>
           <div>
             <label>Date *</label>
-            <Input type="date" placeholder="Please Select Date" />
+            <Input
+              type="date"
+              value={imageMetadata.date}
+              onChange={(e) => setImageMetadata({ ...imageMetadata, date: e.target.value })}
+            />
           </div>
           <div>
             <label>Image Title *</label>
-            <Input placeholder="Type Here" />
+            <Input
+              value={imageMetadata.title}
+              onChange={(e) => setImageMetadata({ ...imageMetadata, title: e.target.value })}
+            />
           </div>
           <div>
             <label>Select Attachment *</label>
-            <input type="file" multiple onChange={handleImageUpload} />
-            <small>
-              (Select multiple photos with ctrl/Shift key) ONLY .JPG, .JPEG &
-              .PNG
-            </small>
+            <input type="file" multiple onChange={handleImageChange} />
+            <small>(Select multiple photos with ctrl/Shift key) ONLY .JPG, .JPEG & .PNG</small>
           </div>
         </Row>
         <ButtonGroup>
           <Button type="submit">Submit</Button>
-          <Button variant="reset">Add more</Button>
+          <Button type="button" variant="reset" onClick={() => setImageFiles([])}>Reset</Button>
         </ButtonGroup>
+      </Form>
 
+      <Form onSubmit={handleVideoUpload}>
         <SectionTitle>Add Videos</SectionTitle>
         <Row>
           <div>
             <label>Date *</label>
-            <Input type="date" placeholder="Please Select Date" />
+            <Input
+              type="date"
+              value={videoMetadata.date}
+              onChange={(e) => setVideoMetadata({ ...videoMetadata, date: e.target.value })}
+            />
           </div>
           <div>
-            <label>Image/Title *</label>
-            <Input placeholder="Type Here" />
+            <label>Video Title *</label>
+            <Input
+              value={videoMetadata.title}
+              onChange={(e) => setVideoMetadata({ ...videoMetadata, title: e.target.value })}
+            />
           </div>
           <div>
             <label>Select Attachment *</label>
-            <input
-              type="file"
-              multiple
-              accept=".mp4, .4K"
-              onChange={handleVideoUpload}
-            />
-            <small>
-              (Select multiple photos with ctrl/Shift key) ONLY MP4, 4K
-            </small>
+            <input type="file" multiple accept=".mp4, .4k" onChange={handleVideoChange} />
+            <small>(Select multiple with ctrl/Shift key) ONLY MP4, 4K</small>
           </div>
         </Row>
         <ButtonGroup>
           <Button type="submit">Submit</Button>
-          <Button variant="reset">Add more</Button>
+          <Button type="button" variant="reset" onClick={() => setVideoFiles([])}>Reset</Button>
         </ButtonGroup>
       </Form>
     </Container>

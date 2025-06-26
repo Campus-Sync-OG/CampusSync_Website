@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import homeIcon from "../assets/images/home.png"; // adjust the path as needed
 import backIcon from "../assets/images/back.png"; // adjust the path as needed
 
@@ -32,39 +32,38 @@ const SchoolInfo = () => {
   };
 
   const handleSave = () => {
-  const {
-    schoolName,
-    affiliationNo,
-    principalName,
-    address,
-    pincode,
-    state,
-    phone,
-    mobile,
-    email,
-    website,
-  } = form;
+    const {
+      schoolName,
+      affiliationNo,
+      principalName,
+      address,
+      pincode,
+      state,
+      phone,
+      mobile,
+      email,
+      website,
+    } = form;
 
-  if (
-    !schoolName ||
-    !affiliationNo ||
-    !principalName ||
-    !address ||
-    !pincode ||
-    !state ||
-    !phone ||
-    !mobile ||
-    !email ||
-    !website
-  ) {
-    alert("saved sucessfully!!.");
-    return;
-  }
+    if (
+      !schoolName ||
+      !affiliationNo ||
+      !principalName ||
+      !address ||
+      !pincode ||
+      !state ||
+      !phone ||
+      !mobile ||
+      !email ||
+      !website
+    ) {
+      alert("saved sucessfully!!.");
+      return;
+    }
 
-  setSuccessMessage("Saved successfully!");
-  setTimeout(() => setSuccessMessage(""), 3000);
-};
-
+    setSuccessMessage("Saved successfully!");
+    setTimeout(() => setSuccessMessage(""), 3000);
+  };
 
   return (
     <Container>
@@ -180,27 +179,28 @@ export default SchoolInfo;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 2rem;
+  padding: 0 1rem;
   background: #f0f2f5;
   font-family: Arial, sans-serif;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const NavContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 0px 20px;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  color: white;
 `;
 
 const Title = styled.h2`
   color: white;
   font-size: 25px;
-  font-weight: bold;
-  font-family: Poppins;
+  font-weight: 600;
+  font-family: "Poppins";
   @media (max-width: 426px) {
     font-size: 20px;
   }
@@ -229,10 +229,8 @@ const ImageIcon = styled.img`
 `;
 
 const Card = styled.div`
-  background: white;
   border-radius: 10px;
   padding: 2rem;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
 `;
 
 const SectionTitle = styled.h3`

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { submitAchievement, getAllClassSections } from "../api/ClientApi";
 
 const Achievement = () => {
+  const handleBackClick = () => navigate(-1);
   const [formData, setFormData] = useState({
     currentClass: "",
     section: "",
@@ -25,13 +26,15 @@ const Achievement = () => {
     const fetchClassSections = async () => {
       try {
         const data = await getAllClassSections();
-        setClassSections(data);  // Store the complete data for filtering later
+        setClassSections(data); // Store the complete data for filtering later
 
         // Extract unique class names and sections from the data
-        const uniqueClasses = Array.from(new Set(data.map(item => item.className)))
-          .map(cls => ({ className: cls }));
-        const uniqueSections = Array.from(new Set(data.map(item => item.section_name)))
-          .map(sec => ({ section_name: sec }));
+        const uniqueClasses = Array.from(
+          new Set(data.map((item) => item.className))
+        ).map((cls) => ({ className: cls }));
+        const uniqueSections = Array.from(
+          new Set(data.map((item) => item.section_name))
+        ).map((sec) => ({ section_name: sec }));
 
         // Set unique class names and sections
         setClassSections(uniqueClasses);
@@ -44,7 +47,6 @@ const Achievement = () => {
     fetchClassSections();
   }, []);
 
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const Achievement = () => {
       setAdmissionNo(userData.unique_id);
     }
   }, []);
-  console.log('admission_no:', admission_no)
+  console.log("admission_no:", admission_no);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -71,38 +73,40 @@ const Achievement = () => {
   };
 
   const handleHomeClick = () => navigate("/dashboard");
-  const handleBackClick = () => navigate("/dashboard");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!admission_no) {
       alert("User is not logged in. Please log in first.");
       return;
     }
-  
+
     if (!formData.certificate || formData.certificate.length === 0) {
       alert("Please upload a certificate.");
       return;
     }
-  
+
     // Prepare submission FormData
     const submission = new FormData();
     submission.append("admission_no", admission_no);
     submission.append("title", formData.title);
     submission.append("description", formData.description);
-    submission.append("className", selectedClass);  // Ensure className is passed
-    submission.append("section", selectedSection);  // Ensure section is passed
+    submission.append("className", selectedClass); // Ensure className is passed
+    submission.append("section", selectedSection); // Ensure section is passed
     submission.append("certificate", formData.certificate[0]);
-  
+
     // Optional images (multiple)
     if (formData.images) {
-      Array.from(formData.images).forEach((img) => submission.append("images", img));
+      Array.from(formData.images).forEach((img) =>
+        submission.append("images", img)
+      );
     }
-  
+
     try {
       await submitAchievement(submission);
       alert("Achievement submitted successfully!");
-  
+
       // Reset form
       setFormData({
         currentClass: "",
@@ -121,8 +125,6 @@ const Achievement = () => {
       }
     }
   };
-  
-
 
   const handleAddMore = () => {
     if (!formData.currentClass || !formData.section) {
@@ -154,47 +156,69 @@ const Achievement = () => {
         <div className="navigation-container">
           <h2 className="nav-title">My Achievement</h2>
           <div className="nav-icons-container">
-            <img src={homeIcon} alt="Home" className="nav-icon" onClick={handleHomeClick} />
+            <img
+              src={homeIcon}
+              alt="Home"
+              className="nav-icon"
+              onClick={handleHomeClick}
+            />
             <div className="icon-divider"></div>
-            <img src={backIcon} alt="Back" className="nav-icon" onClick={handleBackClick} />
+            <img
+              src={backIcon}
+              alt="Back"
+              className="nav-icon"
+              onClick={handleBackClick}
+            />
           </div>
         </div>
 
         <div className="content">
           <form onSubmit={handleSubmit} className="achievement-form">
-            <div className="form-row" style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-
+            <div
+              className="form-row"
+              style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}
+            >
               {/* Current Class */}
               <div className="form-group" style={{ flex: "1 1 20%" }}>
-                <label htmlFor="currentClass">Current Class <span className="required">*</span></label>
+                <label htmlFor="currentClass">
+                  Current Class <span className="required">*</span>
+                </label>
                 <select
                   value={selectedClass}
-                  onChange={(e) => setSelectedClass(e.target.value)}  // Update class
+                  onChange={(e) => setSelectedClass(e.target.value)} // Update class
                 >
                   <option value="">Select Class</option>
                   {classSections.map((cls, index) => (
-                    <option key={index} value={cls.className}>{cls.className}</option>
+                    <option key={index} value={cls.className}>
+                      {cls.className}
+                    </option>
                   ))}
                 </select>
               </div>
 
               {/* Section */}
               <div className="form-group" style={{ flex: "1 1 20%" }}>
-                <label htmlFor="section">Section <span className="required">*</span></label>
+                <label htmlFor="section">
+                  Section <span className="required">*</span>
+                </label>
                 <select
                   value={selectedSection}
-                  onChange={(e) => setSelectedSection(e.target.value)}  // Update section
+                  onChange={(e) => setSelectedSection(e.target.value)} // Update section
                 >
                   <option value="">Select Section</option>
                   {selectedClassSection.map((sec, index) => (
-                    <option key={index} value={sec.section_name}>{sec.section_name}</option>
+                    <option key={index} value={sec.section_name}>
+                      {sec.section_name}
+                    </option>
                   ))}
                 </select>
               </div>
 
               {/* Title */}
               <div className="form-group" style={{ flex: "1 1 20%" }}>
-                <label htmlFor="title">Title <span className="required">*</span></label>
+                <label htmlFor="title">
+                  Title <span className="required">*</span>
+                </label>
                 <input
                   type="text"
                   id="title"
@@ -222,7 +246,9 @@ const Achievement = () => {
 
               {/* Certificate */}
               <div className="form-group" style={{ flex: "1 1 25%" }}>
-                <label htmlFor="certificate">Select Certificate <span className="required">*</span></label>
+                <label htmlFor="certificate">
+                  Select Certificate <span className="required">*</span>
+                </label>
                 <input
                   type="file"
                   id="certificate"
@@ -249,14 +275,21 @@ const Achievement = () => {
             </div>
 
             <div className="form-actions">
-              <button type="submit" className="submit-btn">Submit</button>
-              <button type="button" className="add-more-btn" onClick={handleAddMore}>
+              <button type="submit" className="submit-btn">
+                Submit
+              </button>
+              <button
+                type="button"
+                className="add-more-btn"
+                onClick={handleAddMore}
+              >
                 Add more
               </button>
             </div>
           </form>
           <p className="note">
-            <strong>Note:</strong> Fields marked with <span className="required">*</span> are mandatory.
+            <strong>Note:</strong> Fields marked with{" "}
+            <span className="required">*</span> are mandatory.
           </p>
         </div>
       </div>
@@ -266,58 +299,49 @@ const Achievement = () => {
 
 export default Achievement;
 
-
 /* CSS */
 const styles = `
   .achievement-page {
     flex-direction: column;
-    height: 100vh;
+    height: 80vh;
     overflow:hidden;
-     margin: 0;
-  padding: 0;
+    padding: 0 15px;
   }
-
-  
-
 
   .main-content {
     flex: 1;
-    padding: 20px;
+    padding: 0 15px;
     background-color: #f9f9f9;
-    width: 100%;
-  box-sizing: border-box;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
-  }
-  
-    
+    display: none; 
   }
 
   .navigation-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087,#002087B0, #DF0043);
-  padding: 10px 20px;
-  border-radius: 8px; /* Optional for rounded corners */
+  background:linear-gradient(90deg, #002087, #df0043);
+  padding: 22px 20px;
+  border-radius: 10px; 
   color: white; /* Text color */
   }
   .nav-icons-container {
   display: flex; /* Ensures icons and divider are in a horizontal row */
   align-items: center; /* Ensures vertical alignment of items */
+  gap:10px;
 }
 
  .nav-title {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   margin: 0;
 }
 .nav-icon {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
   display: flex;
   align-items: center; /* Ensures icons and divider are vertically aligned */
@@ -331,12 +355,9 @@ const styles = `
 }
 
   .content {
-    background-color: white;
     padding: 10px;
     margin-top:10px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    
   }
 
   .achievement-form .form-row {

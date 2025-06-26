@@ -15,30 +15,24 @@ const NotificationPopupPage = ({ onClose }) => {
     const topTwo = all.slice(0, 2);
     setTopTwoNotifications(topTwo);
   };
- 
-const handleViewAllNotifications = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const rawRole = user?.role || "";
-  const role = rawRole.trim().toLowerCase();
 
-  console.log("Normalized role:", role);
+  const handleViewAllNotifications = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const rawRole = user?.role || "";
+    const role = rawRole.trim().toLowerCase();
 
-  if (role === "teacher") {
-    console.log("Navigating to teacher page");
-    navigate("/teacher-notification");
-  } else if (role === "student") {
-    console.log("Navigating to student page");
-    navigate("/notifications");
-  } else if (role === "principal") {
-    console.log("Navigating to principal page");
-    navigate("/principal-notification");
-  } else {
-    console.warn("Unknown role, navigating to fallback");
-    navigate("/notification");
-  }
-};
-
-
+    if (role === "teacher") {
+      navigate("/teacher-notification");
+    } else if (role === "student") {
+      navigate("/notification");
+    } else if (role === "principal") {
+      navigate("/principal-notification");
+    } else if (role === "admin") {
+      navigate("/admin-notification");
+    } else {
+      alert("Unknown role. Cannot open notification page.");
+    }
+  };
 
   useEffect(() => {
     loadNotifications();
@@ -54,7 +48,10 @@ const handleViewAllNotifications = () => {
         </Header>
 
         {topTwoNotifications.map((notif, index) => (
-          <NotificationCard key={notif.id} bgColor={index % 2 === 0 ? "#FFF3E0" : "#E3F2FD"}>
+          <NotificationCard
+            key={notif.id}
+            bgColor={index % 2 === 0 ? "#FFF3E0" : "#E3F2FD"}
+          >
             <Icon>{notif.icon || "🔔"}</Icon>
             <Content>
               <Title>{notif.title}</Title>
@@ -66,7 +63,6 @@ const handleViewAllNotifications = () => {
         <ViewAllButton onClick={handleViewAllNotifications}>
           View All
         </ViewAllButton>
-
       </Popup>
     </>
   );
@@ -95,6 +91,16 @@ const Popup = styled.div`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   padding: 15px;
   z-index: 1000;
+
+  @media (max-width: 460px) {
+    width: 300px;
+  }
+  @media (max-width: 420px) {
+    width: 250px;
+  }
+  @media (max-width: 320px) {
+    width: 200px;
+  }
 `;
 
 /* Header with Close Button */

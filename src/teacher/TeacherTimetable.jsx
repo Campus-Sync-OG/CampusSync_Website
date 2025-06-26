@@ -1,232 +1,264 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { getTimetableByClassSection } from "../api/ClientApi";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
+import { Link, useNavigate } from "react-router-dom";
 
-const days = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-const colors = [
-  "#97B3AE",
-  "#D2E0D3",
-  "#F0DDD6",
-  "#F2C3B9",
-  "#D6CBBF",
-  "#F0EEEA",
-];
-
-const timeSlots = [
-  "9:00 AM",
-  "9:45 AM",
-  "10:30 AM",
-  "10:45 AM",
-  "11:30 AM",
-  "12:45 PM",
-  "1:45 PM",
-  "2:30 PM",
-  "3:45 PM",
-];
-
-const schedule = {
-  Monday: [
-    "Social Studies",
-    "English",
-    "Snacks Break",
-    "Mathematics",
-    "Arts Class",
-    "Lunch Break",
-    "Science",
-    "2nd Language",
-    "Physical Education",
-  ],
-  Tuesday: [
-    "Mathematics",
-    "2nd Language",
-    "Snacks Break",
-    "Science",
-    "Physical Education",
-    "Lunch Break",
-    "English",
-    "Arts Class",
-    "Social Studies",
-  ],
-  Wednesday: [
-    "Physical Education",
-    "Mathematics",
-    "Snacks Break",
-    "Arts Class",
-    "2nd Language",
-    "Lunch Break",
-    "Social Studies",
-    "English",
-    "Science",
-  ],
-  Thursday: [
-    "English",
-    "Arts Class",
-    "Snacks Break",
-    "Social Studies",
-    "Mathematics",
-    "Lunch Break",
-    "2nd Language",
-    "Science",
-    "Arts Class",
-  ],
-  Friday: [
-    "Science",
-    "2nd Language",
-    "Snacks Break",
-    "English",
-    "Social Studies",
-    "Lunch Break",
-    "Mathematics",
-    "Social Studies",
-    "Mathematics",
-  ],
-  Saturday: [
-    "Arts Class",
-    "2nd Language",
-    "Snacks Break",
-    "Mathematics",
-    "Social Studies",
-    "Lunch Break",
-    "Science",
-    "Physical Education",
-    "English",
-  ],
-};
-
-const TeacherTimetable = () => {
+const TimetableViewer = () => {
   const navigate = useNavigate();
+
+  const [className, setClassName] = useState("");
+  const [sectionName, setSectionName] = useState("");
+  const [schedule, setSchedule] = useState({});
+  const [error, setError] = useState("");
+  const classOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10th"];
+  const sectionOptions = ["A", "B", "C"];
+
+  const fetchTimetable = async () => {
+    try {
+      const data = await getTimetableByClassSection(className, sectionName);
+      setSchedule(data.schedule);
+      setError("");
+    } catch (err) {
+      setSchedule({});
+      setError(err.message || "Failed to load timetable");
+    }
+  };
+
+  // Create a list of all unique time slots
+  const allTimes = Object.values(schedule)
+    .flat()
+    .map((s) => s.time);
+  const uniqueTimes = [...new Set(allTimes)].sort((a, b) => {
+    const parseTime = (t) => {
+      const [time, period] = t.split(" ");
+      let [hours, minutes] = time.split(":").map(Number);
+      if (period === "PM" && hours !== 12) hours += 12;
+      if (period === "AM" && hours === 12) hours = 0;
+      return hours * 60 + minutes;
+    };
+    return parseTime(a) - parseTime(b);
+  });
+
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   return (
     <Container>
       <Header>
-        <Title>Time Table</Title>
-        <IconGroup>
+        <Title>View Class Timetable</Title>
+        <Wrapper>
           <Link to="/teacher-dashboard">
-            <Icon src={home} alt="home" />
+            <Icons>
+              <img src={home} alt="home" />
+            </Icons>
           </Link>
           <Divider />
-          <Icon src={back} alt="back" onClick={() => navigate(-1)} />
-        </IconGroup>
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
+        </Wrapper>
       </Header>
+      <Form>
+        <Select
+          value={className}
+          onChange={(e) => setClassName(e.target.value)}
+        >
+          <option value="">Select Class</option>
+          {classOptions.map((cls) => (
+            <option key={cls} value={cls}>
+              {cls}
+            </option>
+          ))}
+        </Select>
 
-      <StyledTable>
-        <thead>
-          <tr>
-            <TimeCell>Time</TimeCell>
-            {days.map((day, idx) => (
-              <DayHeader key={day} style={{ backgroundColor: colors[idx] }}>
-                {day}
-              </DayHeader>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {timeSlots.map((slot, idx) => {
-            const isBreak =
-              schedule["Monday"][idx] === "Snacks Break" ||
-              schedule["Monday"][idx] === "Lunch Break";
-            if (isBreak) {
-              return (
-                <tr key={idx}>
-                  <TimeCell>{slot}</TimeCell>
-                  <BreakCell colSpan={6}>{schedule["Monday"][idx]}</BreakCell>
-                </tr>
-              );
-            }
-            return (
-              <tr key={idx}>
-                <TimeCell>{slot}</TimeCell>
-                {days.map((day, dayIdx) => (
-                  <td
-                    key={`${day}-${idx}`}
-                    style={{ backgroundColor: colors[dayIdx] }}
-                  >
-                    {schedule[day][idx]}
-                  </td>
-                ))}
+        <Select
+          value={sectionName}
+          onChange={(e) => setSectionName(e.target.value)}
+        >
+          <option value="">Select Section</option>
+          {sectionOptions.map((sec) => (
+            <option key={sec} value={sec}>
+              {sec}
+            </option>
+          ))}
+        </Select>
+
+        <Button onClick={fetchTimetable}>Load Timetable</Button>
+      </Form>
+
+      {error && <ErrorText>{error}</ErrorText>}
+
+      {Object.keys(schedule).length > 0 && (
+        <Table>
+          <thead>
+            <tr>
+              <TimeCell>Time</TimeCell>
+              {days.map((day, idx) => (
+                <DayHeader key={idx}>{day}</DayHeader>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {uniqueTimes.map((time, i) => (
+              <tr key={i}>
+                <TimeCell>{time}</TimeCell>
+                {days.map((day, j) => {
+                  const subject =
+                    schedule[day]?.find((s) => s.time === time)?.subject || "-";
+                  const isBreak = subject.includes("Break");
+                  return (
+                    <td
+                      key={`${i}-${j}`}
+                      style={{
+                        backgroundColor: isBreak
+                          ? "#002087"
+                          : colorPalette[j % colorPalette.length],
+                        color: isBreak ? "white" : "black",
+                        fontWeight: isBreak ? "bold" : "normal",
+                      }}
+                    >
+                      {subject}
+                    </td>
+                  );
+                })}
               </tr>
-            );
-          })}
-        </tbody>
-      </StyledTable>
+            ))}
+          </tbody>
+        </Table>
+      )}
     </Container>
   );
 };
 
-export default TeacherTimetable;
+export default TimetableViewer;
 
-// Styled Components
+// ---------------- Styled Components ----------------
+
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
+  margin: auto;
+  font-family: "Poppins", sans-serif;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
-  color: white;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-`;
-
-const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
-`;
-
-const IconGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
+  color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
 `;
 
-const Icon = styled.img`
-  width: 25px;
-  height: 25px;
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Icons = styled.div`
   cursor: pointer;
+  margin: 0 10px;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 const Divider = styled.div`
   width: 2px;
-  height: 25px;
+  height: 30px;
   background-color: white;
 `;
 
-const StyledTable = styled.table`
+const Title = styled.h2`
+  text-align: center;
+  margin-bottom: 25px;
+`;
+
+const Form = styled.div`
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+`;
+
+const Input = styled.input`
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 200px;
+  font-size: 16px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background: #002087;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    background: #00156b;
+  }
+`;
+
+const ErrorText = styled.p`
+  color: red;
+  text-align: center;
+`;
+
+const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   text-align: center;
+  font-size: 14px;
+
   td,
   th {
-    padding: 12px;
-    border: 1px solid #ddd;
-    font-size: 14px;
+    padding: 10px;
+    border: 1px solid #ccc;
   }
 `;
 
 const TimeCell = styled.td`
   background-color: #8f6b9f;
   font-weight: bold;
-`;
-
-const BreakCell = styled.td`
-  background-color: #002087;
   color: white;
-  font-weight: bold;
-  text-align: center;
 `;
 
 const DayHeader = styled.th`
+  background-color: #002087;
+  color: white;
   font-weight: bold;
-  font-size: 15px;
 `;
+
+const Select = styled.select`
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 200px;
+  font-size: 16px;
+  background-color: white;
+`;
+
+const colorPalette = [
+  "#E0F7FA",
+  "#F1F8E9",
+  "#FFF3E0",
+  "#FBE9E7",
+  "#E8F5E9",
+  "#EDE7F6",
+];

@@ -10,7 +10,7 @@ import backIcon from "../assets/images/back.png";
 
 // Styled Components
 const PageContainer = styled.div`
-  padding: 5px;
+  padding: 0 10px;
   font-family: "Poppins", sans-serif;
   max-height: 90vh;
   overflow-y: auto;
@@ -26,14 +26,15 @@ const Header = styled.header`
   align-items: center;
   background: linear-gradient(90deg, #002087, #df0043);
   color: white;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 1px 10px;
+  border-radius: 10px;
+  font-family: "Poppins";
 `;
 
 const HeaderTitle = styled.h2`
-  font-size: 20px;
-  font-family: Poppins, sans-serif;
-  font-weight: 400;
+  font-size: 26px;
+  font-family: "Poppins";
+  font-weight: 600;
 `;
 
 const IconsContainer = styled.div`
@@ -54,10 +55,26 @@ const Divider = styled.div`
   background-color: white;
 `;
 
+const ToggleButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 15px 0;
+`;
+
+const ToggleButton = styled.button`
+  padding: 8px 16px;
+  background-color: ${(props) => (props.active ? "#002087" : "#ccc")};
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+`;
+
 const SearchContainer = styled.div`
   display: flex;
   gap: 100px;
-  margin-top: 50px;
+  margin-top: 20px;
   @media (max-width: 1024px) {
     gap: 40px;
   }
@@ -140,9 +157,6 @@ const Table = styled.table`
 
 const TheadWrapper = styled.thead`
   box-shadow: 0 8px 10px rgba(34, 22, 200, 0.1);
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  overflow: hidden;
 `;
 
 const Th = styled.th`
@@ -156,14 +170,6 @@ const Th = styled.th`
   top: 0;
   z-index: 10;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  &:first-child {
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-  }
-  &:last-child {
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
 `;
 
 const Td = styled.td`
@@ -185,12 +191,17 @@ const SubmitButton = styled.button`
   margin: 20px auto;
   float: right;
   width: 200px;
-  @media (max-width: 1024px) {
-    width: 180px;
-  }
-  @media (max-width: 426px) {
-    width: 140px;
-  }
+`;
+const DownloadButton = styled.button`
+  background-color: #002087;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px;
+  float: right;
+  width: 200px;
 `;
 
 const AttendancePage = () => {
@@ -198,10 +209,14 @@ const AttendancePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [attendance, setAttendance] = useState({});
+  const [viewMode, setViewMode] = useState("day-wise");
+
+  const subjects = ["Math", "Science", "English", "Kannada", "Social"];
 
   const studentsPerPage = 5;
   const indexOfLastStudent = currentPage * studentsPerPage;
@@ -210,7 +225,6 @@ const AttendancePage = () => {
     indexOfFirstStudent,
     indexOfLastStudent
   );
-
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
 
   const handleSearch = async () => {
@@ -218,24 +232,38 @@ const AttendancePage = () => {
       alert("Please select class and section");
       return;
     }
-    const students = await getStudentsByClassAndSection(
-      selectedClass,
-      selectedSection
-    );
-    setFilteredStudents(students);
+    if (viewMode === "period-wise" && !selectedSubject) {
+      alert("Please select a subject for period-wise attendance");
+      return;
+    }
 
-    const initialAttendance = students.reduce((acc, student) => {
-      acc[student.admission_no] = true; // default to present
-      return acc;
-    }, {});
-    setAttendance(initialAttendance);
-  };
+    setStudents([]);
+    setFilteredStudents([]);
+    setAttendance({});
+    setCurrentPage(1);
 
-  const handleCheckboxChange = (admission_no) => {
-    setAttendance((prev) => ({
-      ...prev,
-      [admission_no]: !prev[admission_no],
-    }));
+    try {
+      const fetchedStudents = await getStudentsByClassAndSection(
+        selectedClass,
+        selectedSection
+      );
+
+      if (!fetchedStudents || fetchedStudents.length === 0) return;
+
+      const initialAttendance = fetchedStudents.reduce((acc, student) => {
+        acc[student.admission_no] = true;
+        return acc;
+      }, {});
+
+      setStudents(fetchedStudents);
+      setFilteredStudents(fetchedStudents);
+      setAttendance(initialAttendance);
+      setSearchQuery("");
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      alert("Failed to fetch students. Please try again.");
+    }
   };
 
   const handleSubmitAttendance = async () => {
@@ -245,16 +273,39 @@ const AttendancePage = () => {
 
     const records = filteredStudents.map((student) => ({
       admission_no: student.admission_no,
+      student_name: student.student_name,
       status: attendance[student.admission_no] ? "Present" : "Absent",
+      class: selectedClass,
+      section: selectedSection,
+      date,
+      emp_id,
+      attendance_type: viewMode, // ✅ dynamically uses current selection
+      ...(viewMode === "period-wise" && { subject: selectedSubject }), // ✅ include subject if needed
     }));
 
+    console.log("Attendance Records:", records);
+
     try {
-      await bulkUpdateAttendance({ records, emp_id, date });
+      await bulkUpdateAttendance(emp_id, { records }, viewMode); // ✅ dynamic mode passed to backend
+
       alert("Attendance submitted successfully!");
     } catch (error) {
+      console.error("Failed to submit attendance:", error);
       alert("Failed to submit attendance.");
     }
   };
+
+  const handleToggleView = (mode) => {
+    setViewMode(mode);
+  };
+
+  useEffect(() => {
+    const filtered = students.filter((student) =>
+      student.student_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredStudents(filtered);
+    setCurrentPage(1);
+  }, [searchQuery, students]);
 
   return (
     <PageContainer>
@@ -271,10 +322,25 @@ const AttendancePage = () => {
         </IconsContainer>
       </Header>
 
+      <ToggleButtonContainer>
+        <ToggleButton
+          active={viewMode === "day-wise"}
+          onClick={() => handleToggleView("day-wise")}
+        >
+          Day-wise
+        </ToggleButton>
+        <ToggleButton
+          active={viewMode === "period-wise"}
+          onClick={() => handleToggleView("period-wise")}
+        >
+          Period-wise
+        </ToggleButton>
+      </ToggleButtonContainer>
+
       <SearchContainer>
         <SearchInput
           type="text"
-          placeholder="Search by name."
+          placeholder="Search by name"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -283,123 +349,170 @@ const AttendancePage = () => {
           onChange={(e) => setSelectedClass(e.target.value)}
         >
           <option value="">Select Class</option>
-          <option value="10">X</option>
-          <option value="9">IX</option>
-          <option value="8">VIII</option>
-          <option value="7">VII</option>
-          <option value="6">VI</option>
-          <option value="5">V</option>
-          <option value="4">IV</option>
-          <option value="3">III</option>
-          <option value="2">II</option>
-          <option value="1">I</option>
+          {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"].map(
+            (cls, i) => (
+              <option key={cls} value={i + 1}>
+                {cls}
+              </option>
+            )
+          )}
         </SelectDropdownClass>
         <SelectDropdownSec
           value={selectedSection}
           onChange={(e) => setSelectedSection(e.target.value)}
         >
           <option value="">Select Section</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
+          {["A", "B", "C"].map((sec) => (
+            <option key={sec} value={sec}>
+              {sec}
+            </option>
+          ))}
         </SelectDropdownSec>
+        {viewMode === "period-wise" && (
+          <SelectDropdownClass
+            value={selectedSubject}
+            onChange={(e) => setSelectedSubject(e.target.value)}
+          >
+            <option value="">Select Subject</option>
+            {subjects.map((sub) => (
+              <option key={sub} value={sub}>
+                {sub}
+              </option>
+            ))}
+          </SelectDropdownClass>
+        )}
         <SearchButton onClick={handleSearch}>SEARCH</SearchButton>
       </SearchContainer>
 
-      <TableWrapper>
-        <TableContainer>
-          <Table>
-            <TheadWrapper>
-              <tr>
-                <Th style={{ width: "50px" }}>Sl No</Th>
-                <Th style={{ width: "150px" }}>Student Name</Th>
-                <Th style={{ width: "100px" }}>Class</Th>
-                <Th style={{ width: "100px" }}>Section</Th>
-                <Th style={{ width: "120px" }}>Roll Number</Th>
-                <Th style={{ width: "150px" }}>Attendance</Th>
-              </tr>
-            </TheadWrapper>
-
-            <tbody>
-              {currentStudents.map((student, index) => (
-                <tr
-                  key={student.admission_no}
-                  style={{
-                    backgroundColor: attendance[student.admission_no]
-                      ? "transparent"
-                      : "#FF0000",
-                    transition: "background-color 0.5s ease",
-                  }}
-                >
-                  <Td>{indexOfFirstStudent + index + 1}</Td>
-                  <Td>{student.student_name}</Td>
-                  <Td>{student.class}</Td>
-                  <Td>{student.section}</Td>
-                  <Td>{student.admission_no}</Td>
-                  <Td>
-                    <input
-                      type="checkbox"
-                      checked={attendance[student.admission_no] || false}
-                      onChange={() =>
-                        handleCheckboxChange(student.admission_no)
-                      }
+      {/* Render Table */}
+      {filteredStudents.length === 0 ? (
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "40px",
+            fontSize: "18px",
+            color: "#666",
+          }}
+        >
+          No data found for the selected class and section.
+        </div>
+      ) : (
+        <>
+          <TableWrapper>
+            <TableContainer>
+              <Table>
+                <TheadWrapper>
+                  <tr>
+                    <Th>Sl No</Th>
+                    <Th>Student Name</Th>
+                    <Th>Class</Th>
+                    <Th>Section</Th>
+                    <Th>Roll Number</Th>
+                    <Th>Attendance</Th>
+                  </tr>
+                </TheadWrapper>
+                <tbody>
+                  {currentStudents.map((student, index) => (
+                    <tr
+                      key={student.admission_no}
                       style={{
-                        accentColor: attendance[student.admission_no]
-                          ? "green"
-                          : "red",
-                        width: "18px",
-                        height: "18px",
+                        backgroundColor: attendance[student.admission_no]
+                          ? "transparent"
+                          : "#FF0000",
                       }}
-                    />
-                  </Td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </TableContainer>
-      </TableWrapper>
+                    >
+                      <Td>{indexOfFirstStudent + index + 1}</Td>
+                      <Td>{student.student_name}</Td>
+                      <Td>{student.class}</Td>
+                      <Td>{student.section}</Td>
+                      <Td>{student.admission_no}</Td>
+                      <Td>
+                        <input
+                          type="checkbox"
+                          checked={attendance[student.admission_no] || false}
+                          onChange={() =>
+                            setAttendance((prev) => ({
+                              ...prev,
+                              [student.admission_no]:
+                                !prev[student.admission_no],
+                            }))
+                          }
+                          style={{
+                            accentColor: attendance[student.admission_no]
+                              ? "green"
+                              : "red",
+                            width: "18px",
+                            height: "18px",
+                          }}
+                        />
+                      </Td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </TableContainer>
+          </TableWrapper>
 
-      <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
-      >
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          style={{
-            padding: "8px 12px",
-            marginRight: "10px",
-            backgroundColor: "#002087",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          &lt;
-        </button>
-        <span style={{ alignSelf: "center", fontSize: "16px" }}>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          style={{
-            padding: "8px 12px",
-            marginLeft: "10px",
-            backgroundColor: "#002087",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          &gt;
-        </button>
-      </div>
+          {/* Pagination */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
+            }}
+          >
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              style={{
+                padding: "8px 12px",
+                marginRight: "10px",
+                backgroundColor: "#002087",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+              }}
+            >
+              &lt;
+            </button>
+            <span style={{ alignSelf: "center", fontSize: "16px" }}>
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              style={{
+                padding: "8px 12px",
+                marginLeft: "10px",
+                backgroundColor: "#002087",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+              }}
+            >
+              &gt;
+            </button>
+          </div>
 
-      <SubmitButton onClick={handleSubmitAttendance}>SUBMIT</SubmitButton>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "20px",
+              marginRight: "10px",
+            }}
+          >
+            <DownloadButton
+              onClick={() => navigate("/teacher-attendance-download")}
+            >
+              Download Report
+            </DownloadButton>
+            <SubmitButton onClick={handleSubmitAttendance}>SUBMIT</SubmitButton>
+          </div>
+        </>
+      )}
     </PageContainer>
   );
 };

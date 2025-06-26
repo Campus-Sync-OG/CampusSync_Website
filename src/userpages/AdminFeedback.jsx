@@ -5,7 +5,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllFeedback } from "../api/ClientApi";
 const Container = styled.div`
-  padding: 2rem;
+  padding:  0 1rem;
   font-family: Poppins;
 `;
 
@@ -13,17 +13,16 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
-  border-radius: 15px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
+  border-radius: 10px;
   color: white;
-  margin-bottom: 30px;
 `;
 
 const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
@@ -150,7 +149,7 @@ const AdminFeedback = () => {
         <thead>
           <tr>
             <Th>Sl no</Th>
-            <Th>Date</Th>
+            <Th></Th>
             <Th>Reason</Th>
           </tr>
         </thead>

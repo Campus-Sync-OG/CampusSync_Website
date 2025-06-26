@@ -1,11 +1,33 @@
 // App.js
-import React, { useState,useEffect} from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
+
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { Link } from "react-router-dom";
-import { getAllSubjects, getAssignmentsByAdmissionNo } from '../api/ClientApi'; // Adjust the import path as necessary
+import { useNavigate } from "react-router-dom";
+import {
+  getAllSubjects,
+  getAssignmentsByAdmissionNo,
+  studentUploadAssignment,
+} from "../api/ClientApi"; // Adjust the import path as necessary
 
+const moveDot = keyframes`
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    left: 60%;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+`;
 
 // Global style to reset box sizing and overflow
 const GlobalStyle = createGlobalStyle`
@@ -39,39 +61,43 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
 const AppContainer = styled.div`
   width: 100%;
   height: 100vh;
-  font-family: Arial, sans-serif;
-  background: #fff;
+  padding: 0 15px;
 `;
 
 const HeaderWrapper = styled.div`
   width: 100%;
-  background: linear-gradient(90deg, #002087, #002087B0, #DF0043);
+  background: linear-gradient(90deg, #002087, #df0043);
   border-radius: 10px;
 `;
 
 const Header = styled.div`
-
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 18px 20px;
   color: white;
   width: 100%;
-
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
   display: flex;
   gap: 10px;
+`;
+
+const Divider = styled.div`
+  width: 2px;
+  height: 20px;
+  background-color: white;
+  margin: 0 10px;
 `;
 
 const Icons = styled.div`
@@ -82,8 +108,8 @@ const Icons = styled.div`
   cursor: pointer;
 
   img {
-    width: 18px;
-    height: 18px;
+    width: 30px;
+    height: 25px;
   }
 `;
 
@@ -93,9 +119,8 @@ const Icons2 = styled.div`
 
   img {
     position: relative;
-    width: 18px;
-    height: 18px;
-    top:4px;
+    width: 27px;
+    height: 25px;
   }
 `;
 
@@ -109,13 +134,19 @@ const SubjectsList = styled.ul`
 `;
 
 const SubjectItem = styled.li`
-  padding: 10px;
+  position: relative;
+  padding: 10px 20px;
   margin: 5px 0;
   border: 1px solid #ccc;
   cursor: pointer;
+  overflow: hidden;
+
+  &:hover .animated-dot {
+    animation: ${moveDot} 5s ease-in-out;
+  }
 
   &:hover {
-    background: #f0f0f0;
+    background-color: #f9f9f9;
   }
 `;
 
@@ -124,7 +155,8 @@ const AssignmentsTable = styled.table`
   border-collapse: collapse;
   margin-top: 20px;
 
-  th, td {
+  th,
+  td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
@@ -153,11 +185,29 @@ const BackButton = styled.button`
   }
 `;
 
+const FileInput = styled.input`
+  margin-right: 10px;
+`;
+
+const UploadButton = styled.button`
+  padding: 5px 10px;
+  background: #002087;
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
 const App = () => {
+  const navigate = useNavigate();
   const [admission_no, setAdmissionNo] = useState(null);
   const [subjects, setSubjects] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [uploadFiles, setUploadFiles] = useState({}); // { index: File }
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -165,6 +215,7 @@ const App = () => {
       setAdmissionNo(userData.unique_id);
     }
   }, []);
+  console.log("Admission No:", admission_no);
 
   useEffect(() => {
     getAllSubjects()
@@ -182,25 +233,54 @@ const App = () => {
 
     getAssignmentsByAdmissionNo(admission_no)
       .then((data) => {
-        console.log("Full response from assignment API:", data);
-
-        // Normalize response to always be an array
         const allAssignments = Array.isArray(data)
           ? data
           : Array.isArray(data.assignments)
           ? data.assignments
           : [];
-
         const filtered = allAssignments.filter(
-          (a) =>
-            a.subjects === subject || a.subject_name === subject
+          (a) => a.subjects === subject || a.subject_name === subject
         );
-
-        console.log("Filtered assignments:", filtered);
         setAssignments(filtered);
       })
       .catch((err) => console.error("Error fetching assignments:", err));
   };
+
+  const handleFileChange = (index, file) => {
+    setUploadFiles((prev) => ({ ...prev, [index]: file }));
+  };
+
+  const handleUpload = async (assignment, index) => {
+    const file = uploadFiles[index];
+    if (!file) return alert("Please select a file to upload");
+
+    const formData = new FormData();
+    formData.append("title", assignment.title);
+    formData.append("subject_name", selectedSubject);
+    formData.append("file", file);
+
+    try {
+      const res = await studentUploadAssignment(admission_no, formData);
+      alert("Assignment uploaded successfully!");
+      fetchAssignments(selectedSubject); // Refresh the table
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert("Upload failed. Please try again.");
+    }
+  };
+
+  const lightColors = [
+    "#ffe4e1", // Light pink
+    "#e0ffff", // Light cyan
+    "#f0fff0", // Honeydew
+    "#f5f5dc", // Beige
+    "#f0f8ff", // Alice Blue
+    "#fdf5e6", // Old Lace
+    "#fffacd", // Lemon Chiffon
+    "#e6e6fa", // Lavender
+    "#f0ffff", // Azure
+    "#fafad2", // Light Goldenrod Yellow
+  ];
 
   return (
     <>
@@ -215,11 +295,10 @@ const App = () => {
                   <img src={home} alt="home" />
                 </Icons>
               </Link>
-              <Link to="/dashboard">
-                <Icons2>
-                  <img src={back} alt="back" />
-                </Icons2>
-              </Link>
+              <Divider />
+              <Icons2 onClick={() => navigate(-1)}>
+                <img src={back} alt="back" />
+              </Icons2>
             </Wrapper>
           </Header>
         </HeaderWrapper>
@@ -236,46 +315,65 @@ const App = () => {
                     <th>Assignment</th>
                     <th>Date</th>
                     <th>Attachment</th>
+                    <th>Upload Assignment</th>
                   </tr>
                 </thead>
                 <tbody>
-                {Array.isArray(assignments) && assignments.length > 0 ? (
-
-                  assignments.map((item, index) => (
+                  {Array.isArray(assignments) && assignments.length > 0 ? (
+                    assignments.map((item, index) => (
                       <tr key={item.id || index}>
                         <td>{index + 1}</td>
                         <td>{item.emp_name}</td>
                         <td>
-                        <AssignmentLink>{item.title}</AssignmentLink>
-                      </td>
+                          <AssignmentLink>{item.title}</AssignmentLink>
+                        </td>
                         <td>{item.Date}</td>
                         <td>
                           {item.attachment ? (
-                          <a href={item.attachment} download>
-                              <img
-                                src="https://img.icons8.com/ios-glyphs/30/000000/download--v1.png"
-                                alt="Download"
+                            <a href={item.attachment} download>
+                              <button
                                 style={{
-                                width: "20px",
-                                height: "20px",
-                                cursor: "pointer",
-                              }}
-                              />
+                                  padding: "5px 10px",
+                                  backgroundColor: "rgb(233, 30, 30)",
+                                  color: "white",
+                                  border: "none",
+                                  borderRadius: "4px",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                Download
+                              </button>
                             </a>
                           ) : (
-                          "N/A"
-                        )}
-                      </td>
+                            "N/A"
+                          )}
+                        </td>
+                        <td>
+                          <FileInput
+                            type="file"
+                            accept="application/pdf"
+                            onChange={(e) =>
+                              handleFileChange(index, e.target.files[0])
+                            }
+                          />
+                          <UploadButton
+                            onClick={() => handleUpload(item, index)}
+                          >
+                            Upload
+                          </UploadButton>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="5">No assignments available</td>
+                      <td colSpan="6">No assignments available</td>
                     </tr>
                   )}
                 </tbody>
               </AssignmentsTable>
-              <BackButton onClick={() => setSelectedSubject(null)}>Back</BackButton>
+              <BackButton onClick={() => setSelectedSubject(null)}>
+                Back
+              </BackButton>
             </>
           ) : (
             <>
@@ -283,10 +381,26 @@ const App = () => {
               <SubjectsList>
                 {subjects.map((subject_name, index) => (
                   <SubjectItem
-                  key={index}
-                  onClick={() => fetchAssignments(subject_name)}
-                >
+                    key={index}
+                    onClick={() => fetchAssignments(subject_name)}
+                    style={{
+                      backgroundColor: lightColors[index % lightColors.length],
+                    }}
+                  >
                     {subject_name}
+                    <span
+                      className="animated-dot"
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: 0,
+                        width: "8px",
+                        height: "8px",
+                        backgroundColor: "#df0043",
+                        borderRadius: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    ></span>
                   </SubjectItem>
                 ))}
               </SubjectsList>

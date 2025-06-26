@@ -7,18 +7,20 @@ import academics from "../assets/images/academics.png";
 import fees from "../assets/images/fees.png";
 import assignment from "../assets/images/assignment.png";
 import attendance from "../assets/images/attendance.png";
-import { fetchStudentByAdmissionNo } from "../api/ClientApi"; // API function to fetch student info
+import { fetchStudentByAdmissionNo,fetchAnnouncements } from "../api/ClientApi"; // API function to fetch student info
 import { useWindowSize } from "@react-hook/window-size";
 import Confetti from "react-confetti";
 // Styled Components
 const PageContainer = styled.div`
   flex: 1;
-  width: 100%;
-  padding: 20px;
+  padding: 0 20px;
+  width: 98.5%;
+  margin: 40px 15px;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-height: 90vh;
+  max-height: 80vh;
   scroll-behavior: smooth;
   position: relative;
   right: 80px;
@@ -39,7 +41,17 @@ const PageContainer = styled.div`
 
   @media (max-width: 768px) {
     padding: 0.8rem;
-    bottom: 25px;
+  }
+
+  @media (max-width: 480px) {
+    width: 86%;
+  }
+
+  @media (max-width: 420px) {
+    width: 86%;
+  }
+  @media (max-width: 320px) {
+    width: 86%;
   }
 `;
 
@@ -58,34 +70,56 @@ const WelcomeSection = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  width: 103%;
+  margin-bottom: 1.4rem;
+  width: 105.5%;
   flex-wrap: wrap;
   position: relative;
   z-index: -1;
 
   h2 {
-    font-size: 2.5rem;
+    font-size: 1.6rem;
     position: relative;
-    left: 10px;
+    left: 1px;
+    bottom: 35px;
+    font-weight: 40px;
+    font-family: "Poppins", sans-serif;
   }
 
   p {
     font-size: 1.5rem;
-    text-align: center;
+    text-align: left;
+    position: relative;
+    top: 15px;
+    margin: 0;
   }
 
   img {
-    width: 33%;
-    height: 30%;
+    min-width: 35%;
+    max-width: 60%;
+    min-height: 25vh;
+    max-height: 25vh;
+    position: relative;
+    top: 15px;
+  }
+
+  @media (max-width: 1366px) {
+    margin-bottom: 1rem;
   }
 
   @media (max-width: 1024px) {
     position: relative;
-    left: 10px;
+    left: 12px;
+    width: 101%;
+    margin-left: 10px;
 
     h2 {
       font-size: 1.5rem;
+      text-align: center;
+    }
+
+    img {
+      min-height: 22vh;
+      max-height: 22vh;
     }
 
     p {
@@ -94,25 +128,132 @@ const WelcomeSection = styled.div`
   }
 
   @media (max-width: 768px) {
-    left: 25px;
+    overflow-x: hidden;
+    width: 102%;
   }
 
   @media (max-width: 480px) {
-    left: 31px;
+    width: 107%;
+    left: 30px;
+    h2 {
+      top: 0;
+    }
+    p {
+      text-align: center;
+      top: 0px;
+    }
+    img {
+      left: 35px;
+      min-height: 1vh;
+      max-height: 12vh;
+    }
   }
-  @media (max-width: 320px) {
+  @media (max-width: 420px) {
+    width: 100%;
+
+    h2 {
+      top: 0;
+      font-size: 1.1rem;
+    }
+    p {
+      text-align: center;
+      font-size: 1rem;
+    }
+    img {
+      left: 25px;
+      top: 0px;
+      min-height: 1vh;
+      max-height: 9.3vh;
+    }
+  }
+  @media (max-width: 380px) {
     width: 100%;
     left: 36px;
+    h2 {
+      top: 0;
+      font-size: 1.1rem;
+    }
+    p {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    img {
+      left: 25px;
+      top: 0px;
+      min-width: 35%;
+      max-width: 35%;
+      min-height: 9vh;
+      max-height: 9vh;
+    }
+  }
+
+  @media (max-width: 320px) {
+    width: 98%;
+  }
+`;
+const PopupOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const PopupBox = styled.div`
+  background-color: white;
+  padding: 25px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-height:200px;
+  height:50%;
+  h1 {
+    color: red;
+    font-family: "Poppins", sans-serif;
+  }
+
+  h3 {
+    margin-bottom: 10px;
+    font-family: "Poppins", sans-serif;
+  }
+
+  p {
+    margin: 10px 0;
+    font-family: "Roboto", sans-serif;
+  }
+
+  button {
+    margin-top: 20px;
+    background-color: #002087;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    gap:10px;
+
+    &:hover {
+      background-color: #001764;
+    }
   }
 `;
 
 const WidgetsContainer = styled.div`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2.9fr 0.5fr;
 
   @media (max-width: 1024px) {
     position: relative;
-    right: 20px;
+    right: 10px;
   }
 
   @media (max-width: 768px) {
@@ -124,27 +265,41 @@ const WidgetsContainer = styled.div`
 const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
-  gap: 1.5rem 5.5rem;
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+  gap: 1.2rem 5.5rem;
+  margin-top: 0;
+
+  @media (max-width: 1366px) {
+    gap: 15px 87px;
+    padding-top: 0;
+    padding-left: 0;
+    margin-left: 5px;
+    height: 35%;
   }
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0rem 6rem;
+    position: relative;
+    right: 10px;
+    bottom: 10px;
+  }
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-    gap: 25px 105px;
+    gap: 25px 100px;
     position: relative;
-    right: 13px;
+    right: 24px;
   }
 
   @media (max-width: 480px) {
-    left: 2px;
     gap: 15px 105px;
   }
   @media (max-width: 380px) {
-    left: 30px;
+    left: 20px;
   }
   @media (max-width: 320px) {
     gap: 15px 105px;
-    left: 50px;
+    left: 35px;
   }
 `;
 
@@ -159,7 +314,7 @@ const Widget = styled.div`
   padding: 1rem;
   text-align: center;
   width: 110%;
-  height: 180px;
+  height: 150px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -169,21 +324,27 @@ const Widget = styled.div`
     transform: scale(1.05);
   }
 
+  @media (max-width: 1366px) {
+    width: 115%;
+    height: 120px;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     left: 40px;
-    width: 120%;
-    height: 90%;
+    width: 130%;
+    height: 70%;
   }
   @media (max-width: 768px) {
     position: relative;
-    height: 140px;
+    height: 130px;
+    width: 115%;
     left: 55px;
   }
   @media (max-width: 480px) {
     height: 120px;
-    width: 100%;
-    left: 70px;
+    width: 109%;
+    left: 80px;
   }
   @media (max-width: 380px) {
     height: 100px;
@@ -191,26 +352,35 @@ const Widget = styled.div`
     left: 40px;
   }
   @media (max-width: 320px) {
+    overflow-x: hidden;
     position: relative;
     height: 80px;
-    width: 90%;
-    right: 70px;
+    width: 104%;
+    left: 25px;
   }
 `;
 
 const WidgetTitle = styled.div`
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 27;
+  font-family: "Poppins", sans-serif;
   color: #fff;
   position: relative;
   right: 100px;
-  bottom: 25px;
+  top: 15px;
+
+  @media (max-width: 1366px) {
+    font-size: 1.3rem;
+  }
+
   @media (max-width: 1024px) {
     font-size: 1rem;
     right: 40px;
+    top: -10px;
   }
   @media (max-width: 768px) {
-    right: 50px;
+    right: 110px;
+    top: 10px;
   }
   @media (max-width: 480px) {
     position: relative;
@@ -230,11 +400,18 @@ const WidgetTitle = styled.div`
 `;
 
 const WidgetImage = styled.img`
-  max-height: 65%;
-  max-width: 65%;
+  max-height: 100%;
+  max-width: 75%;
+  margin: 0;
   position: relative;
-  left: 100px;
-  top: 30px;
+  left: 110px;
+  top: 0px;
+
+  @media (max-width: 1366px) {
+    max-height: 90%;
+    max-width: 70%;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
     max-width: 85%;
@@ -243,12 +420,12 @@ const WidgetImage = styled.img`
   @media (max-width: 480px) {
     position: relative;
     left: 60px;
-    top: 25px;
+    bottom: 20px;
   }
   @media (max-width: 380px) {
     position: relative;
     left: 60px;
-    top: 20px;
+    bottom: 20px;
   }
   @media (max-width: 320px) {
     position: relative;
@@ -263,35 +440,41 @@ const CalendarContainer = styled.div`
   border-radius: 18px;
   padding: 1rem;
   width: 100%;
-  max-width: 300px;
+  max-width: 335px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  left: 110px;
+  left: 90px;
+
+  @media (max-width: 1366px) {
+    height: 90%;
+  }
+
   @media (max-width: 1024px) {
     position: relative;
-    width: 80%;
-    height: 95%;
+    width: 75%;
+    height: 86%;
     left: 130px;
+    bottom: 10px;
   }
   @media (max-width: 768px) {
     position: relative;
     left: 210px;
   }
   @media (max-width: 480px) {
-    width: 95%;
+    width: 100%;
     position: relative;
-    left: 80px;
+    left: 70px;
   }
   @media (max-width: 380px) {
     position: relative;
-    left: 66px;
+    left: 60px;
     width: 100%;
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 85px;
-    width: 90%;
+    left: 72px;
+    width: 96%;
   }
 `;
 
@@ -303,6 +486,9 @@ const CalendarWidget = styled.div`
   border-radius: 15px;
   &:hover {
     transform: scale(1.05);
+  }
+  @media (max-width: 1366px) {
+    height: 95%;
   }
 `;
 
@@ -331,6 +517,10 @@ const CalendarGrid = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 0.5rem;
   text-align: center;
+
+  @media (max-width: 1366px) {
+    gap: 0;
+  }
 
   @media (max-width: 1024px) {
     font-size: 15px;
@@ -407,31 +597,32 @@ const BirthdayButton = styled.button`
 const widgetConfig = [
   {
     title: "Academics",
-    color: "#77EAD0",
+    color: "#9865F6",
     image: academics,
     link: "/academics",
   },
   {
     title: "School Fees",
-    color: "#7E81EC",
+    color: "#FE8906",
     image: fees,
     link: "/fees",
   },
   {
     title: "Attendance",
-    color: "#BD7BF9",
+    color: "#D5321A",
     image: attendance,
     link: "/attendance",
   },
   {
     title: "Assignment",
-    color: "#FA807D",
+    color: "#5DC355",
     image: assignment,
     link: "/school/assignment",
   },
 ];
 
 const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
+  
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
@@ -444,8 +635,11 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
   ).getDay();
   const adjustedFirstDay = (firstDay + 6) % 7;
   const dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
+    
+ 
   return (
+   
+    
     <CalendarContainer>
       <CalendarWidget>
         <CalendarHeader>
@@ -478,6 +672,7 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
         </CalendarGrid>
       </CalendarWidget>
     </CalendarContainer>
+   
   );
 };
 
@@ -488,7 +683,9 @@ const DashboardPage = () => {
   const [isBirthday, setIsBirthday] = useState(false);
   const [showBirthdayWish, setShowBirthdayWish] = useState(false);
   const [width, height] = useWindowSize(); // ✅ get window size for confetti
-
+   const [showPopup, setShowPopup] = useState(false);
+    const [latestAnnouncement, setLatestAnnouncement] = useState(null);
+    const [announcements, setAnnouncements] = useState([]);
   const storedUser = localStorage.getItem("user");
   let user = null;
 
@@ -570,8 +767,32 @@ const DashboardPage = () => {
     }
   }, [admission_no]);
 
+   useEffect(() => {
+      const popupSeen = sessionStorage.getItem("popupSeen");
+
+    const loadAnnouncements = async () => {
+      try {
+        const data = await fetchAnnouncements();
+        console.log("Fetched Announcements:", data);
+        setAnnouncements(data);
+
+        if (data.length > 0 && !popupSeen) {
+          const latest = data[0]; // your controller already sorts DESC
+          setLatestAnnouncement(latest);
+          setShowPopup(true);
+          sessionStorage.setItem("popupSeen", "true"); // Mark popup as shown
+        }
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      }
+    };
+
+    loadAnnouncements();
+   
+  }, []);
+
   return (
-    <>
+    <> 
       {isBirthday && showBirthdayWish && (
         <BirthdayPopup>
           <Confetti width={width} height={height} />
@@ -586,6 +807,44 @@ const DashboardPage = () => {
           </BirthdayCard>
         </BirthdayPopup>
       )}
+     {showPopup && latestAnnouncement && (
+  <PopupOverlay>
+    <PopupBox style={{ position: 'relative' }}>
+      
+      {/* Close button */}
+      <button 
+        onClick={() => setShowPopup(false)}
+         style={{
+         position: 'absolute',
+          top: '10px',
+          right: '10px',
+          width: '30px',
+          height: '30px',
+          borderRadius: '4px',
+          border: 'none',
+          backgroundColor: '#002087',
+          color: '#fff',
+          fontSize: '20px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        &times;
+      </button>
+
+      {/* Centered Title */}
+      <h1 style={{ textAlign: 'center' }}>Announcement</h1>
+      
+      <h3>{latestAnnouncement.title}</h3>
+      <p>{latestAnnouncement.message}</p>
+      
+    </PopupBox>
+  </PopupOverlay>
+)}
+
       <PageContainer>
         <DashboardContainer>
           <WelcomeSection>

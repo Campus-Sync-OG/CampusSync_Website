@@ -8,6 +8,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
+import { getAllEvents } from "../api/ClientApi"; // Adjust the import path as necessary
 
 const localizer = momentLocalizer(moment);
 
@@ -15,18 +16,17 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
   color: white;
-  margin-left: 10px;
   margin-bottom: 10px;
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const Wrapper = styled.div`
@@ -52,18 +52,19 @@ const Icons = styled.div`
 `;
 
 const CalendarContainer = styled.div`
-  padding: 20px;
-  background: white;
+  padding: 0 15px;
+  flex-direction: column;
+  height: 70vh;
 `;
+
+const colors = ["#FFCCD7", "#D7A5E9", "#9FEAE7", "#BFEEEE", "#E5FCFF", "#FFE0BD"];
 
 const CustomEvent = ({ event }) => {
   return (
     <div
       style={{
-        backgroundColor: event.color || "#007bff",
-        color: "white",
-        padding: "5px",
-        borderRadius: "4px",
+        fontWeight: "bold",
+        color: event.color || "#007bff",
       }}
     >
       {event.title}
@@ -71,41 +72,31 @@ const CustomEvent = ({ event }) => {
   );
 };
 
-const colors = [
-  "#FFCCD7",
-  "#D7A5E9",
-  "#9FEAE7",
-  "#BFEEEE",
-  "#E5FCFF",
-  "#FFE0BD",
-];
 
 const TeacherCalendarofEvent = () => {
   const navigate = useNavigate();
-  const [events, setEvents] = useState([]); // Initially empty array
+  const [events, setEvents] = useState([]);
   const [view, setView] = useState("week");
 
-  // Fetch events from the backend
   useEffect(() => {
-    const fetchEvents = async () => {
+    const loadTeacherEvents = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/events"); // Update URL as needed
-        const formattedEvents = response.data.map((event) => ({
+        const data = await getAllEvents("Teacher");
+        const formatted = data.map(event => ({
           title: event.title,
           start: new Date(event.start),
           end: new Date(event.end),
           color: event.color,
         }));
-        setEvents(formattedEvents);
-      } catch (error) {
-        console.error("Error fetching events:", error);
+        setEvents(formatted);
+      } catch (err) {
+        console.error("Error loading events", err);
       }
     };
 
-    fetchEvents();
+    loadTeacherEvents();
   }, []);
 
-  // Function to get the background color for each column based on the index
   const getColumnColor = (index) => {
     return colors[index % colors.length];
   };
@@ -121,11 +112,9 @@ const TeacherCalendarofEvent = () => {
             </Icons>
           </Link>
           <Divider />
-          <Link to="/teacher-dashboard">
-            <Icons onClick={() => navigate(-1)}>
-              <img src={back} alt="back" />
-            </Icons>
-          </Link>
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
         </Wrapper>
       </Header>
       <Calendar
@@ -138,18 +127,27 @@ const TeacherCalendarofEvent = () => {
         selectable
         step={60}
         timeslots={1}
-        min={new Date(2025, 3, 22, 8, 0)} // Starting calendar grid from 8 AM
-        max={new Date(2025, 3, 22, 18, 0)}
+        min={new Date(2025, 0, 1, 8, 0)}  // 8AM
+        max={new Date(2025, 0, 1, 18, 0)} // 6PM
         onView={(newView) => setView(newView)}
         dayPropGetter={(date) => {
-          const columnIndex = date.getDay(); // Get the day index (0 - 6)
+          const columnIndex = date.getDay();
           return {
             style: {
               backgroundColor: getColumnColor(columnIndex),
             },
           };
         }}
+        eventPropGetter={(event) => ({
+          style: {
+            backgroundColor: "transparent",
+            border: "none",
+            padding: 0,
+            margin: 0
+          }
+        })}
       />
+
     </CalendarContainer>
   );
 };

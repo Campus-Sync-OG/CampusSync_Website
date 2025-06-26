@@ -1,6 +1,6 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link } from "react-router-dom";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 import { getAllTeachers } from "../api/ClientApi";
@@ -15,7 +15,7 @@ const TeachersData = () => {
     const loadTeachers = async () => {
       try {
         const data = await getAllTeachers();
-        setTeacherList(data|| []); // Access the teachers array
+        setTeacherList(data || []); // Access the teachers array
       } catch (err) {
         console.error("Failed to fetch teachers:", err);
       }
@@ -24,17 +24,16 @@ const TeachersData = () => {
   }, []);
 
   const filteredTeachers = Array.isArray(teacherList)
-  ? teacherList.filter((t) =>
-      t.emp_name?.toLowerCase().includes(searchName.toLowerCase())
-    )
-  : [];
-
+    ? teacherList.filter((t) =>
+        t.emp_name?.toLowerCase().includes(searchName.toLowerCase())
+      )
+    : [];
 
   return (
     <Container>
       {/* Top Navigation */}
       <NavContainer>
-        <Title>Teacher information</Title>
+        <Title>Teacher Data</Title>
         <IconsContainer>
           <ImageIcon
             src={homeIcon}
@@ -77,7 +76,7 @@ const TeachersData = () => {
             <tr>
               <th>ID</th>
               <th>Name</th>
-             
+
               <th>Role</th>
               <th>Email</th>
               <th>Date of joining</th>
@@ -85,34 +84,34 @@ const TeachersData = () => {
             </tr>
           </thead>
           <tbody>
-          {filteredTeachers.length === 0 ? (
-  <p>No teachers found.</p>
-) : (
-  filteredTeachers.map((teacher, index) => (
-    <tr key={teacher.id}>
-      <td>{teacher.emp_id}</td>
-      <td>{teacher.emp_name}</td>
-      <td>{teacher.role}</td>
-      
-      <td>{teacher.email}</td>
-      <td>{teacher.joining_date}</td>
-      <td>{teacher.phone_no}</td>
-    </tr>
-  ))
-)}
+            {filteredTeachers.length === 0 ? (
+              <p>No teachers found.</p>
+            ) : (
+              filteredTeachers.map((teacher, index) => (
+                <tr key={teacher.id}>
+                  <td>{teacher.emp_id}</td>
+                  <td>{teacher.emp_name}</td>
+                  <td>{teacher.role}</td>
+
+                  <td>{teacher.email}</td>
+                  <td>{teacher.joining_date}</td>
+                  <td>{teacher.phone_no}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </StyledTable>
       </TableContainer>
 
-      {/* Pagination */}
-      {/* Pagination */}
-      <Pagination>
-        <span>&lt;</span>
-        <Page active>1</Page>
-        <Page>2</Page>
-        <Page>3</Page>
-        <span>&gt;</span>
-      </Pagination>
+      {filteredTeachers.length > 10 && (
+        <Pagination>
+          <span>&lt;</span>
+          <Page active>1</Page>
+          <Page>2</Page>
+          <Page>3</Page>
+          <span>&gt;</span>
+        </Pagination>
+      )}
     </Container>
   );
 };
@@ -121,14 +120,16 @@ export default TeachersData;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   font-family: "Poppins", sans-serif;
   background: #f9f9f9;
+  flex-direction: column;
+  height: 70vh;
 `;
 
 const NavContainer = styled.div`
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
@@ -137,8 +138,10 @@ const NavContainer = styled.div`
 
 const Title = styled.h2`
   color: #fff;
-  font-size: 18px;
-  font-weight: bold;
+   font-size: 25px;
+  font-weight: 600;
+  font-family: "Poppins";
+  
 `;
 
 const IconsContainer = styled.div`

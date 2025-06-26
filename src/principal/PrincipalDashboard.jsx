@@ -1,29 +1,76 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import principalImage from "../assets/images/principaldashboard.png";
 import princiattendanceImage from "../assets/images/princiattendance.png";
 import princiacademiImage from "../assets/images/princiacademics.png";
 import princisubjectImage from "../assets/images/princisubject.png";
 import princiannouncementImage from "../assets/images/princiannouncement.png";
 import { FaEllipsisH } from "react-icons/fa";
+import { fetchAllLeaves,fetchAnnouncements } from "../api/ClientApi";
 const PrincipalDashboard = () => {
   const [date, setDate] = useState(new Date());
+ const [announcements, setAnnouncements] = useState([]);
+const [leaveApplications, setLeaveApplications] = useState([]);
+const [combinedData, setCombinedData] = useState([]);
+   const [Loading, setLoading] = useState([]);
+ const getAnnouncements = async () => {
+  try {
+    const data = await fetchAnnouncements();
+    const formatted = data.map((item) => ({
+      id: item.id,
+      type: "announcement",
+      title: item.title,
+      message: item.message,
+      date: item.date,
+    }));
+    setAnnouncements(formatted);
+    return formatted;
+  } catch (error) {
+    console.error("Error fetching announcements:", error);
+    return [];
+  }
+};
 
-  const announcements = [
-    {
-      id: 1,
-      title: "Circular for Trek",
-      date: "16-03-2025",
-    },
-    {
-      id: 2,
-      title: "New Parking Layout",
-      date: "14-03-2025",
-    },
-  ];
+const getLeaves = async () => {
+  try {
+    const response = await fetchAllLeaves();
+    const formatted = response.data.map((leave) => ({
+      id: leave.id,
+      type: "leave",
+      title: `Leave by ${leave.teacher.name}`,
+      message: `${leave.leave_type} leave from ${leave.from_date} to ${leave.to_date}`,
+      date: leave.from_date,
+    }));
+    setLeaveApplications(formatted);
+    return formatted;
+  } catch (error) {
+    console.error("Error fetching leaves:", error);
+    return [];
+  }
+};
+
+useEffect(() => {
+  const loadDashboardData = async () => {
+    const [announcementList, leaveList] = await Promise.all([
+      getAnnouncements(),
+      getLeaves(),
+    ]);
+
+    const combined = [...announcementList, ...leaveList].sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+
+    setCombinedData(combined);
+  };
+
+  loadDashboardData();
+}, []);
+
+
+
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
@@ -52,31 +99,28 @@ const PrincipalDashboard = () => {
         {/* 2x2 Grid Cards */}
         <CardGrid>
           <Link to="/principal-fees" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#FA807D">
+            <DashboardCard color="#9865F6">
               <p>Fees</p>
               <img src={princiattendanceImage} alt="Attendance" />
             </DashboardCard>
           </Link>
 
           <Link to="/principal-academics" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#7E81EC">
+            <DashboardCard color="#FE8906">
               <p>Academics</p>
               <img src={princiacademiImage} alt="academics" />
             </DashboardCard>
           </Link>
 
-          <Link
-            to="/principal-subjects"
-            style={{ textDecoration: "none" }}
-          >
-            <DashboardCard color="#77EAD0">
+          <Link to="/principal-subjects" style={{ textDecoration: "none" }}>
+            <DashboardCard color="#D5321A">
               <p>Subjects</p>
               <img src={princisubjectImage} alt="Subjects" />
             </DashboardCard>
           </Link>
 
           <Link to="/principal-announcement" style={{ textDecoration: "none" }}>
-            <DashboardCard color="#BD7BF9">
+            <DashboardCard color="#5DC355">
               <p>Announcement </p>
               <img src={princiannouncementImage} alt="Announcement" />
             </DashboardCard>
@@ -90,19 +134,24 @@ const PrincipalDashboard = () => {
             <StyledCalendar value={date} onChange={setDate} />
             <AnnouncementsHeading>Announcements</AnnouncementsHeading>
             <AnnouncementsContainer>
-              {announcements.map((announcement) => (
-                <NotificationCard
-                  key={announcement.id}
-                  to={`/announcement/${announcement.id}`}
-                >
-                  <Content>
-                    <Title>{announcement.title}</Title>
-                    <DateText>• {announcement.date}</DateText>
-                  </Content>
-                  <OptionsIcon />
-                </NotificationCard>
-              ))}
-            </AnnouncementsContainer>
+  {combinedData.map((item) => (
+    <NotificationCard
+      key={`${item.type}-${item.id}`}
+      to={
+        item.type === "leave"
+          ? `/principal-leave-panel`
+          : `/announcement/${item.id}`
+      }
+    >
+      <Content>
+        <Title>{item.title}</Title>
+        <DateText>• {new Date(item.date).toLocaleDateString()}</DateText>
+      </Content>
+      <OptionsIcon />
+    </NotificationCard>
+  ))}
+</AnnouncementsContainer>
+
           </CalendarCard>
         </CalendarSection>
       </MainContent>
@@ -117,13 +166,18 @@ export default PrincipalDashboard;
 const DashboardContainer = styled.div`
   flex: 1;
   width: 100%;
-  padding: 20px;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: -10px;
   overflow-y: auto;
   max-height: 90vh;
+  overflow-x: hidden;
+
+  @media (max-width: 320px) {
+    width: 100%;
+    overflow-x: hidden;
+  }
 `;
 
 const WelcomeCard = styled.div`
@@ -133,6 +187,7 @@ const WelcomeCard = styled.div`
   justify-content: space-between;
   padding: 20px;
   border-radius: 27px;
+  margin-left: 4px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
   height: 150px;
@@ -180,7 +235,9 @@ const WelcomeCard = styled.div`
   }
   @media (max-width: 1024px) {
     margin: 0;
+    margin-bottom: 10px;
     width: 94%;
+    padding-left: 10px;
   }
   @media (max-width: 768px) {
     flex-direction: column;
@@ -203,9 +260,9 @@ const WelcomeCard = styled.div`
       margin-left: auto;
     }
   }
-  @media (max-width: 426px) {
+  @media (max-width: 480px) {
     width: 90%;
-    margin-left: -20px;
+    margin-left: 0px;
 
     .welcome-text {
       font-size: 17px;
@@ -220,14 +277,20 @@ const WelcomeCard = styled.div`
       margin: 0;
     }
   }
+
+  @media (max-width: 420px) {
+    width: 90%;
+    margin-left: 0px;
+  }
+  
 `;
 
 const MainContent = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-top: 20px;
   gap: 30px;
+  margin-left: 0;
 
   @media (max-width: 1024px) {
     flex-direction: column;
@@ -245,17 +308,27 @@ const CardGrid = styled.div`
   gap: 10px;
   //max-width:650px;
   margin-bottom: 10px;
-  padding: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
+
+  @media (max-width: 1366px) {
+    gap: 0;
+    padding-top: 0;
+    padding-left: 0;
+    margin: 0;
+    height: 30%;
+  }
 
   @media (max-width: 1024px) {
     width: 100%;
-    gap: 20px;
-    margin: 0;
+    gap: 10px;
+    margin-left: 10px;
   }
   @media (max-width: 768px) {
     grid-template-columns: 1fr 1fr; /* Stack cards */
-    gap: 20px;
+    gap: 10px;
     max-width: auto;
+    margin-left: 10px;
   }
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
@@ -280,30 +353,43 @@ const DashboardCard = styled.div`
   justify-content: space-between;
   transition: transform 0.2s;
   cursor: pointer;
-  height: 170px;
-  width:85%;
-  gap:10px;
-  margin:10px;
+  height: 155px;
+  width:87%;
+  
+  margin:8px;
   &:hover {
     transform: scale(1.05);
   }
 
   img {
-    width: 200px;
-    height: 180px;
-    margin-left:auto;
-
+    width: 220px;
+    height: 190px;
+    margin:0;
+    position: relative;
+    left:10px;
+    padding:0;
+    bottom:10px;
   }
   
   p {
     flex:1;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
     text-align: left; 
     margin:0;
+    padding:0;
     font-family: 'Poppins', sans-serif;
     color: white;
   }
+
+  @media(max-width:1366px){
+    height:120px;
+    img {
+      width:170px;
+      height:140px;
+    }
+  }
+ 
   @media (max-width: 1024px) {
     gap:5px;
     margin:0;
@@ -311,21 +397,25 @@ const DashboardCard = styled.div`
    
   }
   @media (max-width: 768px) {
-    gap:10px;
+    gap:5px;
     margin:0;
-    width:85%;
+    width:80%;
+    img{
+    position:relative;
+    left: -15px;
+    }
     
   }
-  @media (max-width: 426px) {
+  @media (max-width: 480px) {
     grid-template-columns: 1fr; /* Stack cards */
     gap:20px;
-    margin:15px;
-    width:80%;
+    margin-left:0px;
+    width:93%;
   }
-     @media (max-width: 376px) {
+     @media (max-width: 420px) {
     margin:0;
-    margin-left:-10px;
-    width:90%;
+    margin-left:10px;
+    width:84%;
     height:150px;
     img {
     width: 150px;
@@ -336,9 +426,9 @@ const DashboardCard = styled.div`
   }
    @media (max-width: 320px) {
     margin:0;
-    margin-left:-10px;
-    width:85%;
-    height:150px;
+    margin-left:10px;
+    width:74%;
+    height:140px;
     img {
     width: 130px;
     height: 130px;
@@ -348,30 +438,41 @@ const DashboardCard = styled.div`
 `;
 
 const CalendarSection = styled.div`
-  width: 30%;
+  width: 35%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: left;
   flex-direction: column;
-  margin-top: 0;
+  position: relative;
+  right: 15px;
+
+  @media (max-width: 1366px) {
+    width: 22%;
+  }
+
   @media (max-width: 1024px) {
     width: 45%;
-
-    margin-left: 20px;
+    margin-left: 200px;
+    bottom: 15px;
   }
   @media (max-width: 768px) {
     width: 100%;
     margin-top: 15px;
+    margin-left: 35px;
   }
-  @media (max-width: 426px) {
+  @media (max-width: 480px) {
     width: 90%;
-    margin-left: 10px;
+    margin-left: 35px;
     margin-right: 15px;
     margin-top: 0;
   }
   @media (max-width: 376px) {
-    margin-left: 0;
+    margin-left: 45px;
+  }
+  @media (max-width: 320px) {
+    margin-left: 40px;
+    overflow-x: hidden;
   }
 `;
 
@@ -388,16 +489,27 @@ const CalendarCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   margin: 0;
-  height: 420px;
+  height: 385px;
 
   h3 {
-    margin-bottom: 8px;
+    margin-top: 1px;
     align-text: left;
     font-family: "Poppins", sans-serif;
+    color: white;
+  }
+
+  @media (max-width: 1366px) {
+    height: 310px;
+
+    h3 {
+      margin-top: 0;
+    }
   }
   @media (max-width: 768px) {
     width: 100%;
   }
+ 
+
   @media (max-width: 425px) {
     width: 90%;
   }
@@ -409,6 +521,7 @@ const StyledCalendar = styled(Calendar)`
   border-radius: 8px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   padding: 5px;
+  height: 35vh;
 
   .react-calendar__navigation {
     margin-bottom: 2px; /* Reduce gap between month and days */
@@ -433,6 +546,15 @@ const StyledCalendar = styled(Calendar)`
     font-size: 12px;
     padding: 2px;
   }
+
+  @media (max-width: 1366px) {
+    padding: 0;
+
+    .react-calendar__tile {
+      font-size: 9px; /* Reduce font size to fit */
+      padding: 0px;
+    }
+  }
 `;
 
 const AnnouncementsContainer = styled.div`
@@ -440,7 +562,7 @@ const AnnouncementsContainer = styled.div`
   flex-direction: column;
   gap: 10px;
   overflow-y: auto;
-  max-height: 300px; /* Prevent overflow */
+  max-height: 200px; /* Prevent overflow */
   padding-right: 5px;
   &::-webkit-scrollbar {
     width: 0;

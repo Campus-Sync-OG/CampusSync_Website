@@ -78,16 +78,35 @@ import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
 import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
+import AttendnaceReport from "./principal/AttendanceReport";
+import LeaveApplication from "./teacher/LeaveApplication";
+import PrincipalLeavePanel from "./principal/PrincipalLeavePanel";
+import StudentLeaveApplication from "./pages/StudentLeaveApplication";
+import StudyModuleUpload from "./userpages/StudyModuleUpload";
+import StudyModulePage from "./pages/StudyModulePage";
+import ChatPage from "./components/ChatPage";
+import PrincipalProfile from "./principal/PrincipalProfile";
+import StudentDocument from "./userpages/AddStudentDocument";
+import TeacherViewAssignment from "./teacher/TeacherViewAssignment";
+import AnnouncementPage from "./pages/AnnouncementPage";
+import StudentDocumentView from "./userpages/StudentDocumentView";
+import DocumentView from "./pages/DocumentView";
+import StudentFeeDetails from "./userpages/StudentFeeDetails";
+import AdminCalendarPanel from "./userpages/AdminCalendarPanel";
+import StudentCalendarOfEvent from "./pages/StudentCalendarOfEvent";
+import TeacherLeaveApprovals from "./teacher/TeacherLeaveApprovals";  
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <Sidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <Sidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
@@ -98,24 +117,29 @@ const Layout = ({ children }) => {
 const TeacherLayout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <TeacherSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <TeacherSidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
   );
 };
+
 const AdminLayout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <AdminSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <AdminSidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
@@ -125,11 +149,13 @@ const AdminLayout = ({ children }) => {
 const PrincipalLayout = ({ children }) => {
   return (
     <>
-      <Header />
-      <div style={{ display: "flex", flex: 1, height: "100vh" }}>
-        <PrincipalSidebar style={{ flexShrink: 0 }} />
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
-          {children}
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <PrincipalSidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
     </>
@@ -169,10 +195,27 @@ const App = () => {
             }
           />
           <Route
+            path="/announcement"
+            element={
+              <Layout>
+                <AnnouncementPage />
+              </Layout>
+            }
+          />
+          <Route
             path="/school/assignment"
             element={
               <Layout>
                 <AssignmentPage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path="/school/calendar"
+            element={
+              <Layout>
+                <StudentCalendarOfEvent />
               </Layout>
             }
           />
@@ -259,7 +302,16 @@ const App = () => {
           />
 
           <Route
-            path="/notifications"
+            path="/chatbot"
+            element={
+              <Layout>
+                <ChatPage />
+                {/* Chatbot component can be added here */}
+              </Layout>
+            }
+          />
+          <Route
+            path="/notification"
             element={
               <Layout>
                 <NotificationPage />
@@ -292,7 +344,31 @@ const App = () => {
               </Layout>
             }
           />
+          <Route
+            path="/leave"
+            element={
+              <Layout>
+                <StudentLeaveApplication />
+              </Layout>
+            }
+          />
 
+          <Route
+            path="/study-module"
+            element={
+              <Layout>
+                <StudyModulePage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/documentview"
+            element={
+              <Layout>
+                <DocumentView />
+              </Layout>
+            }
+          />
           {/*  Teacher Dashboard & Pages (Uses TeacherSidebar) */}
           <Route
             path="/teacher-dashboard"
@@ -331,6 +407,15 @@ const App = () => {
             element={
               <TeacherLayout>
                 <TeacherProfile />
+              </TeacherLayout>
+            }
+          />
+
+           <Route
+            path="/teacher-student-leaves"
+            element={
+              <TeacherLayout>
+                <TeacherLeaveApprovals />
               </TeacherLayout>
             }
           />
@@ -399,6 +484,24 @@ const App = () => {
             }
           />
           <Route
+            path="/teacher-chatbot"
+            element={
+              <TeacherLayout>
+                <ChatPage />
+                {/* Chatbot component can be added here */}
+              </TeacherLayout>
+            }
+          />
+          <Route
+            path="/teacher/announcement"
+            element={
+              <TeacherLayout>
+                <AnnouncementPage />
+                {/* Chatbot component can be added here */}
+              </TeacherLayout>
+            }
+          />
+          <Route
             path="/teacher-academics"
             element={
               <TeacherLayout>
@@ -438,7 +541,22 @@ const App = () => {
               </TeacherLayout>
             }
           />
-
+          <Route
+            path="/teacher-levaveapplication"
+            element={
+              <TeacherLayout>
+                <LeaveApplication />
+              </TeacherLayout>
+            }
+          />
+          <Route
+            path="/view-assignments"
+            element={
+              <TeacherLayout>
+                <TeacherViewAssignment />
+              </TeacherLayout>
+            }
+          />
           {/*  Admin Dashboard & Pages (Uses Aminsidebar) */}
           <Route
             path="/admin-dashboard"
@@ -469,6 +587,14 @@ const App = () => {
             element={
               <AdminLayout>
                 <TeachersData />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/announcement"
+            element={
+              <AdminLayout>
+                <AnnouncementPage />
               </AdminLayout>
             }
           />
@@ -505,7 +631,7 @@ const App = () => {
             }
           />
           <Route
-            path="/admin-notification"
+            path="/admin-add-notification"
             element={
               <AdminLayout>
                 <AdminNotification />
@@ -528,6 +654,7 @@ const App = () => {
               </AdminLayout>
             }
           />
+
           <Route
             path="/admin-promotion"
             element={
@@ -577,6 +704,55 @@ const App = () => {
             }
           />
 
+          <Route
+            path="/admin-studymodule"
+            element={
+              <AdminLayout>
+                <StudyModuleUpload />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-Studentdocuments"
+            element={
+              <AdminLayout>
+                <StudentDocument />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-Studentdocumentview"
+            element={
+              <AdminLayout>
+                <StudentDocumentView />
+              </AdminLayout>
+            }
+          />
+
+          <Route
+            path="/admin-calendar"
+            element={
+              <AdminLayout>
+                <AdminCalendarPanel />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-Studentfee"
+            element={
+              <AdminLayout>
+                <StudentFeeDetails />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-notification"
+            element={
+              <AdminLayout>
+                <NotificationPage />
+              </AdminLayout>
+            }
+          />
           {/*  principal & Pages (Uses Aminsidebar) */}
           <Route
             path="/principal-dashboard"
@@ -603,10 +779,26 @@ const App = () => {
             }
           />
           <Route
+            path="/principal/announcement"
+            element={
+              <PrincipalLayout>
+                <AnnouncementPage />
+              </PrincipalLayout>
+            }
+          />
+          <Route
             path="/principal-studentinfo"
             element={
               <PrincipalLayout>
                 <StudentInfo />
+              </PrincipalLayout>
+            }
+          />
+          <Route
+            path="/profile/principalprofile"
+            element={
+              <PrincipalLayout>
+                <PrincipalProfile />
               </PrincipalLayout>
             }
           />
@@ -666,12 +858,32 @@ const App = () => {
               </PrincipalLayout>
             }
           />
-           <Route
+
+          <Route
+            path="/principal-attendance"
+            element={
+              <PrincipalLayout>
+                <AttendnaceReport />
+              </PrincipalLayout>
+            }
+          />
+          <Route
             path="/principal-notification"
             element={
-              <principalLayout>
+              <PrincipalLayout>
+                {" "}
+                {/* ✅ FIXED */}
                 <NotificationPage />
-              </principalLayout>
+              </PrincipalLayout>
+            }
+          />
+
+          <Route
+            path="/principal-leave-panel"
+            element={
+              <PrincipalLayout>
+                <PrincipalLeavePanel />
+              </PrincipalLayout>
             }
           />
         </Routes>

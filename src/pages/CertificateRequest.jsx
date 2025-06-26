@@ -3,7 +3,10 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import { submitCertificateRequest, getCertificateRequestsByAdmissionNo } from "../api/ClientApi";
+import {
+  submitCertificateRequest,
+  getCertificateRequestsByAdmissionNo,
+} from "../api/ClientApi";
 
 const CertificateRequest = () => {
   const [view, setView] = useState("new");
@@ -11,8 +14,6 @@ const CertificateRequest = () => {
   const [reason, setReason] = useState("");
   const [admission_no, setAdmissionNo] = useState("");
   const [certificateRequests, setCertificateRequests] = useState([]);
- 
-
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,7 +44,6 @@ const CertificateRequest = () => {
     }
   }, [view, admission_no]);
 
-  
   console.log("Certificate Requests:", certificateRequests);
   console.log("Admission No:", admission_no);
   const handleSubmit = async (e) => {
@@ -127,12 +127,22 @@ const CertificateRequest = () => {
                 required
               >
                 <option value="">Select Certificate</option>
-                <option value="Transfer Certificate">Transfer Certificate</option>
-                <option value="Bonafide Certificate">Bonafide Certificate</option>
-                <option value="Character Certificate">Character Certificate</option>
+                <option value="Transfer Certificate">
+                  Transfer Certificate
+                </option>
+                <option value="Bonafide Certificate">
+                  Bonafide Certificate
+                </option>
+                <option value="Character Certificate">
+                  Character Certificate
+                </option>
                 <option value="Study Certificate">Study Certificate</option>
-                <option value="Scholarship Certificate">Scholarship Certificate</option>
-                <option value="Migration Certificate">Migration Certificate</option>
+                <option value="Scholarship Certificate">
+                  Scholarship Certificate
+                </option>
+                <option value="Migration Certificate">
+                  Migration Certificate
+                </option>
               </select>
             </FormGroup>
 
@@ -166,7 +176,7 @@ const CertificateRequest = () => {
               </tr>
             </thead>
             <tbody>
-            {(certificateRequests || []).length === 0 ? (
+              {(certificateRequests || []).length === 0 ? (
                 <tr>
                   <td colSpan="3">No requests found.</td>
                 </tr>
@@ -184,7 +194,8 @@ const CertificateRequest = () => {
             </tbody>
           </StyledTable>
           <TableNote>
-            * Note: Please collect the hardcopy of the certificate from the school.
+            * Note: Please collect the hardcopy of the certificate from the
+            school.
           </TableNote>
         </StyledTableContainer>
       )}
@@ -194,27 +205,22 @@ const CertificateRequest = () => {
 
 export default CertificateRequest;
 
-
-
-
 const Container = styled.div`
-    font-family:Poppins;
+  font-family: Poppins;
   margin: auto;
-  padding: 20px;
+  padding: 0 15px;
   @media (max-width: 426px) {
-    max-height:400px;
-    overflow-y:auto;
+    max-height: 400px;
+    overflow-y: auto;
   }
 `;
-
-
 
 const RadioContainer = styled.div`
   margin: 20px 0;
   display: flex;
   gap: 20px;
-   @media (max-width: 426px) {
-    font-size:12px;
+  @media (max-width: 426px) {
+    font-size: 12px;
   }
 `;
 
@@ -222,8 +228,8 @@ const FormContainer = styled.form`
   background: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
-   @media (max-width: 426px) {
-    font-size:14px;
+  @media (max-width: 426px) {
+    font-size: 14px;
   }
 `;
 
@@ -238,29 +244,28 @@ const FormGroup = styled.div`
 
   textarea {
     width: 95%;
-    height:100px;
+    height: 100px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
   }
-    input,
-    select {
+  input,
+  select {
     width: 50%;
     padding: 10px;
-   
+
     border: 1px solid #ccc;
     border-radius: 5px;
   }
-
 
   textarea {
     resize: vertical;
   }
- @media (max-width: 426px) {
-   input,
+  @media (max-width: 426px) {
+    input,
     select {
-    width: 80%;
-}
+      width: 80%;
+    }
   }
 `;
 
@@ -282,7 +287,8 @@ const TableContainer = styled.div`
     border-collapse: collapse;
   }
 
-  th, td {
+  th,
+  td {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: center;
@@ -296,19 +302,20 @@ const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
-  height: 40px;
+  height: 80px;
   flex-shrink: 0;
 `;
 
 const Title = styled.h2`
   color: white;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   @media (max-width: 426px) {
-    font-size:14px;
+    font-size: 14px;
   }
 `;
 
@@ -324,17 +331,17 @@ const Divider = styled.div`
   margin: 0 10px;
 `;
 const ImageIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 const RowGroup = styled.div`
   display: flex;
-  
+
   margin-bottom: 15px;
   flex-wrap: wrap;
   @media (max-width: 426px) {
-    flex-direction:column;
+    flex-direction: column;
   }
 `;
 const StyledTableContainer = styled.div`
@@ -346,20 +353,21 @@ const StyledTable = styled.table`
   width: 100%;
   border-collapse: collapse;
 
-  th, td {
+  th,
+  td {
     padding: 12px;
     text-align: center;
     border-bottom: 1px solid #ccc;
   }
 
   th {
-    background-color:rgb(12, 16, 118);
+    background-color: rgb(12, 16, 118);
     font-weight: bold;
     color: white;
   }
-    th:first-child {
+  th:first-child {
     border-top-left-radius: 10px;
-     border-bottom-left-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
 
   th:last-child {
@@ -392,7 +400,7 @@ const StatusText = styled.span`
 const TableNote = styled.p`
   margin-top: 12px;
   font-size: 14px;
-  
-  color:rgb(132, 19, 4);
+
+  color: rgb(132, 19, 4);
   text-align: left;
 `;

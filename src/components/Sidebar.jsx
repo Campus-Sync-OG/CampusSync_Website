@@ -15,6 +15,9 @@ import { TbFileSpreadsheet } from "react-icons/tb";
 import { AiOutlineForm } from "react-icons/ai";
 import { FiImage } from "react-icons/fi";
 import { MdAssignment } from "react-icons/md";
+import { VscFileSubmodule } from "react-icons/vsc";
+import { IoDocumentAttachOutline } from "react-icons/io5";
+import { IoCalendarSharp } from "react-icons/io5";
 import logo from "../assets/images/logo.png";
 import { Link } from "react-router-dom";
 
@@ -48,8 +51,12 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease;
   overflow: hidden;
   position: relative;
-  height: 120vh;
+  height: 85vh; /* Ensure full viewport height */
   z-index: 1000;
+
+  @media (max-width: 1024px) {
+    height: 84vh;
+  }
 
   @media (max-width: 768px) {
     width: ${(props) => (props.expanded ? "200px" : "60px")};
@@ -75,13 +82,13 @@ const MobileBackButton = styled.div`
 `;
 
 const MobileMenu = styled.div`
- display: none;
+  display: none;
 
   @media (max-width: 768px) {
     display: block;
     position: absolute; // Changed from relative to fixed for better positioning
     top: 88px; // Changed from -110px to position properly
-    left: 58px;
+    left: 30px;
     padding: 15px; // Increased from 10px
     cursor: pointer;
     z-index: 1001;
@@ -92,6 +99,19 @@ const MobileMenu = styled.div`
       width: 40px; // Increase icon size
       height: 40px; // Increase icon size
     }
+  }
+
+  @media (max-width: 480px) {
+    top: 90px;
+    left: 12px;
+  }
+  @media (max-width: 380px) {
+    top: 90px;
+    left: 12px;
+  }
+  @media (max-width: 320px) {
+    top: 96px;
+    left: 12px;
   }
 `;
 
@@ -133,23 +153,39 @@ const MobileDropdown = styled.div`
 `;
 
 const SidebarContent = styled.div`
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; // Always left-aligned in mobile
+  align-items: flex-start;
   padding: 1rem;
   gap: 1rem;
-  white-space: nowrap;
-  min-height: 100%; // Ensure content fills available space
-  overflow: visible !important; // Override any hidden overflow
+  overflow-y: auto; /* Vertical scroll */
+  overflow-x: hidden;
   font-family: "Poppins", sans-serif;
 
-  // Mobile-specific adjustments
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #001a5c;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: grey;
+
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #002087;
+  }
+
   @media (max-width: 768px) {
     padding: 0.5rem;
     gap: 0.8rem;
   }
 `;
-
 const MenuToggle = styled.div`
   display: flex;
   flex-direction: column;
@@ -304,6 +340,15 @@ const Sidebar = () => {
                 <ChildArrow />
                 <Label expanded={true}>My Profile</Label>
               </SidebarItem>
+
+               <SidebarItem to="/documentview"  onClick={() => setMobileOpen(false)}
+              >
+              <Icon>
+               <IoDocumentAttachOutline />
+              </Icon>
+              <Label expanded={true}>My Documents</Label>
+            </SidebarItem>
+
               <SidebarItem
                 to="/profile/parent-info"
                 onClick={() => setMobileOpen(false)}
@@ -320,27 +365,6 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-            <SidebarItem to="/attendance" onClick={() => setMobileOpen(false)}>
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={true}>Attendance</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/school/assignment" expanded={expanded}>
-              <Icon>
-                <MdAssignment />
-              </Icon>
-              <Label expanded={true}>Assignment</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/academics" onClick={() => setMobileOpen(false)}>
-              <Icon>
-                <TbFileSpreadsheet />
-              </Icon>
-              <Label expanded={true}>Academics</Label>
-            </SidebarItem>
-
             <SidebarItem as="div" onClick={() => toggleDropdown("school")}>
               <Icon>
                 <LiaSchoolSolid />
@@ -354,7 +378,7 @@ const Sidebar = () => {
                 onClick={() => setMobileOpen(false)}
               >
                 <ChildArrow />
-                
+                 <Label expanded={true}>calender of event</Label>
               </SidebarItem>
               <SidebarItem
                 to="/school/circular"
@@ -362,6 +386,13 @@ const Sidebar = () => {
               >
                 <ChildArrow />
                 <Label expanded={true}>Circular</Label>
+              </SidebarItem>
+              <SidebarItem
+                to="/school/timetable"
+                onClick={() => setMobileOpen(false)}
+              >
+                <ChildArrow />
+                <Label expanded={true}>Time Table</Label>
               </SidebarItem>
               <SidebarItem
                 to="/school/certificate-request"
@@ -372,19 +403,30 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-            <SidebarItem to="/fees" onClick={() => setMobileOpen(false)}>
+            <SidebarItem to="/leave" onClick={() => setMobileOpen(false)}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <RiCalendarEventFill />
               </Icon>
-              <Label expanded={true}>Fees</Label>
+              <Label expanded={true}>Leave Application</Label>
             </SidebarItem>
 
-            <SidebarItem to="/achievement" onClick={() => setMobileOpen(false)}>
+            
+            <SidebarItem
+              to="/study-module"
+              onClick={() => setMobileOpen(false)}
+            >
               <Icon>
-                <SlBadge />
+               <VscFileSubmodule />
               </Icon>
-              <Label expanded={true}>Achievement</Label>
+              <Label expanded={true}>Study Module</Label>
             </SidebarItem>
+             <SidebarItem to="/documentview" expanded={expanded}>
+              <Icon>
+               <IoDocumentAttachOutline />
+              </Icon>
+              <Label expanded={true}>My Documents</Label>
+            </SidebarItem>
+
 
             <SidebarItem
               to="/forms-feedback"
@@ -394,6 +436,13 @@ const Sidebar = () => {
                 <AiOutlineForm />
               </Icon>
               <Label expanded={true}>Forms/Feedback</Label>
+            </SidebarItem>      
+
+            <SidebarItem to="/achievement" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <SlBadge />
+              </Icon>
+              <Label expanded={true}>Achievement</Label>
             </SidebarItem>
 
             <SidebarItem to="/gallery" onClick={() => setMobileOpen(false)}>
@@ -401,6 +450,35 @@ const Sidebar = () => {
                 <FiImage />
               </Icon>
               <Label expanded={true}>Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/school/assignment" expanded={expanded}>
+              <Icon>
+                <MdAssignment />
+              </Icon>
+              <Label expanded={true}>Assignment</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/fees" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={true}>Fees</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/academics" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>Academics</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/attendance" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <IoCalendarSharp />
+
+              </Icon>
+              <Label expanded={true}>Attendance</Label>
             </SidebarItem>
           </SidebarContent>
         </MobileDropdown>
@@ -432,10 +510,6 @@ const Sidebar = () => {
               {expanded && <DropdownIcon open={dropdown.profile} />}
             </SidebarItem>
             <Dropdown show={dropdown.profile} expanded={expanded}>
-              <SidebarItem to="/profile/my-profile" expanded={expanded}>
-                <ChildArrow />
-                <Label expanded={expanded}>My Profile</Label>
-              </SidebarItem>
               <SidebarItem to="/profile/parent-info" expanded={expanded}>
                 <ChildArrow />
                 <Label expanded={expanded}>Parent Info</Label>
@@ -445,27 +519,6 @@ const Sidebar = () => {
                 <Label expanded={expanded}>School Info</Label>
               </SidebarItem>
             </Dropdown>
-
-            <SidebarItem to="/attendance" expanded={expanded}>
-              <Icon>
-                <RiCalendarEventFill />
-              </Icon>
-              <Label expanded={expanded}>Attendance</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/school/assignment" expanded={expanded}>
-              <Icon>
-                <MdAssignment />
-              </Icon>
-              <Label expanded={expanded}>Assignment</Label>
-            </SidebarItem>
-
-            <SidebarItem to="/academics" expanded={expanded}>
-              <Icon>
-                <TbFileSpreadsheet />
-              </Icon>
-              <Label expanded={expanded}>Academics</Label>
-            </SidebarItem>
 
             {/* My School Dropdown */}
             <SidebarItem
@@ -498,19 +551,22 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-            <SidebarItem to="/fees" expanded={expanded}>
+                        <SidebarItem to="/leave" expanded={expanded}>
               <Icon>
-                <HiDocumentCurrencyRupee />
+                <RiCalendarEventFill />
               </Icon>
-              <Label expanded={expanded}>Fees</Label>
+              <Label expanded={expanded}>Leave Application</Label>
             </SidebarItem>
 
-            <SidebarItem to="/achievement" expanded={expanded}>
+        
+
+            <SidebarItem to="/study-module" expanded={expanded}>
               <Icon>
-                <SlBadge />
+             <VscFileSubmodule />
               </Icon>
-              <Label expanded={expanded}>Achievement</Label>
+              <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
+          
 
             <SidebarItem to="/forms-feedback" expanded={expanded}>
               <Icon>
@@ -519,11 +575,54 @@ const Sidebar = () => {
               <Label expanded={expanded}>Forms/Feedback</Label>
             </SidebarItem>
 
+              <SidebarItem to="/achievement" expanded={expanded}>
+              <Icon>
+                <SlBadge />
+              </Icon>
+              <Label expanded={expanded}>Achievement</Label>
+                         </SidebarItem>
+            <SidebarItem to="/documentview" expanded={expanded}>
+              <Icon>
+                <RiCalendarEventFill />
+              </Icon>
+              <Label expanded={expanded}>My Documents </Label>
+            </SidebarItem>
+
+
             <SidebarItem to="/gallery" expanded={expanded}>
               <Icon>
                 <FiImage />
               </Icon>
               <Label expanded={expanded}>Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/school/assignment" expanded={expanded}>
+              <Icon>
+                <MdAssignment />
+              </Icon>
+              <Label expanded={expanded}>Assignment</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/fees" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Fees</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/academics" expanded={expanded}>
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={expanded}>Academics</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/attendance" expanded={expanded}>
+              <Icon>
+                <IoCalendarSharp />
+
+              </Icon>
+              <Label expanded={expanded}>Attendance</Label>
             </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>

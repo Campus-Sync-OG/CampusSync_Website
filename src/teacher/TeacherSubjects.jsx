@@ -6,23 +6,23 @@ import { useNavigate } from "react-router-dom";
 import { fetchAssignedSubjects } from "../api/ClientApi";
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  border-radius: 15px;
-  padding: 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  border-radius: 10px;
+  padding: 1px 20px;
   color: white;
-  margin-bottom: 30px;
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconGroup = styled.div`

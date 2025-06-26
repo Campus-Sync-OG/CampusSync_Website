@@ -48,8 +48,8 @@ const ContentContainer = styled.div`
 `;
 
 const LogoSection = styled.div`
-  position:relative;
-  top:25px;
+  position: relative;
+  top: 25px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,30 +61,39 @@ const LogoSection = styled.div`
     max-width: 300px;
   }
 
+  @media (max-width: 1366px) {
+    img {
+      position: relative;
+      bottom: 15px;
+      width: 15vw;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    position: relative;
+    bottom: -3rem;
+  }
+
   @media (max-width: 768px) {
     img {
-      position:relative;
-      bottom:30px;
+      position: relative;
+      bottom: 30px;
       width: 30vw;
     }
   }
-   @media(max-width:344px){
-      img{
-        position:relative;
-         bottom:25px;
-       
-      }
-   } 
- @media (max-width: 1024px) {
-        position: relative;
-        bottom: -3rem;
-  }
+
   @media (max-width: 480px) {
     img {
       width: 40vw;
     }
   }
-    
+
+  @media (max-width: 344px) {
+    img {
+      position: relative;
+      bottom: 25px;
+    }
+  }
 `;
 
 const TextSection = styled.div`
@@ -102,29 +111,33 @@ const TextSection = styled.div`
     position: relative;
     bottom: -1rem;
   }
-     @media (max-width: 1024px) {
-       position: relative;
-       bottom: 0.5rem;
+
+  @media (max-width: 1366px) {
+    position: relative;
+    bottom: 1.2rem;
   }
-        @media (max-width: 320px) {
-        position: relative;
-        
+
+  @media (max-width: 1024px) {
+    position: relative;
+    bottom: 0.5rem;
   }
-    @media (max-width: 1366px) {
-        position: relative;
-        bottom: -2rem;
-  }
-   @media(max-width:768px){
-    h1{
-        bottom:30px;
+
+  @media (max-width: 768px) {
+    h1 {
+      bottom: 30px;
     }
   }
-  @media(max-width:344px){
-     h1{
-        font-size:1.7rem;
-        bottom:6px;
-     }
-  }  
+
+  @media (max-width: 344px) {
+    h1 {
+      font-size: 1.7rem;
+      bottom: 6px;
+    }
+  }
+
+  @media (max-width: 320px) {
+    position: relative;
+  }
 `;
 
 const SubTextSection = styled.div`
@@ -136,23 +149,29 @@ const SubTextSection = styled.div`
     position: relative;
     top: 1rem;
     letter-spacing: 0.1rem;
-    
-    
   }
-  @media(max-width:768px){
-    p{
-       top:-4.5rem;
+
+  @media (max-width: 1366px) {
+    p {
+      top: -0.8rem;
     }
   }
-   @media(max-width:344px){
-     p{
-         position:relative;
-         top:-59px;
-     }
-  }   
- @media (max-width: 1024px) {
-        position: relative;
-        bottom: -3rem;
+
+  @media (max-width: 1024px) {
+    position: relative;
+    bottom: -3rem;
+  }
+
+  @media (max-width: 768px) {
+    p {
+      top: -4.5rem;
+    }
+  }
+  @media (max-width: 344px) {
+    p {
+      position: relative;
+      top: -59px;
+    }
   }
 `;
 
@@ -160,17 +179,17 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 1rem;
-  @media (max-width: 768px) {
-  position: relative;
-     bottom: 3rem;
-     left: 0.1rem;
-}
- @media(max-width:344px){
-      position:relative;
-      top:-7px; 
-      left:-7px;  
-   }
 
+  @media (max-width: 768px) {
+    position: relative;
+    bottom: 3rem;
+    left: 0.1rem;
+  }
+  @media (max-width: 344px) {
+    position: relative;
+    top: -7px;
+    left: -7px;
+  }
 `;
 
 const DotNavigation = styled.div`
@@ -178,7 +197,7 @@ const DotNavigation = styled.div`
   justify-content: center;
   gap: 1rem;
   position: relative;
-  bottom:6rem;
+  bottom: 6rem;
   left: 2%;
 
   .dot {
@@ -196,25 +215,34 @@ const DotNavigation = styled.div`
     }
   }
 
+  @media (max-width: 1366px) {
+    gap: 0.5rem;
+    position: relative;
+    top: -7rem;
+  }
+
+  @media (max-width: 1024px) {
+    gap: 0.5rem;
+    position: relative;
+    top: -6rem;
+  }
+
   @media (max-width: 768px) {
-    position:relative;
+    position: relative;
     gap: 0.5rem;
   }
-     @media (max-width: 1024px) {
-       gap: 0.5rem;
-       position: relative;
-       top: -6rem; 
+
+  @media (max-width: 344px) {
+    position: relative;
+    top: -70px;
   }
+
   @media (max-width: 320px) {
-        position: relative;
-        top: -9rem;
+    position: relative;
+    top: -9rem;
   }
-  @media(max-width:344px){
-     position:relative;
-     top:-70px;
-  }      
 `;
- const Button = styled.button`
+const Button = styled.button`
   background-color: #df0043;
   color: white;
   font-weight: bold;
@@ -232,25 +260,23 @@ const DotNavigation = styled.div`
     background-color: #6a1b9a;
   }
 
+  @media (max-width: 1366px) {
+    padding: 0.6rem 1.5rem;
+    position: relative;
+    bottom: 2rem;
+  }
+
   @media (max-width: 768px) {
     padding: 0.6rem 1.5rem;
   }
 
-   @media(max-width:344px){
-      position:relative;
-      top:50px;   
-   }
-
-   @media (max-width: 1366px) {
-      padding: 0.6rem 1.5rem;
-      position: relative;
-      top: 1rem;
+  @media (max-width: 344px) {
+    position: relative;
+    top: 50px;
   }
 `;
 
-
 const LandingPage = () => {
-
   const navigate = useNavigate();
 
   const handleButtonClick = () => {
@@ -290,14 +316,13 @@ const LandingPage = () => {
         <ButtonContainer>
           <Button onClick={handleButtonClick}>Click Here</Button>
         </ButtonContainer>
-      
 
-      <DotNavigation>
-        <div className="dot active"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-      </DotNavigation>
+        <DotNavigation>
+          <div className="dot active"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </DotNavigation>
       </ContentContainer>
     </LandingContainer>
   );

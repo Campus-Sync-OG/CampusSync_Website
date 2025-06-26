@@ -6,7 +6,7 @@ import back from "../assets/images/back.png";
 import { postAnnouncement } from '../api/ClientApi';
 
 const Container = styled.div`
-  padding: 2rem;
+  padding: 0.5rem;
   font-family: Poppins;
 `;
 
@@ -14,8 +14,8 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 25px 20px;
   border-radius: 15px;
   color: white;
   margin-bottom: 30px;

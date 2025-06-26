@@ -1,9 +1,9 @@
 // circular.jsx
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import homeIcon from "../assets/images/home.png"; // adjust path if needed
-import backIcon from "../assets/images/back.png"; 
+import backIcon from "../assets/images/back.png";
 import { fetchCircularsByAdmissionNo } from "../api/ClientApi";
 
 const CircularPage = () => {
@@ -11,7 +11,7 @@ const CircularPage = () => {
   const [circulars, setCirculars] = useState([]);
 
   // ✅ Get admission_no from localStorage (from stored student data)
-  const admission_no = JSON.parse(localStorage.getItem('user'))?.unique_id;
+  const admission_no = JSON.parse(localStorage.getItem("user"))?.unique_id;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +20,9 @@ const CircularPage = () => {
           const data = await fetchCircularsByAdmissionNo(admission_no);
           setCirculars(data);
         } else {
-          console.warn("No admission number (unique_id) found in localStorage.");
+          console.warn(
+            "No admission number (unique_id) found in localStorage."
+          );
         }
       } catch (err) {
         console.error("Error fetching circulars:", err);
@@ -30,7 +32,7 @@ const CircularPage = () => {
 
     fetchData();
   }, [admission_no]);
-  console.log('admission_no:', admission_no);
+  console.log("admission_no:", admission_no);
 
   const handleHomeClick = () => {
     navigate("/dashboard");
@@ -74,7 +76,11 @@ const CircularPage = () => {
               </TableCell>
               <TableCell>
                 {item.attachment_url ? (
-                  <DownloadLink href={item.attachment_url} target="_blank" download>
+                  <DownloadLink
+                    href={item.attachment_url}
+                    target="_blank"
+                    download
+                  >
                     Download
                   </DownloadLink>
                 ) : (
@@ -93,7 +99,7 @@ export default CircularPage;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 20px;
+  padding: 0 15px;
   width: 100%;
   margin: auto;
   max-height: 90vh;
@@ -104,19 +110,19 @@ const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 10px 20px;
   border-radius: 10px;
   margin-bottom: 20px;
-  height: 40px;
+  height: 55px;
   width: 95%;
 `;
 
 const Title = styled.h2`
   color: white;
-  font-size: 25px;
-  font-weight: bold;
-  font-family: Poppins;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   @media (max-width: 426px) {
     font-size: 20px;
   }
@@ -135,8 +141,8 @@ const Divider = styled.div`
 `;
 
 const ImageIcon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
 `;
 

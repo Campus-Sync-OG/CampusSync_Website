@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import bgImage from "../assets/images/bg.jpeg";
 import profileImage from "../assets/images/profile.png";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 import { Link } from "react-router-dom";
-import { getSchoolInfoById } from '../api/ClientApi'; // ✅ import the correct function
+import { useNavigate } from "react-router-dom";
+import { getSchoolInfoById } from "../api/ClientApi"; // ✅ import the correct function
 
 const SchoolPage = () => {
+  const navigate = useNavigate();
   const [schoolInfo, setSchoolInfo] = useState(null);
   const schoolId = 1; // 🔁 Replace with dynamic logic if needed
 
@@ -28,9 +30,13 @@ const SchoolPage = () => {
     <Container>
       <Header>
         <SchoolImage src={bgImage} alt="school" />
-        <Link to="/dashboard">
-          <BackIcon src={backIcon} alt="Back to dashboard" />
-        </Link>
+
+        <BackIcon
+          onClick={() => navigate(-1)}
+          src={backIcon}
+          alt="Back to previous page"
+        />
+
         <Logo src={profileImage} alt="logo" />
         <SchoolName>{schoolInfo?.school_name || "Loading..."}</SchoolName>
         <Link to="/dashboard">
@@ -48,6 +54,41 @@ const SchoolPage = () => {
           <InfoRow><InfoLabel>Website</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.website}</InfoValue></InfoRow>
           <InfoRow><InfoLabel>Established Year</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.established_year}</InfoValue></InfoRow>
           <InfoRow><InfoLabel>Affiliation</InfoLabel><Colon>:</Colon><InfoValue>{schoolInfo?.affiliation}</InfoValue></InfoRow>
+          <InfoRow>
+            <InfoLabel>School Name</InfoLabel>
+            <Colon>:</Colon>
+            <InfoValue>{schoolInfo?.school_name}</InfoValue>
+          </InfoRow>
+          <InfoRow>
+            <InfoLabel>Address</InfoLabel>
+            <Colon>:</Colon>
+            <InfoValue>{schoolInfo?.address}</InfoValue>
+          </InfoRow>
+          <InfoRow>
+            <InfoLabel>Phone Number</InfoLabel>
+            <Colon>:</Colon>
+            <InfoValue>{schoolInfo?.phone}</InfoValue>
+          </InfoRow>
+          <InfoRow>
+            <InfoLabel>Email</InfoLabel>
+            <Colon>:</Colon>
+            <InfoValue>{schoolInfo?.email}</InfoValue>
+          </InfoRow>
+          <InfoRow>
+            <InfoLabel>Website</InfoLabel>
+            <Colon>:</Colon>
+            <InfoValue>{schoolInfo?.website}</InfoValue>
+          </InfoRow>
+          <InfoRow>
+            <InfoLabel>Established Year</InfoLabel>
+            <Colon>:</Colon>
+            <InfoValue>{schoolInfo?.established_year}</InfoValue>
+          </InfoRow>
+          <InfoRow>
+            <InfoLabel>Affiliation</InfoLabel>
+            <Colon>:</Colon>
+            <InfoValue>{schoolInfo?.affiliation}</InfoValue>
+          </InfoRow>
         </InfoContainer>
       </Content>
     </Container>
@@ -56,12 +97,10 @@ const SchoolPage = () => {
 
 export default SchoolPage;
 
-
-
 /* ───────────────────────── styled-components ───────────────────────── */
 
 const Container = styled.div`
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
 `;
 
 const Header = styled.div`

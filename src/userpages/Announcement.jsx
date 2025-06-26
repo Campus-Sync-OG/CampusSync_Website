@@ -5,13 +5,12 @@ import backIcon from "../assets/images/back.png";
 import { useNavigate } from "react-router-dom";
 
 const Container = styled.div`
-  padding: 20px;
-  font-family: sans-serif;
+  padding: 0 15px;
 `;
 
 const Header = styled.div`
-  background: linear-gradient(to right, #002e9f, #cc027c);
-  padding: 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 5px 20px;
   color: white;
   border-radius: 10px;
   display: flex;
@@ -20,21 +19,22 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 22px;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
 `;
 
 const IconBtn = styled.img`
   height: 30px;
   width: 30px;
   cursor: pointer;
-  margin-left: 15px;
 `;
 
 const Divider = styled.div`
-  width: 1px;
+  width: 3px;
   height: 30px;
   background-color: white;
-  margin: 0 10px;
+  margin: 0 12px;
 `;
 
 const SectionTitle = styled.h2`
@@ -178,13 +178,15 @@ const Announcement = () => {
       <Header>
         <Title>Announcement</Title>
         <div style={{ display: "flex", alignItems: "center" }}>
-
-          <div onClick={() => navigate("/admin-dashboard")} style={{ cursor: "pointer" }}>
+          <div
+            onClick={() => navigate("/admin-dashboard")}
+            style={{ cursor: "pointer" }}
+          >
             <IconBtn src={homeIcon} alt="Home" title="Home" />
           </div>
-          
+
           <Divider />
-      
+
           <div onClick={() => navigate(-1)} style={{ cursor: "pointer" }}>
             <IconBtn src={backIcon} alt="Back" title="Back" />
           </div>

@@ -1,7 +1,7 @@
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { fetchAchievements } from "../api/ClientApi";
@@ -10,17 +10,17 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(90deg, #002087, #002087b0, #df0043);
-  padding: 18px 20px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 20px 20px;
   border-radius: 10px;
   color: white;
-  margin-left: 10px;
-  margin-bottom: 10px;
+  
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
   margin: 0;
 `;
 
@@ -47,8 +47,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 20px;
-  background: white;
+  padding: 0 10px;
 `;
 
 const Table = styled.table`
@@ -88,19 +87,25 @@ const Note = styled.p`
   margin-top: 10px;
 `;
 
-
-
 const TeacherAchievements = () => {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+  const [activeCertificate, setActiveCertificate] = useState(null);
+
+  const navigate = useNavigate();
+
+  const getEmp = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.unique_id || "";
+  };
+
+  const emp_id = getEmp();
 
   useEffect(() => {
-    // Fetch data from the backend API
-    fetchAchievements()
+    fetchAchievements(emp_id)
       .then((data) => {
-        setAchievements(data); // Set the achievements data from the response
+        setAchievements(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -108,8 +113,8 @@ const TeacherAchievements = () => {
         setError("Failed to fetch achievements");
         setLoading(false);
       });
-  }, []); 
-    const navigate = useNavigate();
+  }, [emp_id]);
+
   return (
     <Container>
       <Header>
@@ -121,50 +126,68 @@ const TeacherAchievements = () => {
             </Icons>
           </Link>
           <Divider />
-          <Link to="/teacher-dashboard">
-          <Icons onClick={() => navigate(-1)}> {/* Navigate to the previous page */}
-          <img src={back} alt="back" />
-        </Icons>
-          </Link>
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
         </Wrapper>
       </Header>
 
-      <h3>Student achievements information</h3>
+      <h3>Student Achievements Information</h3>
 
-      <Table>
-        <thead>
-          <tr>
-            <th>Sl no</th>
-            <th> Admission_no</th>
-            <th>Student Name</th>
-            <th>Class</th>
-            <th>Section</th>
-            <th>Certificate</th>
-            <th>Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {achievements.map((achievement, index) => (
-            <tr key={achievement.id}>
-              <td>{index + 1}</td>
-              <td>{achievement.admission_no}</td>
-              <td>{achievement.student?.student_name || 'N/A'}</td>
-              <td>{achievement.className}</td>
-              <td>
-                <a href="#">{achievement.section}</a>
-              </td>
-              <td>
-                <a href="#">{achievement.Certificateurl}</a>
-              </td>
-              <td>{achievement.description}</td>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : (
+        <Table>
+          <thead>
+            <tr>
+              <th>Sl No</th>
+              <th>Admission No</th>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Section</th>
+              <th>Certificate</th>
+              <th>Description</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {achievements.map((achievement, index) => (
+              <tr key={achievement.id}>
+                <td>{index + 1}</td>
+                <td>{achievement.admission_no}</td>
+                <td>{achievement.student_name || "N/A"}</td>
+                <td>{achievement.class || "N/A"}</td>
+                <td>{achievement.section || "N/A"}</td>
+                <td>
+                  <button onClick={() => setActiveCertificate(achievement.Certificateurl)}>
+                    View
+                  </button>
+                </td>
+                <td>{achievement.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
 
-      <Note>
-       {/* incase if you want to add a note */}
-      </Note>
+      {activeCertificate && (
+        <div style={{ marginTop: "20px" }}>
+          <h4>Certificate Preview</h4>
+          <iframe
+            src={`https://docs.google.com/gview?url=${encodeURIComponent(activeCertificate)}&embedded=true`}
+            width="100%"
+            height="600px"
+            title="Certificate Viewer"
+            style={{ border: "1px solid #ccc", borderRadius: "8px" }}
+          />
+          <div style={{ marginTop: "10px" }}>
+            <button onClick={() => setActiveCertificate(null)}>Close Preview</button>
+          </div>
+        </div>
+      )}
+
+      <Note>{/* Optional note content here */}</Note>
     </Container>
   );
 };

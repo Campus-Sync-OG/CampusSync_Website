@@ -3,7 +3,11 @@ import styled from "styled-components";
 import homeIcon from "../assets/images/home.png"; // Replace with actual path
 import backIcon from "../assets/images/back.png"; // Replace with actual path
 import { useNavigate } from "react-router-dom";
-import { getAllClassSections, getAllSubjects, submitAssignment } from "../api/ClientApi";
+import {
+  getAllClassSections,
+  getAllSubjects,
+  submitAssignment,
+} from "../api/ClientApi";
 const AssignmentPage = () => {
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
@@ -16,7 +20,7 @@ const AssignmentPage = () => {
   const [classSections, setClassSections] = useState([]);
   const [selectedClassSection, setSelectedClassSection] = useState([]);
   const [subjectList, setSelectedSubjects] = useState([]);
-
+  
 
   useEffect(() => {
     const fetchClassSections = async () => {
@@ -27,11 +31,13 @@ const AssignmentPage = () => {
         setClassSections(data);
 
         // Extract unique class names
-        const uniqueClasses = Array.from(new Set(data.map(item => item.className)))
-          .map(cls => ({ className: cls }));
+        const uniqueClasses = Array.from(
+          new Set(data.map((item) => item.className))
+        ).map((cls) => ({ className: cls }));
 
-        const uniqueSections = Array.from(new Set(data.map(item => item.section_name)))
-          .map(sec => ({ section_name: sec }));
+        const uniqueSections = Array.from(
+          new Set(data.map((item) => item.section_name))
+        ).map((sec) => ({ section_name: sec }));
 
         setClassSections(uniqueClasses); // reuse this as class list
         setSelectedClassSection(uniqueSections);
@@ -54,7 +60,14 @@ const AssignmentPage = () => {
   }, []);
 
   const handleSubmit = async () => {
-    if (!selectedClass || !selectedSection || !selectedSubject || !date || !assignmentTitle || !file) {
+    if (
+      !selectedClass ||
+      !selectedSection ||
+      !selectedSubject ||
+      !date ||
+      !assignmentTitle ||
+      !file
+    ) {
       alert("All fields are required before submitting.");
       return;
     }
@@ -67,7 +80,7 @@ const AssignmentPage = () => {
         alert("Employee ID not found. Please login again.");
         return;
       }
-      console.log('Logged in employee ID:', emp_id);
+      console.log("Logged in employee ID:", emp_id);
 
       const formData = new FormData();
       formData.append("subjects", selectedSubject);
@@ -79,14 +92,14 @@ const AssignmentPage = () => {
       formData.append("emp_id", emp_id);
 
       // Log the FormData object to check its content
-      console.log('Form Data:', {
+      console.log("Form Data:", {
         subjects: selectedSubject,
         title: assignmentTitle,
         Date: date,
         class_name: selectedClass,
         section: selectedSection,
         attachment: file,
-        emp_id
+        emp_id,
       });
 
       // Check if formData is being populated properly
@@ -97,14 +110,14 @@ const AssignmentPage = () => {
       await submitAssignment(emp_id, formData); // pass empId to API
       alert("Assignment submitted successfully!");
       resetFields(); // optional: clear the form
-      console.log('Form Data:', {
+      console.log("Form Data:", {
         subjects: selectedSubject,
         title: assignmentTitle,
         Date: date,
         class_name: selectedClass,
         section: selectedSection,
         attachment: file,
-        emp_id
+        emp_id,
       });
     } catch (err) {
       // Log the error received from the backend
@@ -113,17 +126,17 @@ const AssignmentPage = () => {
       // If the error is an Axios error, print the response details
       if (err.response) {
         console.error("Backend Response:", err.response.data);
-        alert(`Submission failed: ${err.response.data.message || 'Unknown error'}`);
+        alert(
+          `Submission failed: ${err.response.data.message || "Unknown error"}`
+        );
       } else {
         alert("Submission failed. Please try again.");
       }
     }
   };
 
-
   // Function to submit and reset fields for new entry
   const handleAddMore = () => {
-
     resetFields(); // Clear the fields
   };
 
@@ -137,6 +150,10 @@ const AssignmentPage = () => {
     setAssignmentTitle("");
     setFile(null);
   };
+  const handleViewAssignmentsClick = () => {
+  navigate("/view-assignments");
+};
+
   const navigate = useNavigate(); // Hook for navigation
 
   const handleHomeClick = () => {
@@ -160,26 +177,39 @@ const AssignmentPage = () => {
       <h3>Add Assignment</h3>
       {/* First Row - 4 Dropdowns */}
       <DropdownContainer>
-        <Select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
+        <Select
+          value={selectedClass}
+          onChange={(e) => setSelectedClass(e.target.value)}
+        >
           <option value="">Select Class</option>
           {classSections.map((cls, index) => (
-            <option key={index} value={cls.className}>{cls.className}</option>
+            <option key={index} value={cls.className}>
+              {cls.className}
+            </option>
           ))}
         </Select>
 
-
-        <Select value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
+        <Select
+          value={selectedSection}
+          onChange={(e) => setSelectedSection(e.target.value)}
+        >
           <option value="">Select Section</option>
           {selectedClassSection.map((sec, index) => (
-            <option key={sec.id} value={sec.section_name}>{sec.section_name}</option>
+            <option key={sec.id} value={sec.section_name}>
+              {sec.section_name}
+            </option>
           ))}
-
         </Select>
 
-        <Select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+        <Select
+          value={selectedSubject}
+          onChange={(e) => setSelectedSubject(e.target.value)}
+        >
           <option value="">Select Subject</option>
           {subjectList.map((sub, index) => (
-            <option key={index} value={sub}>{sub}</option>
+            <option key={index} value={sub}>
+              {sub}
+            </option>
           ))}
         </Select>
       </DropdownContainer>
@@ -193,11 +223,14 @@ const AssignmentPage = () => {
           onChange={(e) => {
             setDate(e.target.value); // already in correct format
           }}
-          
         />
-        
 
-        <Input type="text" placeholder="Assignment Title" value={assignmentTitle} onChange={(e) => setAssignmentTitle(e.target.value)} />
+        <Input
+          type="text"
+          placeholder="Assignment Title"
+          value={assignmentTitle}
+          onChange={(e) => setAssignmentTitle(e.target.value)}
+        />
         <FileInput type="file" onChange={(e) => setFile(e.target.files[0])} />
       </InputContainer>
 
@@ -205,6 +238,8 @@ const AssignmentPage = () => {
       <ButtonContainer>
         <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
         <AddMoreButton onClick={handleAddMore}>Add More</AddMoreButton>
+        <ViewButton onClick={handleViewAssignmentsClick}>View Student Assignments</ViewButton>
+
       </ButtonContainer>
     </PageContainer>
   );
@@ -214,41 +249,38 @@ export default AssignmentPage;
 
 // Styled Components
 const PageContainer = styled.div`
-  width: 95%;
-  margin: auto;
-  padding: 10px;
-  h3{
-  color:#002087;
-  font-weight: 100;
+
+  padding: 0 10px;
+  h3 {
+    color: #002087;
+    font-weight: 100;
   }
-  font-family:Poppins;
+  font-family: Poppins;
   @media (max-width: 426px) {
-    max-height:90vh; 
-    overflow-y:auto;   
-    font-size:14px;
-    }
+    max-height: 90vh;
+    overflow-y: auto;
+    font-size: 14px;
+  }
 `;
 
 const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg, #002087, #d9534f);
-  padding: 10px;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 10px;
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  height:40px;
+  font-family: "Poppins";
 `;
 
 const Title = styled.h2`
   color: white;
-  font-size: 25px;
-  font-weight: bold;
-   @media (max-width: 426px) {
-    
-    font-size:20px;
-    }
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
+  @media (max-width: 426px) {
+    font-size: 20px;
+  }
 `;
 
 const IconsContainer = styled.div`
@@ -257,8 +289,8 @@ const IconsContainer = styled.div`
 `;
 
 const Icon = styled.img`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   transition: transform 0.2s;
   &:hover {
@@ -277,14 +309,14 @@ const DropdownContainer = styled.div`
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
-  
- @media (max-width: 768px) {
+
+  @media (max-width: 768px) {
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two columns */
     gap: 10px;
   }
   @media (max-width: 426px) {
-     grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -300,15 +332,15 @@ const InputContainer = styled.div`
   display: flex;
   gap: 15px;
   margin-bottom: 20px;
-  margin-top:80px;
- @media (max-width: 768px) {
-    margin-top:15px;
+  margin-top: 80px;
+  @media (max-width: 768px) {
+    margin-top: 15px;
     display: grid;
     grid-template-columns: 1fr 1fr; /* Two columns */
     gap: 10px;
   }
   @media (max-width: 426px) {
-   grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -331,9 +363,9 @@ const FileInput = styled.input`
 const ButtonContainer = styled.div`
   display: flex;
   gap: 15px;
-   @media (max-width: 426px) {
-    gap:150px;
-    }
+  @media (max-width: 426px) {
+    gap: 150px;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -361,3 +393,19 @@ const AddMoreButton = styled.button`
     background-color: #00166b;
   }
 `;
+
+const ViewButton = styled.button`
+  background-color:  #002087;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color:  #00166b;
+  }
+`;
+
