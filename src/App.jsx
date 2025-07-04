@@ -94,7 +94,7 @@ import DocumentView from "./pages/DocumentView";
 import StudentFeeDetails from "./userpages/StudentFeeDetails";
 import AdminCalendarPanel from "./userpages/AdminCalendarPanel";
 import StudentCalendarOfEvent from "./pages/StudentCalendarOfEvent";
-import TeacherLeaveApprovals from "./teacher/TeacherLeaveApprovals";  
+import TeacherLeaveApprovals from "./teacher/TeacherLeaveApprovals";
 import BusLocationDisplay from "./pages/BusLocationDisplay";
 import BusMaps from "./pages/BusMaps";
 import AddDriver from "./userpages/AddDriver";
@@ -365,6 +365,10 @@ const App = () => {
             element={
               <Layout>
                 <StudyModulePage />
+              </Layout>
+            }
+          />
+
           <Route
             path="/BusMap"
             element={
@@ -379,9 +383,9 @@ const App = () => {
               <Layout>
                 <DocumentView />
               </Layout>
-             }
-             />
-             <Route
+            }
+          />
+          <Route
             path="/BusLocation"
             element={
               <Layout>
@@ -439,7 +443,7 @@ const App = () => {
             }
           />
 
-           <Route
+          <Route
             path="/teacher-student-leaves"
             element={
               <TeacherLayout>
@@ -735,7 +739,7 @@ const App = () => {
             path="/transport/addbus"
             element={
               <AdminLayout>
-                <AddBus/>
+                <AddBus />
               </AdminLayout>
             }
           />

@@ -271,6 +271,7 @@ const MobileBackdrop = styled.div`
   display: ${({ open }) => (open ? "block" : "none")};
 `;
 
+
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(window.innerWidth > 768);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -341,13 +342,13 @@ const Sidebar = () => {
                 <Label expanded={true}>My Profile</Label>
               </SidebarItem>
 
-               <SidebarItem to="/documentview"  onClick={() => setMobileOpen(false)}
+              <SidebarItem to="/documentview" onClick={() => setMobileOpen(false)}
               >
-              <Icon>
-               <IoDocumentAttachOutline />
-              </Icon>
-              <Label expanded={true}>My Documents</Label>
-            </SidebarItem>
+                <Icon>
+                  <IoDocumentAttachOutline />
+                </Icon>
+                <Label expanded={true}>My Documents</Label>
+              </SidebarItem>
 
               <SidebarItem
                 to="/profile/parent-info"
@@ -378,7 +379,7 @@ const Sidebar = () => {
                 onClick={() => setMobileOpen(false)}
               >
                 <ChildArrow />
-                 <Label expanded={true}>calender of event</Label>
+                <Label expanded={true}>calender of event</Label>
               </SidebarItem>
               <SidebarItem
                 to="/school/circular"
@@ -410,19 +411,19 @@ const Sidebar = () => {
               <Label expanded={true}>Leave Application</Label>
             </SidebarItem>
 
-            
+
             <SidebarItem
               to="/study-module"
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-               <VscFileSubmodule />
+                <VscFileSubmodule />
               </Icon>
               <Label expanded={true}>Study Module</Label>
             </SidebarItem>
-             <SidebarItem to="/documentview" expanded={expanded}>
+            <SidebarItem to="/documentview" expanded={expanded}>
               <Icon>
-               <IoDocumentAttachOutline />
+                <IoDocumentAttachOutline />
               </Icon>
               <Label expanded={true}>My Documents</Label>
             </SidebarItem>
@@ -436,7 +437,7 @@ const Sidebar = () => {
                 <AiOutlineForm />
               </Icon>
               <Label expanded={true}>Forms/Feedback</Label>
-            </SidebarItem>      
+            </SidebarItem>
 
             <SidebarItem to="/achievement" onClick={() => setMobileOpen(false)}>
               <Icon>
@@ -551,22 +552,22 @@ const Sidebar = () => {
               </SidebarItem>
             </Dropdown>
 
-                        <SidebarItem to="/leave" expanded={expanded}>
+            <SidebarItem to="/leave" expanded={expanded}>
               <Icon>
                 <RiCalendarEventFill />
               </Icon>
               <Label expanded={expanded}>Leave Application</Label>
             </SidebarItem>
 
-        
+
 
             <SidebarItem to="/study-module" expanded={expanded}>
               <Icon>
-             <VscFileSubmodule />
+                <VscFileSubmodule />
               </Icon>
               <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
-          
+
 
             <SidebarItem to="/forms-feedback" expanded={expanded}>
               <Icon>
@@ -575,12 +576,12 @@ const Sidebar = () => {
               <Label expanded={expanded}>Forms/Feedback</Label>
             </SidebarItem>
 
-              <SidebarItem to="/achievement" expanded={expanded}>
+            <SidebarItem to="/achievement" expanded={expanded}>
               <Icon>
                 <SlBadge />
               </Icon>
               <Label expanded={expanded}>Achievement</Label>
-                         </SidebarItem>
+            </SidebarItem>
             <SidebarItem to="/documentview" expanded={expanded}>
               <Icon>
                 <RiCalendarEventFill />

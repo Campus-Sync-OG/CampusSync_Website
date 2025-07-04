@@ -8,6 +8,7 @@ import {
   FaAngleLeft,
    FaUsers,
 } from "react-icons/fa6";
+import { FaChevronDown } from 'react-icons/fa';
 
 import { LiaPaletteSolid } from "react-icons/lia";
 import { GiTeacher } from "react-icons/gi";
@@ -101,6 +102,35 @@ const MobileBackButton = styled.div`
     svg {
       color: #df0043;
     }
+  }
+`;
+
+const DropdownIcon = styled(FaChevronDown)`
+  margin-left: auto;
+  font-size: 16px;
+  color: #555; /* Change as needed */
+  transition: transform 0.3s ease;
+
+  /* Add a rotate animation if dropdown is active (optional) */
+  &.open {
+    transform: rotate(180deg);
+  }
+`;
+
+const Dropdown = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+const ChildArrow = styled.span`
+  margin-left: 8px;
+  font-size: 12px;
+  color: #666;
+  &::before {
+    content: '▶'; /* You can use ▼, ▶, ▾ depending on state */
+  }
+
+  &.open::before {
+    content: '▼';
   }
 `;
 
