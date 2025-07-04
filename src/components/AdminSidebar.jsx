@@ -640,6 +640,124 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Students Data</Label>
             </SidebarItem>
+
+            <SidebarItem
+              as="div"
+              expanded={expanded}
+              onClick={() => toggleDropdown("school")}
+            >
+              <SidebarItem to="/admin-student-information" expanded={expanded}>
+                <Icon>
+                  <PiStudentThin />
+                </Icon>
+                <Label expanded={expanded}>Student Information</Label>
+              </SidebarItem>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-usercreation" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>UserCreation</Label>
+            </SidebarItem>
+<SidebarItem
+              as="div"
+              expanded={expanded}
+              onClick={() => toggleDropdown("transport")}
+            >
+              <Icon>
+                <FaSchool />
+              </Icon>
+              <Label expanded={expanded}>transport</Label>
+              {expanded && <DropdownIcon open={dropdown.transport} />}
+            </SidebarItem>
+            <Dropdown show={dropdown.transport} expanded={expanded}>
+              <SidebarItem to="/transport/addbus" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}>Add Bus</Label>
+              </SidebarItem>
+              <SidebarItem to="/transport/buses" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}>Buses</Label>
+              </SidebarItem>
+              <SidebarItem to="/transport/adddriver" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}>Add Driver</Label>
+              </SidebarItem>
+              <SidebarItem to="/transport/drivers" expanded={expanded}>
+                <ChildArrow />
+                <Label expanded={expanded}> Drivers</Label>
+              </SidebarItem>
+            </Dropdown>
+            <SidebarItem to="/admin-gallery" expanded={expanded}>
+              <Icon>
+                <RiGalleryLine />
+              </Icon>
+              <Label expanded={expanded}>Admin Gallery</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-subjects" expanded={expanded}>
+              <Icon>
+                <MdSubject />
+              </Icon>
+              <Label expanded={expanded}>Subjects</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-notification" expanded={expanded}>
+              <Icon>
+                <LiaCalendarCheck />
+              </Icon>
+              <Label expanded={expanded}>Notification</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-timetable" expanded={expanded}>
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={expanded}>Timetable</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-feedback" expanded={expanded}>
+              <Icon>
+                <MdOutlineFeedback />
+              </Icon>
+              <Label expanded={expanded}>Feedback</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-announcement" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Announcement</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-promotion" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Promotion</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-addsubject" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Add Subject</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-subjectlist" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>SubjectList</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/admin-fee" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Fees</Label>
+            </SidebarItem>
           </SidebarContent>
         </SidebarWrapper>
       )}

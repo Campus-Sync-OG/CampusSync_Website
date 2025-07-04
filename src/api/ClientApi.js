@@ -702,4 +702,25 @@ export const uploadWithMetadata = async (file, metadata = {}) => {
 
 // Inside component or event handler
 
+export const fetchAllBuses = () =>
+  api.get('/bus/getbus').then(res => res.data);
+
+export const fetchAllDrivers = () =>
+  api.get('/driver/getall').then(res => res.data);
+
+export const fetchAllLocations = () =>
+  api.get(`/location/${bus_id}`).then(res => res.data);
+
+export const createDriver = (driverData) =>
+  api.post('/driver/add', driverData).then(res => res.data);
+
+export const createBus = (busData) =>
+  api.post("/bus/addbus", busData).then((res) => res.data);
+
+export const updateLocation = (locationData) =>
+  api.post('/location/update', locationData).then((res) => res.data);
+
+export const fetchBusLocation = (busId) =>
+  api.get(`/location/${busId}`).then(res => res.data);
+
 export default api;

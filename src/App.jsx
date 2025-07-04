@@ -95,6 +95,13 @@ import StudentFeeDetails from "./userpages/StudentFeeDetails";
 import AdminCalendarPanel from "./userpages/AdminCalendarPanel";
 import StudentCalendarOfEvent from "./pages/StudentCalendarOfEvent";
 import TeacherLeaveApprovals from "./teacher/TeacherLeaveApprovals";  
+import BusLocationDisplay from "./pages/BusLocationDisplay";
+import BusMaps from "./pages/BusMaps";
+import AddDriver from "./userpages/AddDriver";
+import Drivers from "./userpages/Drivers";
+import AddBus from "./userpages/AddBus";
+import Buses from "./userpages/Buses";
+import DriverLocation from "./pages/DriverLocation";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -358,6 +365,11 @@ const App = () => {
             element={
               <Layout>
                 <StudyModulePage />
+          <Route
+            path="/BusMap"
+            element={
+              <Layout>
+                <BusMaps />
               </Layout>
             }
           />
@@ -366,6 +378,22 @@ const App = () => {
             element={
               <Layout>
                 <DocumentView />
+              </Layout>
+             }
+             />
+             <Route
+            path="/BusLocation"
+            element={
+              <Layout>
+                <BusLocationDisplay />
+              </Layout>
+            }
+          />
+          <Route
+            path="/DriverLocation"
+            element={
+              <Layout>
+                <DriverLocation />
               </Layout>
             }
           />
@@ -700,6 +728,38 @@ const App = () => {
             element={
               <AdminLayout>
                 <AddSubject />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/transport/addbus"
+            element={
+              <AdminLayout>
+                <AddBus/>
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/transport/buses"
+            element={
+              <AdminLayout>
+                <Buses />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/transport/adddriver"
+            element={
+              <AdminLayout>
+                <AddDriver />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/transport/drivers"
+            element={
+              <AdminLayout>
+                <Drivers />
               </AdminLayout>
             }
           />
