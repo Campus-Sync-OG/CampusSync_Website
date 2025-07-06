@@ -95,7 +95,8 @@ import StudentFeeDetails from "./userpages/StudentFeeDetails";
 import AdminCalendarPanel from "./userpages/AdminCalendarPanel";
 import StudentCalendarOfEvent from "./pages/StudentCalendarOfEvent";
 import TeacherLeaveApprovals from "./teacher/TeacherLeaveApprovals";  
-
+import Payroll from "./userpages/Payroll";
+import SalaryStructure from "./userpages/AddStructure";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -750,6 +751,22 @@ const App = () => {
             element={
               <AdminLayout>
                 <NotificationPage />
+              </AdminLayout>
+            }
+          />
+           <Route
+            path="/admin-payroll"
+            element={
+              <AdminLayout>
+                <Payroll />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-structure"
+            element={
+              <AdminLayout>
+                <SalaryStructure />
               </AdminLayout>
             }
           />
