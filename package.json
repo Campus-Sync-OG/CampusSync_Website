@@ -12,7 +12,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@react-hook/window-size": "^3.1.1",
-    "axios": "^1.8.4",
+    "axios": "^1.10.0",
     "env": "^0.0.2",
     "framer-motion": "^12.10.0",
     "jsdf": "^0.3.2",
@@ -34,6 +34,7 @@
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.4.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^3.0.2",
     "styled-components": "^6.1.17"
   },
   "devDependencies": {

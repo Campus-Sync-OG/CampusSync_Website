@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getStudentsByClassAndSection, getAllClassSections } from "../api/ClientApi";
 import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import { useNavigate, Link } from "react-router-dom";
 
 const Container = styled.div`
   padding: 0 15px;
@@ -138,69 +139,80 @@ const Page = styled.div`
   font-weight: bold;
 `;
 
-const romanClasses = [
-  "I",
-  "II",
-  "III",
-  "IV",
-  "V",
-  "VI",
-  "VII",
-  "VIII",
-  "IX",
-  "X",
-];
-const sections = ["A", "B", "C"];
-
 const StudentData = () => {
   const navigate = useNavigate();
 
-  const studentList = Array.from({ length: 3 }, (_, i) => ({
-    id: i + 1,
-    name: "Daniel Grant",
-    gender: "Male",
-    class: romanClasses[Math.floor(Math.random() * romanClasses.length)],
-    section: sections[Math.floor(Math.random() * sections.length)],
-    parents: "Kofi Grant",
-    address: "59 Australia, Sydney",
-    dob: "02/05/2001",
-    phone: "+123 9988568",
-  }));
+  const [classSections, setClassSections] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
 
-  const itemsPerPage = 12;
-  const [currentPage, setCurrentPage] = useState(1);
   const [searchName, setSearchName] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(studentList.length / itemsPerPage);
+  const itemsPerPage = 10;
 
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
+  useEffect(() => {
+    fetchClassSections();
+  }, []);
+
+  const fetchClassSections = async () => {
+    try {
+      const data = await getAllClassSections();
+      console.log("Class Sections:", data); // Debug API response
+      setClassSections(data || []);
+    } catch (error) {
+      console.error("Error fetching class-section:", error);
     }
   };
 
-  const filteredData = studentList.filter(
-    (student) =>
-      student.name.toLowerCase().includes(searchName.toLowerCase()) &&
-      (selectedClass === "" || student.class === selectedClass)
-  );
+  const fetchStudents = async () => {
+    try {
+      const data = await getStudentsByClassAndSection(selectedClass, selectedSection);
+      setStudents(data || []);
+    } catch (err) {
+      console.error("Failed to fetch students:", err);
+      setStudents([]);
+    }
+  };
 
+  const handleSearch = () => {
+    if (!selectedClass) {
+      alert("Please select a class");
+      return;
+    }
+    fetchStudents();
+  };
+
+  useEffect(() => {
+    const filtered = students.filter((student) =>
+      (student.student_name || "").toLowerCase().includes(searchName.toLowerCase())
+    );
+    setFilteredData(filtered);
+    setCurrentPage(1);
+  }, [students, searchName]);
+
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  // Dynamically extract class and section
+  const classOptions = [...new Set(classSections.map((item) => item.className || item.class_grade))];
+  const sectionOptions = [...new Set(
+    classSections
+      .filter(cs => (cs.className || cs.class_grade) === selectedClass)
+      .map((item) => item.section_name || item.section)
+  )];
 
   return (
     <Container>
       <Header>
         <Title>Student Information</Title>
         <IconsContainer>
-          <ImageIcon
-            src={homeIcon}
-            alt="Home"
-            onClick={() => navigate("/admin-dashboard")}
-          />
+          <ImageIcon src={homeIcon} alt="Home" onClick={() => navigate("/admin-dashboard")} />
           <VerticalDivider />
           <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
         </IconsContainer>
@@ -215,47 +227,44 @@ const StudentData = () => {
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
-        <SelectBox
-          value={selectedClass}
-          onChange={(e) => setSelectedClass(e.target.value)}
-        >
+        <SelectBox value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
           <option value="">Select Class</option>
-          {romanClasses.map((cls) => (
-            <option key={cls} value={cls}>
-              {cls}
-            </option>
+          {classOptions.map((cls) => (
+            <option key={cls} value={cls}>{cls}</option>
           ))}
         </SelectBox>
-        <SearchButton>SEARCH</SearchButton>
+        <SelectBox value={selectedSection} onChange={(e) => setSelectedSection(e.target.value)}>
+          <option value="">Select Section</option>
+          {sectionOptions.map((sec) => (
+            <option key={sec} value={sec}>{sec}</option>
+          ))}
+        </SelectBox>
+        <SearchButton onClick={handleSearch}>SEARCH</SearchButton>
       </SearchRow>
 
       <TableContainer>
         <StyledTable>
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Roll Number</th>
               <th>Name</th>
               <th>Gender</th>
               <th>Class</th>
               <th>Section</th>
-              <th>Parents</th>
-              <th>Address</th>
               <th>Date of Birth</th>
               <th>Phone</th>
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((student) => (
-              <tr key={student.id}>
-                <td>{student.id}</td>
-                <td>{student.name}</td>
+            {paginatedData.map((student, idx) => (
+              <tr key={student.id || idx}>
+                <td>{student.roll_no}</td>
+                <td>{student.student_name}</td>
                 <td>{student.gender}</td>
-                <td>{student.class}</td>
+                <td>{student.class || student.class_grade}</td>
                 <td>{student.section}</td>
-                <td>{student.parents}</td>
-                <td>{student.address}</td>
                 <td>{student.dob}</td>
-                <td>{student.phone}</td>
+                <td>{student.phone_no}</td>
               </tr>
             ))}
           </tbody>
@@ -264,17 +273,13 @@ const StudentData = () => {
 
       {totalPages > 1 && (
         <Pagination>
-          <span onClick={() => handlePageChange(currentPage - 1)}>&lt;</span>
+          <span onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}>&lt;</span>
           {[...Array(totalPages)].map((_, i) => (
-            <Page
-              key={i}
-              active={currentPage === i + 1}
-              onClick={() => handlePageChange(i + 1)}
-            >
+            <Page key={i} active={currentPage === i + 1} onClick={() => setCurrentPage(i + 1)}>
               {i + 1}
             </Page>
           ))}
-          <span onClick={() => handlePageChange(currentPage + 1)}>&gt;</span>
+          <span onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}>&gt;</span>
         </Pagination>
       )}
     </Container>

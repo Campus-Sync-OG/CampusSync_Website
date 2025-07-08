@@ -235,6 +235,10 @@ const SubjectList = () => {
           <Button type="button" onClick={handleSaveSubjects}>
             Save
           </Button>
+
+          <Button type="button" color="#007bff" onClick={() => navigate("/admin-subjectlistview")}>
+            View Subjects
+          </Button>
         </ButtonContainer>
       </Form>
     </Container>

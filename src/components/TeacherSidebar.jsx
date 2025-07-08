@@ -370,6 +370,16 @@ const Sidebar = () => {
               <Label expanded={true}>Academics</Label>
             </SidebarItem>
 
+             <SidebarItem
+              to="/teacher-study"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>Study Module Upload</Label>
+            </SidebarItem>
+
             <SidebarItem
               to="/teacher-fees"
               onClick={() => setMobileOpen(false)}
@@ -532,6 +542,13 @@ const Sidebar = () => {
                 <HiDocumentCurrencyRupee />
               </Icon>
               <Label expanded={expanded}>Fees</Label>
+            </SidebarItem>
+
+             <SidebarItem to="/teacher-study" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Study Module Upload</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-levaveapplication" expanded={expanded}>

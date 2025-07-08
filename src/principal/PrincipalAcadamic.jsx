@@ -1,9 +1,159 @@
-import React, { useState, useMemo } from "react";
-import { SearchIcon } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { getClassPerformance } from "../api/ClientApi";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
+} from "recharts";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
+import { FaSearch } from "react-icons/fa";
+
+const PrincipalAcademics = () => {
+  const navigate = useNavigate();
+
+  const [filters, setFilters] = useState({
+    name: "",
+    roll_no: "",
+    class: "",
+    section: "",
+    assessment_type: "",
+  });
+
+  const [academicData, setAcademicData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showGraph, setShowGraph] = useState(false);
+
+  const handleFilterChange = (field, value) => {
+    setFilters((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const fetchAcademics = async (classGrade, section) => {
+    try {
+      setLoading(true);
+      const data = await getClassPerformance(classGrade, section);
+      setAcademicData(data || []);
+    } catch (error) {
+      setAcademicData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = () => {
+    if (filters.class && filters.section) {
+      setShowGraph(false); // Reset chart visibility on new search
+      fetchAcademics(filters.class, filters.section);
+    } else {
+      alert("Please select both Class and Section.");
+    }
+  };
+
+  useEffect(() => {
+    const filtered = academicData
+      .filter((t) => {
+        return (
+          (filters.name === "" || t.student_name.toLowerCase().includes(filters.name.toLowerCase())) &&
+          (filters.roll_no === "" || t.admission_no.toLowerCase().includes(filters.roll_no.toLowerCase())) &&
+          (filters.class === "" || t.class_grade === filters.class) &&
+          (filters.section === "" || t.section === filters.section) &&
+          (filters.assessment_type === "" || t.exam_format === filters.assessment_type)
+        );
+      })
+      .sort((a, b) => b.percentage - a.percentage);
+
+    setFilteredData(filtered);
+  }, [filters, academicData]);
+
+  return (
+    <Container>
+      <Header>
+        <Title>Academics</Title>
+        <Wrapper>
+          <Link to="/principal-dashboard">
+            <Icons><img src={home} alt="home" /></Icons>
+          </Link>
+          <Divider />
+          <Icons onClick={() => navigate(-1)}><img src={back} alt="back" /></Icons>
+        </Wrapper>
+      </Header>
+
+      <FilterContainer>
+        <input placeholder="Search by name..." onChange={(e) => handleFilterChange("name", e.target.value)} />
+        <input placeholder="Search by roll no..." onChange={(e) => handleFilterChange("roll_no", e.target.value)} />
+        <select onChange={(e) => handleFilterChange("class", e.target.value)}>
+          <option value="">Select Class</option>
+          {["10", "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"].map((cls) => (
+            <option key={cls} value={cls}>{cls}</option>
+          ))}
+        </select>
+        <select onChange={(e) => handleFilterChange("section", e.target.value)}>
+          <option value="">Select Section</option>
+          {["A", "B", "C"].map((sec) => (
+            <option key={sec} value={sec}>{sec}</option>
+          ))}
+        </select>
+        <select onChange={(e) => handleFilterChange("assessment_type", e.target.value)}>
+          <option value="">Assessment Type</option>
+          <option value="FA2">Formative Assessment</option>
+          <option value="Summative Assessment">Summative Assessment</option>
+        </select>
+        <SearchButton onClick={handleSearch}>
+          <FaSearch /> SEARCH
+        </SearchButton>
+        {filteredData.length > 0 && (
+          <GraphButton onClick={() => setShowGraph(true)}>
+            📊 Show Graph
+          </GraphButton>
+        )}
+      </FilterContainer>
+
+      {/* 📊 Performance Chart */}
+      {showGraph && filteredData.length > 0 && (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={filteredData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="student_name" />
+            <YAxis domain={[0, 100]} />
+            <Tooltip />
+            <Bar dataKey="percentage" fill="#1e88e5" />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+
+      {/* 📋 Academic Table */}
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>Sl no</Th>
+            <Th>Roll number</Th>
+            <Th>Student Name</Th>
+            <Th>Class</Th>
+            <Th>Section</Th>
+            <Th>Assessment Name</Th>
+            <Th>Percentage</Th>
+          </Tr>
+        </Thead>
+        <tbody>
+          {filteredData.map((t, index) => (
+            <Tr key={t.admission_no}>
+              <Td>{String(index + 1).padStart(2, "0")}</Td>
+              <Td>{t.admission_no}</Td>
+              <Td>{t.student_name}</Td>
+              <Td>{t.class_grade}</Td>
+              <Td>{t.section}</Td>
+              <Td>{t.exam_format}</Td>
+              <Td>{t.percentage}%</Td>
+            </Tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
+  );
+};
+
+export default PrincipalAcademics;
 
 const Container = styled.div`
   padding: 0 1.2rem;
@@ -151,170 +301,12 @@ const SearchButton = styled.button`
   }
 `;
 
-const data = [
-  {
-    slno: "01",
-    roll_no: "02/05/VB1",
-    name: "Sumith Thakur",
-    class: "III",
-    section: "B",
-    assessment_type: "formative assessment",
-    grades: "9 cgpa ",
-  },
-  {
-    slno: "02",
-    roll_no: "02/05/VB1",
-    name: "Sumith ",
-    class: "III",
-    section: "B",
-    assessment_type: "formative assessment",
-    grades: "9 cgpa ",
-  },
-  {
-    slno: "03",
-    roll_no: "02/05/VB1",
-    name: "Sum",
-    class: "III",
-    section: "B",
-    assessment_type: "formative assessment",
-    grades: "9 cgpa ",
-  },
-  {
-    slno: "04",
-    roll_no: "02/05/VB1",
-    name: "Sumith Thak",
-    class: "III",
-    section: "B",
-    assessment_type: "formative assessment",
-    grades: "9 cgpa ",
-  },
-  {
-    slno: "05",
-    roll_no: "02/05/VB1",
-    name: "Sumi",
-    class: "III",
-    section: "B",
-    assessment_type: "formative assessment",
-    grades: "9 cgpa ",
-  },
-];
-
-const PrincipalAcademics = () => {
-  const navigate = useNavigate();
-  const [filters, setFilters] = useState({
-    name: "",
-    roll_no: "",
-    class: "",
-    section: "",
-    assessment_type: "",
-  });
-
-  const handleFilterChange = (field, value) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const filteredData = useMemo(() => {
-    return data.filter((t) => {
-      return (
-        (filters.name === "" ||
-          t.name.toLowerCase().includes(filters.name.toLowerCase())) &&
-        (filters.roll_no === "" ||
-          t.roll_no.toLowerCase().includes(filters.roll_no.toLowerCase())) &&
-        (filters.class === "" || t.class === filters.class) &&
-        (filters.section === "" || t.section === filters.section) &&
-        (filters.assessment_type === "" ||
-          t.assessment_type === filters.assessment_type)
-      );
-    });
-  }, [filters]);
-
-  return (
-    <Container>
-      <Header>
-        <Title>Academics</Title>
-        <Wrapper>
-          <Link to="/principal-dashboard">
-            <Icons>
-              <img src={home} alt="home" />
-            </Icons>
-          </Link>
-          <Divider />
-          <Icons onClick={() => navigate(-1)}>
-            <img src={back} alt="back" />
-          </Icons>
-        </Wrapper>
-      </Header>
-
-      <FilterContainer>
-        <input
-          placeholder="Search by name..."
-          onChange={(e) => handleFilterChange("name", e.target.value)}
-        />
-        <input
-          placeholder="Search by roll no..."
-          onChange={(e) => handleFilterChange("roll_no", e.target.value)}
-        />
-        <select onChange={(e) => handleFilterChange("class", e.target.value)}>
-          <option value="">Select Class</option>
-
-          <option value="X">X</option>
-          <option value="IX">IX</option>
-          <option value="VIII">VIII</option>
-          <option value="VII">VII</option>
-          <option value="VI">VI</option>
-          <option value="V">V</option>
-          <option value="IV">IV</option>
-          <option value="III">III</option>
-          <option value="II">II</option>
-          <option value="I">I</option>
-
-          {/* Add more classes here */}
-        </select>
-        <select onChange={(e) => handleFilterChange("section", e.target.value)}>
-          <option value="">Select Section</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
-          <option value="C">C</option>
-          {/* Add more sections here */}
-        </select>
-        <select onChange={(e) => handleFilterChange("role", e.target.value)}>
-          <option value="">Assessment Type</option>
-          <option value="Formative Assessment">Formative Assessment</option>
-          <option value="Summative Assessment">Summative Assessment</option>
-        </select>
-        <SearchButton>
-          <SearchIcon size={20} />
-          SEARCH
-        </SearchButton>
-      </FilterContainer>
-      <Table>
-        <Thead>
-          <Tr>
-            <Th>Sl no</Th>
-            <Th>Roll number</Th>
-            <Th>Student Name</Th>
-            <Th>Class</Th>
-            <Th>Section</Th>
-            <Th>Assessment Name </Th>
-            <Th>Grades</Th>
-          </Tr>
-        </Thead>
-        <tbody>
-          {filteredData.map((t, index) => (
-            <Tr key={t.roll_no}>
-              <Td>{String(index + 1).padStart(2, "0")}</Td>
-              <Td>{t.roll_no}</Td>
-              <Td>{t.name}</Td>
-              <Td>{t.class}</Td>
-              <Td>{t.section}</Td>
-              <Td>{t.assessment_type}</Td>
-              <Td>{t.grades}</Td>
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
-    </Container>
-  );
-};
-
-export default PrincipalAcademics;
+const GraphButton = styled.button`
+  background-color: #0069c0;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+`;

@@ -67,8 +67,10 @@ export const loginUser = (credentials) =>
 export const resetPassword = (payload) =>
   api.post("/users/reset-password", payload).then((res) => res.data);
 
+
 export const getAllSubjects = () =>
   api.get("/subjects/all").then((res) => res.data);
+
 
 // Get all assignments for a student by admission number
 export const getAssignmentsByAdmissionNo = (admission_no) =>
@@ -698,6 +700,22 @@ export const uploadWithMetadata = async (file, metadata = {}) => {
     throw new Error(error?.response?.data?.message || "Upload failed");
   }
 };
+
+export const getClassPerformance = async (classGrade, section) => {
+  try {
+    const response = await api.get(`/academics/performance/${classGrade}/${section}`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching class performance:", error);
+    throw error;
+  }
+};
+
+// Add this in your ClientApi.js
+export const deleteSubject = async (id) => {
+  return api.delete(`/subjects/${id}`);
+};
+
 
 
 // Inside component or event handler
