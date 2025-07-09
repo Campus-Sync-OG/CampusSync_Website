@@ -717,6 +717,30 @@ export const deleteSubject = async (id) => {
 };
 
 
+export const getTeacherCirculars = async () => {
+  try {
+    const response = await api.get("/circulars/my-circulars");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher circulars:", error);
+    throw error;
+  }
+};
+
+// 📄 ClientApi.js
+
+export const deleteCircular = async (id) => {
+  try {
+    const response = await api.delete(`/circulars/delete-circular/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting circular:", error);
+    throw error;
+  }
+};
+
+
+
 
 // Inside component or event handler
 

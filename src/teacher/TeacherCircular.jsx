@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { getAllClassSections, uploadCircular } from "../api/ClientApi";
+import { getAllClassSections, uploadCircular, getTeacherCirculars, deleteCircular } from "../api/ClientApi";
 
 const Container = styled.div`
   padding: 0 1.2rem;
@@ -135,7 +135,9 @@ const TeacherCircular = () => {
   ]);
 
   const [classSections, setClassSections] = useState([]);
+  const [uploadedCirculars, setUploadedCirculars] = useState([]); // ✅ New
 
+  // ✅ Load class sections
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllClassSections();
@@ -144,6 +146,38 @@ const TeacherCircular = () => {
     fetchData();
   }, []);
 
+  // ✅ Load uploaded circulars on mount
+  useEffect(() => {
+    const fetchCirculars = async () => {
+      try {
+        const res = await getTeacherCirculars();
+        setUploadedCirculars(res.data);
+      } catch (err) {
+        console.error("Failed to fetch teacher circulars:", err);
+      }
+    };
+
+    fetchCirculars();
+  }, []);
+
+
+  const handleDeleteCircular = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this circular?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteCircular(id);
+      alert("Circular deleted successfully!");
+
+      // Refresh the list after deletion
+      const res = await getTeacherCirculars();
+      setUploadedCirculars(res.data);
+    } catch (error) {
+      alert("Failed to delete circular");
+    }
+  };
+
+
   const handleChange = (e, index) => {
     const { name, value, files } = e.target;
     const updatedForms = [...forms];
@@ -151,39 +185,51 @@ const TeacherCircular = () => {
     setForms(updatedForms);
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  for (const form of forms) {
-    const { date, title, description, file, class_name, section } = form;
-    if (!date || !title || !description || !class_name || !section || !file) {
-      alert("Please fill in all required fields in all circulars.");
-      return;
-    }
-  }
-
-  try {
     for (const form of forms) {
-      const formData = new FormData();
-      formData.append("date", form.date);
-      formData.append("title", form.title);
-      formData.append("description", form.description);
-      formData.append("class_name", form.class_name);
-      formData.append("section", form.section);
-      formData.append("file", form.file);
-
-      // ❌ DO NOT send emp_id manually – it's taken from token
-      await uploadCircular(formData);
+      const { date, title, description, file, class_name, section } = form;
+      if (!date || !title || !description || !class_name || !section || !file) {
+        alert("Please fill in all required fields in all circulars.");
+        return;
+      }
     }
 
-    alert("All circulars uploaded successfully!");
-  } catch (error) {
-    alert("Failed to upload one or more circulars");
-    console.error(error);
-  }
-};
+    try {
+      for (const form of forms) {
+        const formData = new FormData();
+        formData.append("date", form.date);
+        formData.append("title", form.title);
+        formData.append("description", form.description);
+        formData.append("class_name", form.class_name);
+        formData.append("section", form.section);
+        formData.append("file", form.file);
 
+        await uploadCircular(formData);
+      }
 
+      alert("All circulars uploaded successfully!");
+      setForms([
+        {
+          date: "",
+          title: "",
+          description: "",
+          file: null,
+          class_name: "",
+          section: "",
+        },
+      ]);
+
+      // ✅ Refresh circulars after upload
+      const res = await getTeacherCirculars();
+      setUploadedCirculars(res.data);
+
+    } catch (error) {
+      alert("Failed to upload one or more circulars");
+      console.error(error);
+    }
+  };
 
   const addNewForm = () => {
     setForms([
@@ -302,24 +348,63 @@ const TeacherCircular = () => {
         ))}
 
         <ButtonContainer>
-          <Button primary type="submit">
-            Submit
-          </Button>
-          <Button type="button" onClick={addNewForm}>
-            Add More
-          </Button>
+          <Button primary type="submit">Submit</Button>
+          <Button type="button" onClick={addNewForm}>Add More</Button>
           {forms.length > 1 && (
-            <Button type="button" onClick={deleteLastForm}>
-              Delete
-            </Button>
+            <Button type="button" onClick={deleteLastForm}>Delete</Button>
           )}
         </ButtonContainer>
 
         <Note>
-          Note: Only one circular will be created per student in the selected
-          class and section.
+          Note: Only one circular will be created per student in the selected class and section.
         </Note>
       </Form>
+
+      {/* ✅ Uploaded Circulars */}
+      {uploadedCirculars.length > 0 && (
+        <div style={{ marginTop: "2rem" }}>
+          <h3>Uploaded Circulars</h3>
+          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "10px" }}>
+            <thead>
+              <tr>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>#</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Date</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Title</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Class</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Section</th>
+                <th style={{ border: "1px solid #ccc", padding: "8px" }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {uploadedCirculars.map((circ, idx) => (
+                <tr key={circ.id}>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>{idx + 1}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>{circ.date}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>{circ.headline}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>{circ.class_name}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>{circ.section}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "8px" }}>
+                    <button
+                      onClick={() => handleDeleteCircular(circ.id)}
+                      style={{
+                        padding: "6px 12px",
+                        backgroundColor: "#df0043",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
     </Container>
   );
 };
