@@ -120,7 +120,7 @@ const Label = styled.label`
   font-size: 18px;
 `;
 
-const PrincipalCircular = () => {
+const TeacherCircular = () => {
   const navigate = useNavigate();
 
   const [forms, setForms] = useState([
@@ -151,35 +151,39 @@ const PrincipalCircular = () => {
     setForms(updatedForms);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  for (const form of forms) {
+    const { date, title, description, file, class_name, section } = form;
+    if (!date || !title || !description || !class_name || !section || !file) {
+      alert("Please fill in all required fields in all circulars.");
+      return;
+    }
+  }
+
+  try {
     for (const form of forms) {
-      const { date, title, description, file, class_name, section } = form;
-      if (!date || !title || !description || !class_name || !section || !file) {
-        alert("Please fill in all required fields in all circulars.");
-        return;
-      }
+      const formData = new FormData();
+      formData.append("date", form.date);
+      formData.append("title", form.title);
+      formData.append("description", form.description);
+      formData.append("class_name", form.class_name);
+      formData.append("section", form.section);
+      formData.append("file", form.file);
+
+      // ❌ DO NOT send emp_id manually – it's taken from token
+      await uploadCircular(formData);
     }
 
-    try {
-      for (const form of forms) {
-        const formData = new FormData();
-        formData.append("date", form.date);
-        formData.append("title", form.title);
-        formData.append("description", form.description);
-        formData.append("class_name", form.class_name);
-        formData.append("section", form.section);
-        formData.append("file", form.file);
+    alert("All circulars uploaded successfully!");
+  } catch (error) {
+    alert("Failed to upload one or more circulars");
+    console.error(error);
+  }
+};
 
-        await uploadCircular(formData);
-      }
-      alert("All circulars uploaded successfully!");
-    } catch (error) {
-      alert("Failed to upload one or more circulars");
-      console.error(error);
-    }
-  };
+
 
   const addNewForm = () => {
     setForms([
@@ -320,4 +324,4 @@ const PrincipalCircular = () => {
   );
 };
 
-export default PrincipalCircular;
+export default TeacherCircular;

@@ -97,6 +97,7 @@ import StudentCalendarOfEvent from "./pages/StudentCalendarOfEvent";
 import TeacherLeaveApprovals from "./teacher/TeacherLeaveApprovals";  
 import TeacherStudyModule from "./teacher/TeacherStudyModule";  
 import SubjectListView from "./userpages/SubjectListView";
+import TeacherViewAcademics from "./teacher/TeacherViewAcademics";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -508,6 +509,14 @@ const App = () => {
             element={
               <TeacherLayout>
                 <TeacherAcademics />
+              </TeacherLayout>
+            }
+          />
+             <Route
+            path="/teacher-academics-view"
+            element={
+              <TeacherLayout>
+                <TeacherViewAcademics />
               </TeacherLayout>
             }
           />

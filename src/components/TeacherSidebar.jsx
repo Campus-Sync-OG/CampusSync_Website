@@ -572,6 +572,13 @@ const Sidebar = () => {
               <Label expanded={expanded}>Student Leaves</Label>
             </SidebarItem>
 
+            <SidebarItem to="/teacher-academics-view" expanded={expanded}>
+              <Icon>
+                <VscGitPullRequestNewChanges />
+              </Icon>
+              <Label expanded={expanded}> Acdemics View</Label>
+            </SidebarItem>
+
             <SidebarItem to="/teacher-achievement" expanded={expanded}>
               <Icon>
                 <SlBadge />
