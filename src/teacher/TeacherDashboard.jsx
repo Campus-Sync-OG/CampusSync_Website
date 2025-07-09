@@ -10,7 +10,7 @@ import subjectImage from "../assets/images/subject.png";
 import timetableImage from "../assets/images/timetable.png";
 import attendanceImage from "../assets/images/attendance1.png";
 import { FaEllipsisH } from "react-icons/fa";
-import { fetchTeacherById, fetchAnnouncements } from "../api/ClientApi"; // ✅ Adjust path as needed
+import { fetchTeacherById, fetchAnnouncements, fetchLeaveStatusByEmpId } from "../api/ClientApi"; // ✅ Adjust path as needed
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ const TeacherDashboard = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [latestAnnouncement, setLatestAnnouncement] = useState(null);
   const [announcements, setAnnouncements] = useState([]);
+  const [leaveRecords, setLeaveRecords] = useState([]);
 
   const storedUser = localStorage.getItem("user");
   let user = null;
@@ -63,7 +64,6 @@ const TeacherDashboard = () => {
           headers: err.response?.headers,
         });
 
-        // Handle specific error cases
         if (err.response?.status === 403) {
           console.error("Forbidden: Check permissions or token validity");
           localStorage.clear();
@@ -87,14 +87,13 @@ const TeacherDashboard = () => {
     const loadAnnouncements = async () => {
       try {
         const data = await fetchAnnouncements();
-        console.log("Fetched Announcements:", data);
         setAnnouncements(data);
 
         if (data.length > 0 && !popupSeen) {
-          const latest = data[0]; // your controller already sorts DESC
+          const latest = data[0];
           setLatestAnnouncement(latest);
           setShowPopup(true);
-          sessionStorage.setItem("popupSeen", "true"); // Mark popup as shown
+          sessionStorage.setItem("popupSeen", "true");
         }
       } catch (error) {
         console.error("Error fetching announcements:", error);
@@ -103,6 +102,19 @@ const TeacherDashboard = () => {
 
     loadAnnouncements();
   }, []);
+
+  useEffect(() => {
+    const loadLeaveStatus = async () => {
+      try {
+        const records = await fetchLeaveStatusByEmpId(emp_id);
+        setLeaveRecords(records);
+      } catch (error) {
+        console.error("Failed to fetch leave status:", error);
+      }
+    };
+
+    if (emp_id) loadLeaveStatus();
+  }, [emp_id]);
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -113,48 +125,40 @@ const TeacherDashboard = () => {
 
   return (
     <div>
-     {showPopup && latestAnnouncement && (
-  <PopupOverlay>
-    <PopupBox style={{ position: 'relative' }}>
-      
-      {/* Close button */}
-      <button 
-        onClick={() => setShowPopup(false)}
-         style={{
-         position: 'absolute',
-          top: '10px',
-          right: '10px',
-          width: '30px',
-          height: '30px',
-          borderRadius: '4px',
-          border: 'none',
-          backgroundColor: '#002087',
-          color: '#fff',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        &times;
-      </button>
+      {showPopup && latestAnnouncement && (
+        <PopupOverlay>
+          <PopupBox style={{ position: 'relative' }}>
+            <button 
+              onClick={() => setShowPopup(false)}
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                width: '30px',
+                height: '30px',
+                borderRadius: '4px',
+                border: 'none',
+                backgroundColor: '#002087',
+                color: '#fff',
+                fontSize: '20px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              &times;
+            </button>
 
-      {/* Centered Title */}
-      <h1 style={{ textAlign: 'center' }}>Announcement</h1>
-      
-      <h3>{latestAnnouncement.title}</h3>
-      <p>{latestAnnouncement.message}</p>
-      
-    </PopupBox>
-  </PopupOverlay>
-)}
-
-
+            <h1 style={{ textAlign: 'center' }}>Announcement</h1>
+            <h3>{latestAnnouncement.title}</h3>
+            <p>{latestAnnouncement.message}</p>
+          </PopupBox>
+        </PopupOverlay>
+      )}
 
       <DashboardContainer>
-        {/* Welcome Card */}
         <WelcomeCard>
           <div className="text">
             <div className="dashboard-title">Dashboard</div>
@@ -168,7 +172,6 @@ const TeacherDashboard = () => {
           <img className="image" src={teacherImage} alt="Welcome" />
         </WelcomeCard>
 
-        {/* Main Section with Cards & Calendar */}
         <MainContent>
           <CardGrid>
             <Link to="/teacher-assignments" style={{ textDecoration: "none" }}>
@@ -200,11 +203,22 @@ const TeacherDashboard = () => {
             </Link>
           </CardGrid>
 
-          {/* Calendar & Announcements Section */}
           <CalendarSection>
             <CalendarCard>
               <h3>Calendar</h3>
               <StyledCalendar value={date} onChange={setDate} />
+
+              {/* 🔔 Leave Status Notification */}
+              <LeaveNotification>
+                <h4>Leave Status</h4>
+                <LeaveList>
+                  {leaveRecords.map((leave, index) => (
+                    <LeaveItem key={index} status={leave.status}>
+                      {leave.leave_type} - {leave.status}
+                    </LeaveItem>
+                  ))}
+                </LeaveList>
+              </LeaveNotification>
             </CalendarCard>
           </CalendarSection>
         </MainContent>
@@ -215,7 +229,65 @@ const TeacherDashboard = () => {
 
 export default TeacherDashboard;
 
-/* Styled Components */
+const LeaveNotification = styled.div`
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 15px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  max-height: 120px; /* Limit height */
+  overflow-y: auto; /* Enable vertical scroll */
+
+  h4 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #002087;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+  }
+
+  /* Firefox scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+`;
+
+
+const LeaveList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const LeaveItem = styled.li`
+  font-size: 13px;
+  margin-bottom: 6px;
+  padding: 6px 10px;
+  border-left: 4px solid
+    ${(props) =>
+      props.status === "Approved"
+        ? "#28a745"
+        : props.status === "Pending"
+        ? "#ffc107"
+        : "#dc3545"};
+  background-color: ${(props) =>
+    props.status === "Approved"
+      ? "#e6f4ea"
+      : props.status === "Pending"
+      ? "#fff8e5"
+      : "#fbeaea"};
+  border-radius: 4px;
+  font-family: "Roboto", sans-serif;
+`;
+
 
 const DashboardContainer = styled.div`
   flex: 1;

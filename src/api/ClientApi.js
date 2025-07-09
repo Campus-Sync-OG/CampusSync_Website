@@ -739,6 +739,26 @@ export const deleteCircular = async (id) => {
   }
 };
 
+export const fetchLeaveStatusByEmpId  = async () => {
+  try {
+    const response = await api.get("/leaves/teacher-leaves");
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching my leaves:", error);
+    throw error;
+  }
+};
+
+export const updateTeacher = async (emp_id, updateData) => {
+  try {
+    const response = await api.put(`/teachers/update/${emp_id}`, updateData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating teacher:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
 
 
 
