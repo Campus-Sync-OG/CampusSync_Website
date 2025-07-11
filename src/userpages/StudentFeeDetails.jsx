@@ -224,11 +224,7 @@ const StudentFeeDetails = () => {
 export default StudentFeeDetails;
 
 export const Container = styled.div`
-  padding: 0 1.5rem;
-  max-width: 1200px;
-  margin: auto;
-  background: #f9f9f9;
-  border-radius: 8px;
+  padding: 0 1.2rem;
 `;
 
 export const Title = styled.h2`
@@ -339,7 +335,7 @@ export const CloseButton = styled.button`
 `;
 export const Header = styled.div`
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 5px 20px;
+  padding: 21px 20px;
   border-radius: 10px;
   color: white;
   display: flex;
@@ -347,9 +343,10 @@ export const Header = styled.div`
   align-items: center;
   margin-bottom: 1.5rem;
 
-  h1 {
-    font-size: 26px;
+  h2 {
+    font-size: 25px;
     font-weight: 600;
+    margin: 0;
     font-family: "Poppins";
   }
 `;

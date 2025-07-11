@@ -7,7 +7,7 @@ import { fetchFilteredSubjects } from "../api/ClientApi";
 
 // Styled Components
 const Container = styled.div`
-  padding: 5px;
+  padding: 0 1.2rem;
   background: white;
 `;
 
@@ -25,8 +25,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   margin: 0;
 `;
 

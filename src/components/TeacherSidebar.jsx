@@ -370,6 +370,16 @@ const Sidebar = () => {
               <Label expanded={true}>Academics</Label>
             </SidebarItem>
 
+             <SidebarItem
+              to="/teacher-study"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>Study Module Upload</Label>
+            </SidebarItem>
+
             <SidebarItem
               to="/teacher-fees"
               onClick={() => setMobileOpen(false)}
@@ -534,6 +544,13 @@ const Sidebar = () => {
               <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
 
+             <SidebarItem to="/teacher-study" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Study Module Upload</Label>
+            </SidebarItem>
+
             <SidebarItem to="/teacher-levaveapplication" expanded={expanded}>
               <Icon>
                <VscGitPullRequestGoToChanges />
@@ -553,6 +570,13 @@ const Sidebar = () => {
                 <VscGitPullRequestNewChanges />
               </Icon>
               <Label expanded={expanded}>Student Leaves</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/teacher-academics-view" expanded={expanded}>
+              <Icon>
+                <VscGitPullRequestNewChanges />
+              </Icon>
+              <Label expanded={expanded}> Acdemics View</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-achievement" expanded={expanded}>

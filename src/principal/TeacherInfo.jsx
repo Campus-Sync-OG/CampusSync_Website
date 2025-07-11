@@ -131,16 +131,14 @@ export default TeacherInfo;
 
 /* Styled Components */
 const Container = styled.div`
-  padding: 5px;
+  padding: 0 15px;
   font-family: "Poppins";
-  background: #f9f9f9;
-  flex-direction: column;
-  height: 70vh;
+  
 `;
 
 const NavContainer = styled.div`
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 10px 20px;
+  padding: 1px 20px;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
@@ -149,9 +147,9 @@ const NavContainer = styled.div`
 
 const Title = styled.h2`
   color: #fff;
-  font-size: 20px;
+  font-size: 26px;
   font-family: "Poppins";
-  font-weight: bold;
+  font-weight: 600;
 `;
 
 const IconsContainer = styled.div`

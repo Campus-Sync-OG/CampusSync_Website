@@ -95,6 +95,9 @@ import StudentFeeDetails from "./userpages/StudentFeeDetails";
 import AdminCalendarPanel from "./userpages/AdminCalendarPanel";
 import StudentCalendarOfEvent from "./pages/StudentCalendarOfEvent";
 import TeacherLeaveApprovals from "./teacher/TeacherLeaveApprovals";  
+import TeacherStudyModule from "./teacher/TeacherStudyModule";  
+import SubjectListView from "./userpages/SubjectListView";
+import TeacherViewAcademics from "./teacher/TeacherViewAcademics";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -509,6 +512,14 @@ const App = () => {
               </TeacherLayout>
             }
           />
+             <Route
+            path="/teacher-academics-view"
+            element={
+              <TeacherLayout>
+                <TeacherViewAcademics />
+              </TeacherLayout>
+            }
+          />
           <Route
             path="/teacher-calendar-of-event"
             element={
@@ -546,6 +557,15 @@ const App = () => {
             element={
               <TeacherLayout>
                 <LeaveApplication />
+              </TeacherLayout>
+            }
+          />
+
+          <Route
+            path="/teacher-study"
+            element={
+              <TeacherLayout>
+                <TeacherStudyModule />
               </TeacherLayout>
             }
           />
@@ -750,6 +770,14 @@ const App = () => {
             element={
               <AdminLayout>
                 <NotificationPage />
+              </AdminLayout>
+            }
+          />
+            <Route
+            path="/admin-subjectlistview"
+            element={
+              <AdminLayout>
+                <SubjectListView />
               </AdminLayout>
             }
           />

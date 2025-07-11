@@ -6,7 +6,7 @@ import back from "../assets/images/back.png";
 import { postAnnouncement } from '../api/ClientApi';
 
 const Container = styled.div`
-  padding: 0.5rem;
+  padding: 0 1.2rem;
   font-family: Poppins;
 `;
 
@@ -22,8 +22,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 26px;
+  font-weight: 600;
   margin: 0;
 `;
 
@@ -139,8 +139,8 @@ const PrincipleAnnouncement = () => {
   const [formDataList, setFormDataList] = useState([
     {
       title: "",
-      duration: "",
-      date: "",
+      start_date: "",
+      end_date: "",
       description: "",
     },
   ]);
@@ -160,7 +160,8 @@ const PrincipleAnnouncement = () => {
     const formData = formDataList[index];
     const announcementData = {
       title: formData.title,
-      date: formData.date,
+      start_date: formData.start_date,
+      end_date: formData.end_date,
       message: formData.description,
       status: "active",
     };
@@ -174,8 +175,8 @@ const PrincipleAnnouncement = () => {
       const updatedFormData = [...formDataList];
       updatedFormData[index] = {
         title: "",
-        duration: "",
-        date: "",
+        start_date: "",
+        end_date: "",
         description: "",
       };
       setFormDataList(updatedFormData);
@@ -188,7 +189,7 @@ const PrincipleAnnouncement = () => {
   const addMoreForm = () => {
     setFormDataList((prevFormDataList) => [
       ...prevFormDataList,
-      { title: "", duration: "", date: "", description: "" },
+      { title: "", start_date: "", end_date: "", description: "" },
     ]);
   };
 
@@ -233,26 +234,22 @@ const PrincipleAnnouncement = () => {
             </div>
 
             <div style={{ flex: 1 }}>
-              <Label>Duration *</Label>
-              <Select
-                name="duration"
-                value={formData.duration}
+              <Label>Start Date *</Label>
+              <Input
+                type="date"
+                name="start_date"
+                value={formData.start_date}
                 onChange={(e) => handleChange(e, index)}
                 required
-              >
-                <option value="">Select Time</option>
-                <option value="10 mins">10 mins</option>
-                <option value="30 mins">30 mins</option>
-                <option value="1 hour">1 hour</option>
-              </Select>
+              />
             </div>
 
             <div style={{ flex: 1 }}>
-              <Label>Date *</Label>
+              <Label>End Date *</Label>
               <Input
                 type="date"
-                name="date"
-                value={formData.date}
+                name="end_date"
+                value={formData.end_date}
                 onChange={(e) => handleChange(e, index)}
                 required
               />

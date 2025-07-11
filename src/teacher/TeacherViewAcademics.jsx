@@ -9,7 +9,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { FaSearch } from "react-icons/fa";
 
-const PrincipalAcademics = () => {
+const TeacherViewAcademics = () => {
   const navigate = useNavigate();
 
   const [filters, setFilters] = useState({
@@ -153,7 +153,7 @@ const PrincipalAcademics = () => {
   );
 };
 
-export default PrincipalAcademics;
+export default TeacherViewAcademics;
 
 const Container = styled.div`
   padding: 0 1.2rem;

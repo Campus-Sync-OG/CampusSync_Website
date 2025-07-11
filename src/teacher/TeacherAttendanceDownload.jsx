@@ -368,8 +368,7 @@ export default TeacherAttendanceDownload;
 // Styled components declarations (you can keep your existing ones)
 
 const Container = styled.div`
-  padding: 0 10px;
-  max-width: 100%;
+  padding: 0 1.2rem;
 `;
 const Content = styled.div`
   margin-top: 20px;

@@ -17,7 +17,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 600;
   font-family: "Poppins";
   margin: 0;
@@ -234,6 +234,10 @@ const SubjectList = () => {
           </Button>
           <Button type="button" onClick={handleSaveSubjects}>
             Save
+          </Button>
+
+          <Button type="button" color="#007bff" onClick={() => navigate("/admin-subjectlistview")}>
+            View Subjects
           </Button>
         </ButtonContainer>
       </Form>

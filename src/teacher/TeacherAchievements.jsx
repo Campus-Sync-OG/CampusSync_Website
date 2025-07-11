@@ -47,7 +47,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 0 10px;
+  padding: 0 1.2rem;
 `;
 
 const Table = styled.table`

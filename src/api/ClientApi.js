@@ -67,8 +67,10 @@ export const loginUser = (credentials) =>
 export const resetPassword = (payload) =>
   api.post("/users/reset-password", payload).then((res) => res.data);
 
+
 export const getAllSubjects = () =>
   api.get("/subjects/all").then((res) => res.data);
+
 
 // Get all assignments for a student by admission number
 export const getAssignmentsByAdmissionNo = (admission_no) =>
@@ -698,6 +700,66 @@ export const uploadWithMetadata = async (file, metadata = {}) => {
     throw new Error(error?.response?.data?.message || "Upload failed");
   }
 };
+
+export const getClassPerformance = async (classGrade, section) => {
+  try {
+    const response = await api.get(`/academics/performance/${classGrade}/${section}`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching class performance:", error);
+    throw error;
+  }
+};
+
+// Add this in your ClientApi.js
+export const deleteSubject = async (id) => {
+  return api.delete(`/subjects/${id}`);
+};
+
+
+export const getTeacherCirculars = async () => {
+  try {
+    const response = await api.get("/circulars/my-circulars");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher circulars:", error);
+    throw error;
+  }
+};
+
+// 📄 ClientApi.js
+
+export const deleteCircular = async (id) => {
+  try {
+    const response = await api.delete(`/circulars/delete-circular/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting circular:", error);
+    throw error;
+  }
+};
+
+export const fetchLeaveStatusByEmpId  = async () => {
+  try {
+    const response = await api.get("/leaves/teacher-leaves");
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching my leaves:", error);
+    throw error;
+  }
+};
+
+export const updateTeacher = async (emp_id, updateData) => {
+  try {
+    const response = await api.put(`/teachers/update/${emp_id}`, updateData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating teacher:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
 
 
 // Inside component or event handler
