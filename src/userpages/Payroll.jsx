@@ -24,13 +24,13 @@ const PayrollSetup = () => {
         <ActionButton onClick={() => navigate('/admin-structure')}>
           Add Structure
         </ActionButton>
-        <ActionButton onClick={() => navigate('/payroll/add-component-value')}>
+        <ActionButton onClick={() => navigate('/admin-componentvalue')}>
           Add Component Value
         </ActionButton>
-        <ActionButton onClick={() => navigate('/payroll/add-component-type')}>
+        <ActionButton onClick={() => navigate('/admin-componenttype')}>
           Add Component Type
         </ActionButton>
-        <ActionButton onClick={() => navigate('/payroll/generate')}>
+        <ActionButton onClick={() => navigate('/admin-payrollgeneration')}>
           Payroll
         </ActionButton>
       </ButtonGroup>

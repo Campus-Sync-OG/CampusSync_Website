@@ -701,9 +701,11 @@ export const uploadWithMetadata = async (file, metadata = {}) => {
 
 export const getSalaryComponents = () =>
   api.get('/payroll/getcomponents').then((res) => res.data);
-
 export const createSalaryComponent = ({ structure_id, components }) =>
-  api.post('/payroll/addcomponents', { structure_id, components }).then((res) => res.data);
+  api.post('/payroll/addcomponents', {
+    structure_id,
+    component_values: components,
+  }).then((res) => res.data);
 
 export const getSalaryStructures = () =>
   api.get('/payroll/getstructure').then((res) => res.data);
@@ -722,7 +724,7 @@ export const getComponentTypes = () =>
   api.get('/payroll/allcomp').then((res) => res.data);
 
 export const generatePayroll = (month) =>
-  api.post('/payroll/auto', { month }).then((res) => res.data);
+  api.post('/payroll/generateall', { month }).then((res) => res.data);
 // Inside component or event handler
 
 export default api;
