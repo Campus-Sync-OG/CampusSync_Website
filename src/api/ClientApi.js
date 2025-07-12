@@ -726,5 +726,9 @@ export const getComponentTypes = () =>
 export const generatePayroll = (month) =>
   api.post('/payroll/generateall', { month }).then((res) => res.data);
 // Inside component or event handler
+export const getTeacherPayroll = (empId) =>
+  api.get(`/payroll/getbyid/${empId}`).then((res) => res.data);
+
+
 
 export default api;

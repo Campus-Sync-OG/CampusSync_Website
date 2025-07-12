@@ -100,6 +100,8 @@ import SalaryStructure from "./userpages/AddStructure";
 import ComponentValue from "./userpages/AddComponentValue";
 import ComponentType from "./userpages/AddComponentType";
 import PayrollGeneration from "./userpages/PayrollGeneration";
+import TeacherPayroll from "./teacher/TeacherPayroll";
+import TeacherPayrollPDF from "./teacher/TeacherPayrollDownload";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -471,11 +473,27 @@ const App = () => {
               </TeacherLayout>
             }
           />
+           <Route
+            path="/teacher-payroll"
+            element={
+              <TeacherLayout>
+                <TeacherPayroll />
+              </TeacherLayout>
+            }
+          />
           <Route
             path="/teacher-assignments"
             element={
               <TeacherLayout>
                 <TeacherAssignment />
+              </TeacherLayout>
+            }
+          />
+          <Route
+            path="/payroll-pdf"
+            element={
+              <TeacherLayout>
+                <TeacherPayrollPDF />
               </TeacherLayout>
             }
           />
