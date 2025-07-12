@@ -41,13 +41,12 @@ const ComponentValue = () => {
     e.preventDefault();
     if (!selectedStructureId) return alert("Please select a Structure");
 
-    const componentsToSubmit = componentTypes.map(type => ({
-      structure_id: selectedStructureId,
-      name: type.name,
-      type: type.type,
-      amount: componentValues[type.id]?.amount || 0,
-      is_percentage: componentValues[type.id]?.is_percentage || false
-    }));
+  const componentsToSubmit = componentTypes.map(type => ({
+  name: type.name,
+ 
+  amount: parseFloat(componentValues[type.id]?.amount || 0), // ✅ ensure it's a number
+  is_percentage: componentValues[type.id]?.is_percentage || false
+}));
 
     try {
       await createSalaryComponent({ structure_id: selectedStructureId, components: componentsToSubmit });
