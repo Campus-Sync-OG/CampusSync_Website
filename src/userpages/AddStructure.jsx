@@ -1,32 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { createSalaryStructure, getSalaryStructures } from '../api/ClientApi';
 
 const AddStructure = () => {
+  const navigate = useNavigate();
+  const [structures, setStructures] = useState([]);
+  const [showForm, setShowForm] = useState(false);
   const [structureData, setStructureData] = useState({
     name: '',
-    base_salary: '',
-    is_default: false,
-    
+    base_salary: ''
   });
 
-  const [viewMode, setViewMode] = useState(false);
-  const [structures, setStructures] = useState([]);
-
   useEffect(() => {
-    if (viewMode) {
-      getSalaryStructures()
-        .then(setStructures)
-        .catch(() => alert('Failed to fetch structures'));
+    fetchStructures();
+  }, []);
+
+  const fetchStructures = async () => {
+    try {
+      const data = await getSalaryStructures();
+      setStructures(data);
+    } catch (err) {
+      alert('Failed to fetch structures');
     }
-  }, [viewMode]);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createSalaryStructure(structureData);
-      alert('Structure added');
-      setStructureData({ name: '', base_salary: '', is_default: false, school_id: '' });
+      await createSalaryStructure({
+        ...structureData,
+        is_default: false
+      });
+      setStructureData({ name: '', base_salary: '' });
+      setShowForm(false);
+      fetchStructures();
     } catch {
       alert('Failed to add structure');
     }
@@ -35,72 +43,71 @@ const AddStructure = () => {
   return (
     <Container>
       <Header>
-        <h2>Add Salary Structure</h2>
-        <ViewButton onClick={() => setViewMode(!viewMode)}>
-          {viewMode ? ' Add New' : ' View All'}
-        </ViewButton>
+        <h2>Salary Structures</h2>
+        <BackButton onClick={() => navigate(-1)}>Back</BackButton>
       </Header>
 
-     {!viewMode ? (
-  <Form onSubmit={handleSubmit}>
-    <label>Name</label>
-    <input
-      value={structureData.name}
-      onChange={(e) => setStructureData({ ...structureData, name: e.target.value })}
-      required
-    />
-    <label>Base Salary</label>
-    <input
-      type="number"
-      value={structureData.base_salary}
-      onChange={(e) => setStructureData({ ...structureData, base_salary: e.target.value })}
-      required
-    />
-    <label>
-      <input
-        type="checkbox"
-        checked={structureData.is_default}
-        onChange={(e) => setStructureData({ ...structureData, is_default: e.target.checked })}
-      />
-      {' '}Is Default?
-    </label>
-    <SubmitBtn type="submit">Save</SubmitBtn>
-  </Form>
-) : (
-  <TableWrapper>
-    <TableContainer>
-      <Table>
-        <TheadWrapper>
-          <tr>
-            <Th>ID</Th>
-            <Th>Name</Th>
-            <Th>Base Salary</Th>
-            <Th>Default</Th>
-          </tr>
-        </TheadWrapper>
-        <tbody>
-          {structures.map((s) => (
-            <tr key={s.id}>
-              <Td>{s.id}</Td>
-              <Td>{s.name}</Td>
-              <Td>{s.base_salary}</Td>
-              <Td>{s.is_default ? 'Yes' : 'No'}</Td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </TableContainer>
-  </TableWrapper>
-)}
+      {!showForm && (
+        <AddButton onClick={() => setShowForm(true)}>Add More</AddButton>
+      )}
 
-   
+      {showForm && (
+        <Form onSubmit={handleSubmit}>
+          <InputWrapper>
+            <label>Name</label>
+            <input
+              type="text"
+              value={structureData.name}
+              onChange={(e) => setStructureData({ ...structureData, name: e.target.value })}
+              required
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <label>Base Salary</label>
+            <input
+              type="number"
+              value={structureData.base_salary}
+              onChange={(e) => setStructureData({ ...structureData, base_salary: e.target.value })}
+              required
+            />
+          </InputWrapper>
+          <SubmitBtn type="submit">Save</SubmitBtn>
+        </Form>
+      )}
+
+      <TableWrapper>
+        <TableContainer>
+          <Table>
+            <thead>
+              <tr>
+                <Th>ID</Th>
+                <Th>Name</Th>
+                <Th>Base Salary</Th>
+                <Th>Default</Th>
+              </tr>
+            </thead>
+            <tbody>
+            {[...structures].sort((a, b) => a.id - b.id).map((s) => (
+                <tr key={s.id}>
+                  <Td>{s.id}</Td>
+                  <Td>{s.name}</Td>
+                  <Td>₹{s.base_salary}</Td>
+                  <Td>{s.is_default ? 'Yes' : 'No'}</Td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </TableContainer>
+      </TableWrapper>
     </Container>
   );
 };
 
 export default AddStructure;
-const Container = styled.div`
 
+// Styled Components
+
+const Container = styled.div`
   margin: 3rem auto;
   padding: 1rem;
 `;
@@ -111,33 +118,57 @@ const Header = styled.div`
   align-items: center;
 `;
 
-const ViewButton = styled.button`
-  background:rgb(24, 4, 173);
+const BackButton = styled.button`
+  background: #df0043;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+const AddButton = styled.button`
+  background: #002087;
+  color: white;
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 5px;
   cursor: pointer;
-  color:white;
+  margin: 1rem 0;
 `;
 
 const Form = styled.form`
   display: flex;
-  flex-direction: column;
-  margin-top: 1rem;
   gap: 1rem;
-  input{
-  max-width:300px;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  label {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  input {
+    padding: 0.5rem;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
 `;
 
 const SubmitBtn = styled.button`
-  padding: 0.75rem;
-  background-color:#df0043;
+  padding: 0.75rem 1.2rem;
+  background-color: #002087;
   color: white;
   border: none;
   border-radius: 5px;
-  max-width:100px;
+  height: fit-content;
+  align-self: end;
 `;
+
 const TableWrapper = styled.div`
   margin-top: 30px;
   width: 100%;
@@ -145,41 +176,26 @@ const TableWrapper = styled.div`
 `;
 
 const TableContainer = styled.div`
-  max-height: 500px;
+  max-height: 400px;
   overflow-y: auto;
-  @media (max-width: 426px) {
-    max-height: 200px;
-  }
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
-  border-radius: 20px;
-`;
-
-const TheadWrapper = styled.thead`
-  box-shadow: 0 8px 10px rgba(34, 22, 200, 0.1);
 `;
 
 const Th = styled.th`
   background-color: #002087;
   color: white;
   font-family: Poppins;
-  font-weight: 100;
   padding: 10px;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
 `;
 
 const Td = styled.td`
   font-family: Poppins;
   padding: 10px;
   border-bottom: 1px solid #eee;
-  vertical-align: middle;
   text-align: center;
 `;
