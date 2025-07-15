@@ -99,6 +99,13 @@ import TeacherStudyModule from "./teacher/TeacherStudyModule";
 import SubjectListView from "./userpages/SubjectListView";
 import TeacherViewAcademics from "./teacher/TeacherViewAcademics";
 
+import Payroll from "./userpages/Payroll";
+import SalaryStructure from "./userpages/AddStructure";
+import ComponentValue from "./userpages/AddComponentValue";
+import ComponentType from "./userpages/AddComponentType";
+import PayrollGeneration from "./userpages/PayrollGeneration";
+import TeacherPayroll from "./teacher/TeacherPayroll";
+import TeacherPayrollPDF from "./teacher/TeacherPayrollDownload";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -470,11 +477,27 @@ const App = () => {
               </TeacherLayout>
             }
           />
+           <Route
+            path="/teacher-payroll"
+            element={
+              <TeacherLayout>
+                <TeacherPayroll />
+              </TeacherLayout>
+            }
+          />
           <Route
             path="/teacher-assignments"
             element={
               <TeacherLayout>
                 <TeacherAssignment />
+              </TeacherLayout>
+            }
+          />
+          <Route
+            path="/payroll-pdf"
+            element={
+              <TeacherLayout>
+                <TeacherPayrollPDF />
               </TeacherLayout>
             }
           />
@@ -778,6 +801,47 @@ const App = () => {
             element={
               <AdminLayout>
                 <SubjectListView />
+                </AdminLayout>
+            }
+          />
+            
+           <Route
+            path="/admin-payroll"
+            element={
+              <AdminLayout>
+                <Payroll />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-structure"
+            element={
+              <AdminLayout>
+                <SalaryStructure />
+              </AdminLayout>
+            }
+          />
+                    <Route
+            path="/admin-componentvalue"
+            element={
+              <AdminLayout>
+                <ComponentValue />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-componenttype"
+            element={
+              <AdminLayout>
+                <ComponentType />
+              </AdminLayout>
+            }
+          />
+           <Route
+            path="/admin-payrollGeneration"
+            element={
+              <AdminLayout>
+                <PayrollGeneration />
               </AdminLayout>
             }
           />
