@@ -121,7 +121,7 @@ const DashboardContainer = styled.div`
   overflow-y: auto;
   max-height: 90vh;
   overflow-x: hidden;
-  
+
   @media (max-width: 320px) {
     width: 100%;
     overflow-x: hidden;
@@ -228,6 +228,12 @@ const WelcomeCard = styled.div`
   @media (max-width: 380px) {
     width: 90%;
     margin-left: 0px;
+    min-height: 100px;
+    .image {
+      height: 100px;
+      width: 100px;
+      margin-right: 10px;
+    }
   }
 `;
 
@@ -285,6 +291,7 @@ const CardGrid = styled.div`
   @media (max-width: 376px) {
     width: 100%;
     gap: 20px;
+    margin-left: 0px;
   }
 `;
 
@@ -375,7 +382,7 @@ const DashboardCard = styled.div`
     margin:0;
     margin-left:10px;
     width:82%;
-    height:150px;
+    height:111px;
     img {
     width: 150px;
     height: 150px;
@@ -427,7 +434,7 @@ const CalendarSection = styled.div`
     margin-top: 0;
   }
   @media (max-width: 376px) {
-    margin-left: 45px;
+    margin-left: 43px;
   }
   @media (max-width: 320px) {
     margin-left: 40px;
@@ -471,6 +478,13 @@ const CalendarCard = styled.div`
   @media (max-width: 425px) {
     width: 90%;
   }
+  @media (max-width: 380px) {
+    height: 310px;
+
+    h3 {
+      margin: 0;
+    }
+  }
 `;
 
 const StyledCalendar = styled(Calendar)`
@@ -510,6 +524,12 @@ const StyledCalendar = styled(Calendar)`
     .react-calendar__tile {
       font-size: 9px; /* Reduce font size to fit */
       padding: 0px;
+    }
+  }
+  @media (max-width: 380px) {
+    .react-calendar__month-view {
+      height: 139px; /* Ensure the calendar stays within 200px */
+      margin: 0;
     }
   }
 `;
