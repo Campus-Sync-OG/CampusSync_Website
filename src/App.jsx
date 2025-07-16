@@ -76,7 +76,6 @@ import AddSubject from "./userpages/AddSubject";
 import TeacherAttendanceDownload from "./teacher/TeacherAttendanceDownload";
 import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
-import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
 import AttendnaceReport from "./principal/AttendanceReport";
 import LeaveApplication from "./teacher/LeaveApplication";
@@ -346,14 +345,7 @@ const App = () => {
               </Layout>
             }
           />
-          <Route
-            path="/receipt"
-            element={
-              <Layout>
-                <StudentReceiptPage />
-              </Layout>
-            }
-          />
+         
           <Route
             path="/leave"
             element={
