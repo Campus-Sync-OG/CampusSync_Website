@@ -347,7 +347,7 @@ const App = () => {
             }
           />
           <Route
-            path="/student-receipt"
+            path="/receipt"
             element={
               <Layout>
                 <StudentReceiptPage />
