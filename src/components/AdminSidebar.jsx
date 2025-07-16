@@ -480,6 +480,16 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Announcement</Label>
             </SidebarItem>
+             <SidebarItem
+              to="/admin-payroll"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TfiAnnouncement />
+              </Icon>
+              <Label expanded={true}>Payroll</Label>
+            </SidebarItem>
+            
 
             <SidebarItem
               to="/admin-notification"
@@ -626,7 +636,15 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Calendar of Events</Label>
             </SidebarItem>
-
+  <SidebarItem
+              to="/admin-payroll"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TfiAnnouncement />
+              </Icon>
+              <Label expanded={true}>Payroll </Label>
+            </SidebarItem>
             <SidebarItem to="/admin-teacher-data" expanded={expanded}>
               <Icon>
                 <RiDatabase2Line />

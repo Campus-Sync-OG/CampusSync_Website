@@ -141,10 +141,6 @@ const SubjectItem = styled.li`
   cursor: pointer;
   overflow: hidden;
 
-  &:hover .animated-dot {
-    animation: ${moveDot} 5s ease-in-out;
-  }
-
   &:hover {
     background-color: #f9f9f9;
   }
@@ -164,9 +160,6 @@ const AssignmentsTable = styled.table`
 `;
 
 const AssignmentLink = styled.span`
-  color: red;
-  cursor: pointer;
-
   &:hover {
     text-decoration: underline;
   }
@@ -396,7 +389,7 @@ const App = () => {
                         left: 0,
                         width: "8px",
                         height: "8px",
-                        backgroundColor: "#df0043",
+                       
                         borderRadius: "50%",
                         transform: "translateY(-50%)",
                       }}

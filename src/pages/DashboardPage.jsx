@@ -7,7 +7,10 @@ import academics from "../assets/images/academics.png";
 import fees from "../assets/images/fees.png";
 import assignment from "../assets/images/assignment.png";
 import attendance from "../assets/images/attendance.png";
-import { fetchStudentByAdmissionNo,fetchAnnouncements } from "../api/ClientApi"; // API function to fetch student info
+import {
+  fetchStudentByAdmissionNo,
+  fetchAnnouncements,
+} from "../api/ClientApi"; // API function to fetch student info
 import { useWindowSize } from "@react-hook/window-size";
 import Confetti from "react-confetti";
 // Styled Components
@@ -60,6 +63,9 @@ const DashboardContainer = styled.div`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
+  @media (max-width: 360px) {
+    width: 0;
+  }
 `;
 
 const WelcomeSection = styled.div`
@@ -171,18 +177,18 @@ const WelcomeSection = styled.div`
     left: 36px;
     h2 {
       top: 0;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
     }
     p {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
     img {
       left: 25px;
       top: 0px;
-      min-width: 35%;
+      min-width: 55%;
       max-width: 35%;
-      min-height: 9vh;
+      min-height: 15vh;
       max-height: 9vh;
     }
   }
@@ -212,8 +218,8 @@ const PopupBox = styled.div`
   max-width: 500px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  max-height:200px;
-  height:50%;
+  max-height: 200px;
+  height: 50%;
   h1 {
     color: red;
     font-family: "Poppins", sans-serif;
@@ -239,7 +245,7 @@ const PopupBox = styled.div`
     font-size: 14px;
     border-radius: 8px;
     cursor: pointer;
-    gap:10px;
+    gap: 10px;
 
     &:hover {
       background-color: #001764;
@@ -295,7 +301,8 @@ const CardGrid = styled.div`
     gap: 15px 105px;
   }
   @media (max-width: 380px) {
-    left: 20px;
+    left: 25px;
+    width: 100%;
   }
   @media (max-width: 320px) {
     gap: 15px 105px;
@@ -468,7 +475,7 @@ const CalendarContainer = styled.div`
   }
   @media (max-width: 380px) {
     position: relative;
-    left: 60px;
+    left: 67px;
     width: 100%;
   }
   @media (max-width: 320px) {
@@ -622,7 +629,6 @@ const widgetConfig = [
 ];
 
 const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
-  
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
@@ -635,11 +641,8 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
   ).getDay();
   const adjustedFirstDay = (firstDay + 6) % 7;
   const dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-    
- 
+
   return (
-   
-    
     <CalendarContainer>
       <CalendarWidget>
         <CalendarHeader>
@@ -672,7 +675,6 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
         </CalendarGrid>
       </CalendarWidget>
     </CalendarContainer>
-   
   );
 };
 
@@ -683,9 +685,9 @@ const DashboardPage = () => {
   const [isBirthday, setIsBirthday] = useState(false);
   const [showBirthdayWish, setShowBirthdayWish] = useState(false);
   const [width, height] = useWindowSize(); // ✅ get window size for confetti
-   const [showPopup, setShowPopup] = useState(false);
-    const [latestAnnouncement, setLatestAnnouncement] = useState(null);
-    const [announcements, setAnnouncements] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [latestAnnouncement, setLatestAnnouncement] = useState(null);
+  const [announcements, setAnnouncements] = useState([]);
   const storedUser = localStorage.getItem("user");
   let user = null;
 
@@ -767,8 +769,8 @@ const DashboardPage = () => {
     }
   }, [admission_no]);
 
-   useEffect(() => {
-      const popupSeen = sessionStorage.getItem("popupSeen");
+  useEffect(() => {
+    const popupSeen = sessionStorage.getItem("popupSeen");
 
     const loadAnnouncements = async () => {
       try {
@@ -788,11 +790,10 @@ const DashboardPage = () => {
     };
 
     loadAnnouncements();
-   
   }, []);
 
   return (
-    <> 
+    <>
       {isBirthday && showBirthdayWish && (
         <BirthdayPopup>
           <Confetti width={width} height={height} />
@@ -807,43 +808,41 @@ const DashboardPage = () => {
           </BirthdayCard>
         </BirthdayPopup>
       )}
-     {showPopup && latestAnnouncement && (
-  <PopupOverlay>
-    <PopupBox style={{ position: 'relative' }}>
-      
-      {/* Close button */}
-      <button 
-        onClick={() => setShowPopup(false)}
-         style={{
-         position: 'absolute',
-          top: '10px',
-          right: '10px',
-          width: '30px',
-          height: '30px',
-          borderRadius: '4px',
-          border: 'none',
-          backgroundColor: '#002087',
-          color: '#fff',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        &times;
-      </button>
+      {showPopup && latestAnnouncement && (
+        <PopupOverlay>
+          <PopupBox style={{ position: "relative" }}>
+            {/* Close button */}
+            <button
+              onClick={() => setShowPopup(false)}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                width: "30px",
+                height: "30px",
+                borderRadius: "4px",
+                border: "none",
+                backgroundColor: "#002087",
+                color: "#fff",
+                fontSize: "20px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              &times;
+            </button>
 
-      {/* Centered Title */}
-      <h1 style={{ textAlign: 'center' }}>Announcement</h1>
-      
-      <h3>{latestAnnouncement.title}</h3>
-      <p>{latestAnnouncement.message}</p>
-      
-    </PopupBox>
-  </PopupOverlay>
-)}
+            {/* Centered Title */}
+            <h1 style={{ textAlign: "center" }}>Announcement</h1>
+
+            <h3>{latestAnnouncement.title}</h3>
+            <p>{latestAnnouncement.message}</p>
+          </PopupBox>
+        </PopupOverlay>
+      )}
 
       <PageContainer>
         <DashboardContainer>

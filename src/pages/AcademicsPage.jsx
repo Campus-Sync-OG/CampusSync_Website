@@ -4,6 +4,7 @@ import styled from "styled-components";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
 import { fetchExamFormats, generateMarksheet } from "../api/ClientApi";  // Your API utility
+import { generateAndOpenMarksheetPDF } from "../utils/generateAndOpenMarksheetPDF";
 
 
 const Academics = () => {
@@ -32,16 +33,7 @@ const Academics = () => {
 
   const handleView = async (examName) => {
     const admission_no = getAdmissionNo();
-    if (!admission_no) {
-      alert("Missing admission number. Please log in again.");
-      return;
-    }
-    const url = await generateMarksheet(admission_no, examName);
-    if (url) {
-      window.open(url, "_blank");
-    } else {
-      alert("Failed to generate or view marksheet.");
-    }
+    await generateAndOpenMarksheetPDF(admission_no, examName); // ✅ This now handles everything
   };
 
   const handleDownload = async (examName) => {
@@ -64,7 +56,7 @@ const Academics = () => {
   };
 
   // Determine what to display
-  const displayResults = 
+  const displayResults =
     filter === "All"
       ? examNames
       : examNames.filter(name => name === filter);
@@ -133,10 +125,6 @@ const Academics = () => {
 };
 
 export default Academics;
-
-
-
-// styled components (same as before — no change required)
 
 
 // STYLED COMPONENTS

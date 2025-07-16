@@ -407,6 +407,13 @@ const Sidebar = () => {
               <Label expanded={true}>Forms</Label>
             </SidebarItem>
 
+           <SidebarItem to="/teacher-payroll" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={true}>payroll</Label>
+            </SidebarItem>
+
             <SidebarItem to="/teacher-student-leaves" onClick={() => setMobileOpen(false)}>
               <Icon>
                 <VscGitPullRequestNewChanges />
@@ -614,6 +621,12 @@ const Sidebar = () => {
                 <LiaBookSolid />
               </Icon>
               <Label expanded={expanded}>Subjects</Label>
+            </SidebarItem>
+            <SidebarItem to="/teacher-payroll" expanded={expanded}>
+              <Icon>
+                <LiaBookSolid />
+              </Icon>
+              <Label expanded={expanded}>payroll</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-assignments" expanded={expanded}>

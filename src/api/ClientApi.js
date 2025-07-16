@@ -538,7 +538,7 @@ export const generateMarksheet = async (admission_no, exam_format) => {
   try {
     const response = await api.get(`/academics/marksheet/${admission_no}/${exam_format}`);
     if (response.data.success) {
-      return response.data.marksheetUrl;
+      return response.data.data; // ✅ RETURN ONLY NEEDED DATA
     }
     return null;
   } catch (err) {
@@ -757,6 +757,39 @@ export const updateTeacher = async (emp_id, updateData) => {
     console.error('Error updating teacher:', error.response?.data || error.message);
     throw error;
   }
+};
+
+export const getSalaryComponents = () =>
+  api.get('/payroll/getcomponents').then((res) => res.data);
+export const createSalaryComponent = ({ structure_id, components }) =>
+  api.post('/payroll/addcomponents', {
+    structure_id,
+    component_values: components,
+  }).then((res) => res.data);
+
+export const getSalaryStructures = () =>
+  api.get('/payroll/getstructure').then((res) => res.data);
+
+export const createSalaryStructure = (structureData) =>
+  api.post('/payroll/addstructure', structureData).then((res) => res.data);
+
+export const getPayrollsByMonth = (month) =>
+  api.get(`/payroll/getall?month=${month}`).then((res) => res.data);
+
+export const createComponentType = (data) =>
+  api.post('/payroll/component_types', data).then((res) => res.data);
+
+// Get all component types
+export const getComponentTypes = () =>
+  api.get('/payroll/allcomp').then((res) => res.data);
+
+export const generatePayroll = (month) =>
+  api.post('/payroll/generateall', { month }).then((res) => res.data);
+// Inside component or event handler
+export const getTeacherPayroll = (empId) =>
+  api.get(`/payroll/getbyid/${empId}`).then((res) => res.data);
+export const getAllPayrolls = () => {
+  return api.get('/payroll/all').then((res) => res.data);
 };
 
 
