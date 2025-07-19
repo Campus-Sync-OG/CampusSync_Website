@@ -76,7 +76,6 @@ const PayrollSetup = () => {
     </AddButton>
     {showActions && (
       <Dropdown ref={dropdownRef}>
-        <DropdownItem onClick={() => navigate('/admin-structure')}>Add Structure</DropdownItem>
         <DropdownItem onClick={() => navigate('/admin-componentvalue')}>Add Component Value</DropdownItem>
         <DropdownItem onClick={() => navigate('/admin-componenttype')}>Add Component Type</DropdownItem>
         <DropdownItem onClick={() => navigate('/admin-payrollgeneration')}>Payroll</DropdownItem>

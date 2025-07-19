@@ -100,7 +100,7 @@ import SubjectListView from "./userpages/SubjectListView";
 import TeacherViewAcademics from "./teacher/TeacherViewAcademics";
 
 import Payroll from "./userpages/Payroll";
-import SalaryStructure from "./userpages/AddStructure";
+
 import ComponentValue from "./userpages/AddComponentValue";
 import ComponentType from "./userpages/AddComponentType";
 import PayrollGeneration from "./userpages/PayrollGeneration";
@@ -813,14 +813,7 @@ const App = () => {
               </AdminLayout>
             }
           />
-          <Route
-            path="/admin-structure"
-            element={
-              <AdminLayout>
-                <SalaryStructure />
-              </AdminLayout>
-            }
-          />
+          
                     <Route
             path="/admin-componentvalue"
             element={

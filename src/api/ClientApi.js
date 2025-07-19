@@ -763,17 +763,12 @@ export const updateTeacher = async (emp_id, updateData) => {
 
 export const getSalaryComponents = () =>
   api.get('/payroll/getcomponents').then((res) => res.data);
-export const createSalaryComponent = ({ structure_id, components }) =>
+export const createSalaryComponent = ({  role, component_values }) =>
   api.post('/payroll/addcomponents', {
-    structure_id,
-    component_values: components,
+    role,
+    component_values,
+   
   }).then((res) => res.data);
-
-export const getSalaryStructures = () =>
-  api.get('/payroll/getstructure').then((res) => res.data);
-
-export const createSalaryStructure = (structureData) =>
-  api.post('/payroll/addstructure', structureData).then((res) => res.data);
 
 export const getPayrollsByMonth = (month) =>
   api.get(`/payroll/getall?month=${month}`).then((res) => res.data);
@@ -793,6 +788,8 @@ export const getTeacherPayroll = (empId) =>
 export const getAllPayrolls = () => {
   return api.get('/payroll/all').then((res) => res.data);
 };
-
+export const getAllSalaryComponents = async () => {
+  return api.get('/payroll/all').then((res) => res.data);
+};
 
 export default api;
