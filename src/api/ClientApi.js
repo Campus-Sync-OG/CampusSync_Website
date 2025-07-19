@@ -786,9 +786,11 @@ export const getTeacherPayroll = (empId) =>
 export const getAllPayrolls = () => {
   return api.get('/payroll/all').then((res) => res.data);
 };
-export const getAllSalaryComponents = async () => {
-  return api.get('/payroll/all').then((res) => res.data);
-};
+
+export const updateBaseSalary = (unique_id, base_salary) =>
+  api.put(`/users/update/${unique_id}`, {
+    base_salary,
+  }).then((res) => res.data);
 
 
 
