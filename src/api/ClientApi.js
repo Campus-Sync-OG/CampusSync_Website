@@ -538,7 +538,7 @@ export const generateMarksheet = async (admission_no, exam_format) => {
   try {
     const response = await api.get(`/academics/marksheet/${admission_no}/${exam_format}`);
     if (response.data.success) {
-      return response.data.marksheetUrl;
+      return response.data.data; // ✅ RETURN ONLY NEEDED DATA
     }
     return null;
   } catch (err) {
@@ -759,8 +759,6 @@ export const updateTeacher = async (emp_id, updateData) => {
   }
 };
 
-
-
 export const getSalaryComponents = () =>
   api.get('/payroll/getcomponents').then((res) => res.data);
 export const createSalaryComponent = ({  role, component_values }) =>
@@ -791,5 +789,9 @@ export const getAllPayrolls = () => {
 export const getAllSalaryComponents = async () => {
   return api.get('/payroll/all').then((res) => res.data);
 };
+
+
+
+// Inside component or event handler
 
 export default api;

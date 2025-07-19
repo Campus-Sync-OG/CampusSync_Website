@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
+import { generateReceiptPdf } from "../utils/generateReceiptPdf";
 
 const Container = styled.div`
   padding: 0px 15px;
@@ -190,14 +191,13 @@ const FeePaymentForm = () => {
     );
   };
 
-  const handleGenerateReceipt = async (feestype) => {
-    try {
-      const res = await generateReceipt({ admission_no, feestype });
-      if (res) window.open(res, "_blank");
-    } catch (err) {
-      alert("Failed to generate receipt");
-    }
+  const handleGenerateReceipt = (record) => {
+    navigate("/receipt", {
+      state: { receipt: record }
+    });
   };
+
+
 
   const handlePayment = async () => {
     if (!selectedFee) {
@@ -418,9 +418,10 @@ const FeePaymentForm = () => {
                   <td>{record.pay_date?.split("T")[0]}</td>
                   <td>{record.pay_method}</td>
                   <td>
-                    <Button onClick={() => handleGenerateReceipt(record.feestype)}>
+                    <Button onClick={() => generateReceiptPdf(record)}>
                       Generate Receipt
                     </Button>
+
                   </td>
                 </tr>
               ))}
