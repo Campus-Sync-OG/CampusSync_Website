@@ -2,153 +2,176 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
   createSalaryComponent,
-  getSalaryComponents,
-  getSalaryStructures,
   getComponentTypes,
+  getAllUsers,
+  getSalaryComponents
 } from '../api/ClientApi';
 import { useNavigate } from 'react-router-dom';
 
-const ComponentValue = () => {
-  const [components, setComponents] = useState([]);
-  const [structures, setStructures] = useState([]);
+const ComponentValueSetup = () => {
   const [componentTypes, setComponentTypes] = useState([]);
-  const [selectedStructureId, setSelectedStructureId] = useState('');
-  const [componentValues, setComponentValues] = useState({});
-  const [structureMap, setStructureMap] = useState({});
-const navigate = useNavigate();
-  useEffect(() => {
-    getSalaryStructures().then(data => {
-      setStructures(data);
-      const map = {};
-      data.forEach(item => {
-        map[item.id] = item.name;
-      });
-      setStructureMap(map);
-    });
+  const [role, setRole] = useState('');
+  const [formValues, setFormValues] = useState({});
+  const [roles, setRoles] = useState([]);
+  
+  const [savedValues, setSavedValues] = useState({});
 
-    getComponentTypes().then(setComponentTypes);
-    getSalaryComponents().then(setComponents);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchComponentTypes();
+    fetchRoles();
+    fetchSavedComponents();
   }, []);
 
-  const handleInputChange = (typeId, field, value) => {
-    setComponentValues(prev => ({
-      ...prev,
-      [typeId]: {
-        ...prev[typeId],
-        [field]: field === 'is_percentage' ? value.target.checked : value.target.value
+  const fetchComponentTypes = async () => {
+    const types = await getComponentTypes();
+    setComponentTypes(types || []);
+  };
+
+  const fetchRoles = async () => {
+    const allUsers = await getAllUsers();
+    const roleSet = [...new Set(allUsers.map((u) => u.role))].filter((r) => r !== 'student');
+    setRoles(roleSet);
+  };
+
+  const fetchSavedComponents = async () => {
+  try {
+    const all = await getSalaryComponents(); 
+   // should be array
+    const grouped = {};
+
+    all?.forEach((entry) => {
+      if (entry.role && Array.isArray(entry.component_values)) {
+        grouped[entry.role] = entry.component_values;
       }
-    }));
-  };
+    });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedStructureId) return alert("Please select a Structure");
-
-    const componentsToSubmit = componentTypes.map(type => ({
-      name: type.name,
-      amount: parseFloat(componentValues[type.id]?.amount || 0),
-      is_percentage: componentValues[type.id]?.is_percentage || false
-    }));
-
-    try {
-      await createSalaryComponent({
-        structure_id: selectedStructureId,
-        components: componentsToSubmit
-      });
-      alert("Component values saved successfully.");
-      setComponentValues({});
-      getSalaryComponents().then(setComponents); // refresh table
-    } catch (err) {
-      alert("Error saving components");
-    }
-  };
-  const chunkArray = (arr, size) => {
-  const result = [];
-  for (let i = 0; i < arr.length; i += size) {
-    result.push(arr.slice(i, i + size));
+    setSavedValues(grouped);
+  } catch (err) {
+    console.error(' Failed to fetch saved components:', err);
   }
-  return result;
 };
 
-const componentChunks = chunkArray(componentTypes, 3);
+
+  const handleChange = (name, field, value) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: {
+        ...prev[name],
+        [field]: field === 'is_percentage' ? value === 'true' : value,
+      },
+    }));
+  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!role) {
+    alert('Please select a role');
+    return;
+  }
+
+  const component_values = Object.entries(formValues).map(([name, obj]) => ({
+    name,
+    amount: parseFloat(obj.amount || 0),
+    is_percentage: obj.is_percentage || false,
+  }));
+
+  if (component_values.length === 0) {
+    alert('Please enter at least one component value.');
+    return;
+  }
+
+  const payload = {
+    role,
+    component_values,
+  };
+
+  try {
+    console.log(' Submitting Payload:', payload);
+    await createSalaryComponent(payload);
+    alert(' Components saved successfully');
+    setFormValues({});
+    setRole('');
+    fetchSavedComponents();
+  } catch (error) {
+    console.error(' Submission failed:', error.response?.data || error.message);
+    alert(' Failed to save components. Check console for details.');
+  }
+};
+
 
   return (
     <Container>
       <TopBar>
-        <PageTitle>Add Component Values</PageTitle>
-         
-           <BackButton onClick={() => navigate(-1)}>Back</BackButton>
-          
-       
+        <PageTitle>Component Values Setup</PageTitle>
+        <BackButton onClick={() => navigate(-1)}> Back</BackButton>
       </TopBar>
 
       <Form onSubmit={handleSubmit}>
-        <label>Select Structure</label>
-       <SmallSelect
-  value={selectedStructureId}
-  onChange={(e) => setSelectedStructureId(e.target.value)}
-  required
->
-  <option value="">-- Select --</option>
-  {structures.map((s) => (
-    <option key={s.id} value={s.id}>
-      {s.name}
-    </option>
-  ))}
-</SmallSelect>
+        <label>Select Role</label>
+        <SmallSelect value={role} onChange={(e) => setRole(e.target.value)} required>
+          <option value="">-- Choose Role --</option>
+          {roles.map((r, i) => (
+            <option key={i} value={r}>
+              {r}
+            </option>
+          ))}
+        </SmallSelect>
 
+        <ComponentGrid>
+          {componentTypes.map((comp, i) => (
+            <ComponentCard key={i}>
+              <span>{comp.name}</span>
+              <AmountInput
+                type="number"
+                placeholder="Amount"
+                value={formValues[comp.name]?.amount || ''}
+                onChange={(e) => handleChange(comp.name, 'amount', e.target.value)}
+                required
+              />
+              <SmallSelect
+                value={formValues[comp.name]?.is_percentage ? 'true' : 'false'}
+                onChange={(e) => handleChange(comp.name, 'is_percentage', e.target.value)}
+              >
+                <option value="false">₹</option>
+                <option value="true">%</option>
+              </SmallSelect>
+            </ComponentCard>
+          ))}
+        </ComponentGrid>
 
-       <ComponentGrid>
-  {componentTypes.map((type) => (
-    <ComponentCard key={type.id}>
-      <strong>{type.name} ({type.type})</strong>
-      <AmountInput
-        type="number"
-        placeholder="Amount"
-        value={componentValues[type.id]?.amount || ''}
-        onChange={(e) => handleInputChange(type.id, 'amount', e)}
-      />
-      <CheckboxLabel>
-        <input
-          type="checkbox"
-          checked={componentValues[type.id]?.is_percentage || false}
-          onChange={(e) => handleInputChange(type.id, 'is_percentage', e)}
-        />
-        %
-      </CheckboxLabel>
-    </ComponentCard>
-  ))}
-</ComponentGrid>
-
-
-        <SubmitBtn type="submit">Save </SubmitBtn>
+        <SubmitBtn type="submit"> Save</SubmitBtn>
       </Form>
 
-      {/* Table shown always */}
       <TableWrapper>
+        <h3>Saved Component Values</h3>
         <TableContainer>
           <Table>
             <TheadWrapper>
               <tr>
-                <Th>Structure</Th>
-                <Th>Name</Th>
-                <Th>Type</Th>
-                <Th>Amount</Th>
-                <Th>%</Th>
+                <Th>Role</Th>
+                {componentTypes.map((c, i) => (
+                  <Th key={i}>{c.name}</Th>
+                ))}
               </tr>
             </TheadWrapper>
             <tbody>
-              {components.map((comp, idx) =>
-                comp.component_values.map((item, i) => (
-                  <tr key={`${idx}-${i}`}>
-                    <Td>{structureMap[comp.structure_id] || comp.structure_id}</Td>
-                    <Td>{item.name}</Td>
-                    <Td>{item.type}</Td>
-                    <Td>{item.amount}</Td>
-                    <Td>{item.is_percentage ? 'Yes' : 'No'}</Td>
-                  </tr>
-                ))
-              )}
+              {roles.map((r, i) => (
+                <tr key={i}>
+                  <Td>{r}</Td>
+                  {componentTypes.map((c, j) => {
+                   const item = savedValues[r]?.find(
+  (v) => v.name.trim().toLowerCase() === c.name.trim().toLowerCase()
+);
+                    return (
+                      <Td key={j}>
+                        {item ? `${item.amount}${item.is_percentage ? '%' : '₹'}` : '—'}
+                      </Td>
+                    );
+                  })}
+                </tr>
+              ))}
             </tbody>
           </Table>
         </TableContainer>
@@ -157,11 +180,10 @@ const componentChunks = chunkArray(componentTypes, 3);
   );
 };
 
-export default ComponentValue;
-
-// Styled components below (same as before)
-
-const Container = styled.div` padding: 2rem; `;
+export default ComponentValueSetup;
+const Container = styled.div`
+  padding: 2rem;
+`;
 
 const TopBar = styled.div`
   display: flex;
@@ -169,9 +191,9 @@ const TopBar = styled.div`
   align-items: center;
 `;
 
-const PageTitle = styled.h2` font-family: Poppins; `;
-
-
+const PageTitle = styled.h2`
+  font-family: Poppins;
+`;
 
 const BackButton = styled.button`
   background: #df0043;
@@ -181,10 +203,6 @@ const BackButton = styled.button`
   border-radius: 5px;
   cursor: pointer;
 `;
-
-
-
-
 
 const Form = styled.form`
   display: flex;
@@ -208,19 +226,19 @@ const ComponentTypeList = styled.div`
   border-radius: 8px;
   scrollbar-width: thin;
 
-  /* For WebKit (Chrome, Edge, Safari) */
   &::-webkit-scrollbar {
     width: 6px;
   }
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
+
   &::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 10px;
   }
 `;
-
 
 const SubmitBtn = styled.button`
   background: #9e0505ff;
@@ -231,6 +249,7 @@ const SubmitBtn = styled.button`
   font-size: 0.9rem;
   max-width: 100px;
 `;
+
 const SmallSelect = styled.select`
   padding: 0.35rem 0.5rem;
   font-size: 0.85rem;
@@ -240,8 +259,9 @@ const SmallSelect = styled.select`
   background-color: #fff;
   font-family: Poppins;
 `;
+
 const TableWrapper = styled.div`
-  margin-top: 30px;
+  margin-top: 10px;
   width: 100%;
   overflow-x: auto;
 `;
@@ -284,6 +304,7 @@ const Td = styled.td`
   vertical-align: middle;
   text-align: center;
 `;
+
 const ComponentGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);

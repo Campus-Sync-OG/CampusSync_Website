@@ -99,7 +99,7 @@ import SubjectListView from "./userpages/SubjectListView";
 import TeacherViewAcademics from "./teacher/TeacherViewAcademics";
 
 import Payroll from "./userpages/Payroll";
-import SalaryStructure from "./userpages/AddStructure";
+import EmployeeList from "./userpages/EmployeePage";
 import ComponentValue from "./userpages/AddComponentValue";
 import ComponentType from "./userpages/AddComponentType";
 import PayrollGeneration from "./userpages/PayrollGeneration";
@@ -805,19 +805,19 @@ const App = () => {
               </AdminLayout>
             }
           />
-          <Route
-            path="/admin-structure"
+           <Route
+            path="/admin-payroll"
             element={
               <AdminLayout>
-                <SalaryStructure />
+                <Payroll />
               </AdminLayout>
             }
           />
                     <Route
-            path="/admin-componentvalue"
+            path="/admin-employee"
             element={
               <AdminLayout>
-                <ComponentValue />
+                <EmployeeList />
               </AdminLayout>
             }
           />

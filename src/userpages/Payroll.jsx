@@ -4,17 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { FaPlus } from 'react-icons/fa';
-import { getAllPayrolls } from '../api/ClientApi';
+import { getAllPayrolls, getAllUsers } from '../api/ClientApi';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
+import dayjs from 'dayjs';
 
 const PayrollSetup = () => {
   const navigate = useNavigate();
   const [showActions, setShowActions] = useState(false);
   const [totalPayroll, setTotalPayroll] = useState(0);
   const [transactions, setTransactions] = useState([]);
-    const [viewAll, setViewAll] = useState(false);
+  const [viewAll, setViewAll] = useState(false);
+  const [employeeCount, setEmployeeCount] = useState(0);
+  const [showEmployees, setShowEmployees] = useState(false);
+  const [employeeList, setEmployeeList] = useState([]);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -22,18 +26,50 @@ const PayrollSetup = () => {
       try {
         const res = await getAllPayrolls();
         if (res && res.length) {
-          setTransactions(res);
+          setTransactions(res); 
+
+         
 
           const total = res.reduce((sum, tx) => sum + (parseFloat(tx.net_pay) || 0), 0);
           setTotalPayroll(total);
+
+          const uniqueEmployeeIds = new Set(res.map(tx => tx.employee_id));
+          setEmployeeCount(uniqueEmployeeIds.size);
         }
       } catch (error) {
         console.error("Failed to load payrolls:", error);
       }
     };
+
     fetchPayrolls();
   }, []);
- const visibleTransactions = viewAll ? transactions : transactions.slice(0, 5)
+
+  const visibleTransactions = viewAll ? transactions : transactions.slice(0, 5);
+const getLastThreeMonthsData = (transactions) => {
+  const grouped = {};
+
+  transactions.forEach((tx) => {
+    const month = tx.month; // use this directly from DB
+    grouped[month] = (grouped[month] || 0) + parseFloat(tx.net_pay || 0);
+  });
+
+  const chartData = Object.entries(grouped).map(([month, total]) => ({
+    month,
+    label: dayjs(month).format("MMM YYYY"),
+    value: total,
+  }));
+
+  // Sort properly by month value
+  return chartData
+    .sort((a, b) => new Date(a.month) - new Date(b.month))
+    .slice(-3);
+};
+
+const handleEmployeeClick = () => {
+    
+    navigate('/admin-employee'); // or your exact route path
+  };
+
   return (
     <Container>
       <Header>
@@ -50,40 +86,49 @@ const PayrollSetup = () => {
       </Header>
 
       <TopBar>
-  <TopLeft>
-    <Summary>
-      <h3>Total Payroll</h3>
-      <Total>₹{totalPayroll.toLocaleString()}</Total>
+        <TopLeft>
+          <Summary>
+            <h3>Total Payroll</h3>
+            <Total>₹{totalPayroll.toLocaleString()}</Total>
+          </Summary>
+
+           <Summary style={{ cursor: "pointer" }} onClick={handleEmployeeClick}>
+      <h3>Total Employees</h3>
+      <Total>{employeeCount}</Total>
     </Summary>
 
-    <ChartContainer>
-      <h4>Monthly Payroll</h4>
-      <ResponsiveContainer width="100%" height={200}>
-       <BarChart data={transactions.slice(-3)} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="net_pay" fill="#002087" name="Net Pay" />
-        </BarChart>
-      </ResponsiveContainer>
-    </ChartContainer>
-  </TopLeft>
+          <ChartContainer>
+            <h4>Monthly Payroll</h4>
+           
+             <ResponsiveContainer width="100%" height={200}>
+  <BarChart
+  data={getLastThreeMonthsData(transactions)}
+  margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
+>
+  <CartesianGrid strokeDasharray="3 3" />
+  <XAxis dataKey="label" />
+  <YAxis />
+  <Tooltip />
+  <Bar dataKey="value" fill="#708090" name="Net Pay" />
+</BarChart>
 
-  <DropdownWrapper>
-    <AddButton onClick={() => setShowActions(prev => !prev)}>
-      <FaPlus size={18} />
-    </AddButton>
-    {showActions && (
-      <Dropdown ref={dropdownRef}>
-        <DropdownItem onClick={() => navigate('/admin-structure')}>Add Structure</DropdownItem>
-        <DropdownItem onClick={() => navigate('/admin-componentvalue')}>Add Component Value</DropdownItem>
-        <DropdownItem onClick={() => navigate('/admin-componenttype')}>Add Component Type</DropdownItem>
-        <DropdownItem onClick={() => navigate('/admin-payrollgeneration')}>Payroll</DropdownItem>
-      </Dropdown>
-    )}
-  </DropdownWrapper>
-</TopBar>
+            </ResponsiveContainer>
+          </ChartContainer>
+        </TopLeft>
+
+        <DropdownWrapper>
+          <AddButton onClick={() => setShowActions(prev => !prev)}>
+            <FaPlus size={18} />
+          </AddButton>
+          {showActions && (
+            <Dropdown ref={dropdownRef}>
+              <DropdownItem onClick={() => navigate('/admin-componentvalue')}>Add Component Value</DropdownItem>
+              <DropdownItem onClick={() => navigate('/admin-componenttype')}>Add Component Type</DropdownItem>
+              <DropdownItem onClick={() => navigate('/admin-payrollgeneration')}>Payroll</DropdownItem>
+            </Dropdown>
+          )}
+        </DropdownWrapper>
+      </TopBar>
 
       <SectionTitle>Payroll Transactions</SectionTitle>
       <TransactionWrapper>
@@ -99,7 +144,7 @@ const PayrollSetup = () => {
           <tbody>
             {visibleTransactions.map((tx, index) => (
               <tr key={index}>
-                <td>{tx.month}</td>
+                <td>{dayjs(tx.month).format("MMM YYYY")}</td>
                 <td>{tx.employee_id}</td>
                 <td>₹{parseFloat(tx.net_pay).toLocaleString()}</td>
                 <td>{tx.status}</td>
@@ -114,11 +159,40 @@ const PayrollSetup = () => {
           </ViewAllButton>
         )}
       </TransactionWrapper>
+
+      {showEmployees && (
+        <>
+          <SectionTitle>Employee List</SectionTitle>
+          <TransactionWrapper>
+            <TransactionTable>
+              <thead>
+                <tr>
+                  <th>Employee ID</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Base Salary</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employeeList.map((emp, index) => (
+                  <tr key={index}>
+                    <td>{emp.emp_id || emp.id}</td>
+                    <td>{emp.emp_name || emp.name}</td>
+                    <td>{emp.role}</td>
+                    <td>₹{emp.base_salary ? parseFloat(emp.base_salary).toLocaleString() : '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </TransactionTable>
+          </TransactionWrapper>
+        </>
+      )}
     </Container>
   );
 };
 
 export default PayrollSetup;
+
 
 // Styled Components
 const Container = styled.div` padding: 2rem; `;
@@ -225,4 +299,14 @@ const ViewAllButton = styled.button`
   border: none;
   border-radius: 6px;
   cursor: pointer;
+`;
+const EmployeeCount = styled.div`
+  margin-top: 8px;
+  color: #002087;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;

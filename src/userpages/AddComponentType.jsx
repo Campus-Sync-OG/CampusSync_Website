@@ -48,10 +48,12 @@ const ComponentType = () => {
   <PageTitle>Component Types</PageTitle>
   <RightControls>
    
-    <AddMoreBtn onClick={() => setShowForm(!showForm)}>
-      {showForm ? 'Cancel' : '➕ Add More'}
-    </AddMoreBtn>
-     <BackBtn onClick={() => navigate(-1)}>🔙 Back</BackBtn>
+   {!showForm && (
+  <AddMoreBtn onClick={() => setShowForm(true)}>
+    Add More
+  </AddMoreBtn>
+)}
+     <BackBtn onClick={() => navigate(-1)}> Back</BackBtn>
   </RightControls>
 </TopBar>
 
@@ -75,7 +77,10 @@ const ComponentType = () => {
             <option value="deduction">Deduction</option>
           </select>
 
-          <SubmitBtn type="submit">Save</SubmitBtn>
+         <ButtonRow>
+    <SubmitBtn type="submit">Save</SubmitBtn>
+    <CancelBtn type="button" onClick={() => setShowForm(false)}>Cancel</CancelBtn>
+  </ButtonRow>
         </Form>
       )}
 
@@ -208,4 +213,17 @@ const BackBtn = styled.button`
   border-radius: 5px;
   cursor: pointer;
   font-weight: 500;
+`;
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const CancelBtn = styled.button`
+  background: #df0043;
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 5px;
+  width: 100px;
 `;
