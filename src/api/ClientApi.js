@@ -259,15 +259,15 @@ export const postAnnouncement = async (announcementData) => {
 export const getAllFeedback = () =>
   api.get("/principal/view").then((res) => res.data);
 
-export const fetchAllNotifications = async (role) => {
-  return api
-    .get("/notification/getnot", {
-      headers: {
-        Role: role, // Send role in the request header
-      },
-    })
-    .then((res) => res.data.data);
+export const  fetchAllNotifications  = async (params) => {
+  try {
+    const response = await api.get("/notification/getnot", { params }); // params = { user_id, class_id, section_id }
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
+
 
 export const addFee = (feeData) => {
   return api.post(`/users/addfee`, feeData);
@@ -739,7 +739,7 @@ export const deleteCircular = async (id) => {
   }
 };
 
-export const fetchLeaveStatusByEmpId  = async () => {
+export const fetchLeaveStatusByEmpId = async () => {
   try {
     const response = await api.get("/leaves/teacher-leaves");
     return response.data.data;
@@ -761,11 +761,11 @@ export const updateTeacher = async (emp_id, updateData) => {
 
 export const getSalaryComponents = () =>
   api.get('/payroll/getcomponents').then((res) => res.data);
-export const createSalaryComponent = ({  role, component_values }) =>
+export const createSalaryComponent = ({ role, component_values }) =>
   api.post('/payroll/addcomponents', {
     role,
     component_values,
-   
+
   }).then((res) => res.data);
 
 export const getPayrollsByMonth = (month) =>

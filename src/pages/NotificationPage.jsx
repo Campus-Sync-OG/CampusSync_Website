@@ -14,11 +14,12 @@ const NotificationsPage = () => {
       try {
         const loggedInUser = JSON.parse(localStorage.getItem("user"));
         const role = loggedInUser?.role;
+        const user_id = loggedInUser?.unique_id;
 
-        let allNotifications = await fetchAllNotifications(role);
+        let response = await fetchAllNotifications({ user_id });
+        let allNotifications = response?.data || [];
 
         if (Array.isArray(allNotifications)) {
-          // ✅ Remove duplicates based on title + message
           const uniqueNotifications = [];
           const seen = new Set();
 
@@ -30,7 +31,6 @@ const NotificationsPage = () => {
             }
           }
 
-          // ✅ Optional: Reverse for latest-first order
           setNotifications(uniqueNotifications.reverse());
         } else {
           console.error("Unexpected notification format:", allNotifications);
@@ -95,7 +95,7 @@ const NotificationsPage = () => {
       </Header>
 
       {notifications.map((notif, index) => (
-        <NotificationCard key={notif.id || index} bgColor={getRandomColor()}>
+        <NotificationCard key={notif.user_id || index} bgColor={getRandomColor()}>
           <Content>
             <NotificationTitle>
               <Emoji>{getRandomIcon()}</Emoji>
