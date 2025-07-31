@@ -159,13 +159,13 @@ const TeacherProfile = () => {
               <Label>Designation</Label>
               <Input as="select" value={editableFields.role} onChange={(e) => setEditableFields({ ...editableFields, role: e.target.value })}>
                 <option value="">Select Role</option>
-                <option value="Subject Teacher">Subject Teacher</option>
-                <option value="Class Teacher">Class Teacher</option>
+                <option value="subjectTeacher">Subject Teacher</option>
+                <option value="classTeacher">Class Teacher</option>
               </Input>
             </Column>
           </Row>
 
-          {editableFields.role === "Class Teacher" && (
+          {editableFields.role === "classTeacher" && (
             <Row>
               <Column>
                 <Label>Class</Label>
