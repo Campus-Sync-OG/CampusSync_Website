@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -197,7 +197,7 @@ const ToggleIcon = styled.div`
     margin: 0;
   }
   `;
-  export const ErrorMessage = styled.p`{
+export const ErrorMessage = styled.p`{
   color: red;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -250,6 +250,21 @@ const TeacherLogin = () => {
     }
   };
 
+  useEffect(() => {
+    const navType =
+      window.performance.getEntriesByType("navigation")[0]?.type ||
+      window.performance.navigation?.type;
+
+    const isRefresh =
+      navType === "reload" || navType === 1;
+
+    if (isRefresh) {
+      window.location.replace("/login");
+    }
+  }, []);
+
+
+
   const handleBack = () => navigate("/login");
 
   const handleForgotPassword = () => {
@@ -291,35 +306,35 @@ const TeacherLogin = () => {
 
         <LoginCard>
           <form onSubmit={handleLogin}>
-          <BackText onClick={handleBack}>‹ Back</BackText>
-          <Title>Login</Title>
-          <Icon src={teacherIcon} alt="Teacher" />
-          <RoleLabel>Teacher</RoleLabel>
-          {error && <ErrorMessage>{error}</ErrorMessage>}
-          <Input
-            type="text"
-            placeholder="User ID"
-            value={uniqueId}
-            onChange={(e) => setUniqueId(e.target.value)}
-          />
-
-          <PasswordWrapper>
+            <BackText onClick={handleBack}>‹ Back</BackText>
+            <Title>Login</Title>
+            <Icon src={teacherIcon} alt="Teacher" />
+            <RoleLabel>Teacher</RoleLabel>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
             <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="text"
+              placeholder="User ID"
+              value={uniqueId}
+              onChange={(e) => setUniqueId(e.target.value)}
             />
-            <ToggleIcon onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-            </ToggleIcon>
-          </PasswordWrapper>
 
-          <LoginButton onClick={handleLogin}>Login</LoginButton>
+            <PasswordWrapper>
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <ToggleIcon onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+              </ToggleIcon>
+            </PasswordWrapper>
 
-          <ForgotPassword onClick={handleForgotPassword}>
-            Forgot Password?
-          </ForgotPassword>
+            <LoginButton onClick={handleLogin}>Login</LoginButton>
+
+            <ForgotPassword onClick={handleForgotPassword}>
+              Forgot Password?
+            </ForgotPassword>
           </form>
         </LoginCard>
 
