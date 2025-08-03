@@ -84,7 +84,7 @@ const TeacherViewAcademics = () => {
         <input placeholder="Search by roll no..." onChange={(e) => handleFilterChange("roll_no", e.target.value)} />
         <select onChange={(e) => handleFilterChange("class", e.target.value)}>
           <option value="">Select Class</option>
-          {["10", "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"].map((cls) => (
+          {["X", "IX", "VIII", "VII", "VI", "V", "IV", "III", "II", "I"].map((cls) => (
             <option key={cls} value={cls}>{cls}</option>
           ))}
         </select>
