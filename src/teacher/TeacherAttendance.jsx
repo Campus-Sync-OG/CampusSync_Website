@@ -348,7 +348,7 @@ const AttendancePage = () => {
           <option value="">Select Class</option>
           {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"].map(
             (cls, i) => (
-              <option key={cls} value={i + 1}>
+              <option key={cls} value={cls}>
                 {cls}
               </option>
             )
