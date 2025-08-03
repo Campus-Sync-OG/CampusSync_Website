@@ -14,7 +14,6 @@ const TeacherInformation = () => {
     gender: "",
     dob: "",
     blood_gp: "",
-    religion: "",
     email: "",
     phone_no: "",
     role: "",
@@ -55,7 +54,6 @@ const TeacherInformation = () => {
       gender: "",
       dob: "",
       blood_gp: "",
-      religion: "",
       email: "",
       phone_no: "",
       role: "",
@@ -147,20 +145,6 @@ const TeacherInformation = () => {
               value={formData.blood_gp}
               onChange={handleInputChange}
             />
-          </InputGroup>
-          <InputGroup>
-            <Label>Religion *</Label>
-            <Select
-              name="religion"
-              value={formData.religion}
-              onChange={handleInputChange}
-            >
-              <option value="">Please Select Religion</option>
-              <option>Hindu</option>
-              <option>Muslim</option>
-              <option>Christian</option>
-              <option>Other</option>
-            </Select>
           </InputGroup>
           <InputGroup>
             <Label>Email</Label>

@@ -150,7 +150,6 @@ const StudentInformation = () => {
     section: "",
     roll_no: "",
     blood_group: "",
-    religion: "",
     father_name: "",
     father_contact: "",
     father_email: "",
@@ -222,7 +221,6 @@ const StudentInformation = () => {
         class: className, // Use className if backend expects it
         section,
         roll_no,
-        religion,
         blood_group,
         father_name,
         father_contact,
@@ -246,7 +244,6 @@ const StudentInformation = () => {
       studentFormData.append("section", section);
       studentFormData.append("roll_no", roll_no);
       studentFormData.append("blood_group", blood_group);
-      studentFormData.append("religion", religion);
       studentFormData.append("photo", photoFile); // ✅ this is what backend expects
  
       // Parent payload (sent as JSON)
@@ -259,7 +256,6 @@ const StudentInformation = () => {
         mother_contact,
         mother_email,
         address,
-        religion,
       };
  
       await createStudent(studentFormData); // Send FormData
@@ -425,18 +421,7 @@ const StudentInformation = () => {
             />
           </div>
           <div>
-            <label>Religion *</label>
-            <Select
-              name="religion"
-              value={formData.religion}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Religion</option>
-              <option>Hindu</option>
-              <option>Muslim</option>
-              <option>Christian</option>
-            </Select>
+           
           </div>
         </Row>
  
