@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { fetchTeacherProfile, updateTeacher } from "../api/ClientApi";
+import { fetchTeacherProfile, updateTeacher, getAllTeacherClassSections } from "../api/ClientApi";
 import bgImage from "../assets/images/bg.jpeg";
 import profileImage from "../assets/images/profile.png";
 import homeIcon from "../assets/images/home.png";
@@ -12,6 +12,10 @@ const TeacherProfile = () => {
   const [userInfo, setUserInfo] = useState({});
   const [editableFields, setEditableFields] = useState({
     role: "",
+    class_name: "",
+    section_name: ""
+  });
+  const [assignedClassSection, setAssignedClassSection] = useState({
     class_name: "",
     section_name: ""
   });
@@ -30,9 +34,20 @@ const TeacherProfile = () => {
             class_name: res.teacher.class || "",
             section_name: res.teacher.section || ""
           });
+
+          // Fetch assigned class/section
+          const classSections = await getAllTeacherClassSections(empId);
+          const assigned = classSections?.data?.find(item => item.emp_id === empId);
+          if (assigned) {
+            setAssignedClassSection({
+              class_name: assigned.class_name,
+              section_name: assigned.section_name
+            });
+            console.log("Assigned Class/Section:", assigned);
+          }
         }
       } catch (err) {
-        console.error("Error fetching teacher profile:", err);
+        console.error("Error fetching teacher profile or class-section:", err);
       }
     };
 
@@ -109,11 +124,11 @@ const TeacherProfile = () => {
           <Row>
             <Column>
               <Label>Class</Label>
-              <Input value={userInfo.class || ""} readOnly />
+              <Input value={userInfo.class_name || assignedClassSection.class_name || ""} readOnly />
             </Column>
             <Column>
               <Label>Section</Label>
-              <Input value={userInfo.section || ""} readOnly />
+              <Input value={userInfo.section_name || assignedClassSection.section_name || ""} readOnly />
             </Column>
           </Row>
         </Section>
@@ -145,19 +160,17 @@ const TeacherProfile = () => {
               <Label>My Faculty ID</Label>
               <Input value={userInfo.emp_id || ""} readOnly />
             </Column>
-            <Column>
-              <Label>Classes Assigned</Label>
-              <Input value={userInfo.classesAssigned || ""} readOnly />
-            </Column>
           </Row>
           <Row>
             <Column>
-              <Label>Department</Label>
-              <Input value={userInfo.department || ""} readOnly />
-            </Column>
-            <Column>
               <Label>Designation</Label>
-              <Input as="select" value={editableFields.role} onChange={(e) => setEditableFields({ ...editableFields, role: e.target.value })}>
+              <Input
+                as="select"
+                value={editableFields.role}
+                onChange={(e) =>
+                  setEditableFields({ ...editableFields, role: e.target.value })
+                }
+              >
                 <option value="">Select Role</option>
                 <option value="subjectTeacher">Subject Teacher</option>
                 <option value="classTeacher">Class Teacher</option>
@@ -169,11 +182,21 @@ const TeacherProfile = () => {
             <Row>
               <Column>
                 <Label>Class</Label>
-                <Input value={editableFields.class_name} onChange={(e) => setEditableFields({ ...editableFields, class_name: e.target.value })} />
+                <Input
+                  value={editableFields.class_name}
+                  onChange={(e) =>
+                    setEditableFields({ ...editableFields, class_name: e.target.value })
+                  }
+                />
               </Column>
               <Column>
                 <Label>Section</Label>
-                <Input value={editableFields.section_name} onChange={(e) => setEditableFields({ ...editableFields, section_name: e.target.value })} />
+                <Input
+                  value={editableFields.section_name}
+                  onChange={(e) =>
+                    setEditableFields({ ...editableFields, section_name: e.target.value })
+                  }
+                />
               </Column>
             </Row>
           )}
@@ -202,6 +225,7 @@ const TeacherProfile = () => {
 };
 
 export default TeacherProfile;
+
 
 // Keep your styled-components as they are below this line
 

@@ -259,7 +259,7 @@ export const postAnnouncement = async (announcementData) => {
 export const getAllFeedback = () =>
   api.get("/principal/view").then((res) => res.data);
 
-export const  fetchAllNotifications  = async (params) => {
+export const fetchAllNotifications = async (params) => {
   try {
     const response = await api.get("/notification/getnot", { params }); // params = { user_id, class_id, section_id }
     return response.data;
@@ -791,6 +791,16 @@ export const updateBaseSalary = (unique_id, base_salary) =>
   api.put(`/users/update/${unique_id}`, {
     base_salary,
   }).then((res) => res.data);
+
+export const getAllTeacherClassSections = async (emp_id) => {
+  try {
+    const response = await api.get(`/teachers/class-sections/${emp_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher class sections by emp_id:", error);
+    throw error;
+  }
+};
 
 
 
