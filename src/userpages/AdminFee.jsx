@@ -22,6 +22,20 @@ const AdminFee = () => {
     items: [],
   });
 
+  const classOptions = [
+    { label: "I", value: "1" },
+    { label: "II", value: "2" },
+    { label: "III", value: "3" },
+    { label: "IV", value: "4" },
+    { label: "V", value: "5" },
+    { label: "VI", value: "6" },
+    { label: "VII", value: "7" },
+    { label: "VIII", value: "8" },
+    { label: "IX", value: "9" },
+    { label: "X", value: "10" },
+  ];
+
+
   const [formData, setFormData] = useState({
     admission_no: "",
     pay_date: "",
@@ -164,7 +178,6 @@ const AdminFee = () => {
               <option value="Uniform">Uniform</option>
             </Select>
           </Field>
-
           <Field>
             <Label>Class *</Label>
             <Select
@@ -174,11 +187,14 @@ const AdminFee = () => {
               required
             >
               <option value="">Select Class</option>
-              {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={` ${i + 1}`}>{` ${i + 1}`}</option>
+              {classOptions.map((item, index) => (
+                <option key={index} value={item.value}>
+                  {item.label}
+                </option>
               ))}
             </Select>
           </Field>
+
 
           <Field>
             <Label>Section *</Label>
@@ -258,16 +274,16 @@ const AdminFee = () => {
 
           {(formData.feestype === "Transport" ||
             formData.feestype === "All") && (
-            <Field>
-              <Label>Transport Fee</Label>
-              <Input
-                name="transport_fee"
-                type="number"
-                value={formData.transport_fee}
-                onChange={handleChange}
-              />
-            </Field>
-          )}
+              <Field>
+                <Label>Transport Fee</Label>
+                <Input
+                  name="transport_fee"
+                  type="number"
+                  value={formData.transport_fee}
+                  onChange={handleChange}
+                />
+              </Field>
+            )}
 
           {(formData.feestype === "Uniform" || formData.feestype === "All") && (
             <>

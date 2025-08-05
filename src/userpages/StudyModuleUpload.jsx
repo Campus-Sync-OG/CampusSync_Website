@@ -107,7 +107,7 @@ const StudyModuleUpload = () => {
     examType: "",
     subject: "",
     topicName: "",
-    subtopicName: "",
+    subtitles: "",
     pdfFile: null,
   });
 
@@ -130,7 +130,7 @@ const StudyModuleUpload = () => {
       !formData.examType ||
       !formData.subject ||
       !formData.topicName ||
-      !formData.subtopicName ||
+      !formData.subtitles ||
       !formData.pdfFile
     ) {
       alert("Please fill all fields and select a PDF file.");
@@ -141,7 +141,7 @@ const StudyModuleUpload = () => {
     data.append("examName", formData.examType);
     data.append("subjectName", formData.subject);
     data.append("topicName", formData.topicName);
-    data.append("subtopicName", formData.subtopicName);
+    data.append("subtitles", formData.subtitles);
     data.append("pdf", formData.pdfFile);
 
     try {
@@ -153,7 +153,7 @@ const StudyModuleUpload = () => {
         examType: "",
         subject: "",
         topicName: "",
-        subtopicName: "",
+        subtitles: "",
         pdfFile: null,
       });
     } catch (error) {
@@ -225,8 +225,8 @@ const StudyModuleUpload = () => {
             <Input
               type="text"
               placeholder="Enter subtopic name"
-              value={formData.subtopicName}
-              onChange={(e) => handleChange("subtopicName", e.target.value)}
+              value={formData.subtitles}
+              onChange={(e) => handleChange("subtitles", e.target.value)}
             />
           </Field>
 

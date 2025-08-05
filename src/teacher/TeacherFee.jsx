@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
-import { getAllFees } from "../api/ClientApi"; // adjust the path as needed
+import { getAllFees, getAllClassSections } from "../api/ClientApi";
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 1px 20px;
+  padding: 25px 20px;
   border-radius: 10px;
   color: white;
+  margin-left: 0px;
+  width: 96%;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-family: "Poppins";
 `;
 
 const Title = styled.h2`
   font-size: 26px;
   font-weight: 600;
-  font-family: "Poppins";
+  margin: 0;
 `;
 
 const Wrapper = styled.div`
@@ -45,7 +50,7 @@ const Icons = styled.div`
 `;
 
 const Container = styled.div`
-  padding: 0 15px;
+  padding: 0 1.2rem;
 `;
 
 const SearchBar = styled.div`
@@ -112,7 +117,6 @@ const Note = styled.p`
   font-size: 12px;
   margin-top: 10px;
 `;
-
 const TeacherFee = () => {
   const navigate = useNavigate();
   const [searchName, setSearchName] = useState("");
@@ -120,73 +124,98 @@ const TeacherFee = () => {
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [receipts, setReceipts] = useState([]);
+  const [classSections, setClassSections] = useState([]);
+
   const years = [];
   const currentYear = new Date().getFullYear();
-
   for (let year = 2000; year <= currentYear; year++) {
     years.push(year);
   }
 
-  // Updated class list to use Roman numerals
-  const classes = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
-  const sections = ["A", "B", "C"];
-
   useEffect(() => {
-    const fetchFees = async () => {
-      try {
-        const data = await getAllFees();
-
-        if (Array.isArray(data)) {
-          setReceipts(data); // Set the data directly into state
-        } else {
-          console.error("Error: Received data is not an array", data);
-          setReceipts([]); // If data is not an array, set empty array
-        }
-      } catch (error) {
-        console.error("Error fetching fee data:", error);
-        setReceipts([]); // Set empty array if there is an error
-      }
-    };
-
     fetchFees();
+    fetchClassSections();
   }, []);
-  // Empty array ensures this runs only once
+
+  const fetchFees = async () => {
+    try {
+      const data = await getAllFees();
+      setReceipts(data);
+    } catch (error) {
+      console.error("Error fetching fees:", error);
+    }
+  };
+
+  const fetchClassSections = async () => {
+    try {
+      const data = await getAllClassSections();
+      console.log("Class Sections:", data);
+      setClassSections(data);
+    } catch (error) {
+      console.error("Error fetching class sections:", error);
+    }
+  };
+
+  const uniqueClasses = [
+    ...new Set(classSections.map((item) => item.className)),
+  ];
+  const uniqueSections = [
+    ...new Set(
+      classSections
+        .filter((item) =>
+          selectedClass
+            ? String(item.className) === String(selectedClass)
+            : true
+        )
+        .map((item) => item.section_name) // fix here
+    ),
+  ];
+
   const filteredReceipts = receipts.filter((receipt) => {
-    const student = receipt.student || {}; // Access student details, assuming `student` object exists
-    return (
-      (selectedClass ? student.class === selectedClass : true) &&
-      (selectedSection ? student.section === selectedSection : true) &&
-      (searchName
-        ? student.student_name.toLowerCase().includes(searchName.toLowerCase()) // Case-insensitive search
-        : true)
-    );
+    const matchName = (receipt.student?.student_name || "")
+      .toLowerCase()
+      .includes(searchName.toLowerCase());
+
+    const matchClass = selectedClass
+      ? String(receipt.class_name) === String(selectedClass)
+      : true;
+
+    const matchSection = selectedSection
+      ? receipt.section_name === selectedSection
+      : true;
+
+    const matchYear = selectedYear
+      ? new Date(receipt.pay_date).getFullYear() === Number(selectedYear)
+      : true;
+
+    return matchName && matchClass && matchSection && matchYear;
   });
 
   const handleViewReceipt = (receipt) => {
-    console.log("Viewing receipt for:", receipt.student.student_name);
-    // You can navigate or open a modal here
+    navigate("/receipt", { state: { receipt } });
   };
+
   return (
     <Container>
+      {/* Header */}
       <Header>
         <Title>Fees</Title>
         <Wrapper>
-          <Link to="/teacher-dashboard">
+          <Link to="/principal-dashboard">
             <Icons>
               <img src={home} alt="home" />
             </Icons>
           </Link>
           <Divider />
-          <Link to="/teacher-dashboard">
-            <Icons onClick={() => navigate(-1)}>
-              <img src={back} alt="back" />
-            </Icons>
-          </Link>
+          <Icons onClick={() => navigate(-1)}>
+            <img src={back} alt="back" />
+          </Icons>
         </Wrapper>
       </Header>
 
       <h3>Fees Receipt Information</h3>
 
+      {/* Search Bar */}
       <SearchBar>
         <input
           type="text"
@@ -209,10 +238,13 @@ const TeacherFee = () => {
 
         <select
           value={selectedClass}
-          onChange={(e) => setSelectedClass(e.target.value)}
+          onChange={(e) => {
+            setSelectedClass(e.target.value);
+            setSelectedSection(""); // reset section when class changes
+          }}
         >
           <option value="">Select Class</option>
-          {classes.map((cls) => (
+          {uniqueClasses.map((cls) => (
             <option key={cls} value={cls}>
               {cls}
             </option>
@@ -224,26 +256,15 @@ const TeacherFee = () => {
           onChange={(e) => setSelectedSection(e.target.value)}
         >
           <option value="">Select Section</option>
-          {sections.map((sec) => (
-            <option key={sec} value={sec}>
+          {uniqueSections.map((sec) => (
+            <option key={sec} value={sec.section_name}>
               {sec}
             </option>
           ))}
         </select>
-
-        <button
-          style={{
-            background: "#d6003b",
-            color: "white",
-            padding: "8px 15px",
-            border: "none",
-            borderRadius: "5px",
-          }}
-        >
-          SEARCH
-        </button>
       </SearchBar>
 
+      {/* Table */}
       <Table>
         <thead>
           <tr>
@@ -251,6 +272,9 @@ const TeacherFee = () => {
             <th>Date</th>
             <th>Receipt Number</th>
             <th>Student Name</th>
+            <th>Class</th>
+            <th>Section</th>
+            <th>Fees type</th>
             <th>Amount Paid</th>
             <th>Payment Method</th>
             <th>Fees Receipt</th>
@@ -261,25 +285,38 @@ const TeacherFee = () => {
             filteredReceipts.map((receipt, index) => (
               <tr key={receipt.id}>
                 <td>{index + 1}</td>
-                <td>{receipt.pay_date}</td>
+                <td>{new Date(receipt.pay_date).toLocaleDateString()}</td>
                 <td>{receipt.receipt_no}</td>
-                <td>{receipt.student.student_name}</td>
+                <td>{receipt.student?.student_name}</td>
+                <td>{receipt.class_name}</td>
+                <td>{receipt.section_name}</td>
+                <td>{receipt.feestype}</td>
                 <td>{receipt.paid_amount}</td>
                 <td>{receipt.pay_method}</td>
                 <td>
-                  <a onClick={() => handleViewReceipt(receipt)}>View</a>
+                  <a
+                    onClick={() => handleViewReceipt(receipt)}
+                    style={{ cursor: "pointer", color: "#007bff" }}
+                  >
+                    View
+                  </a>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7">No records found</td>
+              <td colSpan="9" style={{ textAlign: "center" }}>
+                No receipts found
+              </td>
             </tr>
           )}
         </tbody>
       </Table>
 
-      <Note>{/* add you note here  */}</Note>
+      <Note>
+        Note: Only paid receipts will be displayed here. For detailed queries,
+        contact administration.
+      </Note>
     </Container>
   );
 };

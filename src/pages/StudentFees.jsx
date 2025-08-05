@@ -301,13 +301,18 @@ const FeePaymentForm = () => {
               <td>{fee.total_fee} ₹</td>
               <td>{fee.paid_amount} ₹</td>
               <td>{fee.due_amount} ₹</td>
-              <td>{fee.due_date.split("T")[0]}</td>
+              <td>{fee.due_date?.split("T")[0]}</td>
               <td>
-                <Button onClick={() => handleFeeSelect(fee)}>Select</Button>
+                {fee.due_amount > 0 ? (
+                  <Button onClick={() => handleFeeSelect(fee)}>Select</Button>
+                ) : (
+                  <span style={{ color: "gray", fontSize: "0.9rem" }}>No Due</span>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
+
       </Table>
 
       {selectedFee && (
