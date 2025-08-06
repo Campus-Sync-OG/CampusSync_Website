@@ -4,7 +4,7 @@ import profileImage from "../assets/images/profile.png";
 import editimg from "../assets/images/edit.png";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import { getParentInfo, updateParentInfo,updateParentInfos } from "../api/ClientApi";
+import { getParentInfo, updateParentInfo } from "../api/ClientApi";
 
 const ParentProfile = () => {
   const [parentInfo, setParentInfo] = useState({});
@@ -80,7 +80,7 @@ const ParentProfile = () => {
     const updatedData = { [key]: tempValue };
 
     try {
-      const response = await updateParentInfos(admissionNo, updatedData);
+      const response = await updateParentInfo(admissionNo, updatedData);
       if (response?.message === "No changes detected") {
         alert("No changes detected.");
         return;
@@ -110,7 +110,7 @@ const ParentProfile = () => {
 
     const admissionNo = parentInfo.admission_no;
     const formData = new FormData();
-    formData.append(uploadTarget, file); // either 'father_image' or 'mother_image'
+    formData.append(uploadTarget, file); // 'father_image' or 'mother_image'
 
     try {
       const response = await updateParentInfo(admissionNo, formData);
@@ -148,59 +148,90 @@ const ParentProfile = () => {
           {successMessage && <div className="success-message">{successMessage}</div>}
 
           <div className="profile-container">
-            <div className="parent-profile-section">
-              {/* 👨‍👩‍👦 Father Image */}
-              <div className="profile-picture-container">
+            <div className="parent-profiles">
+              {/* FATHER SECTION */}
+              <div className="parent-profile-section">
                 <img src={parentInfo.father_image} alt="Father" className="profile-picture" />
                 <button onClick={() => handleImageButtonClick("father_image")}>
                   Change Father Photo
                 </button>
+
+                <div className="info-grid">
+                  {fieldsToShow
+                    .filter(({ key }) => key.startsWith("father"))
+                    .map(({ label, key, editable }) => (
+                      <div className="info-item" key={key}>
+                        <label>{label}:</label>
+                        {editField === key && editable ? (
+                          <div className="edit-container">
+                            <input
+                              type="text"
+                              value={tempValue}
+                              onChange={(e) => setTempValue(e.target.value)}
+                            />
+                            <button onClick={() => handleSave(key)}>Save</button>
+                          </div>
+                        ) : (
+                          <div className="value-container">
+                            <span>{parentInfo[key]}</span>
+                            {editable && (
+                              <button onClick={() => handleEdit(key)}>
+                                <img src={editimg} alt="Edit" className="edit-icon" />
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                </div>
               </div>
 
-              {/* 👩‍👦 Mother Image */}
-              <div className="profile-picture-container">
+              {/* MOTHER SECTION */}
+              <div className="parent-profile-section">
                 <img src={parentInfo.mother_image} alt="Mother" className="profile-picture" />
                 <button onClick={() => handleImageButtonClick("mother_image")}>
                   Change Mother Photo
                 </button>
-              </div>
 
-              {/* 🔁 Shared image input */}
-              <input
-                type="file"
-                accept="image/*"
-                ref={imageInputRef}
-                style={{ display: "none" }}
-                onChange={handleImageChange}
-              />
-
-              <div className="info-grid">
-                {fieldsToShow.map(({ label, key, editable }) => (
-                  <div className="info-item" key={key}>
-                    <label>{label}:</label>
-                    {editField === key && editable ? (
-                      <div className="edit-container">
-                        <input
-                          type="text"
-                          value={tempValue}
-                          onChange={(e) => setTempValue(e.target.value)}
-                        />
-                        <button onClick={() => handleSave(key)}>Save</button>
-                      </div>
-                    ) : (
-                      <div className="value-container">
-                        <span>{parentInfo[key]}</span>
-                        {editable && (
-                          <button onClick={() => handleEdit(key)}>
-                            <img src={editimg} alt="Edit" className="edit-icon" />
-                          </button>
+                <div className="info-grid">
+                  {fieldsToShow
+                    .filter(({ key }) => key.startsWith("mother") || key === "address")
+                    .map(({ label, key, editable }) => (
+                      <div className="info-item" key={key}>
+                        <label>{label}:</label>
+                        {editField === key && editable ? (
+                          <div className="edit-container">
+                            <input
+                              type="text"
+                              value={tempValue}
+                              onChange={(e) => setTempValue(e.target.value)}
+                            />
+                            <button onClick={() => handleSave(key)}>Save</button>
+                          </div>
+                        ) : (
+                          <div className="value-container">
+                            <span>{parentInfo[key]}</span>
+                            {editable && (
+                              <button onClick={() => handleEdit(key)}>
+                                <img src={editimg} alt="Edit" className="edit-icon" />
+                              </button>
+                            )}
+                          </div>
                         )}
                       </div>
-                    )}
-                  </div>
-                ))}
+                    ))}
+                </div>
               </div>
             </div>
+
+            {/* Hidden image upload input */}
+            <input
+              type="file"
+              accept="image/*"
+              ref={imageInputRef}
+              style={{ display: "none" }}
+              onChange={handleImageChange}
+            />
           </div>
         </div>
       </div>
