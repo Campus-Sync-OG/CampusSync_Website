@@ -48,10 +48,26 @@ export const getParentInfo = (admission_no) =>
   api.get(`/parents/${admission_no}`).then((res) => res.data);
 
 // Update parent info by admission number
-export const updateParentInfo = (admission_no, updatedData) =>
+export const updateParentInfos = (admission_no, updatedData) =>
   api
     .put(`/parents/update/${admission_no}`, updatedData)
     .then((res) => res.data);
+
+    export const updateParentInfo = (admission_no, updatedData) => {
+  const isFormData = updatedData instanceof FormData;
+
+  return api.put(
+    `/parents/update/${admission_no}`,
+    updatedData,
+    {
+      headers: {
+        "Content-Type": isFormData
+          ? "multipart/form-data"
+          : "application/json"
+      }
+    }
+  ).then((res) => res.data);
+};
 
 export const getSchoolInfoById = (id) =>
   api.get(`/school/schoolinfo/${id}`).then((res) => res.data);

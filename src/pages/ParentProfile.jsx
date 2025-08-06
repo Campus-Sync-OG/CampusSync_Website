@@ -1,186 +1,133 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import profileImage from "../assets/images/profile.png";
 import editimg from "../assets/images/edit.png";
 import homeIcon from "../assets/images/home.png";
 import backIcon from "../assets/images/back.png";
-import { getParentInfo ,updateParentInfo} from "../api/ClientApi";  // Make sure the path is correct
+import { getParentInfo, updateParentInfo,updateParentInfos } from "../api/ClientApi";
 
 const ParentProfile = () => {
-  const [parentInfo, setParentInfo] = useState({
-    
-  });
+  const [parentInfo, setParentInfo] = useState({});
   const [editField, setEditField] = useState(null);
   const [tempValue, setTempValue] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const[successMessage, setSuccessMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
+  const imageInputRef = useRef(null);
+  const [uploadTarget, setUploadTarget] = useState(""); // 'father_image' or 'mother_image'
   const navigate = useNavigate();
 
-  // Fetch the logged-in student's admission number
   useEffect(() => {
-    const getLoggedInStudent = async () => {
+    const fetchInfo = async () => {
       try {
-        // 1. Get the stored user data from localStorage
         const storedUser = JSON.parse(localStorage.getItem("user"));
-        
-        if (!storedUser || !storedUser.unique_id) {
+        if (!storedUser?.unique_id) {
           setError("No student logged in");
           setLoading(false);
           return;
         }
-        console.log("Stored user data:", storedUser);
-        
-        // 2. Use the unique_id from localStorage as admission_no
+
         const admissionNo = storedUser.unique_id;
-        console.log("Fetching parent data for admission_no:", admissionNo);
-    
-        // 3. Fetch parent details using the admission_no
-        const { data } = await getParentInfo(admissionNo);  // Destructure data here
-        
-        console.log("Fetched parent data:", data);
-  
-      
-  
-        // 5. Update the state with the fetched data
+        const { data } = await getParentInfo(admissionNo);
+
         setParentInfo({
           admission_no: data.admission_no,
-          father: {
-            father_name: data.father_name,
-            email: data.father_email,
-            gender: data.father_gender,
-            admissionId: data.admission_no,
-            dob: data.father_dob,
-            religion: data.religion,
-            phoneNumber: data.father_contact,
-            profilePicture: profileImage,
-            Adress: data.address,
-          },
-          mother: {
-            name: data.mother_name,
-            email: data.mother_email,
-            gender: data.mother_gender,
-            admissionId: data.admission_no,
-            dob: data.mother_dob,
-            religion: data.religion,
-            phoneNumber: data.mother_contact,
-            profilePicture: profileImage,
-            Adress: data.address,
-          }
+          father_name: data.father_name,
+          father_email: data.father_email,
+          father_contact: data.father_contact,
+          father_image: data.father_image || profileImage,
+          mother_name: data.mother_name,
+          mother_email: data.mother_email,
+          mother_contact: data.mother_contact,
+          mother_image: data.mother_image || profileImage,
+          address: data.address,
         });
       } catch (err) {
-        console.error("Fetch error:", err);
-        setError(err.response?.data?.message || "Failed to fetch parent data");
+        setError(err.response?.data?.message || "Failed to fetch data");
       } finally {
         setLoading(false);
       }
     };
-  
-    getLoggedInStudent();
-  }, []);
-  
 
-  const handleEdit = (parent, field) => {
-    setEditField({ parent, field });
-    setTempValue(parentInfo[parent][field]);
+    fetchInfo();
+  }, []);
+
+  const fieldsToShow = [
+    { label: "Father Name", key: "father_name", editable: true },
+    { label: "Father Email", key: "father_email", editable: true },
+    { label: "Father Contact", key: "father_contact", editable: false },
+    { label: "Mother Name", key: "mother_name", editable: true },
+    { label: "Mother Email", key: "mother_email", editable: true },
+    { label: "Mother Contact", key: "mother_contact", editable: false },
+    { label: "Address", key: "address", editable: false },
+  ];
+
+  const handleEdit = (key) => {
+    setEditField(key);
+    setTempValue(parentInfo[key]);
   };
 
-  const handleSave = async () => {
-    const { parent, field } = editField;
+  const handleSave = async (key) => {
     const admissionNo = parentInfo.admission_no;
-  
-    console.log("Admission No used for update:", admissionNo);  // ✅ Add this!
-  
-    if (!admissionNo) {
-      alert("Admission number not found.");
+    if (!admissionNo) return;
+
+    if (tempValue === parentInfo[key]) {
+      alert("No changes made.");
       return;
     }
-  
-    const updatedData =
-      parent === "father"
-        ? {
-            father_name:
-              field === "father_name"
-                ? tempValue
-                : parentInfo.father.father_name,
-            father_email:
-              field === "email" ? tempValue : parentInfo.father.email,
-          }
-        : {
-            mother_name: field === "name" ? tempValue : parentInfo.mother.name,
-            mother_email:
-              field === "email" ? tempValue : parentInfo.mother.email,
-          };
-  
+
+    const updatedData = { [key]: tempValue };
+
     try {
-      await updateParentInfo(admissionNo, updatedData);
-  
+      const response = await updateParentInfos(admissionNo, updatedData);
+      if (response?.message === "No changes detected") {
+        alert("No changes detected.");
+        return;
+      }
+
       setParentInfo((prev) => ({
         ...prev,
-        [parent]: {
-          ...prev[parent],
-          [field]: tempValue,
-        },
+        [key]: tempValue,
       }));
       setEditField(null);
-      setSuccessMessage("Successfully updated!");
+      setSuccessMessage("Information updated successfully!");
       setTimeout(() => setSuccessMessage(""), 3000);
-    } catch (error) {
-      console.error("Update error:", error);
-      alert("Failed to update parent info");
+    } catch (err) {
+      alert("Update failed");
+      console.error(err);
     }
   };
-  
-  
 
-  const handleHomeClick = () => {
-    navigate("/dashboard");
+  const handleImageButtonClick = (targetKey) => {
+    setUploadTarget(targetKey);
+    imageInputRef.current.click();
   };
 
-  const handleBackClick = () => {
-    navigate(-1);
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !uploadTarget) return;
+
+    const admissionNo = parentInfo.admission_no;
+    const formData = new FormData();
+    formData.append(uploadTarget, file); // either 'father_image' or 'mother_image'
+
+    try {
+      const response = await updateParentInfo(admissionNo, formData);
+      setParentInfo((prev) => ({
+        ...prev,
+        [uploadTarget]: response?.parent?.[uploadTarget] || prev[uploadTarget],
+      }));
+      setSuccessMessage("Image updated successfully!");
+      setTimeout(() => setSuccessMessage(""), 3000);
+    } catch (err) {
+      alert("Image upload failed");
+      console.error(err);
+    }
   };
 
-  const renderInfo = (parent) => (
-    <div className="parent-profile-section">
-      <img
-        src={parentInfo[parent].profilePicture}
-        alt={`${parent} Profile`}
-        className="profile-picture"
-      />
-      <h3>{parent.charAt(0).toUpperCase() + parent.slice(1)} Information</h3>
-      <div className="info-grid">
-        {Object.keys(parentInfo[parent]).map(
-          (key) =>
-            key !== "profileImage" && ( // Exclude profileImage field from displaying in details
-              <div className="info-item" key={key}>
-                <label>{key.charAt(0).toUpperCase() + key.slice(1)}:</label>
-                {["name", "email"].includes(key) && editField?.parent === parent && editField?.field === key ? (
-                  <>
-                    <input
-                      type="text"
-                      value={tempValue}
-                      onChange={(e) => setTempValue(e.target.value)}
-                    />
-                    <button onClick={handleSave}>Save</button>
-                  </>
-                ) : (
-                  <>
-                    <span>{parentInfo[parent][key]}</span>
-                    {["name", "email"].includes(key) && (
-                      <button onClick={() => handleEdit(parent, key)}>
-                        <img src={editimg} alt="Edit" className="edit-icon" />
-                      </button>
-                    )}
-                  </>
-                )}
-              </div>
-            )
-        )}
-      </div>
-    </div>
-  );
+  const handleHomeClick = () => navigate("/dashboard");
+  const handleBackClick = () => navigate(-1);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -190,21 +137,69 @@ const ParentProfile = () => {
       <div className="main-container">
         <div className="content">
           <div className="navigation-container">
-            <h2 className="nav-title">Parents Information</h2>
+            <h2 className="nav-title">Parent Information</h2>
             <div className="nav-icons-container">
               <img src={homeIcon} alt="Home" className="nav-icon" onClick={handleHomeClick} />
-              <div className="icon-divider"></div>
+              <div className="icon-divider" />
               <img src={backIcon} alt="Back" className="nav-icon" onClick={handleBackClick} />
             </div>
           </div>
-               
-          {successMessage && (
-            <div className="success-message">{successMessage}</div>
-          )}
+
+          {successMessage && <div className="success-message">{successMessage}</div>}
+
           <div className="profile-container">
-            <div className="parent-profiles">
-              {renderInfo("father")}
-              {renderInfo("mother")}
+            <div className="parent-profile-section">
+              {/* 👨‍👩‍👦 Father Image */}
+              <div className="profile-picture-container">
+                <img src={parentInfo.father_image} alt="Father" className="profile-picture" />
+                <button onClick={() => handleImageButtonClick("father_image")}>
+                  Change Father Photo
+                </button>
+              </div>
+
+              {/* 👩‍👦 Mother Image */}
+              <div className="profile-picture-container">
+                <img src={parentInfo.mother_image} alt="Mother" className="profile-picture" />
+                <button onClick={() => handleImageButtonClick("mother_image")}>
+                  Change Mother Photo
+                </button>
+              </div>
+
+              {/* 🔁 Shared image input */}
+              <input
+                type="file"
+                accept="image/*"
+                ref={imageInputRef}
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
+
+              <div className="info-grid">
+                {fieldsToShow.map(({ label, key, editable }) => (
+                  <div className="info-item" key={key}>
+                    <label>{label}:</label>
+                    {editField === key && editable ? (
+                      <div className="edit-container">
+                        <input
+                          type="text"
+                          value={tempValue}
+                          onChange={(e) => setTempValue(e.target.value)}
+                        />
+                        <button onClick={() => handleSave(key)}>Save</button>
+                      </div>
+                    ) : (
+                      <div className="value-container">
+                        <span>{parentInfo[key]}</span>
+                        {editable && (
+                          <button onClick={() => handleEdit(key)}>
+                            <img src={editimg} alt="Edit" className="edit-icon" />
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
