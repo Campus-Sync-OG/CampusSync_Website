@@ -68,6 +68,7 @@ const Logo = styled.img`
   }
   @media (max-width: 320px) {
     margin-right: 7px;
+    width: 50px;
   }
 `;
 
@@ -125,6 +126,12 @@ const SchoolDetails = styled.div`
   @media (max-width: 320px) {
     position: relative;
     right: 50px;
+     h1 {
+    font-size: 10px;
+    margin: 0 10px 0 0;
+    font-weight: bold;
+    color: #000;
+  }
   }
 `;
 
@@ -176,6 +183,8 @@ const NotificationButton = styled.div`
     position: relative;
     left: 60px;
     top: 3px;
+    height: 35px;
+    width: 35px;
   }
 
 `;
@@ -183,6 +192,9 @@ const NotificationButton = styled.div`
 const NotificationButtonIcon = styled(FaBell)`
   font-size: 20px;
   color: rgb(233, 30, 30);
+  @media (max-width: 320px) {
+     font-size: 17px;
+  }
 `;
 
 const IconButton = styled.button`
@@ -230,6 +242,7 @@ const IconButton = styled.button`
     position: relative;
     left: 25%;
     top: 5px;
+    padding: 5px 10px;
   }
 `;
 
@@ -354,6 +367,7 @@ const MenuButton = styled.div`
     position: relative;
     top: 5px;
     left: 10px;
+    font-size: 23px;
   }
 `;
 
@@ -388,8 +402,13 @@ const SpeakerWrapper = styled.div`
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 28%;
+    left: 30%;
     top: 5px;
+    padding: 5px 10px;
+     svg {
+    width: 18px;
+    height: 24px;
+  }
   }
 `;
 
