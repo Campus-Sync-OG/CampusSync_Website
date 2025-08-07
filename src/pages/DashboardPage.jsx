@@ -155,8 +155,8 @@ const WelcomeSection = styled.div`
     }
   }
   @media (max-width: 420px) {
-    width: 100%;
-
+    width: 265px;
+    left: 55px;
     h2 {
       top: 0;
       font-size: 1.1rem;
@@ -168,13 +168,16 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-height: 1vh;
-      max-height: 9.3vh;
+      min-width: 5%;
+      max-width: 45%;
+      min-height: 15vh;
+      max-height: 9vh;
     }
   }
-  @media (max-width: 380px) {
-    width: 100%;
-    left: 36px;
+
+   @media (max-width: 380px) {
+   width: 290px;
+    left: 41px;
     h2 {
       top: 0;
       font-size: 1.3rem;
@@ -193,29 +196,29 @@ const WelcomeSection = styled.div`
     }
   }
 
-   @media (max-width: 360px) {
-     min-width: 212px;
-    left: 42px;
+  @media (max-width: 360px) {
+   width: 260px;
+    left: 41px;
     h2 {
       top: 0;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }
     p {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
     img {
       left: 25px;
       top: 0px;
-      min-width: 45%;
-      max-width: 30%;
-      min-height: 12vh;
+      min-width: 30%;
+      max-width: 40%;
+      min-height: 15vh;
       max-height: 9vh;
     }
   }
 
   @media (max-width: 320px) {
-     min-width: 212px;
+    width: 210px;
     left: 42px;
     h2 {
       top: 0;
@@ -394,9 +397,20 @@ const Widget = styled.div`
     width: 109%;
     left: 80px;
   }
+
+  @media (max-width: 420px) {
+    height: 100px;
+    width:  130%;;
+    left: 98px;
+  }
   @media (max-width: 380px) {
     height: 100px;
-    width: 100%;
+    width:  127%;;
+    left: 40px;
+  }
+  @media (max-width: 360px) {
+    height: 100px;
+    width:  115%;;
     left: 40px;
   }
   @media (max-width: 320px) {
@@ -470,9 +484,16 @@ const WidgetImage = styled.img`
     left: 60px;
     bottom: 20px;
   }
+ @media (max-width: 420px) {
+    position: relative;
+    left: 130px;
+    max-width: 57%;
+    bottom: 20px;
+  }
   @media (max-width: 380px) {
     position: relative;
-    left: 60px;
+    left: 130px;
+    max-width: 57%;
     bottom: 20px;
   }
   @media (max-width: 320px) {
@@ -514,10 +535,20 @@ const CalendarContainer = styled.div`
     position: relative;
     left: 70px;
   }
+  @media (max-width: 420px) {
+    position: relative;
+    left: 75px;
+    width: 126%;
+  }   
   @media (max-width: 380px) {
     position: relative;
     left: 67px;
-    width: 100%;
+    width: 130%;
+  }
+  @media (max-width: 380px) {
+    position: relative;
+    left: 67px;
+    width: 115%;
   }
   @media (max-width: 320px) {
     position: relative;
