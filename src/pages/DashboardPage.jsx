@@ -51,7 +51,7 @@ const PageContainer = styled.div`
   }
 
   @media (max-width: 420px) {
-    width: 86%;
+    width: 8%;
   }
   @media (max-width: 320px) {
     width:0%;
@@ -193,6 +193,27 @@ const WelcomeSection = styled.div`
     }
   }
 
+   @media (max-width: 360px) {
+     min-width: 212px;
+    left: 42px;
+    h2 {
+      top: 0;
+      font-size: 1.2rem;
+    }
+    p {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    img {
+      left: 25px;
+      top: 0px;
+      min-width: 45%;
+      max-width: 30%;
+      min-height: 12vh;
+      max-height: 9vh;
+    }
+  }
+
   @media (max-width: 320px) {
      min-width: 212px;
     left: 42px;
@@ -213,7 +234,10 @@ const WelcomeSection = styled.div`
       max-height: 9vh;
     }
   }
+
+   
 `;
+
 const PopupOverlay = styled.div`
   position: fixed;
   top: 0;
