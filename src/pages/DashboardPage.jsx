@@ -189,7 +189,7 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 54%;
+      min-width: 40%;
       max-width: 34%;
       min-height: 15vh;
       max-height: 9vh;
@@ -222,11 +222,11 @@ const WelcomeSection = styled.div`
     left: 42px;
     h2 {
       top: 0;
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
     p {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
     img {
       left: 25px;
