@@ -12,7 +12,7 @@ const TimetableViewer = () => {
   const [sectionName, setSectionName] = useState("");
   const [schedule, setSchedule] = useState({});
   const [error, setError] = useState("");
-  const classOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10th"];
+  const classOptions = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
   const sectionOptions = ["A", "B", "C"];
 
   const fetchTimetable = async () => {

@@ -51,6 +51,11 @@ const StudentFeeDetails = () => {
     }
   };
 
+  const romanClassMap = [
+    "I", "II", "III", "IV", "V", "VI",
+    "VII", "VIII", "IX", "X", "XI", "XII"
+  ];
+
   return (
     <Container>
       <Header>
@@ -87,13 +92,12 @@ const StudentFeeDetails = () => {
           }
         >
           <option value="">Select Class</option>
-          {[...Array(12)].map((_, i) => (
+          {romanClassMap.map((roman, i) => (
             <option key={i + 1} value={i + 1}>
-              {i + 1}
+              {roman}
             </option>
           ))}
         </Select>
-
         <Select
           value={filters.section_name}
           onChange={(e) =>
