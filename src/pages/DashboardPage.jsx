@@ -54,7 +54,7 @@ const PageContainer = styled.div`
     width: 86%;
   }
   @media (max-width: 320px) {
-    width: 86%;
+    width:0%;
   }
 `;
 
@@ -194,7 +194,24 @@ const WelcomeSection = styled.div`
   }
 
   @media (max-width: 320px) {
-    width: 98%;
+     min-width: 212px;
+    left: 42px;
+    h2 {
+      top: 0;
+      font-size: 1.2rem;
+    }
+    p {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    img {
+      left: 25px;
+      top: 0px;
+      min-width: 45%;
+      max-width: 30%;
+      min-height: 12vh;
+      max-height: 9vh;
+    }
   }
 `;
 const PopupOverlay = styled.div`
