@@ -113,6 +113,16 @@ const MobileMenu = styled.div`
   @media (max-width: 380px) {
     left: 10px;
   }
+
+  @media (max-width: 320px) {
+     top: 58px;
+    left: 5px;
+    svg {
+      width: 25px; // Increase icon size
+      height: 40px; // Increase icon size
+    }
+
+}
 `;
 
 const MobileDropdown = styled.div`

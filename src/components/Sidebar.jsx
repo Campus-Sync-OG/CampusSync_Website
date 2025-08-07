@@ -106,12 +106,16 @@ const MobileMenu = styled.div`
     left: 12px;
   }
   @media (max-width: 380px) {
-    top: 90px;
+    top: 89px;
     left: 12px;
   }
   @media (max-width: 320px) {
-    top: 96px;
-    left: 12px;
+    top: 58px;
+    left: 5px;
+    svg {
+      width: 25px; // Increase icon size
+      height: 40px; // Increase icon size
+    }
   }
 `;
 
