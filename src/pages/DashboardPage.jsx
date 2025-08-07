@@ -71,173 +71,110 @@ const DashboardContainer = styled.div`
 const WelcomeSection = styled.div`
   background: linear-gradient(135deg, #002087, #df0043);
   color: white;
-  border-radius: 20px;
-  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.4rem;
-  width: 105.5%;
-  flex-wrap: wrap;
+  margin-top: 10px;
+  margin-left: 20px;
+  padding: 20px;
+  border-radius: 27px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
+  height: 150px;
+  width: 95%;
   z-index: -1;
 
-  h2 {
-    font-size: 1.6rem;
-    position: relative;
-    left: 1px;
-    bottom: 35px;
-    font-weight: 40px;
+  .text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .dashboard-title {
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Poppins;
+    position: absolute;
+    top: 10px;
+    left: 20px;
     font-family: "Poppins", sans-serif;
   }
 
-  p {
-    font-size: 1.5rem;
-    text-align: left;
-    position: relative;
-    top: 15px;
-    margin: 0;
+  .welcome-text {
+    position: absolute;
+    bottom: 25px;
+    left: 20px;
+    font-size: 25px;
+    font-family: "Roboto", sans-serif;
   }
 
-  img {
-    min-width: 35%;
-    max-width: 60%;
-    min-height: 25vh;
-    max-height: 25vh;
-    position: relative;
-    top: 15px;
+  .date {
+    position: absolute;
+    bottom: 8px;
+    left: 20px;
+    font-size: 15px;
+    font-family: "Roboto", sans-serif;
   }
 
-  @media (max-width: 1366px) {
-    margin-bottom: 1rem;
+  .image {
+    width: 180px;
+    height: 160px;
+    margin-right: 30px;
   }
-
   @media (max-width: 1024px) {
-    position: relative;
-    left: 12px;
-    width: 101%;
-    margin-left: 10px;
-
-    h2 {
-      font-size: 1.5rem;
-      text-align: center;
-    }
-
-    img {
-      min-height: 22vh;
-      max-height: 22vh;
-    }
-
-    p {
-      font-size: 1rem;
-    }
+    margin: 0;
+    margin-bottom: 10px;
+    width: 94%;
+    padding-left: 10px;
   }
-
   @media (max-width: 768px) {
-    overflow-x: hidden;
-    width: 102%;
+    flex-direction: column;
+    width: 95%;
+    text-align: left;
+    height: auto;
+    padding-bottom: 30px;
+
+    .dashboard-title {
+      position: absolute;
+      margin-bottom: 10px;
+    }
+
+    .welcome-text {
+      position: absolute;
+      margin-top: 10px;
+    }
+
+    .image {
+      margin-left: auto;
+    }
+  }
+  @media (max-width: 426px) {
+    width: 90%;
+    margin-right: px;
+    padding-bottom: 43px;
+    .welcome-text {
+      font-size: 17px;
+    }
+    .image {
+      height: 100px;
+      width: 130px;
+      margin-right: 10px;
+    }
+    .date {
+      font-size: 12px;
+      margin: 0;
+    }
   }
 
-  @media (max-width: 480px) {
-    width: 107%;
-    left: 30px;
-    h2 {
-      top: 0;
-    }
-    p {
-      text-align: center;
-      top: 0px;
-    }
-    img {
-      left: 35px;
-      min-height: 1vh;
-      max-height: 12vh;
-    }
-  }
   @media (max-width: 420px) {
-    width: 265px;
-    left: 55px;
-    h2 {
-      top: 0;
-      font-size: 1.1rem;
-    }
-    p {
-      text-align: center;
-      font-size: 1rem;
-    }
-    img {
-      left: 25px;
-      top: 0px;
-      min-width: 5%;
-      max-width: 45%;
-      min-height: 15vh;
-      max-height: 9vh;
+    width: 91%;
+    margin-bottom: 10px;
+    .image {
+      position: relative;
+      top: 20px;
     }
   }
-
-   @media (max-width: 380px) {
-   width: 290px;
-    left: 41px;
-    h2 {
-      top: 0;
-      font-size: 1.3rem;
-    }
-    p {
-      text-align: center;
-      font-size: 1rem;
-    }
-    img {
-      left: 25px;
-      top: 0px;
-      min-width: 40%;
-      max-width: 34%;
-      min-height: 15vh;
-      max-height: 9vh;
-    }
-  }
-
-  @media (max-width: 360px) {
-   width: 260px;
-    left: 41px;
-    h2 {
-      top: 0;
-      font-size: 1.3rem;
-    }
-    p {
-      text-align: center;
-      font-size: 1rem;
-    }
-    img {
-      left: 25px;
-      top: 0px;
-      min-width: 29%;
-      max-width: 29%;
-      min-height: 15vh;
-      max-height: 9vh;
-    }
-  }
-
-  @media (max-width: 320px) {
-    width: 210px;
-    left: 42px;
-    h2 {
-      top: 0;
-      font-size: 1rem;
-    }
-    p {
-      text-align: center;
-      font-size: 0.8rem;
-    }
-    img {
-      left: 25px;
-      top: 0px;
-      min-width: 44%;
-      max-width: 29%;
-      min-height: 12vh;
-      max-height: 9vh;
-    }
-  }
-
    
 `;
 
