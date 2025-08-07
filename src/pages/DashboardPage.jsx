@@ -189,8 +189,8 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 55%;
-      max-width: 35%;
+      min-width: 54%;
+      max-width: 34%;
       min-height: 15vh;
       max-height: 9vh;
     }
@@ -210,8 +210,8 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 30%;
-      max-width: 40%;
+      min-width: 29%;
+      max-width: 29%;
       min-height: 15vh;
       max-height: 9vh;
     }
@@ -231,8 +231,8 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 45%;
-      max-width: 30%;
+      min-width: 44%;
+      max-width: 29%;
       min-height: 12vh;
       max-height: 9vh;
     }
