@@ -187,11 +187,11 @@ const WelcomeSection = styled.div`
       font-size: 1rem;
     }
     img {
-      left: 25px;
+      left: 12px;
       top: 0px;
-      min-width: 39%;
-      max-width: 35%;
-      min-height: 15vh;
+      min-width: 21%;
+      max-width: 24%;
+      min-height: 9vh;
       max-height: 9vh;
     }
   }
