@@ -210,8 +210,8 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 30%;
-      max-width: 40%;
+      min-width: 27%;
+      max-width: 34%;
       min-height: 15vh;
       max-height: 9vh;
     }
