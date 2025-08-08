@@ -143,15 +143,18 @@ const WelcomeSection = styled.div`
     left: 30px;
     h2 {
       top: 0;
+      font-size: 1rem;
     }
     p {
       text-align: center;
       top: 0px;
+      font-size: 0.8rem;
     }
     img {
-      left: 35px;
-      min-height: 1vh;
-      max-height: 12vh;
+      left: 12px;
+      top:13px;
+      min-height: 3vh;
+      max-height: 7vh;
     }
   }
   @media (max-width: 420px) {
