@@ -168,8 +168,8 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 5%;
-      max-width: 45%;
+      min-width: 10%;
+      max-width: 34%;
       min-height: 15vh;
       max-height: 9vh;
     }
@@ -187,11 +187,11 @@ const WelcomeSection = styled.div`
       font-size: 1rem;
     }
     img {
-      left: 25px;
+      left: 12px;
       top: 0px;
-      min-width: 55%;
-      max-width: 35%;
-      min-height: 15vh;
+      min-width: 21%;
+      max-width: 24%;
+      min-height: 9vh;
       max-height: 9vh;
     }
   }
@@ -210,8 +210,8 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 30%;
-      max-width: 40%;
+      min-width: 27%;
+      max-width: 34%;
       min-height: 15vh;
       max-height: 9vh;
     }
@@ -231,8 +231,8 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 45%;
-      max-width: 30%;
+      min-width: 26%;
+      max-width: 26%;
       min-height: 12vh;
       max-height: 9vh;
     }
