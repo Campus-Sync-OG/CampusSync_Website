@@ -489,6 +489,15 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Payroll</Label>
             </SidebarItem>
+             <SidebarItem
+              to="/admin-certificatepanel"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TfiAnnouncement />
+              </Icon>
+              <Label expanded={true}>Certificate Requests</Label>
+            </SidebarItem>
             
 
             <SidebarItem
@@ -644,6 +653,16 @@ const Sidebar = () => {
                 <TfiAnnouncement />
               </Icon>
               <Label expanded={true}>Payroll </Label>
+            </SidebarItem>
+          
+  <SidebarItem
+              to="/admin-certificatepanel"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TfiAnnouncement />
+              </Icon>
+              <Label expanded={true}>Certificate Requests </Label>
             </SidebarItem>
             <SidebarItem to="/admin-teacher-data" expanded={expanded}>
               <Icon>
