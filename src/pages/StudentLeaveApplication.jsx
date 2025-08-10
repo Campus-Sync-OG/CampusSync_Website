@@ -39,33 +39,43 @@ const StudentLeaveApplication = () => {
   console.log("Admission No:", admission_no);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
+  e.preventDefault();
+  if (!validate()) return;
 
-    try {
-      const payload = {
-        admission_no, // adjust based on how you store admission_no
-        reason: formData.reason,
-        from_date: formData.fromDate,
-        to_date: formData.toDate,
-        leave_type: formData.leaveType,
-      };
+  // Date validation: End date cannot be earlier than start date
+  const start = new Date(formData.fromDate);
+  const end = new Date(formData.toDate);
 
-      const response = await submitLeaveApplication(payload);
-      setSuccessMessage(response.message);
-      alert(response.message);
-      setFormData({
-        leaveType: "",
-        fromDate: "",
-        toDate: "",
-        reason: "",
-      });
-      setErrors({});
-    } catch (err) {
-      console.error("Failed to submit leave application:", err);
-      alert("Failed to submit leave application.");
-    }
-  };
+  if (end < start) {
+    alert("End date cannot be earlier than the start date!");
+    return; // Stop submission
+  }
+
+  try {
+    const payload = {
+      admission_no, // adjust based on how you store admission_no
+      reason: formData.reason,
+      from_date: formData.fromDate,
+      to_date: formData.toDate,
+      leave_type: formData.leaveType,
+    };
+
+    const response = await submitLeaveApplication(payload);
+    setSuccessMessage(response.message);
+    alert(response.message);
+    setFormData({
+      leaveType: "",
+      fromDate: "",
+      toDate: "",
+      reason: "",
+    });
+    setErrors({});
+  } catch (err) {
+    console.error("Failed to submit leave application:", err);
+    alert("Failed to submit leave application.");
+  }
+};
+
 
   return (
     <FormContainer>
