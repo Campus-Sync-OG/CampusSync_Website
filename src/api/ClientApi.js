@@ -155,6 +155,9 @@ export const submitCertificateRequest = (payload) =>
 // Get all certificate requests by admission number
 export const getCertificateRequestsByAdmissionNo = (admission_no) =>
   api.get(`/users/certificates/${admission_no}`).then((res) => res.data);
+export const fetchAllCertificateRequests = () => {
+  return api.get("/users/get/all").then((res) => res.data);
+};
 
 export const submitFeedback = (payload) =>
   api.post("/students/add", payload).then((res) => res.data);
@@ -819,6 +822,11 @@ export const getAllTeacherClassSections = async (emp_id) => {
 };
 
 
+export const updateCertificateStatus = (id, status) => {
+  return api
+    .put(`/users/certificates/update/${id}`, { status })
+    .then((res) => res.data);
+};
 
 // Inside component or event handler
 

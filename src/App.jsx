@@ -105,6 +105,7 @@ import ComponentType from "./userpages/AddComponentType";
 import PayrollGeneration from "./userpages/PayrollGeneration";
 import TeacherPayroll from "./teacher/TeacherPayroll";
 import TeacherPayrollPDF from "./teacher/TeacherPayrollDownload";
+import CertificatePanel from "./userpages/RequestedCertificate";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -735,6 +736,14 @@ const App = () => {
             element={
               <AdminLayout>
                 <AddSubject />
+              </AdminLayout>
+            }
+          />
+           <Route
+            path="/admin-certificatepanel"
+            element={
+              <AdminLayout>
+                <CertificatePanel />
               </AdminLayout>
             }
           />

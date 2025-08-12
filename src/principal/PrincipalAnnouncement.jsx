@@ -154,37 +154,48 @@ const PrincipleAnnouncement = () => {
     );
   };
 
-  const handleSubmit = async (e, index) => {
-    e.preventDefault();
+const handleSubmit = async (e, index) => {
+  e.preventDefault();
 
-    const formData = formDataList[index];
-    const announcementData = {
-      title: formData.title,
-      start_date: formData.start_date,
-      end_date: formData.end_date,
-      message: formData.description,
-      status: "active",
-    };
+  const formData = formDataList[index];
 
-    try {
-      const result = await postAnnouncement(announcementData);
-      console.log("Announcement submitted successfully:", result);
+  // Date validation
+  const start = new Date(formData.start_date);
+  const end = new Date(formData.end_date);
 
-      alert(`Announcement ${index + 1} Submitted Successfully!`);
+  if (end < start) {
+    alert("End date cannot be earlier than the start date!");
+    return; // stop form submission
+  }
 
-      const updatedFormData = [...formDataList];
-      updatedFormData[index] = {
-        title: "",
-        start_date: "",
-        end_date: "",
-        description: "",
-      };
-      setFormDataList(updatedFormData);
-    } catch (error) {
-      console.error("Error submitting announcement:", error);
-      alert("Error submitting announcement!");
-    }
+  const announcementData = {
+    title: formData.title,
+    start_date: formData.start_date,
+    end_date: formData.end_date,
+    message: formData.description,
+    status: "active",
   };
+
+  try {
+    const result = await postAnnouncement(announcementData);
+    console.log("Announcement submitted successfully:", result);
+
+    alert(`Announcement ${index + 1} Submitted Successfully!`);
+
+    const updatedFormData = [...formDataList];
+    updatedFormData[index] = {
+      title: "",
+      start_date: "",
+      end_date: "",
+      description: "",
+    };
+    setFormDataList(updatedFormData);
+  } catch (error) {
+    console.error("Error submitting announcement:", error);
+    alert("Error submitting announcement!");
+  }
+};
+
 
   const addMoreForm = () => {
     setFormDataList((prevFormDataList) => [
