@@ -231,18 +231,6 @@ const Achievement = () => {
               </div>
 
               {/* Images */}
-              <div className="form-group" style={{ flex: "1 1 25%" }}>
-                <label htmlFor="images">Select Images</label>
-                <input
-                  type="file"
-                  id="images"
-                  name="images"
-                  accept=".jpg,.jpeg,.png"
-                  multiple
-                  onChange={handleFileChange}
-                />
-                <small>Upload photos (JPG, JPEG, PNG formats only).</small>
-              </div>
 
               {/* Certificate */}
               <div className="form-group" style={{ flex: "1 1 25%" }}>
