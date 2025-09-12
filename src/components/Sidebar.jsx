@@ -194,9 +194,6 @@ const MenuToggle = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 43px;
-  height: 48px;
-  background-color: #002366;
   padding: 3px;
   margin: 10px auto;
   cursor: pointer;

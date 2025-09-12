@@ -10,7 +10,7 @@ import {
 } from "../api/ClientApi"; // Adjust the import based on your API structure
  
 const Container = styled.div`
-  padding: 0 15px;
+  padding: 0rem 1rem;
   flex-direction: column;
   height: 70vh;
 `;
@@ -38,6 +38,7 @@ const Form = styled.form`
 const SectionTitle = styled.h2`
   color: #002e9f;
   font-size: 18px;
+  font-family: "Poppins";
 `;
  
 const IconWrapper = styled.div`
@@ -59,31 +60,26 @@ const IconBtn = styled.img`
 `;
  
 const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
- 
-  & > div {
-    flex: 1 1 30%;
-    margin: 10px;
-    min-width: 250px;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 2fr));
+  gap: 40px; /* space between inputs */
+  margin-bottom: 20px;
 `;
- 
+
 const Input = styled.input`
   padding: 12px;
-  width: 90%;
+  width: 95%;
   border: none;
   border-radius: 5px;
   background-color: #f1f2f7;
   font-size: 14px;
   outline: none;
- 
+
   &::placeholder {
     color: #888;
   }
 `;
- 
+
 const Select = styled.select`
   padding: 12px;
   width: 100%;
@@ -94,6 +90,7 @@ const Select = styled.select`
   color: #333;
   outline: none;
 `;
+
  
 const ButtonGroup = styled.div`
   margin-top: 30px;
@@ -438,9 +435,6 @@ const StudentInformation = () => {
               <option>Christian</option>
             </Select>
           </div>
-        </Row>
- 
-        <Row>
           <div>
             <label>Phone No *</label>
             <Input
@@ -459,6 +453,8 @@ const StudentInformation = () => {
             />
           </div>
         </Row>
+ 
+        
  
         <SectionTitle>Parents Information</SectionTitle>
  

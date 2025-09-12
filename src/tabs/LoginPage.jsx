@@ -348,7 +348,7 @@ const LoginPage = () => {
           </RoleSelection>
         </LoginBox>
 
-        <Footer>© 2024 Campus Sync School Management</Footer>
+        <Footer>© 2024 Campus Synergy School Management</Footer>
       </Container>
     </>
   );

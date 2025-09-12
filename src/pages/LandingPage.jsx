@@ -109,7 +109,8 @@ const TextSection = styled.div`
     margin: 0;
     font-family: "Koulen", sans-serif;
     position: relative;
-    bottom: -1rem;
+    top: 0.7rem;
+    letter-spacing: 0.1rem;
   }
 
   @media (max-width: 1366px) {
@@ -147,7 +148,7 @@ const SubTextSection = styled.div`
 
   p {
     position: relative;
-    top: 1rem;
+    top: 0.7rem;
     letter-spacing: 0.1rem;
   }
 
@@ -197,7 +198,7 @@ const DotNavigation = styled.div`
   justify-content: center;
   gap: 1rem;
   position: relative;
-  bottom: 6rem;
+  bottom: 6.7rem;
   left: 2%;
 
   .dot {

@@ -237,7 +237,6 @@ export default TeacherInformation;
 
 const Container = styled.div`
   padding: 0rem 1rem;
-  background: #f0f2f5;
   font-family: Arial, sans-serif;
   flex-direction: column;
   height: 70vh;
