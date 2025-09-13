@@ -253,33 +253,6 @@ const Container = styled.div`
   padding: 0 15px;
 `;
 
-const AddSlotButton = styled.button`
-  margin: 10px 0;
-  padding: 8px 16px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  &:hover {
-    background-color: #45a049;
-  }
-`;
-
-const RemoveSlotButton = styled.button`
-  margin-left: 8px;
-  padding: 6px 10px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  &:hover {
-    background-color: #d32f2f;
-  }
-`;
 
 const Header = styled.div`
   background: linear-gradient(90deg, #002087, #df0043);
@@ -320,26 +293,48 @@ const ButtonRow = styled.div`
   gap: 15px;
   margin-bottom: 20px;
 `;
+const BaseButton = styled.button`
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  min-width: 120px; /* Ensure consistent minimum width */
+  text-align: center;
+`;
+export const AddSlotButton = styled(BaseButton)`
+  background-color: #4caf50;
 
-const EditButton = styled.button`
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+export const RemoveSlotButton = styled(BaseButton)`
+  background-color: #f44336;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+`;
+
+export const EditButton = styled(BaseButton)`
   background-color: #002087;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
-const SubmitButton = styled.button`
+export const SubmitButton = styled(BaseButton)`
   background-color: #df0043;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
+
 
 const StyledTable = styled.table`
   width: 100%;

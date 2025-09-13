@@ -417,6 +417,7 @@ const StudentInformation = () => {
               name="roll_no"
               value={formData.roll_no}
               onChange={handleChange}
+              required
             />
           </div>
           </Row>
