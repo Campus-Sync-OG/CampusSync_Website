@@ -10,6 +10,54 @@ import {
 } from "../api/ClientApi"; // Adjust the import based on your API structure
  
 
+const Container = styled.div`
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const NavContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 0px 20px;
+  border-radius: 10px;
+  color: white;
+`;
+
+const Title = styled.h2`
+  color: white;
+  font-size: 25px;
+  font-weight: 600;
+  font-family: "Poppins";
+  @media (max-width: 426px) {
+    font-size: 20px;
+  }
+`;
+
+const IconsContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Divider = styled.div`
+  width: 4px;
+  height: 20px;
+  background-color: white;
+  margin: 0 10px;
+  position: relative;
+  right: 30px;
+`;
+
+const ImageIcon = styled.img`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  position: relative;
+  right: 30px;
+`;
+
 
  
 const SectionTitle = styled.h2`
@@ -66,42 +114,8 @@ const ProfilePreview = styled.div`
     object-fit: cover;
   }
 `;
-const Container = styled.div`
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-`;
 
-const Title = styled.h1`
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  color: #002087;
-`;
-
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const IconBtn = styled.img`
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-`;
-
-const VerticalDivider = styled.div`
-  width: 1px;
-  background: #ccc;
-  height: 30px;
-  margin: 0 1rem;
-`;
 
 const Form = styled.form`
   display: flex;
@@ -291,22 +305,16 @@ const StudentInformation = () => {
  
   return (
     <Container>
-      <Header>
-        <Title>Student Information</Title>
-        <IconWrapper>
+  <NavContainer>
+        <Title>School Information</Title>
+        <IconsContainer>
           <Link to="/admin-dashboard">
-            <IconBtn src={homeIcon} alt="Home" title="Home" />
+            <ImageIcon src={homeIcon} alt="Home" />
           </Link>
-          <VerticalDivider />
-          <div
-            onClick={() => navigate(-1)}
-            style={{ display: "inline-block", cursor: "pointer" }}
-          >
-            <IconBtn src={backIcon} alt="Back" title="Back" />
-          </div>
-        </IconWrapper>
-      </Header>
- 
+          <Divider />
+          <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
+        </IconsContainer>
+      </NavContainer> 
       <Form onSubmit={handleSubmit}>
         <SectionTitle>Add New Students</SectionTitle>
         <ImageContainer>
