@@ -412,7 +412,7 @@ const StudentInformation = () => {
  
        
           <div>
-            <label>Roll No</label>
+            <label>Roll No *</label>
             <Input
               name="roll_no"
               value={formData.roll_no}
