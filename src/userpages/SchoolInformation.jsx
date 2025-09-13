@@ -114,24 +114,26 @@ const SchoolInfo = () => {
               <option>State Board</option>
             </Select>
           </Column>
+          </Flex>
+           <Flex>
           <Column>
             <Label>Principal Name *</Label>
             <Input type="text" placeholder="Enter principal name" />
           </Column>
-        </Flex>
+       
 
-        <Flex>
-          <Column style={{ flex: "1 1 100%" }}>
+       
+          <Column>
             <Label>Address *</Label>
             <Textarea rows={3} placeholder="Enter address" />
           </Column>
-        </Flex>
-
-        <Flex>
+        
           <Column>
             <Label>Pincode *</Label>
             <Input type="text" />
           </Column>
+           </Flex>
+           <Flex>
           <Column>
             <Label>State *</Label>
             <Select>
@@ -228,35 +230,38 @@ const ImageIcon = styled.img`
   right: 30px;
 `;
 
+
+
 const Card = styled.div`
+  background: white;
   border-radius: 10px;
   padding: 2rem;
-`;
-
-const SectionTitle = styled.h3`
-  margin: 2rem 0 1rem;
-  color: #002087;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
 `;
 
 const Flex = styled.div`
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 `;
 
 const Column = styled.div`
-  flex: 1;
-  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const SectionTitle = styled.h3`
+  margin-bottom: 1rem;
+  color: #002087;
 `;
 
 const Label = styled.label`
-  display: block;
   font-weight: bold;
   margin-bottom: 0.5rem;
 `;
 
 const Input = styled.input`
-  width: 100%;
   padding: 0.7rem;
   border: none;
   border-radius: 4px;
@@ -264,7 +269,6 @@ const Input = styled.input`
 `;
 
 const Select = styled.select`
-  width: 100%;
   padding: 0.7rem;
   border: none;
   border-radius: 4px;
@@ -272,24 +276,22 @@ const Select = styled.select`
 `;
 
 const Textarea = styled.textarea`
-  width: 100%;
   padding: 0.7rem;
   border: none;
   border-radius: 4px;
   background: #f0f2f8;
+  resize: vertical;
 `;
 
-const FileNote = styled.p`
-  font-size: 0.75rem;
-  color: red;
-  margin-top: 0.2rem;
+const FileNote = styled.span`
+  font-size: 0.9rem;
+  color: #6c757d;
 `;
 
 const ButtonRow = styled.div`
   display: flex;
-  justify-content: flex-end;
-  margin-top: 2rem;
   gap: 1rem;
+  margin-top: 1.5rem;
 `;
 
 const Button = styled.button`
@@ -299,13 +301,12 @@ const Button = styled.button`
   font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
-  background: ${(props) => (props.primary ? "#df0043" : "#002087")};
+  background: ${(props) => (props.primary ? "#002087" : "#df0043")};
   color: white;
 `;
 
-const SuccessMessage = styled.p`
+const SuccessMessage = styled.div`
+  margin-top: 1rem;
   color: green;
   font-weight: bold;
-  margin-top: 1rem;
-  text-align: right;
 `;
