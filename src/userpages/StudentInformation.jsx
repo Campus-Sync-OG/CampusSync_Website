@@ -477,59 +477,65 @@ const StudentInformation = () => {
  
         <SectionTitle>Parents Information</SectionTitle>
  
-        <Row>
-          <div>
-            <label>Father's Name</label>
-            <Input
-              name="father_name"
-              value={formData.father_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Father's Contact</label>
-            <Input
-              name="father_contact"
-              value={formData.father_contact}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Father's Email</label>
-            <Input
-              name="father_email"
-              value={formData.father_email}
-              onChange={handleChange}
-            />
-          </div>
-        </Row>
- 
-        <Row>
-          <div>
-            <label>Mother's Name</label>
-            <Input
-              name="mother_name"
-              value={formData.mother_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Mother's Contact</label>
-            <Input
-              name="mother_contact"
-              value={formData.mother_contact}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Mother's Email</label>
-            <Input
-              name="mother_email"
-              value={formData.mother_email}
-              onChange={handleChange}
-            />
-          </div>
-        </Row>
+       <Row>
+  <div>
+    <label>Father's Name *</label>
+    <Input
+      name="father_name"
+      value={formData.father_name}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Father's Contact *</label>
+    <Input
+      name="father_contact"
+      value={formData.father_contact}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Father's Email *</label>
+    <Input
+      name="father_email"
+      value={formData.father_email}
+      onChange={handleChange}
+      required
+    />
+  </div>
+</Row>
+
+<Row>
+  <div>
+    <label>Mother's Name *</label>
+    <Input
+      name="mother_name"
+      value={formData.mother_name}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Mother's Contact *</label>
+    <Input
+      name="mother_contact"
+      value={formData.mother_contact}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Mother's Email *</label>
+    <Input
+      name="mother_email"
+      value={formData.mother_email}
+      onChange={handleChange}
+      required
+    />
+  </div>
+</Row>
  
         <Row>
           <div>
