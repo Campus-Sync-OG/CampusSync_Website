@@ -711,28 +711,35 @@ export const Button = styled.button`
   cursor: pointer;
   margin-bottom: 20px;
 `;
-
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3); /* semi-transparent overlay */
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  overflow: hidden; /* Prevent any scroll on overlay */
 `;
+
 export const ModalContent = styled.div`
   background: #fff;
   padding: 2rem;
   border-radius: 10px;
   width: 600px;
   max-width: 90%;
-  height: 50%;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  
+  /* Ensure absolute centering without extra margin/padding issues */
+  margin: auto;
+  position: relative;
 `;
+
 
 export const ModalRow = styled.div`
   display: flex;
