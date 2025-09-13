@@ -112,6 +112,7 @@ export default TeacherDashboard;
 /* Styled Components */
 
 const DashboardContainer = styled.div`
+font-family: "Poppins";
   flex: 1;
   width: 100%;
   margin-top: 5px;
@@ -119,7 +120,7 @@ const DashboardContainer = styled.div`
   flex-direction: column;
   align-items: center;
   overflow-y: auto;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow-x: hidden;
 
   @media (max-width: 320px) {
@@ -137,7 +138,7 @@ const WelcomeCard = styled.div`
   border-radius: 27px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
-  height: 150px;
+  height: 130px;
   width: 95%;
   z-index: -1;
 
@@ -241,7 +242,7 @@ const MainContent = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  gap: 30px;
+  gap: 20px;
   margin-left: 0;
 
   @media (max-width: 1024px) {
@@ -306,7 +307,7 @@ const DashboardCard = styled.div`
   justify-content: space-between;
   transition: transform 0.2s;
   cursor: pointer;
-  height: 155px;
+  height: 135px;
   width:85%;
   gap:10px;
   margin:8px;
@@ -315,8 +316,8 @@ const DashboardCard = styled.div`
   }
 
   img {
-    width: 220px;
-    height: 190px;
+    width: 200px;
+    height: 160px;
     margin:0;
     position: relative;
     left:10px;
@@ -454,8 +455,9 @@ const CalendarCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 0;
-  height: 385px;
+  margin-left: -15px;
+  margin-right: -15px;
+  height: 340px;
 
   h3 {
     margin-top: 1px;
