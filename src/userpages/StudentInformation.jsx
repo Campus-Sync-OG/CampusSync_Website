@@ -9,66 +9,15 @@ import {
   getAllClassSections,
 } from "../api/ClientApi"; // Adjust the import based on your API structure
  
-const Container = styled.div`
-  padding: 0 15px;
-  flex-direction: column;
-  height: 70vh;
-`;
- 
-const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #df0043);
-  padding: 5px 20px;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 10px;
-`;
- 
-const Title = styled.h1`
-  font-size: 26px;
-  font-weight: 600;
-  font-family: "Poppins";
-`;
- 
-const Form = styled.form`
-  margin-top: 20px;
-`;
+
+
  
 const SectionTitle = styled.h2`
   color: #002e9f;
   font-size: 18px;
 `;
  
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
- 
-const VerticalDivider = styled.div`
-  height: 25px;
-  width: 2px;
-  background-color: white;
-`;
- 
-const IconBtn = styled.img`
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-`;
- 
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
- 
-  & > div {
-    flex: 1 1 30%;
-    margin: 10px;
-    min-width: 250px;
-  }
-`;
+
  
 const Input = styled.input`
   padding: 12px;
@@ -95,29 +44,10 @@ const Select = styled.select`
   outline: none;
 `;
  
-const ButtonGroup = styled.div`
-  margin-top: 30px;
-  display: flex;
-  gap: 15px;
-`;
+
  
-const Button = styled.button`
-  padding: 12px 30px;
-  border: none;
-  color: white;
-  border-radius: 5px;
-  font-weight: bold;
-  background-color: ${(props) =>
-    props.variant === "reset" ? "#002e9f" : "#d60000"};
-  cursor: pointer;
-`;
- 
-const ImageContainer = styled.div`
-  margin: 30px 0;
-  display: flex;
-  gap: 30px;
-  align-items: center;
-`;
+
+
  
 const ProfilePreview = styled.div`
   width: 150px;
@@ -136,6 +66,78 @@ const ProfilePreview = styled.div`
     object-fit: cover;
   }
 `;
+const Container = styled.div`
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #002087;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const IconBtn = styled.img`
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+`;
+
+const VerticalDivider = styled.div`
+  width: 1px;
+  background: #ccc;
+  height: 30px;
+  margin: 0 1rem;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const ImageContainer = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+`;
+
+const Row = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  align-items: flex-start;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const Button = styled.button`
+  padding: 0.7rem 2rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  background: ${(props) => (props.variant === "reset" ? "#df0043" : "#002087")};
+  color: white;
+`;
+
  
 const StudentInformation = () => {
   const [formData, setFormData] = useState({
@@ -330,6 +332,7 @@ const StudentInformation = () => {
         </ImageContainer>
  
         <Row>
+          
           <div>
             <label>Admission No *</label>
             <Input
@@ -348,9 +351,9 @@ const StudentInformation = () => {
               required
             />
           </div>
-        </Row>
+        
  
-        <Row>
+       
           <div>
             <label>Gender *</label>
             <Select
@@ -365,6 +368,8 @@ const StudentInformation = () => {
               <option>Other</option>
             </Select>
           </div>
+          </Row>
+          <Row>
           <div>
             <label>Class *</label>
             <Select
@@ -395,9 +400,9 @@ const StudentInformation = () => {
               ))}
             </Select>
           </div>
-        </Row>
+        
  
-        <Row>
+       
           <div>
             <label>Roll No</label>
             <Input
@@ -406,6 +411,8 @@ const StudentInformation = () => {
               onChange={handleChange}
             />
           </div>
+          </Row>
+<Row>
           <div>
             <label>Date Of Birth *</label>
             <Input
@@ -439,7 +446,6 @@ const StudentInformation = () => {
             </Select>
           </div>
         </Row>
- 
         <Row>
           <div>
             <label>Phone No *</label>
@@ -458,6 +464,7 @@ const StudentInformation = () => {
               onChange={handleChange}
             />
           </div>
+          
         </Row>
  
         <SectionTitle>Parents Information</SectionTitle>
