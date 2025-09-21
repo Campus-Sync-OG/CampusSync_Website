@@ -195,7 +195,7 @@ export default PayrollSetup;
 
 
 // Styled Components
-const Container = styled.div` padding: 2rem; `;
+const Container = styled.div` padding: 2rem;font-family: "Poppins"; `;
 const Header = styled.div`
   display: flex; align-items: center; justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);

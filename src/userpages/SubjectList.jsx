@@ -13,7 +13,7 @@ const Header = styled.div`
   padding: 22px 20px;
   border-radius: 10px;
   color: white;
-  
+  font-family: "Poppins";
 `;
 
 const Title = styled.h2`

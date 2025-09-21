@@ -5,6 +5,7 @@ import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import { getAllFeedback } from "../api/ClientApi";
 const Container = styled.div`
+font-family: "Poppins";
   padding:  0 1rem;
   font-family: Poppins;
 `;

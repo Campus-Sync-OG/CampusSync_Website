@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { uploadWithMetadata } from "../api/ClientApi"; // Adjust the import path as necessary
 
 const Container = styled.div`
+font-family: "Poppins";
   padding: 0 15px;
 `;
 

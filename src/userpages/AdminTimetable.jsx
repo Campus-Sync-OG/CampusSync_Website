@@ -250,6 +250,7 @@ const AdminTimetable = () => {
 export default AdminTimetable;
 
 const Container = styled.div`
+font-family: "Poppins";
   padding: 0 15px;
 `;
 

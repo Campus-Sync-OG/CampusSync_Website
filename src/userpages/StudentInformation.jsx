@@ -14,6 +14,7 @@ const Container = styled.div`
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  font-family: "Poppins";
 `;
 
 const NavContainer = styled.div`

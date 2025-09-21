@@ -97,6 +97,7 @@ export default SubjectListView;
 
 const Container = styled.div`
   padding: 20px;
+  font-family: "Poppins";
 `;
 
 const Header = styled.div`

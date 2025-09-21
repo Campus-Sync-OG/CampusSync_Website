@@ -238,7 +238,7 @@ export default TeacherInformation;
 const Container = styled.div`
   padding: 0rem 1rem;
   background: #f0f2f5;
-  font-family: Arial, sans-serif;
+  font-family: "Poppins";
   flex-direction: column;
   height: 70vh;
 `;

@@ -91,6 +91,7 @@ export default EmployeePage;
 
 // Styled Components
 const PageContainer = styled.div`
+font-family: "Poppins";
   padding: 24px;
   background: #fefefe;
 `;

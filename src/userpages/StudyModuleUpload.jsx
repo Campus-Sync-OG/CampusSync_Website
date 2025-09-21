@@ -7,6 +7,7 @@ import { uploadStudyModule } from "../api/ClientApi"; // API function to handle 
 
 const Container = styled.div`
   padding: 0 15px;
+  font-family: "Poppins";
 `;
 
 const Header = styled.div`

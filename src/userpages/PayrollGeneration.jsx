@@ -129,7 +129,7 @@ const PayrollGeneration = () => {
 
 export default PayrollGeneration;
 
-const Container = styled.div`padding: 2rem;`;
+const Container = styled.div`padding: 2rem; font-family: "Poppins";`;
 
 const TopBar = styled.div`
   display: flex;

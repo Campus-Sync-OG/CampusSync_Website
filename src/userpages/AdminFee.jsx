@@ -613,6 +613,7 @@ export default AdminFee;
 /* Keep your styled components exactly as in your provided code */
 
 export const Container = styled.div`
+font-family: "Poppins";
   width: 95%;
   padding: 0 15px;
 `;

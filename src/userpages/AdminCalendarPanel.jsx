@@ -7,6 +7,7 @@ import { Link,useNavigate } from "react-router-dom";
 
 // Styled Components (same as before + refresh button)
 const Container = styled.div`
+font-family: "Poppins";
   padding: 0 20px;
 `;
 
