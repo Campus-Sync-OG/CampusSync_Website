@@ -229,6 +229,7 @@ export default StudentFeeDetails;
 
 export const Container = styled.div`
   padding: 0 1.2rem;
+  font-family: "Poppins";
 `;
 
 export const Title = styled.h2`

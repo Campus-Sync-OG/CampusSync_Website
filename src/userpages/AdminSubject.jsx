@@ -7,6 +7,7 @@ import { fetchFilteredSubjects } from "../api/ClientApi";
 
 // Styled Components
 const Container = styled.div`
+font-family: "Poppins";
   padding: 0 15px;
   background: white;
 `;

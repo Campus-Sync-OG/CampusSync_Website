@@ -11,6 +11,7 @@ import {
 } from "../api/ClientApi";
 
 const Container = styled.div`
+font-family: "Poppins";
   padding: 0 1.5rem;
 `;
 

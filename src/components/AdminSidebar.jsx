@@ -29,10 +29,11 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
 import { FaBookReader } from "react-icons/fa";
 import { CiMoneyCheck1 } from "react-icons/ci";
-import { TfiAnnouncement } from "react-icons/tfi";
+import { TfiAnnouncement,TfiMoney } from "react-icons/tfi";
 import { MdOutlineNotificationAdd } from "react-icons/md";
 import { SlEvent } from "react-icons/sl";
 import { Link } from "react-router-dom";
+import { FaCertificate } from 'react-icons/fa';
 // Animation for mobile sidebar
 const slideIn = keyframes`
   from {
@@ -489,7 +490,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <TfiAnnouncement />
+                <TfiMoney />
               </Icon>
               <Label expanded={true}>Payroll</Label>
             </SidebarItem>
@@ -499,7 +500,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <TfiAnnouncement />
+                <FaCertificate  />
               </Icon>
               <Label expanded={true}>Certificate Requests</Label>
             </SidebarItem>
@@ -652,22 +653,20 @@ const Sidebar = () => {
             </SidebarItem>
             <SidebarItem
               to="/admin-payroll"
-              onClick={() => setMobileOpen(false)}
-            >
+             expanded={expanded}>
               <Icon>
-                <TfiAnnouncement />
+                 <TfiMoney />
               </Icon>
-              <Label expanded={true}>Payroll </Label>
+              <Label expanded={expanded}>Payroll </Label>
             </SidebarItem>
           
   <SidebarItem
               to="/admin-certificatepanel"
-              onClick={() => setMobileOpen(false)}
-            >
+            expanded={expanded}>
               <Icon>
-                <TfiAnnouncement />
+                <FaCertificate />
               </Icon>
-              <Label expanded={true}>Certificate Requests </Label>
+              <Label expanded={expanded}>Certificate Requests </Label>
             </SidebarItem>
             <SidebarItem to="/admin-teacher-data" expanded={expanded}>
               <Icon>

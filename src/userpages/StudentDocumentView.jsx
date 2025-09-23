@@ -8,6 +8,7 @@ import back from "../assets/images/back.png";
 
 const PageContainer = styled.div`
   padding: 0 1.5rem;
+  font-family: "Poppins";
 `;
 
 const SearchInput = styled.input`

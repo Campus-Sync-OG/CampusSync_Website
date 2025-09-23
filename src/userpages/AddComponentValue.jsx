@@ -182,6 +182,7 @@ const handleSubmit = async (e) => {
 
 export default ComponentValueSetup;
 const Container = styled.div`
+font-family: "Poppins";
   padding: 2rem;
 `;
 

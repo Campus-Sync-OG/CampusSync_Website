@@ -7,7 +7,7 @@ import backIcon from "../assets/images/back.png";
 
 const Container = styled.div`
   padding: 0px 15px;
-  font-family: sans-serif;
+ font-family: "Poppins";
 `;
 
 const Header = styled.div`
