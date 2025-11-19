@@ -172,21 +172,21 @@ const IconWrapper = styled.div`
     isAdmin &&
     `
     position:relative;
-    bottom:10px;
+    bottom:15px;
 
     @media (max-width: 460px) {
       img {
-        width: 213px !important;
-        height: 134px !important;
+        width: 253px !important;
+        height: 160px !important;
         position: relative;
         left:10px;
-      
+        top:10px;
             }
     }
     @media (max-width: 320px) {
       img {
         width: 120px !important;
-        height: 130px !important;
+        height: 152px !important;
             }
     }
   `}
@@ -197,19 +197,20 @@ const IconWrapper = styled.div`
     `
     @media (max-width: 460px) {
       img {
-        width: 100px !important;
-        height: 120px !important;
+        width: 123px !important;
+        height: 138px !important;
         position: relative;
         right:10px;
+        top:5px;
       }
     }
     @media (max-width: 320px) {
       img {
-        width: 100px !important;
-        height: 115px !important;
+        width: 116px !important;
+        height: 119px !important;
          position: relative;
         right:10px;
-        bottom:5px;
+        top:10px;
       }
     }
   `}
@@ -222,17 +223,18 @@ const IconWrapper = styled.div`
     top:8px;
     @media (max-width: 460px) {
       img {
-        width: 105px !important;
-        height: 125px !important;
+        width: 115px !important;
+        height: 133px !important;
         position: relative;
         left:10px;
-        bottom:20px;
+        bottom:40px;
       }
     }
     @media (max-width: 320px) {
       img {
-        width: 105px !important;
-        height: 125px !important;
+        width: 98px !important;
+        height: 113px !important;
+        bottom:15px;
       }
     }
   `}
@@ -245,20 +247,20 @@ const IconWrapper = styled.div`
     top:8px;
     @media (max-width: 480px) {
       img {
-        width: 100px !important;
-        height: 120px !important;
+        width: 107px !important;
+        height: 131px !important;
         position: relative;
         right:10px;
-        bottom:20px;
+        bottom:38px;
       }
     }
       @media (max-width: 320px) {
       img {
         width: 100px !important;
-        height: 125px !important;
+        height: 112px !important;
         position: relative;
         right:10px;
-        bottom:17px;
+        bottom:14px;
 }}
   `}
 `;
@@ -330,7 +332,7 @@ const LoginPage = () => {
                 <img src={adminIcon} alt="Admin" />
               </IconWrapper>
             </RoleCard>
-            <RoleCard onClick={() => handleRoleClick("principal")}>
+            <RoleCard   onClick={() => handleRoleClick("principal")}>
               <IconWrapper imgWidth="148px" imgHeight="200px" isPrincipal>
                 <img src={principalIcon} alt="Principal" />
               </IconWrapper>
@@ -341,7 +343,7 @@ const LoginPage = () => {
               </IconWrapper>
             </RoleCard>
             <RoleCard onClick={() => handleRoleClick("student")}>
-              <IconWrapper imgWidth="148px" imgHeight="200px" isStudent>
+              <IconWrapper imgWidth="142px" imgHeight="200px" isStudent>
                 <img src={studentIcon} alt="Student" />
               </IconWrapper>
             </RoleCard>
