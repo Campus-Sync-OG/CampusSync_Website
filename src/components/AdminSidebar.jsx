@@ -6,7 +6,7 @@ import {
   FaCaretDown,
   FaAngleRight,
   FaAngleLeft,
-   FaUsers,
+  FaUsers,
 } from "react-icons/fa6";
 import { FaChevronDown } from 'react-icons/fa';
 
@@ -30,10 +30,11 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 import { CiViewList } from "react-icons/ci";
 import { FaBookReader } from "react-icons/fa";
 import { CiMoneyCheck1 } from "react-icons/ci";
-import { TfiAnnouncement } from "react-icons/tfi";
+import { TfiAnnouncement,TfiMoney } from "react-icons/tfi";
 import { MdOutlineNotificationAdd } from "react-icons/md";
 import { SlEvent } from "react-icons/sl";
 import { Link } from "react-router-dom";
+import { FaCertificate } from 'react-icons/fa';
 // Animation for mobile sidebar
 const slideIn = keyframes`
   from {
@@ -162,8 +163,12 @@ const MobileMenu = styled.div`
     top: 90px;
   }
   @media (max-width: 320px) {
-    left: 10px;
-    top: 98px;
+     top: 58px;
+    left: 5px;
+    svg {
+      width: 25px; // Increase icon size
+      height: 40px; // Increase icon size
+    }
   }
 `;
 
@@ -375,8 +380,8 @@ const Sidebar = () => {
               <Label expanded={true}>Add School Info</Label>
             </SidebarItem>
 
-            <SidebarItem to="/admin-studentdocuments"  onClick={() => setMobileOpen(false)}
-              >
+            <SidebarItem to="/admin-studentdocuments" onClick={() => setMobileOpen(false)}
+            >
               <Icon>
                 <IoDocumentAttachOutline />
               </Icon>
@@ -395,7 +400,7 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                 <LiaCalendarCheck />
+                <LiaCalendarCheck />
               </Icon>
               <Label expanded={true}>Time Table</Label>
             </SidebarItem>
@@ -405,12 +410,12 @@ const Sidebar = () => {
               onClick={() => setMobileOpen(false)}
             >
               <Icon>
-                <LiaBookSolid  />
+                <LiaBookSolid />
               </Icon>
               <Label expanded={true}>Add Subject</Label>
             </SidebarItem>
 
-        
+
 
             <SidebarItem
               to="/admin-subjectlist"
@@ -433,8 +438,8 @@ const Sidebar = () => {
             </SidebarItem>
 
             <SidebarItem to="/admin-studentfee"
-             onClick={() => setMobileOpen(false)}
-              >
+              onClick={() => setMobileOpen(false)}
+            >
               <Icon>
                 <CiMoneyCheck1 />
               </Icon>
@@ -510,6 +515,26 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={true}>Announcement</Label>
             </SidebarItem>
+            <SidebarItem
+              to="/admin-payroll"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TfiMoney />
+              </Icon>
+              <Label expanded={true}>Payroll</Label>
+            </SidebarItem>
+
+             <SidebarItem
+              to="/admin-certificatepanel"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <FaCertificate  />
+              </Icon>
+              <Label expanded={true}>Certificate Requests</Label>
+            </SidebarItem>
+            
 
             <SidebarItem
               to="/admin-notification"
@@ -582,14 +607,14 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-timetable" expanded={expanded}>
               <Icon>
-                 <LiaCalendarCheck />
+                <LiaCalendarCheck />
               </Icon>
               <Label expanded={expanded}>Timetable</Label>
             </SidebarItem>
 
             <SidebarItem to="/admin-addsubject" expanded={expanded}>
               <Icon>
-               <LiaBookSolid />
+                <LiaBookSolid />
               </Icon>
               <Label expanded={expanded}>Add Subject</Label>
             </SidebarItem>
@@ -603,7 +628,7 @@ const Sidebar = () => {
 
             <SidebarItem to="/admin-studymodule" expanded={expanded}>
               <Icon>
-               <VscFileSubmodule />
+                <VscFileSubmodule />
               </Icon>
               <Label expanded={expanded}>Study Module</Label>
             </SidebarItem>
@@ -656,7 +681,23 @@ const Sidebar = () => {
               </Icon>
               <Label expanded={expanded}>Calendar of Events</Label>
             </SidebarItem>
-
+            <SidebarItem
+              to="/admin-payroll"
+             expanded={expanded}>
+              <Icon>
+                 <TfiMoney />
+              </Icon>
+              <Label expanded={expanded}>Payroll </Label>
+            </SidebarItem>
+          
+  <SidebarItem
+              to="/admin-certificatepanel"
+            expanded={expanded}>
+              <Icon>
+                <FaCertificate />
+              </Icon>
+              <Label expanded={expanded}>Certificate Requests </Label>
+            </SidebarItem>
             <SidebarItem to="/admin-teacher-data" expanded={expanded}>
               <Icon>
                 <RiDatabase2Line />

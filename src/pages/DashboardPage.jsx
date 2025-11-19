@@ -7,7 +7,10 @@ import academics from "../assets/images/academics.png";
 import fees from "../assets/images/fees.png";
 import assignment from "../assets/images/assignment.png";
 import attendance from "../assets/images/attendance.png";
-import { fetchStudentByAdmissionNo,fetchAnnouncements } from "../api/ClientApi"; // API function to fetch student info
+import {
+  fetchStudentByAdmissionNo,
+  fetchAnnouncements,
+} from "../api/ClientApi"; // API function to fetch student info
 import { useWindowSize } from "@react-hook/window-size";
 import Confetti from "react-confetti";
 // Styled Components
@@ -48,10 +51,10 @@ const PageContainer = styled.div`
   }
 
   @media (max-width: 420px) {
-    width: 86%;
+    width: 8%;
   }
   @media (max-width: 320px) {
-    width: 86%;
+    width:0%;
   }
 `;
 
@@ -60,6 +63,9 @@ const DashboardContainer = styled.div`
   max-width: 1200px;
   display: flex;
   flex-direction: column;
+  @media (max-width: 360px) {
+    width: 0;
+  }
 `;
 
 const WelcomeSection = styled.div`
@@ -137,20 +143,23 @@ const WelcomeSection = styled.div`
     left: 30px;
     h2 {
       top: 0;
+      font-size: 1rem;
     }
     p {
       text-align: center;
       top: 0px;
+      font-size: 0.8rem;
     }
     img {
-      left: 35px;
-      min-height: 1vh;
-      max-height: 12vh;
+      left: 12px;
+      top:13px;
+      min-height: 3vh;
+      max-height: 7vh;
     }
   }
   @media (max-width: 420px) {
-    width: 100%;
-
+    width: 265px;
+    left: 55px;
     h2 {
       top: 0;
       font-size: 1.1rem;
@@ -162,16 +171,61 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-height: 1vh;
-      max-height: 9.3vh;
+      min-width: 10%;
+      max-width: 34%;
+      min-height: 15vh;
+      max-height: 9vh;
     }
   }
-  @media (max-width: 380px) {
-    width: 100%;
-    left: 36px;
+
+   @media (max-width: 380px) {
+   width: 290px;
+    left: 41px;
     h2 {
       top: 0;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
+    }
+    p {
+      text-align: center;
+      font-size: 1rem;
+    }
+    img {
+      left: 12px;
+      top: 0px;
+      min-width: 21%;
+      max-width: 24%;
+      min-height: 9vh;
+      max-height: 9vh;
+    }
+  }
+
+  @media (max-width: 360px) {
+   width: 260px;
+    left: 41px;
+    h2 {
+      top: 0;
+      font-size: 1.3rem;
+    }
+    p {
+      text-align: center;
+      font-size: 1rem;
+    }
+    img {
+      left: 25px;
+      top: 0px;
+      min-width: 27%;
+      max-width: 34%;
+      min-height: 15vh;
+      max-height: 9vh;
+    }
+  }
+
+  @media (max-width: 320px) {
+    width: 210px;
+    left: 42px;
+    h2 {
+      top: 0;
+      font-size: 1.2rem;
     }
     p {
       text-align: center;
@@ -180,17 +234,16 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 35%;
-      max-width: 35%;
-      min-height: 9vh;
+      min-width: 26%;
+      max-width: 26%;
+      min-height: 12vh;
       max-height: 9vh;
     }
   }
 
-  @media (max-width: 320px) {
-    width: 98%;
-  }
+   
 `;
+
 const PopupOverlay = styled.div`
   position: fixed;
   top: 0;
@@ -212,8 +265,8 @@ const PopupBox = styled.div`
   max-width: 500px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  max-height:200px;
-  height:50%;
+  max-height: 200px;
+  height: 50%;
   h1 {
     color: red;
     font-family: "Poppins", sans-serif;
@@ -239,7 +292,7 @@ const PopupBox = styled.div`
     font-size: 14px;
     border-radius: 8px;
     cursor: pointer;
-    gap:10px;
+    gap: 10px;
 
     &:hover {
       background-color: #001764;
@@ -295,7 +348,8 @@ const CardGrid = styled.div`
     gap: 15px 105px;
   }
   @media (max-width: 380px) {
-    left: 20px;
+    left: 25px;
+    width: 100%;
   }
   @media (max-width: 320px) {
     gap: 15px 105px;
@@ -346,9 +400,20 @@ const Widget = styled.div`
     width: 109%;
     left: 80px;
   }
+
+  @media (max-width: 420px) {
+    height: 100px;
+    width:  130%;;
+    left: 98px;
+  }
   @media (max-width: 380px) {
     height: 100px;
-    width: 100%;
+    width:  127%;;
+    left: 40px;
+  }
+  @media (max-width: 360px) {
+    height: 100px;
+    width:  115%;;
     left: 40px;
   }
   @media (max-width: 320px) {
@@ -422,9 +487,16 @@ const WidgetImage = styled.img`
     left: 60px;
     bottom: 20px;
   }
+ @media (max-width: 420px) {
+    position: relative;
+    left: 130px;
+    max-width: 57%;
+    bottom: 20px;
+  }
   @media (max-width: 380px) {
     position: relative;
-    left: 60px;
+    left: 130px;
+    max-width: 57%;
     bottom: 20px;
   }
   @media (max-width: 320px) {
@@ -466,10 +538,20 @@ const CalendarContainer = styled.div`
     position: relative;
     left: 70px;
   }
+  @media (max-width: 420px) {
+    position: relative;
+    left: 75px;
+    width: 126%;
+  }   
   @media (max-width: 380px) {
     position: relative;
-    left: 60px;
-    width: 100%;
+    left: 67px;
+    width: 130%;
+  }
+  @media (max-width: 380px) {
+    position: relative;
+    left: 67px;
+    width: 115%;
   }
   @media (max-width: 320px) {
     position: relative;
@@ -622,7 +704,6 @@ const widgetConfig = [
 ];
 
 const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
-  
   const daysInMonth = new Date(
     currentDate.getFullYear(),
     currentDate.getMonth() + 1,
@@ -635,11 +716,8 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
   ).getDay();
   const adjustedFirstDay = (firstDay + 6) % 7;
   const dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-    
- 
+
   return (
-   
-    
     <CalendarContainer>
       <CalendarWidget>
         <CalendarHeader>
@@ -672,7 +750,6 @@ const CalendarComponent = ({ currentDate, onPrevious, onNext }) => {
         </CalendarGrid>
       </CalendarWidget>
     </CalendarContainer>
-   
   );
 };
 
@@ -683,9 +760,9 @@ const DashboardPage = () => {
   const [isBirthday, setIsBirthday] = useState(false);
   const [showBirthdayWish, setShowBirthdayWish] = useState(false);
   const [width, height] = useWindowSize(); // ✅ get window size for confetti
-   const [showPopup, setShowPopup] = useState(false);
-    const [latestAnnouncement, setLatestAnnouncement] = useState(null);
-    const [announcements, setAnnouncements] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [latestAnnouncement, setLatestAnnouncement] = useState(null);
+  const [announcements, setAnnouncements] = useState([]);
   const storedUser = localStorage.getItem("user");
   let user = null;
 
@@ -767,8 +844,8 @@ const DashboardPage = () => {
     }
   }, [admission_no]);
 
-   useEffect(() => {
-      const popupSeen = sessionStorage.getItem("popupSeen");
+  useEffect(() => {
+    const popupSeen = sessionStorage.getItem("popupSeen");
 
     const loadAnnouncements = async () => {
       try {
@@ -788,11 +865,10 @@ const DashboardPage = () => {
     };
 
     loadAnnouncements();
-   
   }, []);
 
   return (
-    <> 
+    <>
       {isBirthday && showBirthdayWish && (
         <BirthdayPopup>
           <Confetti width={width} height={height} />
@@ -807,43 +883,41 @@ const DashboardPage = () => {
           </BirthdayCard>
         </BirthdayPopup>
       )}
-     {showPopup && latestAnnouncement && (
-  <PopupOverlay>
-    <PopupBox style={{ position: 'relative' }}>
-      
-      {/* Close button */}
-      <button 
-        onClick={() => setShowPopup(false)}
-         style={{
-         position: 'absolute',
-          top: '10px',
-          right: '10px',
-          width: '30px',
-          height: '30px',
-          borderRadius: '4px',
-          border: 'none',
-          backgroundColor: '#002087',
-          color: '#fff',
-          fontSize: '20px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        &times;
-      </button>
+      {showPopup && latestAnnouncement && (
+        <PopupOverlay>
+          <PopupBox style={{ position: "relative" }}>
+            {/* Close button */}
+            <button
+              onClick={() => setShowPopup(false)}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                width: "30px",
+                height: "30px",
+                borderRadius: "4px",
+                border: "none",
+                backgroundColor: "#002087",
+                color: "#fff",
+                fontSize: "20px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              &times;
+            </button>
 
-      {/* Centered Title */}
-      <h1 style={{ textAlign: 'center' }}>Announcement</h1>
-      
-      <h3>{latestAnnouncement.title}</h3>
-      <p>{latestAnnouncement.message}</p>
-      
-    </PopupBox>
-  </PopupOverlay>
-)}
+            {/* Centered Title */}
+            <h1 style={{ textAlign: "center" }}>Announcement</h1>
+
+            <h3>{latestAnnouncement.title}</h3>
+            <p>{latestAnnouncement.message}</p>
+          </PopupBox>
+        </PopupOverlay>
+      )}
 
       <PageContainer>
         <DashboardContainer>

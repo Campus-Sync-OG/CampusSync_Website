@@ -4,13 +4,15 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 
 const LandingContainer = styled.div`
-  position: relative;
+position : relative; 
   height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  
+  
 `;
 
 const BackgroundCurve = styled.div`
@@ -49,7 +51,7 @@ const ContentContainer = styled.div`
 
 const LogoSection = styled.div`
   position: relative;
-  top: 25px;
+  top: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,20 +73,21 @@ const LogoSection = styled.div`
 
   @media (max-width: 1024px) {
     position: relative;
-    bottom: -3rem;
+    top:6px;
   }
 
   @media (max-width: 768px) {
     img {
       position: relative;
-      bottom: 30px;
-      width: 30vw;
+      bottom: 18px;
+      width: 25vw;
     }
   }
 
   @media (max-width: 480px) {
     img {
-      width: 40vw;
+      width: 35vw;
+      bottom: 18px;
     }
   }
 
@@ -109,7 +112,7 @@ const TextSection = styled.div`
     margin: 0;
     font-family: "Koulen", sans-serif;
     position: relative;
-    bottom: -1rem;
+    bottom: 0.3rem;
   }
 
   @media (max-width: 1366px) {
@@ -124,7 +127,7 @@ const TextSection = styled.div`
 
   @media (max-width: 768px) {
     h1 {
-      bottom: 30px;
+      bottom: 10px;
     }
   }
 
@@ -147,7 +150,7 @@ const SubTextSection = styled.div`
 
   p {
     position: relative;
-    top: 1rem;
+    top: 0rem;
     letter-spacing: 0.1rem;
   }
 
@@ -159,12 +162,12 @@ const SubTextSection = styled.div`
 
   @media (max-width: 1024px) {
     position: relative;
-    bottom: -3rem;
+    bottom: 0.4rem;
   }
 
   @media (max-width: 768px) {
     p {
-      top: -4.5rem;
+      top: -1rem;
     }
   }
   @media (max-width: 344px) {
@@ -182,7 +185,7 @@ const ButtonContainer = styled.div`
 
   @media (max-width: 768px) {
     position: relative;
-    bottom: 3rem;
+    bottom: 1rem;
     left: 0.1rem;
   }
   @media (max-width: 344px) {
@@ -197,7 +200,7 @@ const DotNavigation = styled.div`
   justify-content: center;
   gap: 1rem;
   position: relative;
-  bottom: 6rem;
+  bottom: 7.4rem;
   left: 2%;
 
   .dot {
@@ -224,12 +227,13 @@ const DotNavigation = styled.div`
   @media (max-width: 1024px) {
     gap: 0.5rem;
     position: relative;
-    top: -6rem;
+    top: -6.4rem;
   }
 
   @media (max-width: 768px) {
     position: relative;
     gap: 0.5rem;
+    top: -6.5rem;
   }
 
   @media (max-width: 344px) {
@@ -253,7 +257,7 @@ const Button = styled.button`
   cursor: pointer;
   transition: background-color 0.3s;
   position: relative;
-  top: -2rem;
+  top: -3rem;
   left: 1rem;
 
   &:hover {
@@ -268,6 +272,7 @@ const Button = styled.button`
 
   @media (max-width: 768px) {
     padding: 0.6rem 1.5rem;
+    top: -2.3rem;
   }
 
   @media (max-width: 344px) {

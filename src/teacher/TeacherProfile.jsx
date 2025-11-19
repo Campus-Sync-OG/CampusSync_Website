@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { fetchTeacherProfile } from "../api/ClientApi";
+import { fetchTeacherProfile, updateTeacher, getAllTeacherClassSections } from "../api/ClientApi";
 import bgImage from "../assets/images/bg.jpeg";
 import profileImage from "../assets/images/profile.png";
 import homeIcon from "../assets/images/home.png";
@@ -9,25 +9,15 @@ import backIcon from "../assets/images/back.png";
 
 const TeacherProfile = () => {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({
-    emp_name: "",
-    phone_no: "",
-    email: "",
-    emp_id: "",
-    subjects: "",
-    joining_date: "",
+  const [userInfo, setUserInfo] = useState({});
+  const [editableFields, setEditableFields] = useState({
     role: "",
-    gender: "",
-    dob: "",
-    class: "",
-    section: "",
-    address: "",
-    classesAssigned: "",
-    department: "",
-    optionA: false,
-    optionB: false,
-    optionC: false,
-    optionD: false,
+    class_name: "",
+    section_name: ""
+  });
+  const [assignedClassSection, setAssignedClassSection] = useState({
+    class_name: "",
+    section_name: ""
   });
 
   useEffect(() => {
@@ -39,16 +29,49 @@ const TeacherProfile = () => {
         if (empId) {
           const res = await fetchTeacherProfile(empId);
           setUserInfo(res.teacher);
-        } else {
-          console.warn("Employee ID not found in localStorage.");
+          setEditableFields({
+            role: res.teacher.role || "",
+            class_name: res.teacher.class || "",
+            section_name: res.teacher.section || ""
+          });
+
+          // Fetch assigned class/section
+          const classSections = await getAllTeacherClassSections(empId);
+          const assigned = classSections?.data?.find(item => item.emp_id === empId);
+          if (assigned) {
+            setAssignedClassSection({
+              class_name: assigned.class_name,
+              section_name: assigned.section_name
+            });
+            console.log("Assigned Class/Section:", assigned);
+          }
         }
       } catch (err) {
-        console.error("Error fetching teacher profile:", err);
+        console.error("Error fetching teacher profile or class-section:", err);
       }
     };
 
     getProfile();
   }, []);
+
+  const handleSubmit = async () => {
+    try {
+      const empId = userInfo.emp_id;
+      const { role, class_name, section_name } = editableFields;
+
+      const payload = { role };
+      if (role === "Class Teacher") {
+        payload.class_name = class_name;
+        payload.section_name = section_name;
+      }
+
+      await updateTeacher(empId, payload);
+      alert("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update teacher profile:", error);
+      alert("Update failed.");
+    }
+  };
 
   return (
     <Container>
@@ -73,7 +96,6 @@ const TeacherProfile = () => {
       </Header>
 
       <InfoGrid>
-        {/* Basic Information */}
         <Section>
           <SectionTitle>My Basic Information</SectionTitle>
           <Row>
@@ -90,18 +112,8 @@ const TeacherProfile = () => {
             <Column>
               <Label>Gender</Label>
               <RadioGroup>
-                <RadioButton
-                  type="radio"
-                  checked={userInfo.gender === "Male"}
-                  readOnly
-                />{" "}
-                Male
-                <RadioButton
-                  type="radio"
-                  checked={userInfo.gender === "Female"}
-                  readOnly
-                />{" "}
-                Female
+                <RadioButton type="radio" checked={userInfo.gender === "Male"} readOnly /> Male
+                <RadioButton type="radio" checked={userInfo.gender === "Female"} readOnly /> Female
               </RadioGroup>
             </Column>
             <Column>
@@ -112,16 +124,15 @@ const TeacherProfile = () => {
           <Row>
             <Column>
               <Label>Class</Label>
-              <Input value={userInfo.class || ""} readOnly />
+              <Input value={userInfo.class_name || assignedClassSection.class_name || ""} readOnly />
             </Column>
             <Column>
               <Label>Section</Label>
-              <Input value={userInfo.section || ""} readOnly />
+              <Input value={userInfo.section_name || assignedClassSection.section_name || ""} readOnly />
             </Column>
           </Row>
         </Section>
 
-        {/* Contact Information */}
         <Section>
           <SectionTitle>Contact Information</SectionTitle>
           <Row>
@@ -142,7 +153,6 @@ const TeacherProfile = () => {
           </Row>
         </Section>
 
-        {/* Department & Classes */}
         <Section>
           <SectionTitle>My Department & Class Assigned</SectionTitle>
           <Row>
@@ -150,44 +160,64 @@ const TeacherProfile = () => {
               <Label>My Faculty ID</Label>
               <Input value={userInfo.emp_id || ""} readOnly />
             </Column>
-            <Column>
-              <Label>Classes Assigned</Label>
-              <Input value={userInfo.classesAssigned || ""} readOnly />
-            </Column>
           </Row>
           <Row>
             <Column>
-              <Label>Department</Label>
-              <Input value={userInfo.department || ""} readOnly />
-            </Column>
-            <Column>
               <Label>Designation</Label>
-              <Input value={userInfo.role || ""} readOnly />
+              <Input
+                as="select"
+                value={editableFields.role}
+                onChange={(e) =>
+                  setEditableFields({ ...editableFields, role: e.target.value })
+                }
+              >
+                <option value="">Select Role</option>
+                <option value="subjectTeacher">Subject Teacher</option>
+                <option value="classTeacher">Class Teacher</option>
+              </Input>
             </Column>
           </Row>
-        </Section>
 
-        {/* Additional Information */}
-        <Section>
-          <SectionTitle>Additional Information</SectionTitle>
-          <CheckboxGroup>
-            <CheckboxLabel>
-              <input type="checkbox" checked={userInfo.optionA} readOnly />{" "}
-              Option A
-            </CheckboxLabel>
-            <CheckboxLabel>
-              <input type="checkbox" checked={userInfo.optionB} readOnly />{" "}
-              Option B
-            </CheckboxLabel>
-            <CheckboxLabel>
-              <input type="checkbox" checked={userInfo.optionC} readOnly />{" "}
-              Option C
-            </CheckboxLabel>
-            <CheckboxLabel>
-              <input type="checkbox" checked={userInfo.optionD} readOnly />{" "}
-              Option D
-            </CheckboxLabel>
-          </CheckboxGroup>
+          {editableFields.role === "classTeacher" && (
+            <Row>
+              <Column>
+                <Label>Class</Label>
+                <Input
+                  value={editableFields.class_name}
+                  onChange={(e) =>
+                    setEditableFields({ ...editableFields, class_name: e.target.value })
+                  }
+                />
+              </Column>
+              <Column>
+                <Label>Section</Label>
+                <Input
+                  value={editableFields.section_name}
+                  onChange={(e) =>
+                    setEditableFields({ ...editableFields, section_name: e.target.value })
+                  }
+                />
+              </Column>
+            </Row>
+          )}
+
+          <Row>
+            <Column fullWidth>
+              <button
+                style={{
+                  backgroundColor: "#002087",
+                  color: "white",
+                  padding: "10px 20px",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer"
+                }}
+                onClick={handleSubmit}
+              >
+                Submit Changes
+              </button>
+            </Column>
+          </Row>
         </Section>
       </InfoGrid>
     </Container>
@@ -195,6 +225,10 @@ const TeacherProfile = () => {
 };
 
 export default TeacherProfile;
+
+
+// Keep your styled-components as they are below this line
+
 
 // Styled-components
 const Container = styled.div`

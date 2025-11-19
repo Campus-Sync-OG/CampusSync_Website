@@ -7,7 +7,6 @@ import { uploadStudyModule } from "../api/ClientApi"; // API function to handle 
 
 const Container = styled.div`
   padding: 0 15px;
-  font-family: "Poppins";
 `;
 
 const Header = styled.div`
@@ -103,12 +102,12 @@ const FileName = styled.p`
   margin-top: 8px;
 `;
 
-const StudyModuleUpload = () => {
+const TeacherStudyModule = () => {
   const [formData, setFormData] = useState({
     examType: "",
     subject: "",
     topicName: "",
-    subtitles: "",
+    subtopicName: "",
     pdfFile: null,
   });
 
@@ -131,7 +130,7 @@ const StudyModuleUpload = () => {
       !formData.examType ||
       !formData.subject ||
       !formData.topicName ||
-      !formData.subtitles ||
+      !formData.subtopicName ||
       !formData.pdfFile
     ) {
       alert("Please fill all fields and select a PDF file.");
@@ -142,7 +141,7 @@ const StudyModuleUpload = () => {
     data.append("examName", formData.examType);
     data.append("subjectName", formData.subject);
     data.append("topicName", formData.topicName);
-    data.append("subtitles", formData.subtitles);
+    data.append("subtopicName", formData.subtopicName);
     data.append("pdf", formData.pdfFile);
 
     try {
@@ -154,7 +153,7 @@ const StudyModuleUpload = () => {
         examType: "",
         subject: "",
         topicName: "",
-        subtitles: "",
+        subtopicName: "",
         pdfFile: null,
       });
     } catch (error) {
@@ -226,8 +225,8 @@ const StudyModuleUpload = () => {
             <Input
               type="text"
               placeholder="Enter subtopic name"
-              value={formData.subtitles}
-              onChange={(e) => handleChange("subtitles", e.target.value)}
+              value={formData.subtopicName}
+              onChange={(e) => handleChange("subtopicName", e.target.value)}
             />
           </Field>
 
@@ -254,4 +253,4 @@ const StudyModuleUpload = () => {
   );
 };
 
-export default StudyModuleUpload;
+export default TeacherStudyModule;

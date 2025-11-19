@@ -13,7 +13,7 @@ const Header = styled.div`
   padding: 22px 20px;
   border-radius: 10px;
   color: white;
-  
+  font-family: "Poppins";
 `;
 
 const Title = styled.h2`
@@ -234,6 +234,10 @@ const SubjectList = () => {
           </Button>
           <Button type="button" onClick={handleSaveSubjects}>
             Save
+          </Button>
+
+          <Button type="button" color="#007bff" onClick={() => navigate("/admin-subjectlistview")}>
+            View Subjects
           </Button>
         </ButtonContainer>
       </Form>

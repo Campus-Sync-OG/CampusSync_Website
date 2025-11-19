@@ -139,8 +139,8 @@ const PrincipleAnnouncement = () => {
   const [formDataList, setFormDataList] = useState([
     {
       title: "",
-      duration: "",
-      date: "",
+      start_date: "",
+      end_date: "",
       description: "",
     },
   ]);
@@ -154,41 +154,53 @@ const PrincipleAnnouncement = () => {
     );
   };
 
-  const handleSubmit = async (e, index) => {
-    e.preventDefault();
+const handleSubmit = async (e, index) => {
+  e.preventDefault();
 
-    const formData = formDataList[index];
-    const announcementData = {
-      title: formData.title,
-      date: formData.date,
-      message: formData.description,
-      status: "active",
-    };
+  const formData = formDataList[index];
 
-    try {
-      const result = await postAnnouncement(announcementData);
-      console.log("Announcement submitted successfully:", result);
+  // Date validation
+  const start = new Date(formData.start_date);
+  const end = new Date(formData.end_date);
 
-      alert(`Announcement ${index + 1} Submitted Successfully!`);
+  if (end < start) {
+    alert("End date cannot be earlier than the start date!");
+    return; // stop form submission
+  }
 
-      const updatedFormData = [...formDataList];
-      updatedFormData[index] = {
-        title: "",
-        duration: "",
-        date: "",
-        description: "",
-      };
-      setFormDataList(updatedFormData);
-    } catch (error) {
-      console.error("Error submitting announcement:", error);
-      alert("Error submitting announcement!");
-    }
+  const announcementData = {
+    title: formData.title,
+    start_date: formData.start_date,
+    end_date: formData.end_date,
+    message: formData.description,
+    status: "active",
   };
+
+  try {
+    const result = await postAnnouncement(announcementData);
+    console.log("Announcement submitted successfully:", result);
+
+    alert(`Announcement ${index + 1} Submitted Successfully!`);
+
+    const updatedFormData = [...formDataList];
+    updatedFormData[index] = {
+      title: "",
+      start_date: "",
+      end_date: "",
+      description: "",
+    };
+    setFormDataList(updatedFormData);
+  } catch (error) {
+    console.error("Error submitting announcement:", error);
+    alert("Error submitting announcement!");
+  }
+};
+
 
   const addMoreForm = () => {
     setFormDataList((prevFormDataList) => [
       ...prevFormDataList,
-      { title: "", duration: "", date: "", description: "" },
+      { title: "", start_date: "", end_date: "", description: "" },
     ]);
   };
 
@@ -233,26 +245,22 @@ const PrincipleAnnouncement = () => {
             </div>
 
             <div style={{ flex: 1 }}>
-              <Label>Duration *</Label>
-              <Select
-                name="duration"
-                value={formData.duration}
+              <Label>Start Date *</Label>
+              <Input
+                type="date"
+                name="start_date"
+                value={formData.start_date}
                 onChange={(e) => handleChange(e, index)}
                 required
-              >
-                <option value="">Select Time</option>
-                <option value="10 mins">10 mins</option>
-                <option value="30 mins">30 mins</option>
-                <option value="1 hour">1 hour</option>
-              </Select>
+              />
             </div>
 
             <div style={{ flex: 1 }}>
-              <Label>Date *</Label>
+              <Label>End Date *</Label>
               <Input
                 type="date"
-                name="date"
-                value={formData.date}
+                name="end_date"
+                value={formData.end_date}
                 onChange={(e) => handleChange(e, index)}
                 required
               />

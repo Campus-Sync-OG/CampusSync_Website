@@ -245,6 +245,7 @@ export default Promotion;
 // Styled Components (unchanged)
 const Container = styled.div`
   padding: 0 1.5rem;
+  font-family: "Poppins";
 `;
 
 const FormGroup = styled.div`

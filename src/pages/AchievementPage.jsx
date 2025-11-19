@@ -12,7 +12,7 @@ const Achievement = () => {
     title: "",
     description: "",
     images: null,
-    certificate: null,
+    certificateurl: null,
   });
 
   const [admission_no, setAdmissionNo] = useState(null);
@@ -82,7 +82,7 @@ const Achievement = () => {
       return;
     }
 
-    if (!formData.certificate || formData.certificate.length === 0) {
+    if (!formData.certificateurl || formData.certificateurl.length === 0) {
       alert("Please upload a certificate.");
       return;
     }
@@ -94,7 +94,7 @@ const Achievement = () => {
     submission.append("description", formData.description);
     submission.append("className", selectedClass); // Ensure className is passed
     submission.append("section", selectedSection); // Ensure section is passed
-    submission.append("certificate", formData.certificate[0]);
+    submission.append("certificateurl", formData.certificateurl[0]);
 
     // Optional images (multiple)
     if (formData.images) {
@@ -113,7 +113,7 @@ const Achievement = () => {
         section: "",
         title: "",
         description: "",
-        certificate: "",
+        certificateurl: "",
       });
     } catch (error) {
       console.error("Submission failed:", error);
@@ -132,7 +132,7 @@ const Achievement = () => {
       return;
     }
 
-    if (!formData.certificate || formData.certificate.length === 0) {
+    if (!formData.certificateurl || formData.certificateurl.length === 0) {
       alert("Please upload a certificate before adding more.");
       return;
     }
@@ -144,7 +144,7 @@ const Achievement = () => {
       title: "",
       description: "",
 
-      certificate: null,
+      certificateurl: null,
     });
 
     alert("Achievement added! You can add another.");
@@ -246,13 +246,13 @@ const Achievement = () => {
 
               {/* Certificate */}
               <div className="form-group" style={{ flex: "1 1 25%" }}>
-                <label htmlFor="certificate">
+                <label htmlFor="certificateurl">
                   Select Certificate <span className="required">*</span>
                 </label>
                 <input
                   type="file"
-                  id="certificate"
-                  name="certificate"
+                  id="certificateurl"
+                  name="certificateurl"
                   accept=".pdf"
                   onChange={handleFileChange}
                   required

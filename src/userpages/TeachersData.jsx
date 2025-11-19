@@ -121,7 +121,7 @@ export default TeachersData;
 /* Styled Components */
 const Container = styled.div`
   padding: 0 15px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Poppins";
   background: #f9f9f9;
   flex-direction: column;
   height: 70vh;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -249,6 +249,19 @@ const AdminLogin = ({ role = "Admin" || "operator" }) => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const navType =
+      window.performance.getEntriesByType("navigation")[0]?.type ||
+      window.performance.navigation?.type;
+
+    const isRefresh =
+      navType === "reload" || navType === 1;
+
+    if (isRefresh) {
+      window.location.replace("/login");
+    }
+  }, []);
+
   const handleForgotPassword = () => {
     navigate("/forgot-password", {
       state: {
@@ -288,34 +301,34 @@ const AdminLogin = ({ role = "Admin" || "operator" }) => {
 
         <LoginCard>
           <form onSubmit={handleLogin}>
-          <BackText onClick={handleBack}>‹ Back</BackText>
-          <Title>Login</Title>
-          <Icon src={icon} alt={role} />
-          <RoleLabel>{role}</RoleLabel>
+            <BackText onClick={handleBack}>‹ Back</BackText>
+            <Title>Login</Title>
+            <Icon src={icon} alt={role} />
+            <RoleLabel>{role}</RoleLabel>
 
-          <Input
-            type="text"
-            placeholder="User ID"
-            value={uniqueId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-
-          <PasswordWrapper>
             <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type="text"
+              placeholder="User ID"
+              value={uniqueId}
+              onChange={(e) => setUserId(e.target.value)}
             />
-            <ToggleIcon onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
-            </ToggleIcon>
-          </PasswordWrapper>
 
-          <LoginButton onClick={handleLogin}>Login</LoginButton>
-          <ForgotPassword onClick={handleForgotPassword}>
-            Forgot Password?
-          </ForgotPassword>
+            <PasswordWrapper>
+              <Input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <ToggleIcon onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
+              </ToggleIcon>
+            </PasswordWrapper>
+
+            <LoginButton onClick={handleLogin}>Login</LoginButton>
+            <ForgotPassword onClick={handleForgotPassword}>
+              Forgot Password?
+            </ForgotPassword>
           </form>
         </LoginCard>
 

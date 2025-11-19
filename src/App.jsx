@@ -76,7 +76,6 @@ import AddSubject from "./userpages/AddSubject";
 import TeacherAttendanceDownload from "./teacher/TeacherAttendanceDownload";
 import PrincipalSubject from "./principal/PrincipalSubjects";
 import ReceiptPage from "./principal/ViewReciept";
-import StudentReceiptPage from "./pages/ReciptPage";
 import TeacherSchoolinfo from "./teacher/TeacherSchoolinfo";
 import AttendnaceReport from "./principal/AttendanceReport";
 import LeaveApplication from "./teacher/LeaveApplication";
@@ -102,7 +101,18 @@ import Drivers from "./userpages/Drivers";
 import AddBus from "./userpages/AddBus";
 import Buses from "./userpages/Buses";
 import DriverLocation from "./pages/DriverLocation";
+import TeacherStudyModule from "./teacher/TeacherStudyModule";  
+import SubjectListView from "./userpages/SubjectListView";
+import TeacherViewAcademics from "./teacher/TeacherViewAcademics";
 
+import Payroll from "./userpages/Payroll";
+import EmployeeList from "./userpages/EmployeePage";
+import ComponentValue from "./userpages/AddComponentValue";
+import ComponentType from "./userpages/AddComponentType";
+import PayrollGeneration from "./userpages/PayrollGeneration";
+import TeacherPayroll from "./teacher/TeacherPayroll";
+import TeacherPayrollPDF from "./teacher/TeacherPayrollDownload";
+import CertificatePanel from "./userpages/RequestedCertificate";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -343,14 +353,7 @@ const App = () => {
               </Layout>
             }
           />
-          <Route
-            path="/student-receipt"
-            element={
-              <Layout>
-                <StudentReceiptPage />
-              </Layout>
-            }
-          />
+         
           <Route
             path="/leave"
             element={
@@ -365,6 +368,15 @@ const App = () => {
             element={
               <Layout>
                 <StudyModulePage />
+              </Layout>
+            }
+          />
+
+          <Route
+            path="/BusMap"
+            element={
+              <Layout>
+                <BusMaps />
               </Layout>
             }
           />
@@ -499,11 +511,27 @@ const App = () => {
               </TeacherLayout>
             }
           />
+           <Route
+            path="/teacher-payroll"
+            element={
+              <TeacherLayout>
+                <TeacherPayroll />
+              </TeacherLayout>
+            }
+          />
           <Route
             path="/teacher-assignments"
             element={
               <TeacherLayout>
                 <TeacherAssignment />
+              </TeacherLayout>
+            }
+          />
+          <Route
+            path="/payroll-pdf"
+            element={
+              <TeacherLayout>
+                <TeacherPayrollPDF />
               </TeacherLayout>
             }
           />
@@ -538,6 +566,14 @@ const App = () => {
             element={
               <TeacherLayout>
                 <TeacherAcademics />
+              </TeacherLayout>
+            }
+          />
+             <Route
+            path="/teacher-academics-view"
+            element={
+              <TeacherLayout>
+                <TeacherViewAcademics />
               </TeacherLayout>
             }
           />
@@ -578,6 +614,15 @@ const App = () => {
             element={
               <TeacherLayout>
                 <LeaveApplication />
+              </TeacherLayout>
+            }
+          />
+
+          <Route
+            path="/teacher-study"
+            element={
+              <TeacherLayout>
+                <TeacherStudyModule />
               </TeacherLayout>
             }
           />
@@ -767,6 +812,14 @@ const App = () => {
               </AdminLayout>
             }
           />
+           <Route
+            path="/admin-certificatepanel"
+            element={
+              <AdminLayout>
+                <CertificatePanel />
+              </AdminLayout>
+            }
+          />
 
           <Route
             path="/admin-studymodule"
@@ -814,6 +867,55 @@ const App = () => {
             element={
               <AdminLayout>
                 <NotificationPage />
+              </AdminLayout>
+            }
+          />
+            <Route
+            path="/admin-subjectlistview"
+            element={
+              <AdminLayout>
+                <SubjectListView />
+                </AdminLayout>
+            }
+          />
+            
+           <Route
+            path="/admin-payroll"
+            element={
+              <AdminLayout>
+                <Payroll />
+              </AdminLayout>
+            }
+          />
+           <Route
+            path="/admin-payroll"
+            element={
+              <AdminLayout>
+                <Payroll />
+              </AdminLayout>
+            }
+          />
+                    <Route
+            path="/admin-employee"
+            element={
+              <AdminLayout>
+                <EmployeeList />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin-componenttype"
+            element={
+              <AdminLayout>
+                <ComponentType />
+              </AdminLayout>
+            }
+          />
+           <Route
+            path="/admin-payrollGeneration"
+            element={
+              <AdminLayout>
+                <PayrollGeneration />
               </AdminLayout>
             }
           />

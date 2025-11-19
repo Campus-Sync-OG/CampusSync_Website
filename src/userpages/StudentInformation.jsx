@@ -9,66 +9,64 @@ import {
   getAllClassSections,
 } from "../api/ClientApi"; // Adjust the import based on your API structure
  
+
 const Container = styled.div`
-  padding: 0 15px;
-  flex-direction: column;
-  height: 70vh;
-`;
- 
-const Header = styled.div`
-  background: linear-gradient(90deg, #002087, #df0043);
-  padding: 5px 20px;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 10px;
-`;
- 
-const Title = styled.h1`
-  font-size: 26px;
-  font-weight: 600;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
   font-family: "Poppins";
 `;
- 
-const Form = styled.form`
-  margin-top: 20px;
+
+const NavContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #002087, #df0043);
+  padding: 0px 20px;
+  border-radius: 10px;
+  color: white;
 `;
+
+const Title = styled.h2`
+  color: white;
+  font-size: 25px;
+  font-weight: 600;
+  font-family: "Poppins";
+  @media (max-width: 426px) {
+    font-size: 20px;
+  }
+`;
+
+const IconsContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Divider = styled.div`
+  width: 4px;
+  height: 20px;
+  background-color: white;
+  margin: 0 10px;
+  position: relative;
+  right: 30px;
+`;
+
+const ImageIcon = styled.img`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  position: relative;
+  right: 30px;
+`;
+
+
  
 const SectionTitle = styled.h2`
   color: #002e9f;
   font-size: 18px;
 `;
  
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
- 
-const VerticalDivider = styled.div`
-  height: 25px;
-  width: 2px;
-  background-color: white;
-`;
- 
-const IconBtn = styled.img`
-  width: 25px;
-  height: 25px;
-  cursor: pointer;
-`;
- 
-const Row = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
- 
-  & > div {
-    flex: 1 1 30%;
-    margin: 10px;
-    min-width: 250px;
-  }
-`;
+
  
 const Input = styled.input`
   padding: 12px;
@@ -95,29 +93,10 @@ const Select = styled.select`
   outline: none;
 `;
  
-const ButtonGroup = styled.div`
-  margin-top: 30px;
-  display: flex;
-  gap: 15px;
-`;
+
  
-const Button = styled.button`
-  padding: 12px 30px;
-  border: none;
-  color: white;
-  border-radius: 5px;
-  font-weight: bold;
-  background-color: ${(props) =>
-    props.variant === "reset" ? "#002e9f" : "#d60000"};
-  cursor: pointer;
-`;
- 
-const ImageContainer = styled.div`
-  margin: 30px 0;
-  display: flex;
-  gap: 30px;
-  align-items: center;
-`;
+
+
  
 const ProfilePreview = styled.div`
   width: 150px;
@@ -136,6 +115,44 @@ const ProfilePreview = styled.div`
     object-fit: cover;
   }
 `;
+
+
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const ImageContainer = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+`;
+
+const Row = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  align-items: flex-start;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const Button = styled.button`
+  padding: 0.7rem 2rem;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1rem;
+  background: ${(props) => (props.variant === "reset" ? "#df0043" : "#002087")};
+  color: white;
+`;
+
  
 const StudentInformation = () => {
   const [formData, setFormData] = useState({
@@ -289,22 +306,16 @@ const StudentInformation = () => {
  
   return (
     <Container>
-      <Header>
-        <Title>Student Information</Title>
-        <IconWrapper>
+  <NavContainer>
+        <Title>School Information</Title>
+        <IconsContainer>
           <Link to="/admin-dashboard">
-            <IconBtn src={homeIcon} alt="Home" title="Home" />
+            <ImageIcon src={homeIcon} alt="Home" />
           </Link>
-          <VerticalDivider />
-          <div
-            onClick={() => navigate(-1)}
-            style={{ display: "inline-block", cursor: "pointer" }}
-          >
-            <IconBtn src={backIcon} alt="Back" title="Back" />
-          </div>
-        </IconWrapper>
-      </Header>
- 
+          <Divider />
+          <ImageIcon src={backIcon} alt="Back" onClick={() => navigate(-1)} />
+        </IconsContainer>
+      </NavContainer> 
       <Form onSubmit={handleSubmit}>
         <SectionTitle>Add New Students</SectionTitle>
         <ImageContainer>
@@ -330,6 +341,7 @@ const StudentInformation = () => {
         </ImageContainer>
  
         <Row>
+          
           <div>
             <label>Admission No *</label>
             <Input
@@ -348,9 +360,9 @@ const StudentInformation = () => {
               required
             />
           </div>
-        </Row>
+        
  
-        <Row>
+       
           <div>
             <label>Gender *</label>
             <Select
@@ -365,6 +377,8 @@ const StudentInformation = () => {
               <option>Other</option>
             </Select>
           </div>
+          </Row>
+          <Row>
           <div>
             <label>Class *</label>
             <Select
@@ -395,17 +409,20 @@ const StudentInformation = () => {
               ))}
             </Select>
           </div>
-        </Row>
+        
  
-        <Row>
+       
           <div>
-            <label>Roll No</label>
+            <label>Roll No *</label>
             <Input
               name="roll_no"
               value={formData.roll_no}
               onChange={handleChange}
+              required
             />
           </div>
+          </Row>
+<Row>
           <div>
             <label>Date Of Birth *</label>
             <Input
@@ -439,7 +456,6 @@ const StudentInformation = () => {
             </Select>
           </div>
         </Row>
- 
         <Row>
           <div>
             <label>Phone No *</label>
@@ -458,63 +474,70 @@ const StudentInformation = () => {
               onChange={handleChange}
             />
           </div>
+          
         </Row>
  
         <SectionTitle>Parents Information</SectionTitle>
  
-        <Row>
-          <div>
-            <label>Father's Name</label>
-            <Input
-              name="father_name"
-              value={formData.father_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Father's Contact</label>
-            <Input
-              name="father_contact"
-              value={formData.father_contact}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Father's Email</label>
-            <Input
-              name="father_email"
-              value={formData.father_email}
-              onChange={handleChange}
-            />
-          </div>
-        </Row>
- 
-        <Row>
-          <div>
-            <label>Mother's Name</label>
-            <Input
-              name="mother_name"
-              value={formData.mother_name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Mother's Contact</label>
-            <Input
-              name="mother_contact"
-              value={formData.mother_contact}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label>Mother's Email</label>
-            <Input
-              name="mother_email"
-              value={formData.mother_email}
-              onChange={handleChange}
-            />
-          </div>
-        </Row>
+       <Row>
+  <div>
+    <label>Father's Name *</label>
+    <Input
+      name="father_name"
+      value={formData.father_name}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Father's Contact *</label>
+    <Input
+      name="father_contact"
+      value={formData.father_contact}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Father's Email *</label>
+    <Input
+      name="father_email"
+      value={formData.father_email}
+      onChange={handleChange}
+      required
+    />
+  </div>
+</Row>
+
+<Row>
+  <div>
+    <label>Mother's Name *</label>
+    <Input
+      name="mother_name"
+      value={formData.mother_name}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Mother's Contact *</label>
+    <Input
+      name="mother_contact"
+      value={formData.mother_contact}
+      onChange={handleChange}
+      required
+    />
+  </div>
+  <div>
+    <label>Mother's Email *</label>
+    <Input
+      name="mother_email"
+      value={formData.mother_email}
+      onChange={handleChange}
+      required
+    />
+  </div>
+</Row>
  
         <Row>
           <div>

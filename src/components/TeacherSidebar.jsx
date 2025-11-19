@@ -110,6 +110,14 @@ const MobileMenu = styled.div`
   @media (max-width: 380px) {
     left: 10px;
   }
+    @media (max-width: 320px) {
+     top: 58px;
+    left: 5px;
+    svg {
+      width: 25px; // Increase icon size
+      height: 40px; // Increase icon size
+    }
+}
 `;
 
 const MobileDropdown = styled.div`
@@ -370,6 +378,16 @@ const Sidebar = () => {
               <Label expanded={true}>Academics</Label>
             </SidebarItem>
 
+             <SidebarItem
+              to="/teacher-study"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>Study Module Upload</Label>
+            </SidebarItem>
+
             <SidebarItem
               to="/teacher-fees"
               onClick={() => setMobileOpen(false)}
@@ -395,6 +413,13 @@ const Sidebar = () => {
                 <AiOutlineForm />
               </Icon>
               <Label expanded={true}>Forms</Label>
+            </SidebarItem>
+
+           <SidebarItem to="/teacher-payroll" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <AiOutlineForm />
+              </Icon>
+              <Label expanded={true}>payroll</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-student-leaves" onClick={() => setMobileOpen(false)}>
@@ -534,6 +559,13 @@ const Sidebar = () => {
               <Label expanded={expanded}>Fees</Label>
             </SidebarItem>
 
+             <SidebarItem to="/teacher-study" expanded={expanded}>
+              <Icon>
+                <HiDocumentCurrencyRupee />
+              </Icon>
+              <Label expanded={expanded}>Study Module Upload</Label>
+            </SidebarItem>
+
             <SidebarItem to="/teacher-levaveapplication" expanded={expanded}>
               <Icon>
                <VscGitPullRequestGoToChanges />
@@ -553,6 +585,13 @@ const Sidebar = () => {
                 <VscGitPullRequestNewChanges />
               </Icon>
               <Label expanded={expanded}>Student Leaves</Label>
+            </SidebarItem>
+
+            <SidebarItem to="/teacher-academics-view" expanded={expanded}>
+              <Icon>
+                <VscGitPullRequestNewChanges />
+              </Icon>
+              <Label expanded={expanded}> Acdemics View</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-achievement" expanded={expanded}>
@@ -590,6 +629,12 @@ const Sidebar = () => {
                 <LiaBookSolid />
               </Icon>
               <Label expanded={expanded}>Subjects</Label>
+            </SidebarItem>
+            <SidebarItem to="/teacher-payroll" expanded={expanded}>
+              <Icon>
+                <LiaBookSolid />
+              </Icon>
+              <Label expanded={expanded}>payroll</Label>
             </SidebarItem>
 
             <SidebarItem to="/teacher-assignments" expanded={expanded}>

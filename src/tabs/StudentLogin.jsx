@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -250,6 +250,18 @@ const StudentLogin = () => {
   };
 
   const handleBack = () => navigate("/login");
+   useEffect(() => {
+      const navType =
+        window.performance.getEntriesByType("navigation")[0]?.type ||
+        window.performance.navigation?.type;
+  
+      const isRefresh =
+        navType === "reload" || navType === 1;
+  
+      if (isRefresh) {
+        window.location.replace("/login");
+      }
+    }, []);
 
   const handleForgotPassword = () => {
     navigate("/forgot-password", {

@@ -22,6 +22,20 @@ const AdminFee = () => {
     items: [],
   });
 
+  const classOptions = [
+    { label: "I", value: "1" },
+    { label: "II", value: "2" },
+    { label: "III", value: "3" },
+    { label: "IV", value: "4" },
+    { label: "V", value: "5" },
+    { label: "VI", value: "6" },
+    { label: "VII", value: "7" },
+    { label: "VIII", value: "8" },
+    { label: "IX", value: "9" },
+    { label: "X", value: "10" },
+  ];
+
+
   const [formData, setFormData] = useState({
     admission_no: "",
     pay_date: "",
@@ -164,7 +178,6 @@ const AdminFee = () => {
               <option value="Uniform">Uniform</option>
             </Select>
           </Field>
-
           <Field>
             <Label>Class *</Label>
             <Select
@@ -174,11 +187,14 @@ const AdminFee = () => {
               required
             >
               <option value="">Select Class</option>
-              {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={` ${i + 1}`}>{` ${i + 1}`}</option>
+              {classOptions.map((item, index) => (
+                <option key={index} value={item.value}>
+                  {item.label}
+                </option>
               ))}
             </Select>
           </Field>
+
 
           <Field>
             <Label>Section *</Label>
@@ -258,16 +274,16 @@ const AdminFee = () => {
 
           {(formData.feestype === "Transport" ||
             formData.feestype === "All") && (
-            <Field>
-              <Label>Transport Fee</Label>
-              <Input
-                name="transport_fee"
-                type="number"
-                value={formData.transport_fee}
-                onChange={handleChange}
-              />
-            </Field>
-          )}
+              <Field>
+                <Label>Transport Fee</Label>
+                <Input
+                  name="transport_fee"
+                  type="number"
+                  value={formData.transport_fee}
+                  onChange={handleChange}
+                />
+              </Field>
+            )}
 
           {(formData.feestype === "Uniform" || formData.feestype === "All") && (
             <>
@@ -597,6 +613,7 @@ export default AdminFee;
 /* Keep your styled components exactly as in your provided code */
 
 export const Container = styled.div`
+font-family: "Poppins";
   width: 95%;
   padding: 0 15px;
 `;
@@ -695,28 +712,35 @@ export const Button = styled.button`
   cursor: pointer;
   margin-bottom: 20px;
 `;
-
 export const ModalOverlay = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3); /* semi-transparent overlay */
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  overflow: hidden; /* Prevent any scroll on overlay */
 `;
+
 export const ModalContent = styled.div`
   background: #fff;
   padding: 2rem;
   border-radius: 10px;
   width: 600px;
   max-width: 90%;
-  height: 50%;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  
+  /* Ensure absolute centering without extra margin/padding issues */
+  margin: auto;
+  position: relative;
 `;
+
 
 export const ModalRow = styled.div`
   display: flex;

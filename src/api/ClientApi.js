@@ -48,10 +48,26 @@ export const getParentInfo = (admission_no) =>
   api.get(`/parents/${admission_no}`).then((res) => res.data);
 
 // Update parent info by admission number
-export const updateParentInfo = (admission_no, updatedData) =>
+export const updateParentInfos = (admission_no, updatedData) =>
   api
     .put(`/parents/update/${admission_no}`, updatedData)
     .then((res) => res.data);
+
+    export const updateParentInfo = (admission_no, updatedData) => {
+  const isFormData = updatedData instanceof FormData;
+
+  return api.put(
+    `/parents/update/${admission_no}`,
+    updatedData,
+    {
+      headers: {
+        "Content-Type": isFormData
+          ? "multipart/form-data"
+          : "application/json"
+      }
+    }
+  ).then((res) => res.data);
+};
 
 export const getSchoolInfoById = (id) =>
   api.get(`/school/schoolinfo/${id}`).then((res) => res.data);
@@ -67,8 +83,10 @@ export const loginUser = (credentials) =>
 export const resetPassword = (payload) =>
   api.post("/users/reset-password", payload).then((res) => res.data);
 
+
 export const getAllSubjects = () =>
   api.get("/subjects/all").then((res) => res.data);
+
 
 // Get all assignments for a student by admission number
 export const getAssignmentsByAdmissionNo = (admission_no) =>
@@ -137,6 +155,9 @@ export const submitCertificateRequest = (payload) =>
 // Get all certificate requests by admission number
 export const getCertificateRequestsByAdmissionNo = (admission_no) =>
   api.get(`/users/certificates/${admission_no}`).then((res) => res.data);
+export const fetchAllCertificateRequests = () => {
+  return api.get("/users/get/all").then((res) => res.data);
+};
 
 export const submitFeedback = (payload) =>
   api.post("/students/add", payload).then((res) => res.data);
@@ -257,15 +278,15 @@ export const postAnnouncement = async (announcementData) => {
 export const getAllFeedback = () =>
   api.get("/principal/view").then((res) => res.data);
 
-export const fetchAllNotifications = async (role) => {
-  return api
-    .get("/notification/getnot", {
-      headers: {
-        Role: role, // Send role in the request header
-      },
-    })
-    .then((res) => res.data.data);
+export const fetchAllNotifications = async (params) => {
+  try {
+    const response = await api.get("/notification/getnot", { params }); // params = { user_id, class_id, section_id }
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
+
 
 export const addFee = (feeData) => {
   return api.post(`/users/addfee`, feeData);
@@ -536,7 +557,7 @@ export const generateMarksheet = async (admission_no, exam_format) => {
   try {
     const response = await api.get(`/academics/marksheet/${admission_no}/${exam_format}`);
     if (response.data.success) {
-      return response.data.marksheetUrl;
+      return response.data.data; // ✅ RETURN ONLY NEEDED DATA
     }
     return null;
   } catch (err) {
@@ -699,6 +720,113 @@ export const uploadWithMetadata = async (file, metadata = {}) => {
   }
 };
 
+export const getClassPerformance = async (classGrade, section) => {
+  try {
+    const response = await api.get(`/academics/performance/${classGrade}/${section}`);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Error fetching class performance:", error);
+    throw error;
+  }
+};
+
+// Add this in your ClientApi.js
+export const deleteSubject = async (id) => {
+  return api.delete(`/subjects/${id}`);
+};
+
+
+export const getTeacherCirculars = async () => {
+  try {
+    const response = await api.get("/circulars/my-circulars");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher circulars:", error);
+    throw error;
+  }
+};
+
+// 📄 ClientApi.js
+
+export const deleteCircular = async (id) => {
+  try {
+    const response = await api.delete(`/circulars/delete-circular/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting circular:", error);
+    throw error;
+  }
+};
+
+export const fetchLeaveStatusByEmpId = async () => {
+  try {
+    const response = await api.get("/leaves/teacher-leaves");
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching my leaves:", error);
+    throw error;
+  }
+};
+
+export const updateTeacher = async (emp_id, updateData) => {
+  try {
+    const response = await api.put(`/teachers/update/${emp_id}`, updateData);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating teacher:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const getSalaryComponents = () =>
+  api.get('/payroll/getcomponents').then((res) => res.data);
+export const createSalaryComponent = ({ role, component_values }) =>
+  api.post('/payroll/addcomponents', {
+    role,
+    component_values,
+
+  }).then((res) => res.data);
+
+export const getPayrollsByMonth = (month) =>
+  api.get(`/payroll/getall?month=${month}`).then((res) => res.data);
+
+export const createComponentType = (data) =>
+  api.post('/payroll/component_types', data).then((res) => res.data);
+
+// Get all component types
+export const getComponentTypes = () =>
+  api.get('/payroll/allcomp').then((res) => res.data);
+
+export const generatePayroll = (month) =>
+  api.post('/payroll/generateall', { month }).then((res) => res.data);
+// Inside component or event handler
+export const getTeacherPayroll = (empId) =>
+  api.get(`/payroll/getbyid/${empId}`).then((res) => res.data);
+export const getAllPayrolls = () => {
+  return api.get('/payroll/all').then((res) => res.data);
+};
+
+export const updateBaseSalary = (unique_id, base_salary) =>
+  api.put(`/users/update/${unique_id}`, {
+    base_salary,
+  }).then((res) => res.data);
+
+export const getAllTeacherClassSections = async (emp_id) => {
+  try {
+    const response = await api.get(`/teachers/class-sections/${emp_id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching teacher class sections by emp_id:", error);
+    throw error;
+  }
+};
+
+
+export const updateCertificateStatus = (id, status) => {
+  return api
+    .put(`/users/certificates/update/${id}`, { status })
+    .then((res) => res.data);
+};
 
 // Inside component or event handler
 
