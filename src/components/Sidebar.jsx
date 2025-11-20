@@ -478,6 +478,13 @@ const Sidebar = () => {
               <Label expanded={true}>Academics</Label>
             </SidebarItem>
 
+                <SidebarItem to="/hostel" onClick={() => setMobileOpen(false)}>
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={true}>Hostel</Label>
+            </SidebarItem>
+
             <SidebarItem to="/attendance" onClick={() => setMobileOpen(false)}>
               <Icon>
                 <IoCalendarSharp />
@@ -633,6 +640,13 @@ const Sidebar = () => {
                 <TbFileSpreadsheet />
               </Icon>
               <Label expanded={expanded}>Academics</Label>
+            </SidebarItem>
+
+             <SidebarItem to="/hostel" expanded={expanded}>
+              <Icon>
+                <TbFileSpreadsheet />
+              </Icon>
+              <Label expanded={expanded}>hostel</Label>
             </SidebarItem>
 
             <SidebarItem to="/attendance" expanded={expanded}>

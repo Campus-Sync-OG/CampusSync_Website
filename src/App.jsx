@@ -113,6 +113,10 @@ import PayrollGeneration from "./userpages/PayrollGeneration";
 import TeacherPayroll from "./teacher/TeacherPayroll";
 import TeacherPayrollPDF from "./teacher/TeacherPayrollDownload";
 import CertificatePanel from "./userpages/RequestedCertificate";
+import HostelHomePage from "./pages/HostelHomePage";
+import LeaveModal from "./pages/LeaveModal";
+import SupportModal from "./pages/SupportModal";
+import HostelRegister from "./pages/HostelRegister";
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -281,6 +285,42 @@ const App = () => {
             element={
               <Layout>
                 <Academics />
+              </Layout>
+            }
+          />
+
+           <Route
+            path="/hostel"
+            element={
+              <Layout>
+                <HostelRegister />
+              </Layout>
+            }
+          />
+
+            <Route
+            path="/hostel-home"
+            element={
+              <Layout>
+                <HostelHomePage />
+              </Layout>
+            }
+          />
+          
+           <Route
+            path="/hostel-leave"
+            element={
+              <Layout>
+                <LeaveModal />
+              </Layout>
+            }
+          />
+          
+           <Route
+            path="/support"
+            element={
+              <Layout>
+                <SupportModal />
               </Layout>
             }
           />
