@@ -558,7 +558,7 @@ const DashboardCard = styled.div`
     margin:0;
     margin-left:0px;
     width:80%;
-    height:150px;
+    height:115px;
     img {
     width: 130px;
     height: 130px;
