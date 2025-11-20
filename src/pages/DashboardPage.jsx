@@ -221,7 +221,7 @@ const WelcomeSection = styled.div`
   }
 
   @media (max-width: 320px) {
-    width: 210px;
+    width: 238px;
     left: 42px;
     h2 {
       top: 0;
@@ -234,7 +234,7 @@ const WelcomeSection = styled.div`
     img {
       left: 25px;
       top: 0px;
-      min-width: 26%;
+      min-width: 46%;
       max-width: 26%;
       min-height: 12vh;
       max-height: 9vh;
@@ -420,8 +420,8 @@ const Widget = styled.div`
     overflow-x: hidden;
     position: relative;
     height: 80px;
-    width: 104%;
-    left: 25px;
+    width: 113%;
+    left: 26px;
   }
 `;
 
@@ -555,7 +555,7 @@ const CalendarContainer = styled.div`
   }
   @media (max-width: 320px) {
     position: relative;
-    left: 72px;
+    left: 83px;
     width: 96%;
   }
 `;
