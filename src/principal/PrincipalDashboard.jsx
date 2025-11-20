@@ -328,7 +328,7 @@ const CardGrid = styled.div`
     grid-template-columns: 1fr 1fr; /* Stack cards */
     gap: 10px;
     max-width: auto;
-    margin-left: 10px;
+    margin-left: 4px;
   }
   @media (max-width: 426px) {
     grid-template-columns: 1fr; /* Stack cards */
@@ -426,9 +426,9 @@ const DashboardCard = styled.div`
   }
    @media (max-width: 320px) {
     margin:0;
-    margin-left:10px;
+    margin-left:5px;
     width:74%;
-    height:140px;
+    height:100px;
     img {
     width: 130px;
     height: 130px;
