@@ -95,10 +95,11 @@ const LoginBox = styled.div`
     height: 62vh;
   }
   @media (max-width: 460px) {
-    height: 62vh;
+    height: 69vh;
+    margin-top:62px;
   }
   @media (max-width: 320px) {
-    height: 56vh;
+    height: 63vh;
   }
 `;
 
