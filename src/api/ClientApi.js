@@ -851,4 +851,44 @@ export const updateLocation = (locationData) =>
 export const fetchBusLocation = (busId) =>
   api.get(`/location/${busId}`).then(res => res.data);
 
+// ---------- Marks approval workflow ----------
+export const fetchPendingMarksForPrincipal = async () => {
+  // returns { success, pending: [...] } where each has notification_id (id), submission, submitted_by etc
+  const res = await api.get('/marks/pending');
+  return res.data;
+};
+
+export const fetchNotificationById = async (id) => {
+  // optional helper if you want to fetch a single notification from backend (not implemented server-side)
+  const res = await api.get(`/notification/${id}`);
+  return res.data;
+}
+
+export const reviewMarksSubmission = async (id, action, comments = '') => {
+  // PUT /marks/:id/review
+  const res = await api.put(`/marks/${id}/review`, { action, comments });
+  return res.data;
+};
+
+export const fetchNotificationsForCurrentUser = async (params = {}) => {
+  try {
+    const res = await api.get("/notification/getnot", { params });
+    return res.data.notifications || res.data || [];
+  } catch (err) {
+    console.error("fetchNotificationsForCurrentUser error:", err.response?.data || err.message);
+    throw err.response?.data || err;
+  }
+};
+
+export const submitMarksForApproval = async (payload) => {
+  try {
+    const res = await api.post("/marks/submit", payload);
+    return res.data;
+  } catch (err) {
+    console.error("submitMarksForApproval error:", err.response?.data || err.message);
+    throw err.response?.data || err;
+  }
+};
+
+
 export default api;

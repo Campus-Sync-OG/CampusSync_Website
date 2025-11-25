@@ -117,6 +117,9 @@ import HostelHomePage from "./pages/HostelHomePage";
 import LeaveModal from "./pages/LeaveModal";
 import SupportModal from "./pages/SupportModal";
 import HostelRegister from "./pages/HostelRegister";
+import PrincipalNotifications from "./principal/PrincipalNotifications";
+import MarksReview from "./principal/MarksReview";
+
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
   return (
@@ -358,6 +361,7 @@ const App = () => {
             }
           />
 
+           
           <Route
             path="/chatbot"
             element={
@@ -1083,6 +1087,25 @@ const App = () => {
               </PrincipalLayout>
             }
           />
+
+           <Route
+            path="/notification-markspopup"
+            element={
+              <PrincipalLayout>
+                <PrincipalNotifications />
+              </PrincipalLayout>
+            }
+          />
+
+          <Route
+            path="/marks-review/:id"
+            element={
+              <PrincipalLayout>
+                <MarksReview/>
+              </PrincipalLayout>
+            }
+          />
+
 
           <Route
             path="/principal-leave-panel"
