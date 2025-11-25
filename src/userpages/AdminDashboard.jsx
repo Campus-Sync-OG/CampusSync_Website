@@ -393,7 +393,7 @@ const DashboardCard = styled.div`
   }
    @media (max-width: 320px) {
     margin:0;
-    margin-left:10px;
+    margin-left:6px;
     width:74%;
     height:140px;
     img {
