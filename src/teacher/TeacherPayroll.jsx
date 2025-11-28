@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { getTeacherPayroll } from '../api/ClientApi';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { getTeacherPayroll } from "../api/ClientApi";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import home from "../assets/images/home.png";
+import back from "../assets/images/back.png"
+import { useNavigate } from "react-router-dom";
 
 const user = JSON.parse(localStorage.getItem("user"));
 const empId = user?.unique_id || "";
@@ -11,17 +13,17 @@ const teacherName = user?.name || "";
 
 const TeacherPayroll = () => {
   const [payrolls, setPayrolls] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await getTeacherPayroll(empId);
-        console.log('Fetched payrolls:', data);
+        console.log("Fetched payrolls:", data);
         setPayrolls(data);
       } catch (err) {
-        console.error('Error fetching payrolls', err);
+        console.error("Error fetching payrolls", err);
       }
     };
 
@@ -29,20 +31,36 @@ const TeacherPayroll = () => {
   }, [empId]);
 
   const filteredPayrolls = selectedMonth
-    ? payrolls.filter(p => p.month.startsWith(selectedMonth))
+    ? payrolls.filter((p) => p.month.startsWith(selectedMonth))
     : payrolls;
-
- 
 
   return (
     <Container>
+      <Header>
+        <Title>My Payroll Records</Title>
+        <IconGroup>
+          <Icon
+            src={home}
+            alt="Home"
+            onClick={() => navigate("/teacher-dashboard")}
+          />
+          <div style={{ width: "1px", height: "25px", background: "white" }} />
+          <Icon src={back} alt="Back" onClick={() => navigate(-1)} />
+        </IconGroup>
+      </Header>
       <TopBar>
-        <h2>My Payroll Records</h2>
-        <select value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)}>
+        <select
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        >
           <option value="">All Months</option>
-          {Array.from(new Set(payrolls.map(p => p.month.slice(0, 7)))).map(m => (
-            <option key={m} value={m}>{m}</option>
-          ))}
+          {Array.from(new Set(payrolls.map((p) => p.month.slice(0, 7)))).map(
+            (m) => (
+              <option key={m} value={m}>
+                {m}
+              </option>
+            )
+          )}
         </select>
       </TopBar>
 
@@ -61,7 +79,9 @@ const TeacherPayroll = () => {
           </thead>
           <tbody>
             {filteredPayrolls.length === 0 ? (
-              <tr><Td colSpan="7">No payroll records found</Td></tr>
+              <tr>
+                <Td colSpan="7">No payroll records found</Td>
+              </tr>
             ) : (
               filteredPayrolls.map((p, i) => (
                 <tr key={i}>
@@ -72,10 +92,17 @@ const TeacherPayroll = () => {
                   <Td>₹{p.net_pay}</Td>
                   <Td>{p.status}</Td>
                   <Td>
-                    <button onClick={() => navigate('/payroll-pdf', { state: { payroll: { ...p, employee_name: teacherName } } })}>
+                    <button
+                      onClick={() =>
+                        navigate("/payroll-pdf", {
+                          state: {
+                            payroll: { ...p, employee_name: teacherName },
+                          },
+                        })
+                      }
+                    >
                       View
-                    </button>{' '}
-                  
+                    </button>{" "}
                   </Td>
                 </tr>
               ))
@@ -90,12 +117,61 @@ const TeacherPayroll = () => {
 export default TeacherPayroll;
 
 // Styled Components
-const Container = styled.div` padding: 2rem; `;
-const TopBar = styled.div`
-  display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
-  select { padding: 0.5rem; font-size: 1rem; }
+const Container = styled.div`
+  padding: 0.5rem 2rem;
 `;
-const TableWrapper = styled.div` overflow-x: auto; margin-top: 20px; `;
-const Table = styled.table` width: 100%; border-collapse: collapse; `;
-const Th = styled.th` background: #002087; color: white; padding: 10px; `;
-const Td = styled.td` padding: 10px; text-align: center; `;
+const TopBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  select {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+`;
+const TableWrapper = styled.div`
+  overflow-x: auto;
+  margin-top: 20px;
+`;
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+`;
+const Th = styled.th`
+  background: #002087;
+  color: white;
+  padding: 10px;
+`;
+const Td = styled.td`
+  padding: 10px;
+  text-align: center;
+`;
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #002087, #df0043);
+  border-radius: 10px;
+  padding: 1px 20px;
+  color: white;
+  margin-bottom:20px;
+`;
+
+const Title = styled.h2`
+  font-size: 26px;
+  font-weight: 600;
+  font-family: "Poppins";
+  
+`;
+const IconGroup = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+`;
+
+const Icon = styled.img`
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+`;
