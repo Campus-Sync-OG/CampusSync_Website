@@ -19,9 +19,13 @@ const Page = styled.div`
 `;
 
 const HeaderWrapper = styled.div`
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
+  padding: 1px 20px;
   border-radius: 10px;
+  color: white;
 `;
 
 const Wrapper = styled.div`
@@ -73,7 +77,7 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 9px 20px;
+  padding: 1px 20px;
   color: white;
   width: 100%;
 `;
