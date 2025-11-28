@@ -182,30 +182,30 @@ const HostelDashboard = () => {
       </HeaderCard>
 
       <CardGrid>
-        <Link to="/hostel-fees" style={{ textDecoration: "none" , marginLeft: "1%"}}>
+        <Link to="/hostel-attendance" style={{ textDecoration: "none" , marginLeft: "1%"}}>
           <DashboardCard color="#9865F6">
-            <p>Fees</p>
+            <p>Attendence</p>
             <img src={attendanceImg} alt="Fees" />
           </DashboardCard>
         </Link>
 
-        <Link to="/hostel-academics" style={{ textDecoration: "none" }}>
+        <Link to="/hostel-leave-request" style={{ textDecoration: "none" }}>
           <DashboardCard color="#FE8906">
-            <p>Academics</p>
+            <p>Leave Request</p>
             <img src={academicsImg} alt="Academics" />
           </DashboardCard>
         </Link>
 
-        <Link to="/hostel-subjects" style={{ textDecoration: "none" }}>
+        <Link to="/hostel-students" style={{ textDecoration: "none" }}>
           <DashboardCard color="#5DC355">
             <p>Students</p>
             <img src={subjectsImg} alt="Students" />
           </DashboardCard>
         </Link>
 
-        <Link to="/hostel-announcement" style={{ textDecoration: "none" }}>
+        <Link to="/hostel-complaints" style={{ textDecoration: "none" }}>
           <DashboardCard color="#D5321A">
-            <p>Announcement</p>
+            <p>Complaints</p>
             <img src={announcementImg} alt="Announcement" />
           </DashboardCard>
         </Link>
