@@ -96,7 +96,7 @@ const LoginBox = styled.div`
   }
   @media (max-width: 460px) {
     height: 69vh;
-    margin-top:62px;
+    margin-top: 62px;
   }
   @media (max-width: 320px) {
     height: 63vh;
@@ -273,6 +273,17 @@ const Footer = styled.footer`
   color: #fff;
   text-align: center;
 `;
+const HostelButton = styled.button`
+  margin-top: 30px;
+  padding: 12px 24px;
+  background: #002087;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+`;
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -292,6 +303,9 @@ const LoginPage = () => {
         break;
       case "student":
         navigate("/student-login");
+        break;
+      case "hostelwarden":
+        navigate("/hostelwarden-login");
         break;
       default:
         break;
@@ -333,7 +347,7 @@ const LoginPage = () => {
                 <img src={adminIcon} alt="Admin" />
               </IconWrapper>
             </RoleCard>
-            <RoleCard   onClick={() => handleRoleClick("principal")}>
+            <RoleCard onClick={() => handleRoleClick("principal")}>
               <IconWrapper imgWidth="148px" imgHeight="200px" isPrincipal>
                 <img src={principalIcon} alt="Principal" />
               </IconWrapper>
@@ -349,6 +363,9 @@ const LoginPage = () => {
               </IconWrapper>
             </RoleCard>
           </RoleSelection>
+          <HostelButton onClick={() => handleRoleClick("hostelwarden")}>
+            Login For Hostel Warden
+          </HostelButton>
         </LoginBox>
 
         <Footer>© 2024 Campus Sync School Management</Footer>

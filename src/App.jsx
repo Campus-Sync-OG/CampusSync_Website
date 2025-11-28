@@ -38,6 +38,7 @@ import AdminLogin from "./tabs/AdminLogin";
 import TeacherLogin from "./tabs/TeacherLogin";
 import StudentLogin from "./tabs/StudentLogin";
 import PrincipalLogin from "./tabs/PrincipalLogin";
+import HostelLogin from "./tabs/HostelLogin";
 import ForgotPassword from "./tabs/ForgotPassword";
 import AdminDashboard from "./userpages/AdminDashboard";
 import SchoolInformation from "./userpages/SchoolInformation";
@@ -114,6 +115,7 @@ import TeacherPayroll from "./teacher/TeacherPayroll";
 import TeacherPayrollPDF from "./teacher/TeacherPayrollDownload";
 import CertificatePanel from "./userpages/RequestedCertificate";
 import HostelHomePage from "./pages/HostelHomePage";
+import HostelDashboard from "./hostel/HostelDashboard";
 import LeaveModal from "./pages/LeaveModal";
 import SupportModal from "./pages/SupportModal";
 import HostelRegister from "./pages/HostelRegister";
@@ -186,6 +188,22 @@ const PrincipalLayout = ({ children }) => {
   );
 };
 
+const HostelLayout = ({ children }) => {
+  return (
+    <>
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <TeacherSidebar />
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const App = () => {
   return (
     <Router>
@@ -198,6 +216,7 @@ const App = () => {
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
           <Route path="/student-login" element={<StudentLogin />} />
+          <Route path="/hostelwarden-login" element={<HostelLogin />} />
           <Route path="/principal-login" element={<PrincipalLogin />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
@@ -1113,6 +1132,15 @@ const App = () => {
               <PrincipalLayout>
                 <PrincipalLeavePanel />
               </PrincipalLayout>
+            }
+          />
+          
+          <Route
+            path="/hostel-dashboard"
+            element={
+              <HostelLayout>
+                <HostelDashboard />
+              </HostelLayout>
             }
           />
         </Routes>
