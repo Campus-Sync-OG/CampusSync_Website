@@ -13,7 +13,6 @@ const NotificationsPage = () => {
     const loadNotifications = async () => {
       try {
         const loggedInUser = JSON.parse(localStorage.getItem("user"));
-        const role = loggedInUser?.role;
         const user_id = loggedInUser?.unique_id;
 
         let response = await fetchAllNotifications({ user_id });
@@ -43,7 +42,7 @@ const NotificationsPage = () => {
     loadNotifications();
   }, []);
 
-
+  // P A S T E L   C O L O R S
   const getRandomColor = () => {
     const pastelColors = [
       "#FFEBEE",
@@ -58,25 +57,22 @@ const NotificationsPage = () => {
   };
 
   const randomIcons = ["📢", "🔔", "📅", "📝", "📣"];
-  const getRandomIcon = () => {
-    return randomIcons[Math.floor(Math.random() * randomIcons.length)];
-  };
+  const getRandomIcon = () => randomIcons[Math.floor(Math.random() * randomIcons.length)];
 
   const handleHomeClick = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const role = user?.role?.trim().toLowerCase();
 
-    if (role === "teacher") {
-      navigate("/teacher-dashboard");
-    } else if (role === "student") {
-      navigate("/dashboard");
-    } else if (role === "principal") {
-      navigate("/principal-dashboard");
-    } else if (role === "admin") {
-      navigate("/admin-dashboard");
-    } else {
-      alert("Unknown role. Cannot navigate to home.");
-    }
+    if (role === "teacher") navigate("/teacher-dashboard");
+    else if (role === "student") navigate("/dashboard");
+    else if (role === "principal") navigate("/principal-dashboard");
+    else if (role === "admin") navigate("/admin-dashboard");
+    else alert("Unknown role. Cannot navigate to home.");
+  };
+
+  // 🚀🚀 NAVIGATION for Notification Click
+  const openPopup = (notif) => {
+    navigate("/notification-markspopup", { state: { notif } });
   };
 
   return (
@@ -95,7 +91,11 @@ const NotificationsPage = () => {
       </Header>
 
       {notifications.map((notif, index) => (
-        <NotificationCard key={notif.user_id || index} bgColor={getRandomColor()}>
+        <NotificationCard
+          key={notif.id || notif.user_id || index}
+          bgColor={getRandomColor()}
+          onClick={() => openPopup(notif)}  // ← THIS IS THE ONLY CHANGE
+        >
           <Content>
             <NotificationTitle>
               <Emoji>{getRandomIcon()}</Emoji>
@@ -129,6 +129,7 @@ const NotificationCard = styled.div`
   align-items: center;
   width: 95%;
   gap: 30px;
+  cursor: pointer;       /* clickable */
 `;
 
 const Content = styled.div`
