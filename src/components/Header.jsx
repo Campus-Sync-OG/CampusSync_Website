@@ -86,7 +86,6 @@ const Divider = styled.div`
     position: relative;
     right: 60px;
   }
-  
 `;
 
 const SchoolDetails = styled.div`
@@ -126,12 +125,12 @@ const SchoolDetails = styled.div`
   @media (max-width: 320px) {
     position: relative;
     right: 50px;
-     h1 {
-    font-size: 10px;
-    margin: 0 10px 0 0;
-    font-weight: bold;
-    color: #000;
-  }
+    h1 {
+      font-size: 10px;
+      margin: 0 10px 0 0;
+      font-weight: bold;
+      color: #000;
+    }
   }
 `;
 
@@ -186,14 +185,13 @@ const NotificationButton = styled.div`
     height: 35px;
     width: 35px;
   }
-
 `;
 
 const NotificationButtonIcon = styled(FaBell)`
   font-size: 20px;
   color: rgb(233, 30, 30);
   @media (max-width: 320px) {
-     font-size: 17px;
+    font-size: 17px;
   }
 `;
 
@@ -280,7 +278,6 @@ const DividerRight = styled.div`
     position: relative;
     left: 33px;
   }
- 
 `;
 
 const ProfileSection = styled.div`
@@ -405,10 +402,10 @@ const SpeakerWrapper = styled.div`
     left: 30%;
     top: 5px;
     padding: 5px 10px;
-     svg {
-    width: 18px;
-    height: 24px;
-  }
+    svg {
+      width: 18px;
+      height: 24px;
+    }
   }
 `;
 
@@ -563,6 +560,12 @@ const Header = ({
               const user = JSON.parse(localStorage.getItem("user"));
               const role = user?.role?.toLowerCase();
 
+              // ❗ Disable for hostel & warden with alert
+              if (role === "warden" || role === "hostel") {
+                alert("Access denied.");
+                return; // Stop further execution
+              }
+
               if (role === "teacher") {
                 navigate("/teacher/announcement");
               } else if (role === "principal") {
@@ -570,9 +573,16 @@ const Header = ({
               } else if (role === "admin") {
                 navigate("/admin/announcement");
               } else {
-                navigate("/announcement"); // fallback
+                navigate("/announcement");
               }
             }}
+            className={
+              ["warden", "hostel"].includes(
+                JSON.parse(localStorage.getItem("user"))?.role?.toLowerCase()
+              )
+                ? "disabled-speaker"
+                : ""
+            }
           >
             <SpeakerIcon />
           </SpeakerWrapper>
