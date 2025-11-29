@@ -161,6 +161,22 @@ const HostelLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    // ✅ Dummy Hostel Login Bypass
+    if (uniqueId === "H-2025-0001" && password === "123456") {
+      localStorage.setItem("token", "dummy-hostel-token-xyz");
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: "Hostel Admin",
+          role: "Hostel",
+          unique_id: uniqueId,
+        })
+      );
+      navigate("/hostel-dashboard");
+      return;
+    }
+
     const credentials = { unique_id: uniqueId, password };
 
     try {
@@ -176,8 +192,7 @@ const HostelLogin = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      navigate("/hostel-dashboard"); // ✅ Direct redirect after login
-
+      navigate("/hostel-dashboard");
     } catch (err) {
       setError("Login failed. Try again.");
       console.error("Hostel Login Error:", err);
