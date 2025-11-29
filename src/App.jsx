@@ -125,6 +125,7 @@ import RoomAvailability from "./hostel/RoomAvailability";
 import Complaints from "./hostel/Complaints";
 import HostelAttendance from "./hostel/HostelAttendance";
 import HostelStudents from "./hostel/HostelStudents";
+import HostelLeave from "./hostel/HostelLeave";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -1149,6 +1150,14 @@ const App = () => {
             element={
               <HostelLayout>
                 <HostelStudents />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/hostel-leave-request"
+            element={
+              <HostelLayout>
+                <HostelLeave />
               </HostelLayout>
             }
           />
