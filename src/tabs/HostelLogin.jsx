@@ -163,7 +163,7 @@ const HostelLogin = () => {
     e.preventDefault();
 
     // ✅ Dummy Hostel Login Bypass
-    if (uniqueId === "H-2025-0001" && password === "123456") {
+    if (uniqueId === "W-2025-0001" && password === "123456") {
       localStorage.setItem("token", "dummy-hostel-token-xyz");
       localStorage.setItem(
         "user",

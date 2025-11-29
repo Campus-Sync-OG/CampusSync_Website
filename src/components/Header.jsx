@@ -447,6 +447,9 @@ const Header = ({
       case "principal":
         navigate("/profile/principalprofile");
         break;
+      case "hostel":
+        navigate("/profile/warden-profile");
+        break;
       default:
         console.warn("Unknown role, redirecting to login");
         navigate("/login");
@@ -501,6 +504,9 @@ const Header = ({
         break;
       case "admin":
         navigate("/admin-dashboard", { state: userState });
+        break;
+      case "hostel":
+        navigate("/hostel-dashboard", { state: userState });
         break;
       default:
         console.warn("Unknown role, redirecting to login");
