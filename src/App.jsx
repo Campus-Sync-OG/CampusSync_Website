@@ -196,7 +196,7 @@ const HostelLayout = ({ children }) => {
       >
         <Header />
         <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-          <TeacherSidebar />
+         
           <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
         </div>
       </div>
