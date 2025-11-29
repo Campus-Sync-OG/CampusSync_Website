@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: "http://192.168.1.8:3000/api",
+  baseURL: "http://localhost:3000/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -889,6 +889,31 @@ export const submitMarksForApproval = async (payload) => {
     throw err.response?.data || err;
   }
 };
+
+export async function fetchAllNotification(userId) {
+  const res = await fetch(`/api/notification/list?user_id=${encodeURIComponent(userId)}`);
+  if (!res.ok) throw new Error('Failed to fetch notifications');
+  const json = await res.json();
+  return json.data || json.notifications || [];
+}
+
+export async function getUnreadCount(userId) {
+  const res = await fetch(`/api/notification/unread/${encodeURIComponent(userId)}`);
+  if (!res.ok) throw new Error('Failed to fetch unread count');
+  return res.json(); // { unread }
+}
+
+export async function markAllRead(userId) {
+  const res = await fetch(`/api/notification/mark-read-all/${encodeURIComponent(userId)}`, { method: 'POST' });
+  if (!res.ok) throw new Error('Failed to mark all read');
+  return res.json();
+}
+
+export async function markAsRead(notificationId) {
+  const res = await fetch(`/api/notification/mark-read/${encodeURIComponent(notificationId)}`, { method: 'POST' });
+  if (!res.ok) throw new Error('Failed to mark read');
+  return res.json();
+}
 
 
 export default api;

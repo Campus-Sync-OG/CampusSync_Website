@@ -1,3 +1,4 @@
+// src/components/Header.jsx
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import logo from "../assets/images/logo.png";
@@ -5,14 +6,19 @@ import defaultProfile from "../assets/images/profile.png";
 import defaultSlogo from "../assets/images/slogo.png";
 import { FaBell, FaCaretDown, FaEllipsisV } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
-import { FiSettings } from "react-icons/fi";
 import { TbLogout } from "react-icons/tb";
 import { TbMessageChatbot } from "react-icons/tb";
 import { FaBullhorn } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import NotificationPopupPage from "./notificationpopup";
+import NotificationPopupPage from "../components/notificationpopup"; // <-- ensure file name matches exactly
 
-// styled-components (unchanged)
+// API helpers
+import { getUnreadCount, markAllRead } from "../api/ClientApi";
+
+// socket.io-client (install with `npm i socket.io-client` if you want realtime)
+import { io } from "socket.io-client";
+
+/* ================= Styles (kept exactly as you had) ================= */
 const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
@@ -163,6 +169,7 @@ const NotificationButton = styled.div`
   background-color: #f7f7f7;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  position: relative; /* needed for badge positioning */
 
   @media (max-width: 768px) {
     position: relative;
@@ -186,7 +193,6 @@ const NotificationButton = styled.div`
     height: 35px;
     width: 35px;
   }
-
 `;
 
 const NotificationButtonIcon = styled(FaBell)`
@@ -195,6 +201,33 @@ const NotificationButtonIcon = styled(FaBell)`
   @media (max-width: 320px) {
      font-size: 17px;
   }
+`;
+
+/* small badge/dot on the bell */
+const BellBadge = styled.div`
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: linear-gradient(90deg,#9A34FF,#FF7A29);
+  color: #fff;
+  padding: 3px 7px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 22px;
+  text-align: center;
+  box-shadow: 0 6px 14px rgba(154,52,255,0.12);
+`;
+
+const BellDot = styled.div`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(90deg,#9A34FF,#FF7A29);
+  box-shadow: 0 6px 14px rgba(154,52,255,0.12);
 `;
 
 const IconButton = styled.button`
@@ -280,7 +313,6 @@ const DividerRight = styled.div`
     position: relative;
     left: 33px;
   }
- 
 `;
 
 const ProfileSection = styled.div`
@@ -412,6 +444,7 @@ const SpeakerWrapper = styled.div`
   }
 `;
 
+/* ================= Header component ================= */
 const Header = ({
   schoolName = "LocateUs International School",
   location = "Bangalore, Karnataka",
@@ -420,13 +453,86 @@ const Header = ({
 }) => {
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [unread, setUnread] = useState(0);
   const navigate = useNavigate();
   const back_location = useLocation();
   const [role, setRole] = useState(null);
   const dropdownRef = useRef(null);
+  const socketRef = useRef(null);
 
   const toggleDropdown = () => setIsDropdownVisible(!isDropdownVisible);
   const togglePopup = () => setIsPopupVisible(!isPopupVisible);
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = user?.unique_id;
+
+  // SOCKET URL supporting both Vite and CRA env styles; fallback to window.location.origin
+  const SOCKET_URL =
+  (typeof import.meta !== "undefined" && import.meta.env?.VITE_SOCKET_URL) ||
+  window.location.origin;
+
+  // Fetch unread count on mount
+  useEffect(() => {
+    if (!userId) return;
+    let mounted = true;
+
+    (async () => {
+      try {
+        const resp = await getUnreadCount(userId); // expects { unread }
+        if (mounted) setUnread(resp?.unread || 0);
+      } catch (err) {
+        console.warn("getUnreadCount failed", err);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [userId]);
+
+  // Setup socket (optional) to receive realtime new_notification events
+  useEffect(() => {
+    if (!userId) return;
+    try {
+      socketRef.current = io(SOCKET_URL, { transports: ["websocket"] });
+
+      socketRef.current.on("connect", () => {
+        if (userId) socketRef.current.emit("register", userId);
+      });
+
+      socketRef.current.on("new_notification", (payload) => {
+        if (typeof payload?.unread === "number") {
+          setUnread(payload.unread);
+        } else {
+          setUnread((c) => c + 1);
+        }
+      });
+
+      socketRef.current.on("connect_error", (err) => {
+        console.warn("socket connect_error", err);
+      });
+    } catch (e) {
+      console.warn("socket init failed", e);
+    }
+
+    return () => {
+      try {
+        socketRef.current && socketRef.current.disconnect();
+      } catch (e) {}
+    };
+  }, [userId, SOCKET_URL]);
+
+  // mark all read when user opens popup
+  const handleBellClick = async () => {
+    togglePopup();
+    // optimistic clear
+    setUnread(0);
+    try {
+      if (userId) await markAllRead(userId);
+    } catch (err) {
+      console.warn("markAllRead failed", err);
+    }
+  };
 
   const handleViewAllNotifications = () => {
     const Role = localStorage.getItem("role")?.trim().toLowerCase();
@@ -436,6 +542,7 @@ const Header = ({
       navigate("/notifications");
     }
   };
+
   const redirectToProfile = (userRole) => {
     switch (userRole) {
       case "student":
@@ -457,64 +564,29 @@ const Header = ({
     const user = JSON.parse(localStorage.getItem("user"));
     const rawRole = user?.role || "";
     const role = rawRole.trim().toLowerCase();
-
-    console.log("Normalized role:", role);
-
     const path = role === "teacher" ? "/teacher-chatbot" : "/chatbot";
-
-    if (back_location.pathname !== path) {
-      navigate(path);
-    }
+    if (back_location.pathname !== path) navigate(path);
   };
 
-  // 👤 Called on profile click
+  // profile click
   const handleProfileClick = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const userRole = user?.role?.toLowerCase();
-
-    console.log("Profile click role:", userRole);
-
     if (!userRole) {
       console.warn("Role not set, redirecting to login");
       navigate("/login");
       return;
     }
-
-    redirectToProfile(userRole); // ✅ Delegate to separate function
+    redirectToProfile(userRole);
   };
 
-  // 🔁 Dashboard redirection logic (keep unchanged)
-  const redirectToDashboard = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const userRole = user?.role?.toLowerCase();
-    const userState = { user };
-
-    switch (userRole) {
-      case "student":
-        navigate("/dashboard", { state: userState });
-        break;
-      case "teacher":
-        navigate("/teacher-dashboard", { state: userState });
-        break;
-      case "principal":
-        navigate("/principal-dashboard", { state: userState });
-        break;
-      case "admin":
-        navigate("/admin-dashboard", { state: userState });
-        break;
-      default:
-        console.warn("Unknown role, redirecting to login");
-        navigate("/login");
-    }
-  };
-
+  // close popup on route change
   useEffect(() => {
     setIsPopupVisible(false);
   }, [back_location]);
 
   useEffect(() => {
     const storedRole = localStorage.getItem("role");
-    console.log("Loaded role:", storedRole);
     setRole(storedRole?.toLowerCase());
   }, []);
 
@@ -523,23 +595,35 @@ const Header = ({
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(event.target) &&
-        !event.target.closest(".profile-section") && // avoids closing when clicking on profile pic
-        !event.target.closest(".menu-button") // avoids closing when clicking on menu icon
+        !event.target.closest(".profile-section") &&
+        !event.target.closest(".menu-button")
       ) {
         setIsDropdownVisible(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <>
       <HeaderContainer>
-        <LogoSection onClick={redirectToDashboard}>
+        <LogoSection
+          onClick={() => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const userRole = user?.role?.toLowerCase();
+            const userState = { user };
+            if (userRole === "student")
+              navigate("/dashboard", { state: userState });
+            else if (userRole === "teacher")
+              navigate("/teacher-dashboard", { state: userState });
+            else if (userRole === "principal")
+              navigate("/principal-dashboard", { state: userState });
+            else if (userRole === "admin")
+              navigate("/admin-dashboard", { state: userState });
+            else navigate("/login");
+          }}
+        >
           <Logo src={logo} alt="Campus Sync Logo" />
           <Divider />
           <SchoolDetails onClick={handleProfileClick}>
@@ -556,16 +640,10 @@ const Header = ({
             onClick={() => {
               const user = JSON.parse(localStorage.getItem("user"));
               const role = user?.role?.toLowerCase();
-
-              if (role === "teacher") {
-                navigate("/teacher/announcement");
-              } else if (role === "principal") {
-                navigate("/principal/announcement");
-              } else if (role === "admin") {
-                navigate("/admin/announcement");
-              } else {
-                navigate("/announcement"); // fallback
-              }
+              if (role === "teacher") navigate("/teacher/announcement");
+              else if (role === "principal") navigate("/principal/announcement");
+              else if (role === "admin") navigate("/admin/announcement");
+              else navigate("/announcement");
             }}
           >
             <SpeakerIcon />
@@ -576,23 +654,23 @@ const Header = ({
               onClick={() => {
                 const user = JSON.parse(localStorage.getItem("user"));
                 const role = user?.role?.trim().toLowerCase();
-
-                if (role === "teacher") {
-                  navigate("/teacher-chatbot");
-                } else if (role === "student") {
-                  navigate("/chatbot");
-                } else if (role === "principal" || role === "admin") {
-                  alert(
-                    "Chatbot is not available for Principal and Admin users."
-                  );
-                } else {
-                  alert("Unknown role. Access denied.");
-                }
+                if (role === "teacher") navigate("/teacher-chatbot");
+                else if (role === "student") navigate("/chatbot");
+                else if (role === "principal" || role === "admin")
+                  alert("Chatbot is not available for Principal and Admin users.");
+                else alert("Unknown role. Access denied.");
               }}
             />
           </IconButton>
-          <NotificationButton onClick={togglePopup}>
+
+          {/* Notification bell with unread badge (inline) */}
+          <NotificationButton onClick={handleBellClick}>
             <NotificationButtonIcon />
+            {unread > 0 ? (
+              <BellBadge>{unread > 99 ? "99+" : unread}</BellBadge>
+            ) : (
+              <BellDot />
+            )}
           </NotificationButton>
 
           <DividerRight />
@@ -611,12 +689,6 @@ const Header = ({
               <CgProfile />
               Profile
             </DropdownItem>
-            {/* <Link to="/settings" style={{ textDecoration: "none" }}>
-              <DropdownItem>
-                <FiSettings />
-                Settings
-              </DropdownItem>
-            </Link> */}
             <Link to="/login" style={{ textDecoration: "none" }}>
               <DropdownItem>
                 <TbLogout />
@@ -627,6 +699,7 @@ const Header = ({
         </HeaderRight>
       </HeaderContainer>
 
+      {/* existing popup usage — opens via isPopupVisible */}
       {isPopupVisible && (
         <NotificationPopupPage
           onClose={togglePopup}
