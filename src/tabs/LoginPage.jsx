@@ -1,20 +1,22 @@
-import React from "react";
+// src/pages/LoginPage.jsx
+import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo.png";
 import bg from "../assets/images/bg1.png";
-import adminIcon from "../assets/images/adminIcon.png";
-import teacherIcon from "../assets/images/teacherIcon.png";
-import studentIcon from "../assets/images/studentIcon.png";
-import principalIcon from "../assets/images/principalIcon.png";
+import { loginUser } from "../api/ClientApi"; // <-- import the helper function (adjust path if needed)
 
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     font-family: 'Arial', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #05103a; /* keep page backdrop similar to your earlier overlay */
   }
 `;
 
+/* Layout */
 const Container = styled.div`
   position: relative;
   min-height: 100vh;
@@ -22,293 +24,264 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 2rem;
 `;
 
+/* Logo position preserved */
 const LogoSection = styled.div`
   position: absolute;
   top: 1rem;
   right: 1rem;
 
-  img {
-    width: 100px;
-    height: auto;
-  }
+  img { width: 100px; height: auto; }
 `;
 
+/* Background image + original overlay/color preserved */
 const BackgroundImage = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -4;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  top: 0; left: 0; width: 100%; height: 100%; z-index: -4;
+  img { width: 100%; height: 100%; object-fit: cover; }
 `;
 
 const BackgroundOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background-color: rgba(0, 32, 135, 0.9);
   z-index: -2;
 `;
 
 const BackgroundCurve = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 200%;
-  z-index: -1;
-
-  svg {
-    width: 100%;
-    height: 100%;
-  }
+  position: absolute; top: 0; left: 0; width: 100%; height: 200%; z-index: -1;
+  svg { width: 100%; height: 100%; }
 `;
 
+/* Slightly polished LoginBox (visual improvements only; colors unchanged) */
 const LoginBox = styled.div`
   background: #fff;
-  border-radius: 6px;
+  border-radius: 10px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 50%;
-  height: 50vh;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.16);
+  width: 420px;
+  padding: 2.25rem 2.25rem;
+  max-width: 96%;
+  box-sizing: border-box;
+  transform: translateY(-6px);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  &:hover { transform: translateY(-10px); box-shadow: 0 18px 48px rgba(0,0,0,0.18); }
 
-  @media (max-width: 1366px) {
-    width: 71%;
-    height: 62vh;
-  }
-  @media (max-width: 1024px) {
-    width: 71%;
-    height: 62vh;
-  }
-  @media (max-width: 768px) {
-    width: 86%;
-    height: 62vh;
-  }
   @media (max-width: 460px) {
-    height: 69vh;
-    margin-top: 62px;
-  }
-  @media (max-width: 320px) {
-    height: 63vh;
+    padding: 1.25rem 1rem;
   }
 `;
 
 const Title = styled.h2`
-  font-size: 1.8rem;
-  color: #df0043;
-  margin-bottom: 3rem;
-
-  @media (max-width: 460px) {
-    margin-bottom: 0rem;
-  }
-  @media (max-width: 320px) {
-    margin-bottom: 1rem;
-  }
+  font-size: 1.8rem; color: #df0043; margin: 0 0 0.6rem 0;
 `;
 
-const RoleSelection = styled.div`
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 0rem;
-
-  @media (max-width: 460px) {
-    gap: 0rem 0;
-  }
-  @media (max-width: 320px) {
-    gap: 0rem 0;
-  }
+const Sub = styled.p`
+  margin: 0 0 1rem 0; color: #333; font-size: 0.95rem;
 `;
 
-const RoleCard = styled.div`
-  color: #fff;
-  border-radius: 8px;
-  padding: 1rem;
-  width: 120px;
-  cursor: pointer;
-  text-align: center;
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-
-  span {
-    display: block;
-    font-weight: bold;
-    margin-top: 0.5rem;
-  }
-
-  @media (max-width: 320px) {
-    padding: 0px;
-  }
+/* Form */
+const Form = styled.form`
+  display: flex; flex-direction: column; gap: 0.8rem; align-items: stretch;
 `;
 
-const IconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: auto;
-
-  img {
-    width: ${({ imgWidth }) => imgWidth || "90px"};
-    height: ${({ imgHeight }) => imgHeight || "90px"};
-    object-fit: contain;
-    transition: all 0.3s ease;
-  }
-
-  /* Admin Responsive */
-  ${({ isAdmin }) =>
-    isAdmin &&
-    `
-    position:relative;
-    bottom:15px;
-
-    @media (max-width: 460px) {
-      img {
-        width: 253px !important;
-        height: 160px !important;
-        position: relative;
-        left:10px;
-        top:10px;
-            }
-    }
-    @media (max-width: 320px) {
-      img {
-        width: 120px !important;
-        height: 152px !important;
-            }
-    }
-  `}
-
-  /* Principal Responsive */
-  ${({ isPrincipal }) =>
-    isPrincipal &&
-    `
-    @media (max-width: 460px) {
-      img {
-        width: 123px !important;
-        height: 138px !important;
-        position: relative;
-        right:10px;
-        top:5px;
-      }
-    }
-    @media (max-width: 320px) {
-      img {
-        width: 116px !important;
-        height: 119px !important;
-         position: relative;
-        right:10px;
-        top:10px;
-      }
-    }
-  `}
-
-  /* Teacher Responsive */
-  ${({ isTeacher }) =>
-    isTeacher &&
-    `
-    position:relative;
-    top:8px;
-    @media (max-width: 460px) {
-      img {
-        width: 115px !important;
-        height: 133px !important;
-        position: relative;
-        left:10px;
-        bottom:40px;
-      }
-    }
-    @media (max-width: 320px) {
-      img {
-        width: 98px !important;
-        height: 113px !important;
-        bottom:15px;
-      }
-    }
-  `}
-
-  /* Student Responsive */
-  ${({ isStudent }) =>
-    isStudent &&
-    `
-     position:relative;
-    top:8px;
-    @media (max-width: 480px) {
-      img {
-        width: 107px !important;
-        height: 131px !important;
-        position: relative;
-        right:10px;
-        bottom:38px;
-      }
-    }
-      @media (max-width: 320px) {
-      img {
-        width: 100px !important;
-        height: 112px !important;
-        position: relative;
-        right:10px;
-        bottom:14px;
-}}
-  `}
+/* Input wrapper to allow eye icon and micro-styling */
+const FieldWrapper = styled.div`
+  position: relative;
 `;
 
-const Footer = styled.footer`
-  position: absolute;
-  bottom: 1rem;
-  font-size: 0.8rem;
-  color: #fff;
-  text-align: center;
-`;
-const HostelButton = styled.button`
-  margin-top: 30px;
-  padding: 12px 24px;
-  background: #002087;
-  color: #fff;
-  border: none;
+const Input = styled.input`
+  padding: 0.95rem 3.25rem 0.95rem 0.95rem; /* reserve space on right for eye icon */
   border-radius: 6px;
+  border: 1px solid #dcdcdc;
   font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
+  outline: none;
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.08s;
+  background: #fff;
+  color: #222;
+
+  &:focus {
+    box-shadow: 0 0 0 6px rgba(223,0,67,0.06);
+    border-color: #df0043;
+  }
 `;
+
+/* Eye toggle button placed on right inside the input area */
+const EyeToggle = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 30px;
+  width: 34px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #6b6b6b;
+  padding: 0;
+  line-height: 1;
+`;
+
+/* Submit button (keeps your original gradient and style) */
+const Button = styled.button`
+  padding: 0.95rem 1rem;
+  background: linear-gradient(90deg,#df0043,#9a34ff);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+  transition: transform 0.08s, box-shadow 0.12s;
+  &:active { transform: translateY(1px); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+`;
+
+/* small helper text and error */
+const Small = styled.small`
+  display:block; margin-top:0.5rem; color: #666; font-size: 0.82rem;
+`;
+
+const ErrorBox = styled.div`
+  background: #ffecec; color: #8b0000; padding: 0.6rem 0.8rem; border-radius: 6px;
+  font-size: 0.9rem; margin-bottom: 0.5rem;
+`;
+
+/* Footer kept as-is (white text on blue overlay) */
+const Footer = styled.footer`
+  position: absolute; bottom: 1rem; font-size: 0.8rem; color: #fff; text-align: center;
+`;
+
+/* helper to map role to route; exact routes you specified kept */
+const routeForRole = (role) => {
+  if (!role) return "/";
+  switch ((role || "").toLowerCase()) {
+    case "admin": return "/admin-dashboard";
+    case "student": return "/pages/dashboard";
+    case "teacher": return "/teacher-dashboard";
+    case "principal": return "/principal-dashboard";
+    case "warden": return "/hostel-dashboard";
+    default: return "/";
+  }
+};
+
+/**
+ * parseJwt - safely decode JWT payload (no validation)
+ * returns an object or null
+ */
+const parseJwt = (token) => {
+  try {
+    if (!token) return null;
+    const parts = token.split(".");
+    if (parts.length < 2) return null;
+    const payload = parts[1];
+    // base64url -> base64
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    // pad base64 string
+    const pad = base64.length % 4;
+    const padded = base64 + (pad ? "=".repeat(4 - pad) : "");
+    const decoded = atob(padded);
+    // decode UTF-8
+    try {
+      return JSON.parse(decodeURIComponent(escape(decoded)));
+    } catch {
+      return JSON.parse(decoded);
+    }
+  } catch (e) {
+    // fallback
+    return null;
+  }
+};
 
 const LoginPage = () => {
   const navigate = useNavigate();
 
-  const handleRoleClick = (role) => {
-    localStorage.setItem("selectedRole", role); // ✅ Save selected role
+  const [uniqueId, setUniqueId] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // eye toggle (hide/show)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    switch (role) {
-      case "admin":
-        navigate("/admin-login");
-        break;
-      case "principal":
-        navigate("/principal-login");
-        break;
-      case "teacher":
-        navigate("/teacher-login");
-        break;
-      case "student":
-        navigate("/student-login");
-        break;
-      case "hostelwarden":
-        navigate("/hostelwarden-login");
-        break;
-      default:
-        break;
+  const submitLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (!uniqueId.trim() || !password) {
+      setError("Please enter both Unique ID and password.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // call centralized helper (may return data or axios response depending on implementation)
+      const res = await loginUser({ unique_id: uniqueId.trim(), password });
+
+      // Normalize possible shapes:
+      // - loginUser returns { token, role, user }
+      // - loginUser returns axios response { data: { token, user } }
+      // - loginUser returns { data: { token, user } }
+      const data = res?.data ? res.data : res;
+
+      const token = data?.token || data?.data?.token || null;
+      let role =
+        data?.role ||
+        data?.data?.role ||
+        data?.user?.role ||
+        data?.data?.user?.role ||
+        null;
+      const user = data?.user || data?.data?.user || null;
+
+      // If role not provided explicitly, try to extract from token (JWT)
+      if (!role && token) {
+        const payload = parseJwt(token);
+        role = payload?.role || payload?.user_role || payload?.user?.role || payload?.roles || null;
+      }
+
+      // If user missing but token contains user info, try payload
+      let finalUser = user;
+      if (!finalUser && token) {
+        const payload = parseJwt(token);
+        if (payload?.user) finalUser = payload.user;
+        else if (payload?.unique_id || payload?.sub) {
+          finalUser = { unique_id: payload.unique_id || payload.sub, role: payload.role || role || null };
+        }
+      }
+
+      if (!token) {
+        const msg = data?.error || data?.message || "Login failed: token missing";
+        setError(msg);
+        setLoading(false);
+        return;
+      }
+
+      // persist auth info in localStorage (web equivalent of AsyncStorage)
+      try {
+        localStorage.setItem("authToken", token);
+        if (finalUser) localStorage.setItem("user", JSON.stringify(finalUser));
+        if (role) localStorage.setItem("role", role);
+      } catch (storageErr) {
+        console.warn("Could not persist auth to localStorage:", storageErr);
+      }
+
+      console.log("Login successful. Role:", role, "UniqueId:", finalUser?.unique_id || uniqueId);
+
+      // Navigate based on role
+      navigate(routeForRole(role));
+    } catch (err) {
+      console.error("Login error:", err);
+      const serverMessage =
+        err?.response?.data?.error ||
+        err?.response?.data?.message ||
+        err?.message ||
+        "Unable to reach server. Please try again later.";
+      setError(serverMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -319,19 +292,10 @@ const LoginPage = () => {
         <BackgroundImage>
           <img src={bg} alt="Background" />
         </BackgroundImage>
-
         <BackgroundOverlay />
-
         <BackgroundCurve>
-          <svg
-            viewBox="0 0 1440 1024"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M-4,0 C300,500 1640,100 1440,700 L1440,0 Z"
-              fill="#DF0043"
-            />
+          <svg viewBox="0 0 1440 1024" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M-4,0 C300,500 1640,100 1440,700 L1440,0 Z" fill="#DF0043" />
           </svg>
         </BackgroundCurve>
 
@@ -339,33 +303,68 @@ const LoginPage = () => {
           <img src={logo} alt="Logo" />
         </LogoSection>
 
-        <LoginBox>
-          <Title>Login</Title>
-          <RoleSelection>
-            <RoleCard onClick={() => handleRoleClick("admin")}>
-              <IconWrapper imgWidth="212px" imgHeight="235px" isAdmin>
-                <img src={adminIcon} alt="Admin" />
-              </IconWrapper>
-            </RoleCard>
-            <RoleCard onClick={() => handleRoleClick("principal")}>
-              <IconWrapper imgWidth="148px" imgHeight="200px" isPrincipal>
-                <img src={principalIcon} alt="Principal" />
-              </IconWrapper>
-            </RoleCard>
-            <RoleCard onClick={() => handleRoleClick("teacher")}>
-              <IconWrapper imgWidth="150px" imgHeight="193px" isTeacher>
-                <img src={teacherIcon} alt="Teacher" />
-              </IconWrapper>
-            </RoleCard>
-            <RoleCard onClick={() => handleRoleClick("student")}>
-              <IconWrapper imgWidth="142px" imgHeight="200px" isStudent>
-                <img src={studentIcon} alt="Student" />
-              </IconWrapper>
-            </RoleCard>
-          </RoleSelection>
-          <HostelButton onClick={() => handleRoleClick("hostelwarden")}>
-            Login For Hostel Warden
-          </HostelButton>
+        <LoginBox aria-labelledby="login-title" role="form">
+          <Title id="login-title">Login</Title>
+          <Sub>Login with your Unique ID and password</Sub>
+
+          {error && <ErrorBox role="alert" id="login-error">{error}</ErrorBox>}
+
+          <Form onSubmit={submitLogin} aria-describedby={error ? "login-error" : undefined}>
+            <label htmlFor="uniqueId" style={{ textAlign: "left", width: "100%", fontSize: 13, color: "#444", marginBottom: 6 }}>Unique ID</label>
+            <FieldWrapper>
+              <Input
+                id="uniqueId"
+                value={uniqueId}
+                onChange={(e) => setUniqueId(e.target.value)}
+                placeholder="Enter your unique id (eg. admission_no or emp_id)"
+                autoComplete="username"
+                aria-label="Unique ID"
+                required
+              />
+            </FieldWrapper>
+
+            <label htmlFor="password" style={{ textAlign: "left", width: "100%", fontSize: 13, color: "#444", marginTop: 8, marginBottom: 6 }}>Password</label>
+            <FieldWrapper>
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                aria-label="Password"
+                required
+              />
+
+              {/* Eye icon toggle - keeps look subtle and matches other UI elements */}
+              <EyeToggle
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                title={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword(s => !s)}
+              >
+                {showPassword ? (
+                  /* eye-off (subtle) */
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.94 17.94A10.94 10.94 0 0112 20c-5 0-9.27-3-11-7 1.21-2.81 3.8-5.01 7.04-6.07" stroke="#6b6b6b" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M2 2l20 20" stroke="#6b6b6b" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                ) : (
+                  /* eye */
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="#6b6b6b" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="12" cy="12" r="3" stroke="#6b6b6b" strokeWidth="1.4" />
+                  </svg>
+                )}
+              </EyeToggle>
+            </FieldWrapper>
+
+            <Button type="submit" disabled={loading} aria-busy={loading}>
+              {loading ? "Signing in..." : "Sign In"}
+            </Button>
+
+            <Small>Forgot password? Implement reset flow on the backend and link here.</Small>
+          </Form>
         </LoginBox>
 
         <Footer>© 2024 Campus Sync School Management</Footer>
