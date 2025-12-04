@@ -207,83 +207,109 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const submitLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+  // inside src/pages/LoginPage.jsx -> replace submitLogin with this
+const submitLogin = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    if (!uniqueId.trim() || !password) {
-      setError("Please enter both Unique ID and password.");
+  if (!uniqueId.trim() || !password) {
+    setError("Please enter both Unique ID and password.");
+    return;
+  }
+
+  setLoading(true);
+  try {
+    const res = await loginUser({ unique_id: uniqueId.trim(), password });
+    console.debug("Raw login response:", res);
+
+    // normalize axios vs direct
+    const resp = res?.data ?? res ?? {};
+
+    // try common token locations
+    let token =
+      resp.token ||
+      resp.authToken ||
+      resp.access_token ||
+      resp.accessToken ||
+      resp.data?.token ||
+      resp.data?.authToken ||
+      resp.result?.token ||
+      null;
+
+    // sometimes token inside 'user' (rare)
+    if (!token) token = resp.user?.token || resp.user?.authToken || null;
+
+    // if token looks like a jwt without Bearer, add prefix
+    if (token && !token.startsWith("Bearer ")) token = `Bearer ${token}`;
+
+    // refresh token
+    const refreshToken =
+      resp.refreshToken || resp.refresh_token || resp.data?.refreshToken || null;
+
+    // user payload
+    const user =
+      resp.user || resp.data?.user || resp.result?.user || resp.userData || null;
+
+    // role: prefer explicit, fallback to token payload
+    let role =
+      resp.role ||
+      resp.data?.role ||
+      (user && user.role) ||
+      null;
+
+    if (!role && token) {
+      try {
+        const payload = JSON.parse(atob(token.split(" ")[1].split(".")[1]));
+        role = payload.role || payload.user?.role || role;
+      } catch (err) {
+        // ignore
+      }
+    }
+
+    if (!token) {
+      setError(resp.message || "Login failed: token missing in response.");
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-    try {
-      // call centralized helper (may return data or axios response depending on implementation)
-      const res = await loginUser({ unique_id: uniqueId.trim(), password });
-
-      // Normalize possible shapes:
-      // - loginUser returns { token, role, user }
-      // - loginUser returns axios response { data: { token, user } }
-      // - loginUser returns { data: { token, user } }
-      const data = res?.data ? res.data : res;
-
-      const token = data?.token || data?.data?.token || null;
-      let role =
-        data?.role ||
-        data?.data?.role ||
-        data?.user?.role ||
-        data?.data?.user?.role ||
-        null;
-      const user = data?.user || data?.data?.user || null;
-
-      // If role not provided explicitly, try to extract from token (JWT)
-      if (!role && token) {
-        const payload = parseJwt(token);
-        role = payload?.role || payload?.user_role || payload?.user?.role || payload?.roles || null;
-      }
-
-      // If user missing but token contains user info, try payload
-      let finalUser = user;
-      if (!finalUser && token) {
-        const payload = parseJwt(token);
-        if (payload?.user) finalUser = payload.user;
-        else if (payload?.unique_id || payload?.sub) {
-          finalUser = { unique_id: payload.unique_id || payload.sub, role: payload.role || role || null };
-        }
-      }
-
-      if (!token) {
-        const msg = data?.error || data?.message || "Login failed: token missing";
-        setError(msg);
-        setLoading(false);
-        return;
-      }
-
-      // persist auth info in localStorage (web equivalent of AsyncStorage)
+    // final normalized user object: if not provided, try token payload
+    let finalUser = user;
+    if (!finalUser) {
       try {
-        localStorage.setItem("authToken", token);
-        if (finalUser) localStorage.setItem("user", JSON.stringify(finalUser));
-        if (role) localStorage.setItem("role", role);
-      } catch (storageErr) {
-        console.warn("Could not persist auth to localStorage:", storageErr);
+        const payload = JSON.parse(atob(token.split(" ")[1].split(".")[1]));
+        finalUser = payload.user || { unique_id: payload.unique_id || payload.sub, role: payload.role };
+      } catch (err) {
+        // ignore
       }
-
-      console.log("Login successful. Role:", role, "UniqueId:", finalUser?.unique_id || uniqueId);
-
-      // Navigate based on role
-      navigate(routeForRole(role));
-    } catch (err) {
-      console.error("Login error:", err);
-      const serverMessage =
-        err?.response?.data?.error ||
-        err?.response?.data?.message ||
-        err?.message ||
-        "Unable to reach server. Please try again later.";
-      setError(serverMessage);
-    } finally {
-      setLoading(false);
     }
-  };
+
+    // Persist *consistent* keys (defensive)
+    try {
+      localStorage.setItem("authToken", token);
+      localStorage.setItem("token", token); // some code expects this
+      if (refreshToken) localStorage.setItem("refreshToken", refreshToken);
+      if (finalUser) localStorage.setItem("user", JSON.stringify(finalUser));
+      if (role) localStorage.setItem("role", (typeof role === "string" ? role : JSON.stringify(role)).toLowerCase());
+    } catch (storageErr) {
+      console.warn("Could not persist auth to localStorage:", storageErr);
+    }
+
+    console.log("Login stored:", { authToken: !!localStorage.getItem("authToken"), role: localStorage.getItem("role"), user: localStorage.getItem("user") });
+
+    navigate(routeForRole(localStorage.getItem("role")));
+  } catch (err) {
+    console.error("Login error:", err);
+    const serverMessage =
+      err?.response?.data?.error ||
+      err?.response?.data?.message ||
+      err?.message ||
+      "Unable to reach server. Please try again later.";
+    setError(serverMessage);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <>
