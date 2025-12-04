@@ -162,10 +162,10 @@ const routeForRole = (role) => {
   if (!role) return "/";
   switch ((role || "").toLowerCase()) {
     case "admin": return "/admin-dashboard";
-    case "student": return "/pages/dashboard";
+    case "student": return "/dashboard";
     case "teacher": return "/teacher-dashboard";
     case "principal": return "/principal-dashboard";
-    case "warden": return "/hostel-dashboard";
+    case "operator": return "/hostel-dashboard";
     default: return "/";
   }
 };
