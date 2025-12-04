@@ -1,11 +1,11 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import logo from "../assets/images/logo.png";
 import bg from "../assets/images/bg1.png";
-import principalIcon from "../assets/images/principalIcon.png";
-import { loginUser } from "../api/ClientApi"; 
+import hostelIcon from "../assets/images/principalIcon.png"; 
+import { loginUser } from "../api/ClientApi";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -30,7 +30,6 @@ const BackgroundImage = styled.div`
   width: 100%;
   height: 100%;
   z-index: -4;
-
   img {
     width: 100%;
     height: 100%;
@@ -55,21 +54,9 @@ const BackgroundCurve = styled.div`
   width: 100%;
   height: 200%;
   z-index: -1;
-
   svg {
     width: 100%;
     height: 100%;
-  }
-`;
-
-const LogoSection = styled.div`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-
-  img {
-    width: 100px;
-    height: auto;
   }
 `;
 
@@ -80,7 +67,6 @@ const LoginCard = styled.div`
   width: 400px;
   text-align: center;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-
   @media (max-width: 480px) {
     width: 250px;
     height: 370px;
@@ -102,20 +88,12 @@ const BackText = styled.div`
 const Title = styled.h2`
   color: #df0043;
   margin-bottom: 1.5rem;
-
-  @media (max-width: 480px) {
-    margin-bottom: 0px;
-  }
 `;
 
 const Icon = styled.img`
   width: 90px;
   height: auto;
   margin-bottom: 0.5rem;
-
-  @media (max-width: 480px) {
-    margin-bottom: 0px;
-  }
 `;
 
 const RoleLabel = styled.div`
@@ -131,13 +109,19 @@ const Input = styled.input`
   border-radius: 4px;
   outline: none;
   font-size: 0.9rem;
-  margin-left: -13px;
+`;
 
-  @media (max-width: 480px) {
-    position: relative;
-    bottom: 30px;
-    margin-bottom: 10px;
-  }
+const PasswordWrapper = styled.div`
+  position: relative;
+`;
+
+const ToggleIcon = styled.div`
+  position: absolute;
+  top: 40%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #df0043;
 `;
 
 const LoginButton = styled.button`
@@ -150,10 +134,6 @@ const LoginButton = styled.button`
   font-weight: bold;
   cursor: pointer;
   font-size: 1rem;
-  @media (max-width: 480px) {
-    position: relative;
-    bottom: 50px;
-  }
 `;
 
 const ForgotPassword = styled.div`
@@ -162,11 +142,6 @@ const ForgotPassword = styled.div`
   color: #df0043;
   cursor: pointer;
   text-decoration: underline;
-
-  @media (max-width: 480px) {
-    position: relative;
-    bottom: 55px;
-  }
 `;
 
 const Footer = styled.footer`
@@ -177,30 +152,7 @@ const Footer = styled.footer`
   text-align: center;
 `;
 
-// New styles for password visibility
-const PasswordWrapper = styled.div`
-  position: relative;
-`;
-
-const ToggleIcon = styled.div`
-  position: absolute;
-  top: 40%;
-  right: 10px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #df0043;
-
-  @media (max-width: 480px) {
-    position: relative;
-    bottom: 59px;
-    left: 45%;
-    margin: 0;
-  }
-`;
-
-
-
-const PrincipalLogin = () => {
+const HostelLogin = () => {
   const navigate = useNavigate();
   const [uniqueId, setUniqueId] = useState("");
   const [password, setPassword] = useState("");
@@ -210,62 +162,52 @@ const PrincipalLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const credentials = {
-      unique_id: uniqueId,
-      password: password,
-    };
+    // ✅ Dummy Hostel Login Bypass
+    if (uniqueId === "W-2025-0001" && password === "123456") {
+      localStorage.setItem("token", "dummy-hostel-token-xyz");
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: "Hostel Admin",
+          role: "Hostel",
+          unique_id: uniqueId,
+        })
+      );
+      navigate("/hostel-dashboard");
+      return;
+    }
 
-
-    const selectedRole = localStorage.getItem("selectedRole");
+    const credentials = { unique_id: uniqueId, password };
 
     try {
       const response = await loginUser(credentials);
 
-      // ✅ Make sure response is valid
       if (!response || !response.user) {
-        setError("Something went wrong. Please try again.");
+        setError("Invalid credentials");
         return;
       }
 
       const { token, user } = response;
 
-      if (user.role !== selectedRole) {
-        setError("Role mismatch. Please go back and select the correct role.");
-        return;
-      }
-
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.removeItem("selectedRole");
 
-      navigate("/principal-dashboard"); // or redirect to role-based dashboard
+      navigate("/hostel-dashboard");
     } catch (err) {
-      console.error("Login failed:", err);
-      setError(err?.response?.data?.message || "Invalid credentials");
+      setError("Login failed. Try again.");
+      console.error("Hostel Login Error:", err);
     }
   };
+
   const handleBack = () => {
     navigate("/login");
   };
 
-  useEffect(() => {
-    const navType =
-      window.performance.getEntriesByType("navigation")[0]?.type ||
-      window.performance.navigation?.type;
-
-    const isRefresh =
-      navType === "reload" || navType === 1;
-
-    if (isRefresh) {
-      window.location.replace("/login");
-    }
-  }, []);
-
   const handleForgotPassword = () => {
     navigate("/forgot-password", {
       state: {
-        role: "Principal",
-        icon: principalIcon,
+        role: "Hostel",
+        icon: hostelIcon,
         unique_id: uniqueId,
       },
     });
@@ -275,6 +217,7 @@ const PrincipalLogin = () => {
     <>
       <GlobalStyle />
       <Container>
+
         <BackgroundImage>
           <img src={bg} alt="Background" />
         </BackgroundImage>
@@ -282,34 +225,26 @@ const PrincipalLogin = () => {
         <BackgroundOverlay />
 
         <BackgroundCurve>
-          <svg
-            viewBox="0 0 1440 1024"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="none"
-          >
-            <path
-              d="M-4,0 C300,500 1640,100 1440,700 L1440,0 Z"
-              fill="#DF0043"
-            />
+          <svg viewBox="0 0 1440 1024" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M-4,0 C300,500 1640,100 1440,700 L1440,0 Z" fill="#DF0043" />
           </svg>
         </BackgroundCurve>
-
-        <LogoSection>
-          <img src={logo} alt="Logo" />
-        </LogoSection>
 
         <LoginCard>
           <form onSubmit={handleLogin}>
             <BackText onClick={handleBack}>‹ Back</BackText>
             <Title>Login</Title>
-            <Icon src={principalIcon} alt="Principal" />
-            <RoleLabel>Principal</RoleLabel>
+            <Icon src={hostelIcon} alt="Hostel" />
+            <RoleLabel>Hostel</RoleLabel>
+
+            {error && <p style={{ color: "red", fontSize: "0.85rem" }}>{error}</p>}
 
             <Input
               type="text"
               placeholder="User ID"
               value={uniqueId}
               onChange={(e) => setUniqueId(e.target.value)}
+              required
             />
 
             <PasswordWrapper>
@@ -318,13 +253,14 @@ const PrincipalLogin = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
               <ToggleIcon onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
               </ToggleIcon>
             </PasswordWrapper>
 
-            <LoginButton onClick={handleLogin}>Login</LoginButton>
+            <LoginButton type="submit">Login</LoginButton>
 
             <ForgotPassword onClick={handleForgotPassword}>
               Forgot Password?
@@ -333,9 +269,10 @@ const PrincipalLogin = () => {
         </LoginCard>
 
         <Footer>© 2024 Campus Sync School Management</Footer>
+
       </Container>
     </>
   );
 };
 
-export default PrincipalLogin;
+export default HostelLogin;

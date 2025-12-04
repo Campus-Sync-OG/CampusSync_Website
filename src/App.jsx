@@ -38,6 +38,7 @@ import AdminLogin from "./tabs/AdminLogin";
 import TeacherLogin from "./tabs/TeacherLogin";
 import StudentLogin from "./tabs/StudentLogin";
 import PrincipalLogin from "./tabs/PrincipalLogin";
+import HostelLogin from "./tabs/HostelLogin";
 import ForgotPassword from "./tabs/ForgotPassword";
 import AdminDashboard from "./userpages/AdminDashboard";
 import SchoolInformation from "./userpages/SchoolInformation";
@@ -101,7 +102,7 @@ import Drivers from "./userpages/Drivers";
 import AddBus from "./userpages/AddBus";
 import Buses from "./userpages/Buses";
 import DriverLocation from "./pages/DriverLocation";
-import TeacherStudyModule from "./teacher/TeacherStudyModule";  
+import TeacherStudyModule from "./teacher/TeacherStudyModule";
 import SubjectListView from "./userpages/SubjectListView";
 import TeacherViewAcademics from "./teacher/TeacherViewAcademics";
 
@@ -114,11 +115,17 @@ import TeacherPayroll from "./teacher/TeacherPayroll";
 import TeacherPayrollPDF from "./teacher/TeacherPayrollDownload";
 import CertificatePanel from "./userpages/RequestedCertificate";
 import HostelHomePage from "./pages/HostelHomePage";
+import HostelDashboard from "./hostel/HostelDashboard";
 import LeaveModal from "./pages/LeaveModal";
 import SupportModal from "./pages/SupportModal";
 import HostelRegister from "./pages/HostelRegister";
 import PrincipalNotifications from "./principal/PrincipalNotifications";
 import MarksReview from "./principal/MarksReview";
+import RoomAvailability from "./hostel/RoomAvailability";
+import Complaints from "./hostel/Complaints";
+import HostelAttendance from "./hostel/HostelAttendance";
+import HostelStudents from "./hostel/HostelStudents";
+import HostelLeave from "./hostel/HostelLeave";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -186,6 +193,21 @@ const PrincipalLayout = ({ children }) => {
   );
 };
 
+const HostelLayout = ({ children }) => {
+  return (
+    <>
+      <div
+        style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+      >
+        <Header />
+        <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+          <div style={{ flex: 1, overflowY: "auto" }}>{children}</div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 const App = () => {
   return (
     <Router>
@@ -198,9 +220,9 @@ const App = () => {
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="/teacher-login" element={<TeacherLogin />} />
           <Route path="/student-login" element={<StudentLogin />} />
+          <Route path="/hostelwarden-login" element={<HostelLogin />} />
           <Route path="/principal-login" element={<PrincipalLogin />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-
           {/*  Student Dashboard & Pages (Uses Sidebar) */}
           <Route
             path="/dashboard"
@@ -234,7 +256,6 @@ const App = () => {
               </Layout>
             }
           />
-
           <Route
             path="/school/calendar"
             element={
@@ -291,8 +312,7 @@ const App = () => {
               </Layout>
             }
           />
-
-           <Route
+          <Route
             path="/hostel"
             element={
               <Layout>
@@ -300,8 +320,7 @@ const App = () => {
               </Layout>
             }
           />
-
-            <Route
+          <Route
             path="/hostel-home"
             element={
               <Layout>
@@ -309,8 +328,7 @@ const App = () => {
               </Layout>
             }
           />
-          
-           <Route
+          <Route
             path="/hostel-leave"
             element={
               <Layout>
@@ -318,8 +336,7 @@ const App = () => {
               </Layout>
             }
           />
-          
-           <Route
+          <Route
             path="/support"
             element={
               <Layout>
@@ -351,7 +368,6 @@ const App = () => {
               </Layout>
             }
           />
-
           <Route
             path="/notification-popup"
             element={
@@ -360,8 +376,6 @@ const App = () => {
               </Layout>
             }
           />
-
-           
           <Route
             path="/chatbot"
             element={
@@ -379,7 +393,6 @@ const App = () => {
               </Layout>
             }
           />
-
           <Route
             path="/profile/school-info"
             element={
@@ -388,7 +401,6 @@ const App = () => {
               </Layout>
             }
           />
-
           <Route
             path="/fees"
             element={
@@ -397,7 +409,6 @@ const App = () => {
               </Layout>
             }
           />
-         
           <Route
             path="/leave"
             element={
@@ -406,7 +417,6 @@ const App = () => {
               </Layout>
             }
           />
-
           <Route
             path="/study-module"
             element={
@@ -415,7 +425,6 @@ const App = () => {
               </Layout>
             }
           />
-
           <Route
             path="/BusMap"
             element={
@@ -424,7 +433,6 @@ const App = () => {
               </Layout>
             }
           />
-
           <Route
             path="/BusMap"
             element={
@@ -498,7 +506,6 @@ const App = () => {
               </TeacherLayout>
             }
           />
-
           <Route
             path="/teacher-student-leaves"
             element={
@@ -555,7 +562,7 @@ const App = () => {
               </TeacherLayout>
             }
           />
-           <Route
+          <Route
             path="/teacher-payroll"
             element={
               <TeacherLayout>
@@ -613,7 +620,7 @@ const App = () => {
               </TeacherLayout>
             }
           />
-             <Route
+          <Route
             path="/teacher-academics-view"
             element={
               <TeacherLayout>
@@ -661,7 +668,6 @@ const App = () => {
               </TeacherLayout>
             }
           />
-
           <Route
             path="/teacher-study"
             element={
@@ -775,7 +781,6 @@ const App = () => {
               </AdminLayout>
             }
           />
-
           <Route
             path="/admin-promotion"
             element={
@@ -856,7 +861,7 @@ const App = () => {
               </AdminLayout>
             }
           />
-           <Route
+          <Route
             path="/admin-certificatepanel"
             element={
               <AdminLayout>
@@ -864,7 +869,6 @@ const App = () => {
               </AdminLayout>
             }
           />
-
           <Route
             path="/admin-studymodule"
             element={
@@ -889,7 +893,6 @@ const App = () => {
               </AdminLayout>
             }
           />
-
           <Route
             path="/admin-calendar"
             element={
@@ -914,16 +917,15 @@ const App = () => {
               </AdminLayout>
             }
           />
-            <Route
+          <Route
             path="/admin-subjectlistview"
             element={
               <AdminLayout>
                 <SubjectListView />
-                </AdminLayout>
+              </AdminLayout>
             }
           />
-            
-           <Route
+          <Route
             path="/admin-payroll"
             element={
               <AdminLayout>
@@ -931,7 +933,7 @@ const App = () => {
               </AdminLayout>
             }
           />
-           <Route
+          <Route
             path="/admin-payroll"
             element={
               <AdminLayout>
@@ -939,7 +941,7 @@ const App = () => {
               </AdminLayout>
             }
           />
-                    <Route
+          <Route
             path="/admin-employee"
             element={
               <AdminLayout>
@@ -955,7 +957,7 @@ const App = () => {
               </AdminLayout>
             }
           />
-           <Route
+          <Route
             path="/admin-payrollGeneration"
             element={
               <AdminLayout>
@@ -1068,7 +1070,6 @@ const App = () => {
               </PrincipalLayout>
             }
           />
-
           <Route
             path="/principal-attendance"
             element={
@@ -1087,8 +1088,7 @@ const App = () => {
               </PrincipalLayout>
             }
           />
-
-           <Route
+          <Route
             path="/notification-markspopup"
             element={
               <PrincipalLayout>
@@ -1096,23 +1096,69 @@ const App = () => {
               </PrincipalLayout>
             }
           />
-
           <Route
             path="/marks-review/:id"
             element={
               <PrincipalLayout>
-                <MarksReview/>
+                <MarksReview />
               </PrincipalLayout>
             }
           />
-
-
           <Route
             path="/principal-leave-panel"
             element={
               <PrincipalLayout>
                 <PrincipalLeavePanel />
               </PrincipalLayout>
+            }
+          />
+          // Hostel Dashboard & Pages (Uses HostelLayout)
+          <Route
+            path="/hostel-dashboard"
+            element={
+              <HostelLayout>
+                <HostelDashboard />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/hostel-room-availability"
+            element={
+              <HostelLayout>
+                <RoomAvailability />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/hostel-complaints"
+            element={
+              <HostelLayout>
+                <Complaints />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/hostel-attendance"
+            element={
+              <HostelLayout>
+                <HostelAttendance />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/hostel-student-data"
+            element={
+              <HostelLayout>
+                <HostelStudents />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/hostel-leave-request"
+            element={
+              <HostelLayout>
+                <HostelLeave />
+              </HostelLayout>
             }
           />
         </Routes>
