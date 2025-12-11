@@ -140,15 +140,27 @@ const TeacherBulkMarksEntry = () => {
   };
 
   // start polling teacher notifications to see principal's review outcome
+  // replace the current startPollingForReview in TeacherBulkMarksEntry.jsx
   const startPollingForReview = (meta) => {
     if (pollingRef.current) {
       clearInterval(pollingRef.current);
       pollingRef.current = null;
     }
 
+    // read user id once (defensive)
+    const logged = (() => {
+      try { return JSON.parse(localStorage.getItem("user")); } catch { return null; }
+    })();
+    const currentUserId = logged?.unique_id || logged?.user_id || logged?.id || null;
+    if (!currentUserId) {
+      console.warn("startPollingForReview: user id not found in localStorage, aborting polling.");
+      return;
+    }
+
     pollingRef.current = setInterval(async () => {
       try {
-        const res = await fetchNotificationsForCurrentUser();
+        // pass user id to API
+        const res = await fetchNotificationsForCurrentUser(currentUserId);
         const list = Array.isArray(res) ? res : (res.notifications || res.data || res);
         if (!Array.isArray(list)) return;
 
@@ -156,11 +168,9 @@ const TeacherBulkMarksEntry = () => {
           try {
             const parsed = typeof n.message === "string" ? JSON.parse(n.message) : n.message;
             if (!parsed || parsed.type !== "marks_review") return false;
-            // best match by submission_ref_notification_id
             if (parsed.submission_ref_notification_id && meta.notificationId) {
               return String(parsed.submission_ref_notification_id) === String(meta.notificationId);
             }
-            // fallback: match by submission_summary or submission fields
             if (parsed.submission_summary) {
               const s = parsed.submission_summary;
               return s.subject === meta.subject && s.class_grade === meta.class_grade && s.section === meta.section && s.exam_format === meta.exam_format;
@@ -190,6 +200,7 @@ const TeacherBulkMarksEntry = () => {
 
     setPolling(true);
   };
+
 
   const manualCheckStatus = () => {
     if (!lastSubmissionMetaRef.current) {
