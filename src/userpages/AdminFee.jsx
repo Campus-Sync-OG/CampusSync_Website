@@ -32,7 +32,7 @@ const AdminFee = () => {
     { label: "VII", value: "7" },
     { label: "VIII", value: "8" },
     { label: "IX", value: "9" },
-    { label: "X", value: "10" },
+    { label: "X", value: "X" },
   ];
 
 
@@ -187,8 +187,8 @@ const AdminFee = () => {
               required
             >
               <option value="">Select Class</option>
-              {classOptions.map((item, index) => (
-                <option key={index} value={item.value}>
+              {classOptions.map((item) => (
+                <option key={item.value} value={item.value}>
                   {item.label}
                 </option>
               ))}
