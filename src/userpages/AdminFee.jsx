@@ -433,22 +433,22 @@ const AdminFee = () => {
                       let items = [];
                       if (feestype === "Uniform") {
                         items = [
-                          { item_name: "Shirt", amount: 0 },
-                          { item_name: "Pant", amount: 0 },
-                          { item_name: "Tie", amount: 0 },
-                          { item_name: "Shoe", amount: 0 },
+                          { item_name: "Shirt", amount: "" },
+                          { item_name: "Pant", amount: "" },
+                          { item_name: "Tie", amount: "" },
+                          { item_name: "Shoe", amount: "" },
                         ];
                       } else if (feestype === "Books") {
                         items = [
-                          { item_name: "Math Book", amount: 0 },
-                          { item_name: "Science Book", amount: 0 },
+                          { item_name: "Math Book", amount: "" },
+                          { item_name: "Science Book", amount: "" },
                         ];
                       }
                       setFeePlanData((prev) => ({
                         ...prev,
                         feestype,
                         items,
-                        total_fee: 0,
+                        total_fee: "",
                       }));
                     }}
                   >
@@ -502,9 +502,9 @@ const AdminFee = () => {
                           onChange={(e) => {
                             const updatedItems = [...feePlanData.items];
                             updatedItems[idx].amount =
-                              parseFloat(e.target.value) || 0;
+                              parseFloat(e.target.value) || "";
                             const sum = updatedItems.reduce(
-                              (acc, itm) => acc + (itm.amount || 0),
+                              (acc, itm) => acc + (itm.amount || ""),
                               0
                             );
                             setFeePlanData((prev) => ({
@@ -522,7 +522,7 @@ const AdminFee = () => {
                             (_, i) => i !== idx
                           );
                           const sum = updatedItems.reduce(
-                            (acc, itm) => acc + (itm.amount || 0),
+                            (acc, itm) => acc + (itm.amount || ""),
                             0
                           );
                           setFeePlanData((prev) => ({
@@ -542,7 +542,7 @@ const AdminFee = () => {
                     onClick={() =>
                       setFeePlanData((prev) => ({
                         ...prev,
-                        items: [...prev.items, { item_name: "", amount: 0 }],
+                        items: [...prev.items, { item_name: "", amount: "" }],
                       }))
                     }
                   >
@@ -560,7 +560,7 @@ const AdminFee = () => {
                     onChange={(e) =>
                       setFeePlanData({
                         ...feePlanData,
-                        total_fee: parseFloat(e.target.value) || 0,
+                        total_fee: parseFloat(e.target.value) || "",
                       })
                     }
                   />
