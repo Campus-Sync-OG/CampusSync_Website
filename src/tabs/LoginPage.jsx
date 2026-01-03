@@ -166,6 +166,8 @@ const routeForRole = (role) => {
     case "teacher": return "/teacher-dashboard";
     case "principal": return "/principal-dashboard";
     case "operator": return "/hostel-dashboard";
+    case "driver": return "/driver-dashboard";
+  
     default: return "/";
   }
 };
