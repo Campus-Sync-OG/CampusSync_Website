@@ -113,6 +113,7 @@ const StatusBadge = styled.div`
 const TeacherBulkMarksEntry = () => {
   const navigate = useNavigate();
   const [showSubmitButton, setShowSubmitButton] = useState(false);
+  const inputRefs = useRef([]);
 
   // form state
   const [selectedClass, setSelectedClass] = useState("");
@@ -499,18 +500,32 @@ const TeacherBulkMarksEntry = () => {
                     <MarkInput
                       type="number"
                       value={marksData[i]?.marks_obtained || ""}
+                      ref={(el) => (inputRefs.current[i * 2] = el)}
                       onChange={(e) =>
                         handleInputChange(i, "marks_obtained", e.target.value)
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          inputRefs.current[i * 2 + 1]?.focus();
+                        }
+                      }}
                     />
                   </Td>
                   <Td>
                     <MarkInput
                       type="number"
                       value={marksData[i]?.total_marks || ""}
+                      ref={(el) => (inputRefs.current[i * 2 + 1] = el)}
                       onChange={(e) =>
                         handleInputChange(i, "total_marks", e.target.value)
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          inputRefs.current[(i + 1) * 2]?.focus();
+                        }
+                      }}
                     />
                   </Td>
                 </tr>
