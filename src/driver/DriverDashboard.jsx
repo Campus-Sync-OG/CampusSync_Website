@@ -61,7 +61,15 @@ const Button = styled.button`
 
 export default function DriverDashboard() {
   const [tripStarted, setTripStarted] = useState(false);
-  const busId = "BUS001"; // must match student/principal bus_id
+  const busId = "BUS001";
+
+  // 🔹 Load status from localStorage on refresh
+  useEffect(() => {
+    const savedStatus = localStorage.getItem(`trip_started_${busId}`);
+    if (savedStatus === "true") {
+      setTripStarted(true);
+    }
+  }, []);
 
   useEffect(() => {
     let interval;
@@ -85,11 +93,23 @@ export default function DriverDashboard() {
           (err) => console.error("GPS error", err),
           { enableHighAccuracy: true }
         );
-      }, 5000); // every 5 seconds
+      }, 5000);
     }
 
     return () => clearInterval(interval);
   }, [tripStarted]);
+
+  // 🔹 Toggle trip + store flag
+  const toggleTrip = () => {
+    const newStatus = !tripStarted;
+    setTripStarted(newStatus);
+
+    if (newStatus) {
+      localStorage.setItem(`trip_started_${busId}`, "true");
+    } else {
+      localStorage.removeItem(`trip_started_${busId}`);
+    }
+  };
 
   return (
     <Container>
@@ -99,10 +119,7 @@ export default function DriverDashboard() {
         <Label>Status</Label>
         <Value>{tripStarted ? "ON ROUTE" : "STOPPED"}</Value>
 
-        <Button
-          active={tripStarted}
-          onClick={() => setTripStarted(!tripStarted)}
-        >
+        <Button active={tripStarted} onClick={toggleTrip}>
           {tripStarted ? "Stop Trip" : "Start Trip"}
         </Button>
       </Card>
