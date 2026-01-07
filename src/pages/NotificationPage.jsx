@@ -7,6 +7,7 @@ import { fetchAllNotifications } from "../api/ClientApi";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
+  const [userRole, setUserRole] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,6 +15,8 @@ const NotificationsPage = () => {
       try {
         const loggedInUser = JSON.parse(localStorage.getItem("user"));
         const user_id = loggedInUser?.unique_id;
+        const role = loggedInUser?.role?.trim().toLowerCase();
+        setUserRole(role);
 
         let response = await fetchAllNotifications({ user_id });
         let allNotifications = response?.data || [];
@@ -42,7 +45,7 @@ const NotificationsPage = () => {
     loadNotifications();
   }, []);
 
-  // P A S T E L   C O L O R S
+  // 🎨 Pastel colors
   const getRandomColor = () => {
     const pastelColors = [
       "#FFEBEE",
@@ -57,20 +60,18 @@ const NotificationsPage = () => {
   };
 
   const randomIcons = ["📢", "🔔", "📅", "📝", "📣"];
-  const getRandomIcon = () => randomIcons[Math.floor(Math.random() * randomIcons.length)];
+  const getRandomIcon = () =>
+    randomIcons[Math.floor(Math.random() * randomIcons.length)];
 
   const handleHomeClick = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const role = user?.role?.trim().toLowerCase();
-
-    if (role === "teacher") navigate("/teacher-dashboard");
-    else if (role === "student") navigate("/dashboard");
-    else if (role === "principal") navigate("/principal-dashboard");
-    else if (role === "admin") navigate("/admin-dashboard");
+    if (userRole === "teacher") navigate("/teacher-dashboard");
+    else if (userRole === "student") navigate("/dashboard");
+    else if (userRole === "principal") navigate("/principal-dashboard");
+    else if (userRole === "admin") navigate("/admin-dashboard");
     else alert("Unknown role. Cannot navigate to home.");
   };
 
-  // 🚀🚀 NAVIGATION for Notification Click
+  // 🚀 Open popup ONLY for principal
   const openPopup = (notif) => {
     navigate("/notification-markspopup", { state: { notif } });
   };
@@ -90,28 +91,38 @@ const NotificationsPage = () => {
         </Wrapper>
       </Header>
 
-      {notifications.map((notif, index) => (
-        <NotificationCard
-          key={notif.id || notif.user_id || index}
-          bgColor={getRandomColor()}
-          onClick={() => openPopup(notif)}  // ← THIS IS THE ONLY CHANGE
-        >
-          <Content>
-            <NotificationTitle>
-              <Emoji>{getRandomIcon()}</Emoji>
-              {notif.title}
-            </NotificationTitle>
-            <NotificationMessage>{notif.message}</NotificationMessage>
-          </Content>
-        </NotificationCard>
-      ))}
+      {notifications.map((notif, index) => {
+        const isPrincipal = userRole === "principal";
+
+        return (
+          <NotificationCard
+            key={notif.id || notif.user_id || index}
+            bgColor={getRandomColor()}
+            clickable={isPrincipal}
+            onClick={() => {
+              if (isPrincipal) openPopup(notif);
+            }}
+          >
+            <Content>
+              <NotificationTitle>
+                <Emoji>{getRandomIcon()}</Emoji>
+                {notif.title}
+              </NotificationTitle>
+              <NotificationMessage>{notif.message}</NotificationMessage>
+            </Content>
+          </NotificationCard>
+        );
+      })}
     </Container>
   );
 };
 
 export default NotificationsPage;
 
-/* Styled Components */
+/* =========================
+   STYLED COMPONENTS
+========================= */
+
 const Container = styled.div`
   padding: 0 15px;
   margin: auto;
@@ -129,7 +140,9 @@ const NotificationCard = styled.div`
   align-items: center;
   width: 95%;
   gap: 30px;
-  cursor: pointer;       /* clickable */
+
+  cursor: ${(props) => (props.clickable ? "pointer" : "default")};
+  opacity: ${(props) => (props.clickable ? "1" : "0.9")};
 `;
 
 const Content = styled.div`

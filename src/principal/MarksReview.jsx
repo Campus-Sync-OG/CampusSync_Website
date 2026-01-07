@@ -44,7 +44,7 @@ export default function MarksReview() {
     try {
       await reviewMarksSubmission(id, action, comment);
       alert(`Submission ${action} successfully.`);
-      navigate("/principal/notifications"); // back to list
+      navigate("/principal-dashboard"); // back to list
     } catch (err) {
       console.error(err);
       alert("Action failed. See console.");

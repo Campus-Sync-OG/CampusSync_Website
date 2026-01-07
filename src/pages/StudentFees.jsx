@@ -236,7 +236,7 @@ const FeePaymentForm = () => {
 
       const orderRes = await createFeeOrder(payload, admission_no);
       const options = {
-        key: "rzp_test_7fhdtLtzRXOZDh",
+        key: "rzp_test_RS5LLMAlMfCVED",
         amount: orderRes.order.amount,
         currency: "INR",
         order_id: orderRes.order.id,

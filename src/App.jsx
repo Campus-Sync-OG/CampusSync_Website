@@ -126,6 +126,8 @@ import Complaints from "./hostel/Complaints";
 import HostelAttendance from "./hostel/HostelAttendance";
 import HostelStudents from "./hostel/HostelStudents";
 import HostelLeave from "./hostel/HostelLeave";
+import HostelFees from "./hostel/HostelFees";
+import DriverDashboard from "./driver/DriverDashboard";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -1158,6 +1160,22 @@ const App = () => {
             element={
               <HostelLayout>
                 <HostelLeave />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/hostel-fees"
+            element={
+              <HostelLayout>
+                <HostelFees />
+              </HostelLayout>
+            }
+          />
+          <Route
+            path="/driver-dashboard"
+            element={
+              <HostelLayout>
+                <DriverDashboard />
               </HostelLayout>
             }
           />

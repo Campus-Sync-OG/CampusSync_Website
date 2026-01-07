@@ -195,7 +195,7 @@ const HostelDashboard = () => {
       <QuickTileRow>
         <QuickTile onClick={() => navigate("/hostel-room-availability")}>Room Availability</QuickTile>
         <QuickTile onClick={() => navigate("/hostel-student-data")}>Student Data</QuickTile>
-        <QuickTile onClick={() => navigate("/hostel-fee-details")}>Fee Details</QuickTile>
+        <QuickTile onClick={() => navigate("/hostel-fees")}>Fee Details</QuickTile>
         <QuickTile onClick={() => navigate("/hostel-attendance")}>Attendance</QuickTile>
         <QuickTile onClick={() => navigate("/hostel-leave-request")}>Leave Request</QuickTile>
         <QuickTile onClick={() => navigate("/hostel-complaints")}>Complaints</QuickTile>
@@ -212,7 +212,7 @@ const HostelDashboard = () => {
       <MenuList>
         <MenuItem onClick={() => navigate("/hostel-student-data")}>📘 Manage Students</MenuItem>
         <MenuItem onClick={() => navigate("/hostel-attendance")}>✅ Student Attendance</MenuItem>
-        <MenuItem onClick={() => navigate("/hostel-fee-details")}>💰 Fee Records</MenuItem>
+        <MenuItem onClick={() => navigate("/hostel-fees")}>💰 Fee Records</MenuItem>
         <MenuItem onClick={() => navigate("/hostel-leave-request")}>📩 Leave Approvals</MenuItem>
         <MenuItem onClick={() => navigate("/hostel-room-availability")}>🏠 View Rooms</MenuItem>
         <MenuItem onClick={() => navigate("/hostel-complaints")}>🚨 Complaints</MenuItem>
