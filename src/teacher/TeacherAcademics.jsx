@@ -12,6 +12,7 @@ import {
   submitMarksForApproval,
   fetchNotificationsForCurrentUser,
 } from "../api/ClientApi";
+import logo from "../assets/images/logo.png";
 
 /* ---------- Styles (same as your original) ---------- */
 const Container = styled.div`
@@ -77,6 +78,26 @@ const Header = styled.div`
   color: white;
   border-radius: 8px;
 `;
+
+const overlayStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  height: "100vh",
+  width: "100vw",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 9999,
+};
+
+const LoaderContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+`;
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
@@ -113,7 +134,16 @@ const StatusBadge = styled.div`
 const TeacherBulkMarksEntry = () => {
   const navigate = useNavigate();
   const [showSubmitButton, setShowSubmitButton] = useState(false);
+  const [loaderType, setLoaderType] = useState(null);
   const inputRefs = useRef([]);
+
+  const showLoaderFor5Sec = (type) => {
+    setLoaderType(type);
+    setTimeout(() => {
+      setLoaderType(null);
+      window.location.reload();
+    }, 2000);
+  };
 
   // form state
   const [selectedClass, setSelectedClass] = useState("");
@@ -309,6 +339,7 @@ const TeacherBulkMarksEntry = () => {
 
   // normalized submit handler
   const handleSubmit = async () => {
+    showLoaderFor5Sec("spinner");
     const loggedInUser = JSON.parse(localStorage.getItem("user"));
     const emp_id = loggedInUser?.unique_id;
     if (!emp_id) return alert("Employee ID not found. Please login again.");
@@ -391,6 +422,7 @@ const TeacherBulkMarksEntry = () => {
 
   const handleFileChange = (e) => setCsvFile(e.target.files[0]);
   const handleCSVUpload = async () => {
+    showLoaderFor5Sec("dots");
     if (!csvFile) return alert("Please select a CSV file.");
     try {
       await uploadAcademicsCSV(csvFile);
@@ -417,9 +449,7 @@ const TeacherBulkMarksEntry = () => {
           </Icons>
         </Wrapper>
       </Header>
-
       <Title>Bulk Marks Entry</Title>
-
       <FormRow>
         <Select
           value={selectedClass}
@@ -473,7 +503,6 @@ const TeacherBulkMarksEntry = () => {
         />
         <Button onClick={fetchStudents}>Load Students</Button>
       </FormRow>
-
       {students.length > 0 && (
         <>
           <Table>
@@ -580,11 +609,27 @@ const TeacherBulkMarksEntry = () => {
           </div>
         </>
       )}
-
       <div style={{ marginTop: "30px" }}>
         <Input type="file" accept=".csv" onChange={handleFileChange} />
         <Button onClick={handleCSVUpload}>Upload CSV</Button>
       </div>
+      {loaderType && (
+        <div style={overlayStyle}>
+          <LoaderContent>
+            
+
+            {loaderType === "text" && <h2>Loading...</h2>}
+
+            {loaderType === "spinner" && (
+              <div className="spinner-wrapper">
+                <div className="spinner">
+                  <img src={logo} alt="logo" className="spinner-logo" />
+                </div>
+              </div>
+            )}
+          </LoaderContent>
+        </div>
+      )}
     </Container>
   );
 };
