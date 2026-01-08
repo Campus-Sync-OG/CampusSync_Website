@@ -3,186 +3,158 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { fetchAllNotifications } from "../api/ClientApi";
 
-const NotificationPopupPage = ({ onClose }) => {
+const NotificationPopupPage = ({ onClose, onViewAll }) => {
   const [newNotifications, setNewNotifications] = useState([]);
-  const navigate = useNavigate();
   const intervalRef = useRef(null);
+  const navigate = useNavigate();
 
-  const loadNotifications = async () => {
+  const loadNewNotifications = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       const user_id = user?.unique_id;
-
-      if (!user_id) {
-        console.warn("No user_id found in localStorage");
-        return;
-      }
+      if (!user_id) return;
 
       const res = await fetchAllNotifications({ user_id });
       const notifications = res?.data || [];
 
-      // Get last popup fetch timestamp
-      const lastFetchTime =
+      const lastFetch =
         parseInt(localStorage.getItem(`lastNotificationFetch_${user_id}`)) || 0;
 
-      // Only notifications newer than last fetch
-      const newlyArrived = notifications.filter(
-        (n) => new Date(n.createdAt).getTime() > lastFetchTime
+      const newOnes = notifications.filter(
+        (n) => new Date(n.createdAt).getTime() > lastFetch
       );
 
-      if (newlyArrived.length > 0) {
-        setNewNotifications(newlyArrived);
-      }
-
-      // Update last fetch timestamp
-      localStorage.setItem(`lastNotificationFetch_${user_id}`, Date.now().toString());
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
+      setNewNotifications(newOnes);
+    } catch (err) {
+      console.error("Popup fetch error:", err);
     }
   };
 
-  // Polling: fetch notifications every 5 seconds
   useEffect(() => {
-    loadNotifications(); // initial load
-    intervalRef.current = setInterval(loadNotifications, 5000); // poll every 5 sec
+    loadNewNotifications();
+    intervalRef.current = setInterval(loadNewNotifications, 5000);
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    return () => clearInterval(intervalRef.current);
   }, []);
 
-  const handleViewAllNotifications = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const role = (user?.role || "").trim().toLowerCase();
+  const handleViewAllClick = () => {
+    onViewAll(); // ✅ updates lastNotificationFetch in Header
+    onClose();
 
-    switch (role) {
-      case "teacher":
-        navigate("/teacher-notification");
-        break;
-      case "student":
-        navigate("/notification");
-        break;
-      case "principal":
-        navigate("/principal-notification");
-        break;
-      case "admin":
-        navigate("/admin-notification");
-        break;
-      default:
-        alert("Unknown role. Cannot open notification page.");
-    }
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = user?.role?.toLowerCase();
+
+    if (role === "teacher") navigate("/teacher-notification");
+    else if (role === "student") navigate("/notification");
+    else if (role === "principal") navigate("/principal-notification");
+    else if (role === "admin") navigate("/admin-notification");
   };
 
   return (
-    <>
-      <PopupOverlay onClick={onClose} />
-      <Popup>
-        <Header>
-          <h3>New Notifications ({newNotifications.length})</h3>
-          <CloseButton onClick={onClose}>×</CloseButton>
-        </Header>
+    <Popup>
+      <PopupHeader>
+        <h4>New Notifications</h4>
+        <CloseButton onClick={onClose}>×</CloseButton>
+      </PopupHeader>
 
+      <NotificationList>
         {newNotifications.length === 0 ? (
-          <NotificationCard bgColor="#F5F5F5">
-            <Content>
-              <Message>No new notifications</Message>
-            </Content>
-          </NotificationCard>
+          <Empty>No new notifications</Empty>
         ) : (
-          newNotifications.map((notif, index) => (
-            <NotificationCard
-              key={notif.id}
-              bgColor={index % 2 === 0 ? "#FFF3E0" : "#E3F2FD"}
-            >
-              <Icon>{notif.icon || "🔔"}</Icon>
-              <Content>
-                <Title>{notif.title}</Title>
-                <Message>{notif.message}</Message>
-              </Content>
+          newNotifications.map((n, i) => (
+            <NotificationCard key={i}>
+              <Title>{n.title}</Title>
+              <Message>{n.message}</Message>
             </NotificationCard>
           ))
         )}
+      </NotificationList>
 
-        <ViewAllButton onClick={handleViewAllNotifications}>
-          View All
-        </ViewAllButton>
-      </Popup>
-    </>
+      <ViewAllButton onClick={handleViewAllClick}>View All</ViewAllButton>
+    </Popup>
   );
 };
 
 export default NotificationPopupPage;
 
-/* Styled Components */
-const PopupOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-`;
+/* ===================== STYLED COMPONENTS ===================== */
 
 const Popup = styled.div`
   position: fixed;
-  top: 60px;
-  right: 50px;
+  top: 70px;
+  right: 40px;
   width: 320px;
-  background: white;
+  background: #fff;
   border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
   padding: 15px;
   z-index: 1000;
 `;
 
-const Header = styled.div`
+const NotificationList = styled.div`
+  max-height: 240px; /* ✅ fixed scroll area */
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding-right: 4px;
+
+  /* Optional nice scrollbar */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 10px;
+  }
+`;
+
+const PopupHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  font-weight: bold;
+  align-items: center;
+  margin-bottom: 10px;
 `;
 
 const CloseButton = styled.button`
-  background: none;
   border: none;
+  background: none;
   font-size: 18px;
   cursor: pointer;
 `;
 
 const NotificationCard = styled.div`
-  display: flex;
-  background-color: ${(props) => props.bgColor};
+  background: #f7f7f7;
   padding: 10px;
-  margin: 8px 0;
-  border-radius: 10px;
-  align-items: center;
-`;
-
-const Icon = styled.div`
-  font-size: 24px;
-  margin-right: 10px;
-`;
-
-const Content = styled.div`
-  flex-grow: 1;
+  border-radius: 8px;
+  margin-bottom: 8px;
 `;
 
 const Title = styled.div`
   font-weight: bold;
+  font-size: 14px;
 `;
 
 const Message = styled.div`
   font-size: 12px;
+  color: #555;
+`;
+
+const Empty = styled.p`
+  text-align: center;
   color: gray;
+  font-size: 13px;
 `;
 
 const ViewAllButton = styled.button`
   width: 100%;
   margin-top: 10px;
   padding: 10px;
-  background: blue;
+  background: #e91e63;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+
+  &:hover {
+    background: #d81b60;
+  }
 `;

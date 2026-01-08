@@ -433,6 +433,7 @@ const Header = ({
   profilePic = defaultProfile,
   schoolLogo = defaultSlogo,
 }) => {
+  const pollingRef = useRef(null);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const navigate = useNavigate();
@@ -442,67 +443,33 @@ const Header = ({
   const [unreadCount, setUnreadCount] = useState(0);
   const toggleDropdown = () => setIsDropdownVisible(!isDropdownVisible);
   const togglePopup = () => {
-    setIsPopupVisible((prev) => {
-      const next = !prev;
-
-      if (!prev && next) {
-        // popup opened → mark as seen
-        const user = JSON.parse(localStorage.getItem("user"));
-        const user_id = JSON.parse(localStorage.getItem("user"))?.unique_id;
-
-        fetchAllNotifications({ user_id }).then((res) => {
-          const notifications = res?.data || [];
-          const keys = notifications.map((n) => `${n.title}-${n.message}`);
-          localStorage.setItem(
-            `seenNotifications_${user_id}`,
-            JSON.stringify(keys)
-          );
-          setUnreadCount(0);
-        });
-      }
-
-      return next;
-    });
+    setIsPopupVisible((prev) => !prev);
   };
 
   const handleViewAllNotifications = async () => {
-    const Role = localStorage.getItem("role")?.trim().toLowerCase();
-
     const user = JSON.parse(localStorage.getItem("user"));
     const user_id = user?.unique_id;
-    localStorage.setItem(`seenNotifications_${user_id}`, JSON.stringify(keys));
 
-    // ✅ mark all as read
-    const res = await fetchAllNotifications({ user_id });
-    const notifications = res?.data || [];
-    const keys = notifications.map((n) => `${n.title}-${n.message}`);
-    localStorage.setItem("seenNotifications", JSON.stringify(keys));
-    setUnreadCount(0); // 🔥 hides badge
+    if (user_id) {
+      localStorage.setItem(
+        `lastNotificationFetch_${user_id}`,
+        Date.now().toString()
+      );
+    }
 
-    if (Role === "teacher") {
+    setUnreadCount(0); // hide badge
+    setIsPopupVisible(false); // ✅ CLOSE POPUP
+
+    const role = user?.role?.toLowerCase();
+
+    if (role === "teacher") {
       navigate("/teacher-notification");
+    } else if (role === "principal") {
+      navigate("/principal-notification");
+    } else if (role === "admin") {
+      navigate("/admin-notification");
     } else {
       navigate("/notifications");
-    }
-  };
-
-  const redirectToProfile = (userRole) => {
-    switch (userRole) {
-      case "student":
-        navigate("/profile/my-profile");
-        break;
-      case "teacher":
-        navigate("/profile/teacher-profile");
-        break;
-      case "principal":
-        navigate("/profile/principalprofile");
-        break;
-      case "hostel":
-        navigate("/profile/warden-profile");
-        break;
-      default:
-        console.warn("Unknown role, redirecting to login");
-        navigate("/login");
     }
   };
 
@@ -572,24 +539,18 @@ const Header = ({
 
         const user_id = user.unique_id;
 
-        // fetch all notifications
         const res = await fetchAllNotifications({ user_id });
         const notifications = res?.data || [];
 
-        // get previously seen notifications from localStorage
-        const seen =
-          JSON.parse(localStorage.getItem(`seenNotifications_${user_id}`)) ||
-          [];
+        const lastFetch =
+          parseInt(localStorage.getItem(`lastNotificationFetch_${user_id}`)) ||
+          0;
 
-        const seenSet = new Set(seen);
+        const newlyArrived = notifications.filter(
+          (n) => new Date(n.createdAt).getTime() > lastFetch
+        );
 
-        // filter only new/unseen notifications
-        const newNotifications = notifications.filter((n) => {
-          const key = `${n.title}-${n.message}`;
-          return !seenSet.has(key);
-        });
-
-        setUnreadCount(newNotifications.length); // only new notifications
+        setUnreadCount(newlyArrived.length);
       } catch (err) {
         console.error("Unread count error:", err);
       }
