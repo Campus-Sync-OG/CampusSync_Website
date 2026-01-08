@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
+import logo from "../assets/images/logo.png";
 import {
   getAllClassSections,
   fetchStudents,
@@ -162,6 +163,7 @@ const AddMoreButton = styled(BaseButton)`
 
 const NotificationForm = () => {
   const navigate = useNavigate();
+  const [loaderType, setLoaderType] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     message: "",
@@ -182,6 +184,12 @@ const NotificationForm = () => {
 
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const userRole = currentUser?.role;
+  const showLoaderFor5Sec = (type) => {
+    setLoaderType(type);
+    setTimeout(() => {
+      setLoaderType(null);
+    }, 2000); // 2 seconds loader
+  };
 
   useEffect(() => {
     const fetchClassSections = async () => {
@@ -260,6 +268,7 @@ const NotificationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    showLoaderFor5Sec("spinner");
 
     const payload = {
       ...formData,
@@ -433,6 +442,47 @@ const NotificationForm = () => {
           <AddMoreButton onClick={handleAddMore}>Add More</AddMoreButton>
         </ButtonRow>
       </Form>
+      {loaderType && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            height: "100vh",
+            width: "100vw",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(255,255,255,0.6)",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "16px",
+            }}
+          >
+            {loaderType === "spinner" && (
+              <div className="spinner-wrapper">
+                <div className="spinner">
+                  <img src={logo} alt="logo" className="spinner-logo" />
+                </div>
+              </div>
+            )}
+
+            {loaderType === "dots" && (
+              <div className="dots">
+                <span>•</span>
+                <span>•</span>
+                <span>•</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </Container>
   );
 };
