@@ -8,29 +8,25 @@ const NotificationPopupPage = ({ onClose }) => {
   const navigate = useNavigate();
 
   const loadNotifications = async () => {
-    const loggedInUser = JSON.parse(localStorage.getItem("user"));
-    const role = loggedInUser?.role; // Get the role from localStorage
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const user_id = user?.unique_id;
 
-    const all = await fetchAllNotifications(role); // Pass role to the API function
-    const topTwo = all.slice(0, 2);
-    setTopTwoNotifications(topTwo);
-  };
+      if (!user_id) {
+        console.error("No user_id found in localStorage");
+        return;
+      }
 
-  const handleViewAllNotifications = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const rawRole = user?.role || "";
-    const role = rawRole.trim().toLowerCase();
+      // Fetch notifications from backend
+      const res = await fetchAllNotifications({ user_id });
+      const notifications = res?.data || [];
 
-    if (role === "teacher") {
-      navigate("/teacher-notification");
-    } else if (role === "student") {
-      navigate("/notification");
-    } else if (role === "principal") {
-      navigate("/principal-notification");
-    } else if (role === "admin") {
-      navigate("/admin-notification");
-    } else {
-      alert("Unknown role. Cannot open notification page.");
+      // Only unread notifications
+      const unreadNotifications = notifications.filter(n => !n.is_read);
+
+      setTopTwoNotifications(unreadNotifications.slice(0, 2));
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
     }
   };
 
@@ -38,27 +34,57 @@ const NotificationPopupPage = ({ onClose }) => {
     loadNotifications();
   }, []);
 
+  const handleViewAllNotifications = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const role = (user?.role || "").trim().toLowerCase();
+
+    switch (role) {
+      case "teacher":
+        navigate("/teacher-notification");
+        break;
+      case "student":
+        navigate("/notification");
+        break;
+      case "principal":
+        navigate("/principal-notification");
+        break;
+      case "admin":
+        navigate("/admin-notification");
+        break;
+      default:
+        alert("Unknown role. Cannot open notification page.");
+    }
+  };
+
   return (
     <>
       <PopupOverlay onClick={onClose} />
       <Popup>
         <Header>
-          <h3>Notification</h3>
+          <h3>Notifications</h3>
           <CloseButton onClick={onClose}>×</CloseButton>
         </Header>
 
-        {topTwoNotifications.map((notif, index) => (
-          <NotificationCard
-            key={notif.id}
-            bgColor={index % 2 === 0 ? "#FFF3E0" : "#E3F2FD"}
-          >
-            <Icon>{notif.icon || "🔔"}</Icon>
+        {topTwoNotifications.length === 0 ? (
+          <NotificationCard bgColor="#F5F5F5">
             <Content>
-              <Title>{notif.title}</Title>
-              <Message>{notif.message}</Message>
+              <Message>No new notifications</Message>
             </Content>
           </NotificationCard>
-        ))}
+        ) : (
+          topTwoNotifications.map((notif, index) => (
+            <NotificationCard
+              key={notif.id}
+              bgColor={index % 2 === 0 ? "#FFF3E0" : "#E3F2FD"}
+            >
+              <Icon>{notif.icon || "🔔"}</Icon>
+              <Content>
+                <Title>{notif.title}</Title>
+                <Message>{notif.message}</Message>
+              </Content>
+            </NotificationCard>
+          ))
+        )}
 
         <ViewAllButton onClick={handleViewAllNotifications}>
           View All
@@ -77,7 +103,7 @@ const PopupOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dims background */
+  background: rgba(0, 0, 0, 0.5);
   z-index: 999;
 `;
 
@@ -91,26 +117,14 @@ const Popup = styled.div`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   padding: 15px;
   z-index: 1000;
-
-  @media (max-width: 460px) {
-    width: 300px;
-  }
-  @media (max-width: 420px) {
-    width: 250px;
-  }
-  @media (max-width: 320px) {
-    width: 200px;
-  }
 `;
 
-/* Header with Close Button */
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   font-weight: bold;
 `;
 
-/* Close Button */
 const CloseButton = styled.button`
   background: none;
   border: none;
@@ -118,7 +132,6 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-/* Notification Card */
 const NotificationCard = styled.div`
   display: flex;
   background-color: ${(props) => props.bgColor};
@@ -128,13 +141,11 @@ const NotificationCard = styled.div`
   align-items: center;
 `;
 
-/* Icon Style */
 const Icon = styled.div`
   font-size: 24px;
   margin-right: 10px;
 `;
 
-/* Notification Content */
 const Content = styled.div`
   flex-grow: 1;
 `;
@@ -148,7 +159,6 @@ const Message = styled.div`
   color: gray;
 `;
 
-/* View All Button */
 const ViewAllButton = styled.button`
   width: 100%;
   margin-top: 10px;
