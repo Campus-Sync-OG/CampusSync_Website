@@ -174,8 +174,8 @@ const NotificationForm = () => {
 
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [classSections, setClassSections] = useState([]); // For class list
-  const [selectedClassSection, setSelectedClassSection] = useState([]); // For section list
+  const [classSections, setClassSections] = useState([]);
+  const [selectedClassSection, setSelectedClassSection] = useState([]);
 
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
@@ -183,7 +183,6 @@ const NotificationForm = () => {
   const currentUser = JSON.parse(localStorage.getItem("user"));
   const userRole = currentUser?.role;
 
-  // ✅ Separate fetch for class and section lists
   useEffect(() => {
     const fetchClassSections = async () => {
       try {
@@ -206,7 +205,6 @@ const NotificationForm = () => {
     fetchClassSections();
   }, []);
 
-  // ✅ Fetch users
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -220,7 +218,6 @@ const NotificationForm = () => {
     fetchUsers();
   }, []);
 
-  // ✅ Filter users based on role/class/section
   useEffect(() => {
     const fetchRelevantUsers = async () => {
       if (formData.role === "student" && selectedClass && selectedSection) {
@@ -229,7 +226,13 @@ const NotificationForm = () => {
             selectedClass,
             selectedSection
           );
-          setFilteredUsers(students || []);
+          const mappedStudents = (students || []).map((stu) => ({
+            id: stu.id || stu.student_id,
+            unique_id: stu.unique_id || stu.student_id || stu.admission_no,
+            name: stu.name || stu.student_name || stu.full_name,
+          }));
+
+          setFilteredUsers(mappedStudents);
         } catch (error) {
           console.error("Error fetching students:", error);
           setFilteredUsers([]);
@@ -247,7 +250,6 @@ const NotificationForm = () => {
     fetchRelevantUsers();
   }, [formData.role, selectedClass, selectedSection, users]);
 
-  // ✅ Form change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -256,7 +258,6 @@ const NotificationForm = () => {
     }));
   };
 
-  // ✅ Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
