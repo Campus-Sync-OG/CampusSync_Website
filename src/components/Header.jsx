@@ -11,6 +11,7 @@ import { TbMessageChatbot } from "react-icons/tb";
 import { FaBullhorn } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import NotificationPopupPage from "./notificationpopup";
+import { fetchAllNotifications } from "../api/ClientApi";
 
 // styled-components (unchanged)
 const HeaderContainer = styled.header`
@@ -152,6 +153,7 @@ const HeaderRight = styled.div`
 `;
 
 const NotificationButton = styled.div`
+  position: relative;
   margin-right: 15px;
   display: flex;
   justify-content: center;
@@ -409,6 +411,22 @@ const SpeakerWrapper = styled.div`
   }
 `;
 
+const NotificationBadge = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+`;
+
 const Header = ({
   schoolName = "LocateUs International School",
   location = "Bangalore, Karnataka",
@@ -421,18 +439,53 @@ const Header = ({
   const back_location = useLocation();
   const [role, setRole] = useState(null);
   const dropdownRef = useRef(null);
-
+  const [unreadCount, setUnreadCount] = useState(0);
   const toggleDropdown = () => setIsDropdownVisible(!isDropdownVisible);
-  const togglePopup = () => setIsPopupVisible(!isPopupVisible);
+  const togglePopup = () => {
+    setIsPopupVisible((prev) => {
+      const next = !prev;
 
-  const handleViewAllNotifications = () => {
+      if (!prev && next) {
+        // popup opened → mark as seen
+        const user = JSON.parse(localStorage.getItem("user"));
+        const user_id = JSON.parse(localStorage.getItem("user"))?.unique_id;
+
+        fetchAllNotifications({ user_id }).then((res) => {
+          const notifications = res?.data || [];
+          const keys = notifications.map((n) => `${n.title}-${n.message}`);
+          localStorage.setItem(
+            `seenNotifications_${user_id}`,
+            JSON.stringify(keys)
+          );
+          setUnreadCount(0);
+        });
+      }
+
+      return next;
+    });
+  };
+
+  const handleViewAllNotifications = async () => {
     const Role = localStorage.getItem("role")?.trim().toLowerCase();
+
+    const user = JSON.parse(localStorage.getItem("user"));
+    const user_id = user?.unique_id;
+    localStorage.setItem(`seenNotifications_${user_id}`, JSON.stringify(keys));
+
+    // ✅ mark all as read
+    const res = await fetchAllNotifications({ user_id });
+    const notifications = res?.data || [];
+    const keys = notifications.map((n) => `${n.title}-${n.message}`);
+    localStorage.setItem("seenNotifications", JSON.stringify(keys));
+    setUnreadCount(0); // 🔥 hides badge
+
     if (Role === "teacher") {
       navigate("/teacher-notification");
     } else {
       navigate("/notifications");
     }
   };
+
   const redirectToProfile = (userRole) => {
     switch (userRole) {
       case "student":
@@ -510,6 +563,44 @@ const Header = ({
         navigate("/login");
     }
   };
+
+  useEffect(() => {
+    const loadUnreadCount = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) return;
+
+        const user_id = user.unique_id;
+
+        // fetch all notifications
+        const res = await fetchAllNotifications({ user_id });
+        const notifications = res?.data || [];
+
+        // get previously seen notifications from localStorage
+        const seen =
+          JSON.parse(localStorage.getItem(`seenNotifications_${user_id}`)) ||
+          [];
+
+        const seenSet = new Set(seen);
+
+        // filter only new/unseen notifications
+        const newNotifications = notifications.filter((n) => {
+          const key = `${n.title}-${n.message}`;
+          return !seenSet.has(key);
+        });
+
+        setUnreadCount(newNotifications.length); // only new notifications
+      } catch (err) {
+        console.error("Unread count error:", err);
+      }
+    };
+
+    loadUnreadCount();
+
+    // optional auto-refresh every 30s
+    const interval = setInterval(loadUnreadCount, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     setIsPopupVisible(false);
@@ -609,6 +700,11 @@ const Header = ({
           </IconButton>
           <NotificationButton onClick={togglePopup}>
             <NotificationButtonIcon />
+            {unreadCount > 0 && (
+              <NotificationBadge>
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </NotificationBadge>
+            )}
           </NotificationButton>
 
           <DividerRight />
