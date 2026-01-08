@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { fetchAllNotifications } from "../api/ClientApi";
 
 const NotificationPopupPage = ({ onClose }) => {
-  const [topTwoNotifications, setTopTwoNotifications] = useState([]);
+  const [newNotifications, setNewNotifications] = useState([]);
   const navigate = useNavigate();
+  const intervalRef = useRef(null);
 
   const loadNotifications = async () => {
     try {
@@ -13,25 +14,41 @@ const NotificationPopupPage = ({ onClose }) => {
       const user_id = user?.unique_id;
 
       if (!user_id) {
-        console.error("No user_id found in localStorage");
+        console.warn("No user_id found in localStorage");
         return;
       }
 
-      // Fetch notifications from backend
       const res = await fetchAllNotifications({ user_id });
       const notifications = res?.data || [];
 
-      // Only unread notifications
-      const unreadNotifications = notifications.filter(n => !n.is_read);
+      // Get last popup fetch timestamp
+      const lastFetchTime =
+        parseInt(localStorage.getItem(`lastNotificationFetch_${user_id}`)) || 0;
 
-      setTopTwoNotifications(unreadNotifications.slice(0, 2));
+      // Only notifications newer than last fetch
+      const newlyArrived = notifications.filter(
+        (n) => new Date(n.createdAt).getTime() > lastFetchTime
+      );
+
+      if (newlyArrived.length > 0) {
+        setNewNotifications(newlyArrived);
+      }
+
+      // Update last fetch timestamp
+      localStorage.setItem(`lastNotificationFetch_${user_id}`, Date.now().toString());
     } catch (error) {
       console.error("Error fetching notifications:", error);
     }
   };
 
+  // Polling: fetch notifications every 5 seconds
   useEffect(() => {
-    loadNotifications();
+    loadNotifications(); // initial load
+    intervalRef.current = setInterval(loadNotifications, 5000); // poll every 5 sec
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   const handleViewAllNotifications = () => {
@@ -61,18 +78,18 @@ const NotificationPopupPage = ({ onClose }) => {
       <PopupOverlay onClick={onClose} />
       <Popup>
         <Header>
-          <h3>Notifications</h3>
+          <h3>New Notifications ({newNotifications.length})</h3>
           <CloseButton onClick={onClose}>×</CloseButton>
         </Header>
 
-        {topTwoNotifications.length === 0 ? (
+        {newNotifications.length === 0 ? (
           <NotificationCard bgColor="#F5F5F5">
             <Content>
               <Message>No new notifications</Message>
             </Content>
           </NotificationCard>
         ) : (
-          topTwoNotifications.map((notif, index) => (
+          newNotifications.map((notif, index) => (
             <NotificationCard
               key={notif.id}
               bgColor={index % 2 === 0 ? "#FFF3E0" : "#E3F2FD"}
