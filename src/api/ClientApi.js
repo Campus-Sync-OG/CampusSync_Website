@@ -962,4 +962,21 @@ export const getApprovedApplicationsForWarden = async () => {
   }
 };
 
+export const fetchHostelStudents = async () => {
+  const res = await api.get("/hostel/students");
+  return res.data;
+};
+
+// Get hostel students for logged-in warden
+export const fetchHostelStudentsForWarden = async () => {
+  try {
+    const res = await api.get("/hostel-attendance/warden/hostel-students");
+    return res.data;
+  } catch (err) {
+    console.error("fetchHostelStudentsForWarden error:", err);
+    throw err;
+  }
+};
+
+
 export default api;
