@@ -10,6 +10,13 @@ const NotificationsPage = () => {
   const [userRole, setUserRole] = useState("");
   const navigate = useNavigate();
 
+  const getNotificationType = (notif) => {
+    if (notif.message?.preferred_sharing) return "hostel";
+    if (notif.title?.toLowerCase().includes("marks")) return "marks";
+    return "unknown";
+  };
+
+
   useEffect(() => {
     const loadNotifications = async () => {
       try {
@@ -73,8 +80,19 @@ const NotificationsPage = () => {
 
   // 🚀 Open popup ONLY for principal
   const openPopup = (notif) => {
-    navigate("/notification-markspopup", { state: { notif } });
+    const type = getNotificationType(notif);
+
+    if (type === "marks") {
+      navigate("/marks-approval", { state: { notif } });
+    }
+    else if (type === "hostel") {
+      navigate("/hostel-approval", { state: { notif } });
+    }
+    else {
+      alert("Unknown notification type");
+    }
   };
+
 
   return (
     <Container>
@@ -108,7 +126,15 @@ const NotificationsPage = () => {
                 <Emoji>{getRandomIcon()}</Emoji>
                 {notif.title}
               </NotificationTitle>
-              <NotificationMessage>{notif.message}</NotificationMessage>
+              <NotificationMessage>
+                {typeof notif.message === "string"
+                  ? notif.message
+                  : `Admission No: ${notif.message.admission_no}, 
+       Sharing: ${notif.message.preferred_sharing}, 
+       Payment: ${notif.message.payment_type}},
+       registration: ${notif.message.registration_id || ""}`}
+              </NotificationMessage>
+
             </Content>
           </NotificationCard>
         );
