@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { fetchHostelStudentsForWarden } from "../api/ClientApi";
+import { fetchHostelStudentsForWarden,saveHostelAttendance} from "../api/ClientApi";
 
 /* ================= STYLES ================= */
 
@@ -114,6 +114,7 @@ const SaveButton = styled.button`
 const HostelAttendance = () => {
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const loadStudents = async () => {
@@ -122,7 +123,7 @@ const HostelAttendance = () => {
 
         const formatted = data.map((item) => ({
           id: item.allotment_id,
-          admission: item.student.admission_no,
+          admission_no: item.student.admission_no,
           name: item.student.student_name,
           class: item.student.class,
           section: item.student.section,
@@ -130,7 +131,7 @@ const HostelAttendance = () => {
 
         const initialAttendance = {};
         formatted.forEach((stu) => {
-          initialAttendance[stu.id] = "present";
+          initialAttendance[stu.admission_no] = "Present";
         });
 
         setStudents(formatted);
@@ -143,22 +144,40 @@ const HostelAttendance = () => {
     loadStudents();
   }, []);
 
-  const handleChange = (id, status) => {
-    setAttendance((prev) => ({ ...prev, [id]: status }));
+  const handleChange = (admission_no, status) => {
+    setAttendance((prev) => ({ ...prev, [admission_no]: status }));
   };
 
   const presentCount = Object.values(attendance).filter(
-    (v) => v === "present"
+    (v) => v === "Present"
   ).length;
 
   const absentCount = Object.values(attendance).filter(
-    (v) => v === "absent"
+    (v) => v === "Absent"
   ).length;
 
-  const handleSave = () => {
-    alert(
-      `✅ Attendance Saved!\nPresent: ${presentCount}\nAbsent: ${absentCount}`
-    );
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      const payload = {
+        date: new Date().toISOString().split("T")[0],
+        attendance: Object.keys(attendance).map((admission_no) => ({
+          admission_no,
+          status: attendance[admission_no],
+          note: "",
+        })),
+      };
+
+      await saveHostelAttendance(payload);
+
+      alert("✅ Attendance saved successfully");
+    } catch (err) {
+      console.error("Attendance save failed:", err);
+      alert("❌ Failed to save attendance");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -184,19 +203,19 @@ const HostelAttendance = () => {
           <tbody>
             {students.map((student) => (
               <tr key={student.id}>
-                <td>{student.admission}</td>
+                <td>{student.admission_no}</td>
                 <td>{student.name}</td>
                 <td>{student.class}</td>
                 <td>{student.section}</td>
                 <td>
                   <Select
-                    value={attendance[student.id]}
+                    value={attendance[student.admission_no]}
                     onChange={(e) =>
-                      handleChange(student.id, e.target.value)
+                      handleChange(student.admission_no, e.target.value)
                     }
                   >
-                    <option value="present">Present</option>
-                    <option value="absent">Absent</option>
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
                   </Select>
                 </td>
               </tr>
@@ -205,7 +224,9 @@ const HostelAttendance = () => {
         </Table>
       </TableWrapper>
 
-      <SaveButton onClick={handleSave}>💾 Save Attendance</SaveButton>
+      <SaveButton onClick={handleSave} disabled={saving}>
+        {saving ? "Saving..." : "💾 Save Attendance"}
+      </SaveButton>
     </Container>
   );
 };

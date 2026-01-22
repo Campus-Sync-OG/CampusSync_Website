@@ -979,4 +979,10 @@ export const fetchHostelStudentsForWarden = async () => {
 };
 
 
+export const saveHostelAttendance = async (payload) => {
+  const res = await api.post("/hostel-attendance/hostel/attendance/save", payload);
+  return res.data;
+};
+
+
 export default api;
