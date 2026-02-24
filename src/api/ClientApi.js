@@ -984,5 +984,39 @@ export const saveHostelAttendance = async (payload) => {
   return res.data;
 };
 
+export const fetchHostelLeaveRequests = () =>
+  api.get("/hostel-leaves/all").then(res => res.data);
+
+// Warden approve/reject
+export const updateHostelLeaveStatus = (leave_id, status) =>
+  api.put(`/hostel-leaves/update/${leave_id}`, { status }).then(res => res.data);
+
+
+// ================= HOSTEL COMPLAINT APIs =================
+
+// Apply complaint
+export const applyHostelComplaint = (payload) =>
+  api.post("/hostel-complaints/apply", payload).then(res => res.data);
+
+// Get all complaints (warden)
+export const fetchHostelComplaints = () =>
+  api.get("/hostel-complaints/all").then(res => res.data);
+
+// Student complaints
+export const fetchStudentComplaints = (admission_no) =>
+  api.get(`/hostel-complaints/student/${admission_no}`).then(res => res.data);
+
+// Review complaint
+export const reviewHostelComplaint = (complaint_id, payload) =>
+  api.put(`/hostel-complaints/review/${complaint_id}`, payload).then(res => res.data);
+
+// 🔹 Record hostel cash payment
+export const recordCashPayment = async (payload) => {
+  const res = await api.post("/fee/record-cash", payload);
+  return res.data;
+};
+
+
+
 
 export default api;

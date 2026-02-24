@@ -23,17 +23,18 @@ const AdminFee = () => {
   });
 
   const classOptions = [
-    { label: "I", value: "1" },
-    { label: "II", value: "2" },
-    { label: "III", value: "3" },
-    { label: "IV", value: "4" },
-    { label: "V", value: "5" },
-    { label: "VI", value: "6" },
-    { label: "VII", value: "7" },
-    { label: "VIII", value: "8" },
-    { label: "IX", value: "9" },
-    { label: "X", value: "10" },
+    { label: "I", value: "I" },
+    { label: "II", value: "II" },
+    { label: "III", value: "III" },
+    { label: "IV", value: "IV" },
+    { label: "V", value: "V" },
+    { label: "VI", value: "VI" },
+    { label: "VII", value: "VII" },
+    { label: "VIII", value: "VIII" },
+    { label: "IX", value: "IX" },
+    { label: "X", value: "X" },
   ];
+
 
 
   const [formData, setFormData] = useState({
@@ -392,9 +393,12 @@ const AdminFee = () => {
                     }
                   >
                     <option value="">Select Class</option>
-                    {[...Array(10)].map((_, i) => (
-                      <option key={i} value={`${i + 1}`}>{`${i + 1}`}</option>
+                    {classOptions.map((item, index) => (
+                      <option key={index} value={item.value}>
+                        {item.label}
+                      </option>
                     ))}
+
                   </Select>
                 </ModalField>
 
@@ -453,6 +457,7 @@ const AdminFee = () => {
                     <option value="Transport">Transport</option>
                     <option value="Books">Books</option>
                     <option value="Uniform">Uniform</option>
+                    <option value="Hostel">Hostel</option>
                   </Select>
                 </ModalField>
 
@@ -547,7 +552,7 @@ const AdminFee = () => {
                 </>
               )}
 
-              {["Tuition", "Transport"].includes(feePlanData.feestype) && (
+              {["Tuition", "Transport", "Hostel"].includes(feePlanData.feestype) && (
                 <>
                   <Label>Total Fee</Label>
                   <Input
