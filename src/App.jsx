@@ -412,6 +412,8 @@ const App = () => {
               </Layout>
             }
           />
+
+          
           <Route
             path="/leave"
             element={
@@ -749,6 +751,15 @@ const App = () => {
             element={
               <AdminLayout>
                 <AdminGallery />
+              </AdminLayout>
+            }
+          />
+
+          <Route
+            path="/admin-componentvalue"
+            element={
+              <AdminLayout>
+                <ComponentValue />
               </AdminLayout>
             }
           />
