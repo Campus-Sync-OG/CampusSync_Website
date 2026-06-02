@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: "https://api-school-backend-ewa8dwgtgpf8a2as.centralindia-01.azurewebsites.net/api",
+  baseURL: "https://school-backend-gbexa6hxgdcwgcek.centralindia-01.azurewebsites.net/api",
   headers: {
     "Content-Type": "application/json",
   },
