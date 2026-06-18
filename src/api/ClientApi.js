@@ -890,5 +890,133 @@ export const submitMarksForApproval = async (payload) => {
   }
 };
 
+export const applyHostel = (data) => {
+  return api.post("/hostel/apply", data);
+};
+
+export const getPendingApplications = async () => {
+  try {
+    const res = await api.get("/hostel/pending");
+    return res.data;
+  } catch (err) {
+    console.error("getPendingApplications error:", err);
+    throw err;
+  }
+};
+
+/* =====================================================
+   2️⃣ GET ALL HOSTEL ROOMS (WARDEN)
+   Backend should return hostel_rooms + block info
+===================================================== */
+export const getHostelRooms = async () => {
+  try {
+    const res = await api.get("/hostel/rooms");
+    return res.data;
+  } catch (err) {
+    console.error("getHostelRooms error:", err);
+    throw err;
+  }
+};
+
+/* =====================================================
+   3️⃣ APPROVE & ASSIGN ROOM (WARDEN)
+   Backend: exports.approveAndAssignRoom
+===================================================== */
+export const approveAndAssignRoom = async (payload) => {
+  /*
+    payload = {
+      registration_id,
+      room_id
+    }
+  */
+  try {
+    const res = await api.post("/hostel/approve", payload);
+    return res.data;
+  } catch (err) {
+    console.error("approveAndAssignRoom error:", err);
+    throw err;
+  }
+};
+export const principalApproveHostel = async ({ registration_id, decision }) => {
+  try {
+    const res = await api.post("/hostel/principal-approve", {
+      registration_id,
+      decision, // "approve" | "reject"
+    });
+
+    return res.data;
+  } catch (err) {
+    console.error("principalApproveHostel error:", err);
+    throw err;
+  }
+};
+
+
+export const getApprovedApplicationsForWarden = async () => {
+  try {
+    const res = await api.get("/hostel/application");
+    return res.data;
+  } catch (err) {
+    console.error("getApprovedApplicationsForWarden error:", err);
+    throw err;
+  }
+};
+
+export const fetchHostelStudents = async () => {
+  const res = await api.get("/hostel/students");
+  return res.data;
+};
+
+// Get hostel students for logged-in warden
+export const fetchHostelStudentsForWarden = async () => {
+  try {
+    const res = await api.get("/hostel-attendance/warden/hostel-students");
+    return res.data;
+  } catch (err) {
+    console.error("fetchHostelStudentsForWarden error:", err);
+    throw err;
+  }
+};
+
+
+export const saveHostelAttendance = async (payload) => {
+  const res = await api.post("/hostel-attendance/hostel/attendance/save", payload);
+  return res.data;
+};
+
+export const fetchHostelLeaveRequests = () =>
+  api.get("/hostel-leaves/all").then(res => res.data);
+
+// Warden approve/reject
+export const updateHostelLeaveStatus = (leave_id, status) =>
+  api.put(`/hostel-leaves/update/${leave_id}`, { status }).then(res => res.data);
+
+
+// ================= HOSTEL COMPLAINT APIs =================
+
+// Apply complaint
+export const applyHostelComplaint = (payload) =>
+  api.post("/hostel-complaints/apply", payload).then(res => res.data);
+
+// Get all complaints (warden)
+export const fetchHostelComplaints = () =>
+  api.get("/hostel-complaints/all").then(res => res.data);
+
+// Student complaints
+export const fetchStudentComplaints = (admission_no) =>
+  api.get(`/hostel-complaints/student/${admission_no}`).then(res => res.data);
+
+// Review complaint
+export const reviewHostelComplaint = (complaint_id, payload) =>
+  api.put(`/hostel-complaints/review/${complaint_id}`, payload).then(res => res.data);
+
+// 🔹 Record hostel cash payment
+export const recordCashPayment = async (payload) => {
+  const res = await api.post("/fee/record-cash", payload);
+  return res.data;
+};
+
+
+
 
 export default api;

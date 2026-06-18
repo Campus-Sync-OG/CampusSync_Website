@@ -1,291 +1,191 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+  getApprovedApplicationsForWarden,
+  getHostelRooms,
+  approveAndAssignRoom,
+} from "../api/ClientApi";
+
+/* ===================== STYLES ===================== */
 
 const Container = styled.div`
   padding: 20px;
-  font-family: "Roboto", sans-serif;
-  background: #fdfdfd;
+  background: #f5f7fb;
   min-height: 100vh;
 `;
 
-const SectionTitle = styled.h2`
-  font-size: 19px;
-  color: #df0043;
-  margin-bottom: 10px;
-  text-transform: capitalize;
-  font-weight: 700;
+const Title = styled.h1`
+  color: #002087;
+  font-weight: 800;
 `;
 
-const RoomsSectionWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin-top: 25px;
+const Section = styled.div`
+  margin-top: 30px;
 `;
 
-const RoomsRow = styled.div`
+const Card = styled.div`
+  background: #fff;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  margin-bottom: 12px;
+  cursor: pointer;
+  border: 2px solid ${(p) => (p.$selected ? "#002087" : "#eee")};
+`;
+
+const RoomGrid = styled.div`
   display: flex;
-  gap: 16px;
+  gap: 14px;
   overflow-x: auto;
-  padding: 10px;
 `;
 
 const RoomCard = styled.div`
-  width: 160px;
-  padding: 15px;
-  border-radius: 18px;
-  background: ${(p) => (p.filled === p.total ? "#ffe6ea" : "white")};
-  border: 2px solid ${(p) => (p.selected ? "#002087" : "#ddd")};
-  box-shadow: ${(p) =>
-    p.selected ? "0 4px 14px rgba(0,32,135,0.3)" : "0 2px 8px rgba(0,0,0,0.06)"};
-  transition: 0.3s ease;
-  cursor: pointer;
-  text-align: center;
-
-  &:hover {
-    transform: translateY(-5px);
-    border-color: #df0043;
-  }
-`;
-
-const RoomText = styled.div`
-  font-size: 17px;
-  color: #002087;
-  font-weight: 700;
-`;
-
-const BedsCount = styled.p`
-  margin-top: 8px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #222;
-`;
-
-const Status = styled.p`
-  margin-top: 5px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #444;
-`;
-
-const AssignButton = styled.button`
-  width: 200px;
-  padding: 12px;
-  background: #002087;
-  color: white;
-  border: none;
+  min-width: 160px;
+  padding: 14px;
   border-radius: 14px;
+  background: ${(p) => (p.$available ? "#e8f5e9" : "#ffe6ea")};
+  border: 2px solid ${(p) => (p.$selected ? "#002087" : "#ddd")};
+  cursor: ${(p) => (p.$available ? "pointer" : "not-allowed")};
+  text-align: center;
+  opacity: ${(p) => (p.$available ? 1 : 0.5)};
+`;
+
+const Button = styled.button`
+  margin-top: 30px;
+  padding: 14px;
+  width: 220px;
+  background: #002087;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
   font-weight: 700;
-  font-size: 15px;
-  margin-top: 28px;
   cursor: pointer;
-  transition: 0.3s;
-  &:hover {
-    background: #df0043;
-  }
+
   &:disabled {
-    background: #bbb;
+    background: #aaa;
     cursor: not-allowed;
   }
 `;
 
-/* Modal Styling */
-const ModalOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
+/* ===================== COMPONENT ===================== */
 
-const Modal = styled.div`
-  width: 350px;
-  background: white;
-  padding: 22px;
-  border-radius: 22px;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.2);
-  animation: pop 0.3s ease-out;
-  @keyframes pop {
-    0% { transform: scale(0.85); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-`;
+export default function RoomAvailability() {
+  const [applications, setApplications] = useState([]);
+  const [rooms, setRooms] = useState([]);
 
-const FormTitle = styled.h3`
-  text-align: center;
-  font-size: 20px;
-  color: #df0043;
-  font-weight: 700;
-  margin-bottom: 12px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 11px;
-  border: 2px solid #002087;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 600;
-  outline: none;
-  &:focus {
-    border-color: #df0043;
-  }
-`;
-
-const FormField = styled.div`
-  font-size: 15px;
-  font-weight: 700;
-  color: #333;
-  margin-top: 12px;
-  background: #f5f5f5;
-  padding: 9px 12px;
-  border-radius: 12px;
-`;
-
-const ModalButton = styled.button`
-  width: 100%;
-  padding: 12px;
-  background: #002087;
-  color: white;
-  border: none;
-  margin-top: 18px;
-  border-radius: 14px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.3s;
-  &:hover {
-    background: #df0043;
-  }
-`;
-
-const dummyRooms = {
-  "2-sharing": [
-    { id: "2-101", total: 2, filled: 1 },
-    { id: "2-102", total: 2, filled: 2 },
-    { id: "2-103", total: 2, filled: 0 },
-  ],
-  "3-sharing": [
-    { id: "3-201", total: 3, filled: 1 },
-    { id: "3-202", total: 3, filled: 3 },
-    { id: "3-203", total: 3, filled: 2 },
-  ],
-  "4-sharing": [
-    { id: "4-301", total: 4, filled: 3 },
-    { id: "4-302", total: 4, filled: 4 },
-    { id: "4-303", total: 4, filled: 1 },
-  ],
-};
-
-const dummyStudents = [
-  { admission: "A001", name: "Gnana Dev", class: "10", section: "A" },
-  { admission: "A002", name: "Rohan Kumar", class: "10", section: "B" },
-  { admission: "A003", name: "Sneha Raj", class: "9", section: "A" },
-  { admission: "A004", name: "Arjun Mehta", class: "8", section: "C" },
-];
-
-const RoomAvailability = () => {
+  const [selectedRegistration, setSelectedRegistration] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [admissionNumber, setAdmissionNumber] = useState("");
-  const [student, setStudent] = useState(null);
 
-  const handleSearchStudent = () => {
-    const found = dummyStudents.find(
-      (stu) => stu.admission === admissionNumber.trim()
-    );
-    if (!found) {
-      alert("Student not found ❌");
-      setStudent(null);
-    } else {
-      setStudent(found);
-    }
+  /* ===================== LOAD DATA ===================== */
+
+  useEffect(() => {
+    loadApproved();
+    loadRooms();
+  }, []);
+
+  const loadApproved = async () => {
+    const res = await getApprovedApplicationsForWarden();
+    setApplications(Array.isArray(res) ? res : []);
   };
 
-  const handleAssign = () => {
-    if (!student) {
-      alert("Please fetch student first!");
-      return;
-    }
-    alert(`✅ Room ${selectedRoom} assigned to ${student.name}`);
-    setModalOpen(false);
-    setSelectedRoom(null);
-    setStudent(null);
-    setAdmissionNumber("");
+  const loadRooms = async () => {
+    const res = await getHostelRooms();
+    setRooms(Array.isArray(res) ? res : []);
   };
 
-  const room = Object.values(dummyRooms).flat().find(r => r.id === selectedRoom);
+  /* ===================== ASSIGN ===================== */
+
+  const handleAssign = async () => {
+    if (!selectedRegistration || !selectedRoom) return;
+
+    try {
+      await approveAndAssignRoom({
+        registration_id: selectedRegistration.registration_id,
+        room_id: selectedRoom.room_id,
+      });
+
+      alert("✅ Room assigned successfully");
+
+      setSelectedRegistration(null);
+      setSelectedRoom(null);
+
+      loadApproved();
+      loadRooms();
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || "Failed to assign room");
+    }
+  };
 
   return (
     <Container>
+      <Title>🏠 Hostel Room Allocation (Warden)</Title>
 
-      <h1 style={{marginTop:"20px", fontSize:"24px", fontWeight:"800", color:"#002087"}}>
-        🏠 Room Availability
-      </h1>
+      {/* ===================== APPROVED APPLICATIONS ===================== */}
+      <Section>
+        <h3>Approved Hostel Applications</h3>
 
-      <RoomsSectionWrapper>
-        {Object.entries(dummyRooms).map(([type, rooms]) => (
-          <div key={type}>
-            <SectionTitle>{type}</SectionTitle>
-            <RoomsRow>
-              {rooms.map(room => (
-                <RoomCard
-                  key={room.id}
-                  selected={selectedRoom === room.id}
-                  filled={room.filled}
-                  total={room.total}
-                  onClick={() => setSelectedRoom(room.id)}
-                >
-                  <RoomText>{room.id}</RoomText>
-                  <BedsCount>{room.filled} / {room.total} Beds</BedsCount>
-                  <Status>
-                    {room.filled === room.total
-                      ? "Fully Filled"
-                      : `Available Beds: ${room.total - room.filled}`}
-                  </Status>
-                </RoomCard>
-              ))}
-            </RoomsRow>
-          </div>
+        {applications.length === 0 && <p>No approved applications</p>}
+
+        {applications.map((app) => (
+          <Card
+            key={app.registration_id}
+            $selected={
+              selectedRegistration?.registration_id === app.registration_id
+            }
+            onClick={() => setSelectedRegistration(app)}
+          >
+            <strong>{app.student?.name || "Student"}</strong>
+            <p>Admission No: {app.admission_no}</p>
+            <p>Sharing: {app.preferred_sharing}</p>
+          </Card>
         ))}
-      </RoomsSectionWrapper>
+      </Section>
 
-      <AssignButton
-        disabled={!selectedRoom || room?.filled === room?.total}
-        onClick={() => {
-          if (!selectedRoom) return alert("Select a room first!");
-          if (room?.filled === room?.total) return alert("Room fully filled ❌");
-          setModalOpen(true);
-        }}
+      {/* ===================== ROOMS ===================== */}
+      <Section>
+        <h3>Available Rooms</h3>
+
+        <RoomGrid>
+          {rooms.map((room) => {
+            // ✅ SAFE availability calculation
+            const availableBeds =
+              room.available_beds ??
+              room.capacity ??
+              room.total_beds ??
+              0;
+
+            const available = availableBeds > 0;
+
+            return (
+              <RoomCard
+                key={room.room_id}
+                $available={available}
+                $selected={selectedRoom?.room_id === room.room_id}
+                onClick={() => {
+                  if (!available) {
+                    alert("No beds available in this room");
+                    return;
+                  }
+                  setSelectedRoom(room);
+                }}
+              >
+                <strong>Room {room.room_number}</strong>
+                <p>{availableBeds} beds available</p>
+                <p>{room.block?.block_name}</p>
+              </RoomCard>
+            );
+          })}
+        </RoomGrid>
+      </Section>
+
+      {/* ===================== ACTION ===================== */}
+      <Button
+        disabled={!selectedRegistration || !selectedRoom}
+        onClick={handleAssign}
       >
         Assign Room
-      </AssignButton>
-
-      {modalOpen && (
-        <ModalOverlay onClick={() => setModalOpen(false)}>
-          <Modal onClick={(e) => e.stopPropagation()}>
-            <FormTitle>📝 Assign Room - {selectedRoom}</FormTitle>
-            <Input
-              placeholder="Enter Admission Number"
-              value={admissionNumber}
-              onChange={(e) => setAdmissionNumber(e.target.value)}
-            />
-            <ModalButton onClick={handleSearchStudent}>Fetch Student</ModalButton>
-
-            {student && (
-              <>
-                <FormField>👤 {student.name}</FormField>
-                <FormField>🎓 Class {student.class} - Section {student.section}</FormField>
-                <ModalButton onClick={handleAssign}>✅ Assign</ModalButton>
-              </>
-            )}
-          </Modal>
-        </ModalOverlay>
-      )}
+      </Button>
     </Container>
   );
-};
-
-export default RoomAvailability;
+}

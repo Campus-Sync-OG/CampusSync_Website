@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import {
+  fetchHostelComplaints,
+  reviewHostelComplaint,
+} from "../api/ClientApi";
 
 /* --- Styled UI --- */
 const Container = styled.div`
@@ -30,20 +34,20 @@ const TableWrapper = styled.div`
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 700px;
 
   th {
     background: #002087;
     color: white;
     padding: 12px;
-    font-size: 15px;
+    font-size: 14px;
   }
 
   td {
     padding: 12px;
     text-align: center;
     border-bottom: 2px solid #eee;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     color: #333;
   }
@@ -51,6 +55,39 @@ const Table = styled.table`
   tr:hover td {
     background: #ffe6ea;
   }
+`;
+
+const StatusBadge = styled.span`
+  padding: 6px 12px;
+  border-radius: 10px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  background: ${({ status }) =>
+    status === "Resolved"
+      ? "green"
+      : status === "Rejected"
+      ? "#df0043"
+      : status === "In Review"
+      ? "#ff9800"
+      : "#888"};
+`;
+
+const Button = styled.button`
+  padding: 6px 10px;
+  margin: 2px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  background: ${({ type }) =>
+    type === "approve"
+      ? "green"
+      : type === "reject"
+      ? "#df0043"
+      : "#ff9800"};
 `;
 
 const EmptyText = styled.p`
@@ -61,80 +98,112 @@ const EmptyText = styled.p`
   color: #df0043;
 `;
 
-/* --- Dummy complaints DB to simulate student complaints --- */
-const dummyComplaints = [
-  {
-    id: 1,
-    admission: "A001",
-    name: "Gnana Dev",
-    class: "10",
-    section: "A",
-    message: "Water problem in hostel room",
-    date: "2025-11-28",
-  },
-  {
-    id: 2,
-    admission: "A003",
-    name: "Sneha Raj",
-    class: "9",
-    section: "A",
-    message: "Fan not working",
-    date: "2025-11-29",
-  },
-  {
-    id: 3,
-    admission: "A004",
-    name: "Arjun Mehta",
-    class: "8",
-    section: "C",
-    message: "Food quality is bad",
-    date: "2025-11-27",
-  },
-];
-
 /* --- Component --- */
 const Complaints = () => {
   const [complaints, setComplaints] = useState([]);
 
-  /* Simulated fetch, replace with real API later */
-  const fetchComplaints = async () => {
-    // Simulate API delay
-    await new Promise((res) => setTimeout(res, 500));
-    setComplaints(dummyComplaints);
+  useEffect(() => {
+    loadComplaints();
+  }, []);
+
+  const loadComplaints = async () => {
+    try {
+      const res = await fetchHostelComplaints();
+      setComplaints(res.data || []);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to load complaints");
+    }
   };
 
-  useEffect(() => {
-    fetchComplaints();
-  }, []);
+  const handleReview = async (id, status) => {
+    try {
+      await reviewHostelComplaint(id, {
+        status,
+        response_message: `Complaint ${status}`,
+        responded_by: "warden", // replace with logged user id
+      });
+
+      setComplaints((prev) =>
+        prev.map((c) =>
+          c.complaint_id === id ? { ...c, status } : c
+        )
+      );
+
+      alert(`Complaint ${status}`);
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update complaint");
+    }
+  };
 
   return (
     <Container>
-      <Title>📢 Student Complaints</Title>
+      <Title>📢 Hostel Complaints</Title>
 
       {complaints.length === 0 ? (
-        <EmptyText>No complaints available from students</EmptyText>
+        <EmptyText>No complaints available</EmptyText>
       ) : (
         <TableWrapper>
           <Table>
             <thead>
               <tr>
-                <th>Admission No</th>
+                <th>Admission</th>
                 <th>Name</th>
                 <th>Class</th>
-                <th>Section</th>
-                <th>Complaint</th>
-                <th>Date</th>
+                <th>Subject</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
               </tr>
             </thead>
+
             <tbody>
               {complaints.map((c) => (
-                <tr key={c.id}>
-                  <td>{c.admission}</td>
-                  <td>{c.name}</td>
-                  <td>{c.class}</td>
-                  <td>{c.section}</td>
-                  <td>{c.message}</td>
-                  <td>{c.date}</td>
+                <tr key={c.complaint_id}>
+                  <td>{c.admission_no}</td>
+                  <td>{c.student?.student_name}</td>
+                  <td>
+                    {c.student?.class_name} {c.student?.section_name}
+                  </td>
+                  <td>{c.subject}</td>
+                  <td>{c.description}</td>
+                  <td>
+                    <StatusBadge status={c.status}>
+                      {c.status}
+                    </StatusBadge>
+                  </td>
+                  <td>
+                    {c.status === "Pending" && (
+                      <>
+                        <Button
+                          type="review"
+                          onClick={() =>
+                            handleReview(c.complaint_id, "In Review")
+                          }
+                        >
+                          Review
+                        </Button>
+                        <Button
+                          type="approve"
+                          onClick={() =>
+                            handleReview(c.complaint_id, "Resolved")
+                          }
+                        >
+                          Resolve
+                        </Button>
+                        <Button
+                          type="reject"
+                          onClick={() =>
+                            handleReview(c.complaint_id, "Rejected")
+                          }
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    )}
+                    {c.status !== "Pending" && "--"}
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import {
+  fetchHostelLeaveRequests,
+  updateHostelLeaveStatus,
+} from "../api/ClientApi";
 
 /* Layout */
 const Container = styled.div`
@@ -60,7 +64,7 @@ const Table = styled.table`
 `;
 
 /* Status badge */
-const StatusBadge = styled.span`
+const Badge = styled.span`
   padding: 6px 14px;
   border-radius: 12px;
   font-size: 12px;
@@ -75,7 +79,7 @@ const StatusBadge = styled.span`
 `;
 
 /* Action buttons */
-const ActionButton = styled.button`
+const Btn = styled.button`
   padding: 6px 12px;
   border: none;
   border-radius: 10px;
@@ -91,125 +95,87 @@ const ActionButton = styled.button`
 `;
 
 /* Leave data dummy */
-const dummyLeaveData = [
-  {
-    id: 1,
-    admission: "A001",
-    name: "Gnana Dev",
-    class: "10",
-    section: "A",
-    from: "2025-11-25",
-    to: "2025-11-27",
-    reason: "Medical leave",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    admission: "A002",
-    name: "Rohan Kumar",
-    class: "10",
-    section: "B",
-    from: "2025-11-26",
-    to: "2025-11-28",
-    reason: "Fever",
-    status: "Pending",
-  },
-  {
-    id: 3,
-    admission: "A003",
-    name: "Sneha Raj",
-    class: "9",
-    section: "A",
-    from: "2025-11-20",
-    to: "2025-11-21",
-    reason: "Family function",
-    status: "Approved",
-  },
-];
+
 
 const HostelLeave = () => {
   const [leaveRequests, setLeaveRequests] = useState([]);
 
   useEffect(() => {
-    const fetchLeaveData = async () => {
-      await new Promise((res) => setTimeout(res, 400));
-      setLeaveRequests(dummyLeaveData);
-    };
-    fetchLeaveData();
+    loadLeaves();
   }, []);
 
-  const handleStatusChange = (id, newStatus) => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const role = user?.role?.toLowerCase();
+  const loadLeaves = async () => {
+    try {
+      const res = await fetchHostelLeaveRequests();
+      setLeaveRequests(res.data || []);
+    } catch {
+      alert("Failed to load leave requests");
+    }
+  };
 
-    setLeaveRequests((prev) =>
-      prev.map((req) => (req.id === id ? { ...req, status: newStatus } : req))
-    );
-    alert(`✅ Leave ${newStatus} successfully!`);
+  const handleStatusChange = async (leave_id, status) => {
+    try {
+      await updateHostelLeaveStatus(leave_id, status);
+      setLeaveRequests((prev) =>
+        prev.map((l) =>
+          l.leave_id === leave_id ? { ...l, status } : l
+        )
+      );
+      alert(`Leave ${status}`);
+    } catch {
+      alert("Error updating leave");
+    }
   };
 
   return (
     <Container>
-      <Title>📅 Hostel Leave Requests</Title>
+      <Title>Hostel Leave Requests</Title>
 
-      <TableCard>
-        <Table>
-          <thead>
-            <tr>
-              <th>Admission No</th>
-              <th>Name</th>
-              <th>Class</th>
-              <th>Section</th>
-              <th>Leave From</th>
-              <th>Leave To</th>
-              <th>Reason</th>
-              <th>Status</th>
-              <th>Action</th>
+      <Table>
+        <thead>
+          <tr>
+            <th>Admission</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Reason</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {leaveRequests.map((req) => (
+            <tr key={req.leave_id}>
+              <td>{req.admission_no}</td>
+              <td>{req.student?.student_name}</td>
+              <td>{req.student?.class}</td>
+              <td>{req.start_date?.slice(0, 10)}</td>
+              <td>{req.end_date?.slice(0, 10)}</td>
+              <td>{req.reason}</td>
+              <td>
+                <Badge status={req.status}>{req.status}</Badge>
+              </td>
+              <td>
+                {req.status === "Pending" ? (
+                  <>
+                    <Btn onClick={() => handleStatusChange(req.leave_id, "Approved")}>
+                      Approve
+                    </Btn>
+                    <Btn danger onClick={() => handleStatusChange(req.leave_id, "Rejected")}>
+                      Reject
+                    </Btn>
+                  </>
+                ) : "--"}
+              </td>
             </tr>
-          </thead>
-
-          <tbody>
-            {leaveRequests.map((req) => (
-              <tr key={req.id}>
-                <td>{req.admission}</td>
-                <td>{req.name}</td>
-                <td>{req.class}</td>
-                <td>{req.section}</td>
-                <td>{req.from}</td>
-                <td>{req.to}</td>
-                <td>{req.reason}</td>
-                <td>
-                  <StatusBadge status={req.status}>{req.status}</StatusBadge>
-                </td>
-
-                {/* Action only for pending rooms */}
-                <td>
-                  {req.status === "Pending" ? (
-                    <>
-                      <ActionButton
-                        type="approve"
-                        onClick={() => handleStatusChange(req.id, "Approved")}
-                      >
-                        ✔ Approve
-                      </ActionButton>
-                      <ActionButton
-                        type="reject"
-                        onClick={() => handleStatusChange(req.id, "Rejected")}
-                      >
-                        ✖ Reject
-                      </ActionButton>
-                    </>
-                  ) : (
-                    <span>--</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-      </TableCard>
+          ))}
+        </tbody>
+      </Table>
     </Container>
   );
 };
 
 export default HostelLeave;
+

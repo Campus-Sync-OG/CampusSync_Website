@@ -1,124 +1,150 @@
-// File: HostelRegister.jsx
 import React, { useMemo, useState } from "react";
 import home from "../assets/images/home.png";
 import back from "../assets/images/back.png";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
+import { applyHostel } from "../api/ClientApi";
+
+/* =======================
+   COLORS
+======================= */
 const ERP_RED = "#cc2b2b";
 const ERP_BLUE = "#1e6fb8";
 const ERP_LIGHT = "#f5f7fb";
 
+/* =======================
+   ENUM OPTIONS (MATCH BACKEND)
+======================= */
+const SHARING_OPTIONS = [
+  "Single",
+  "Double",
+  "Triple",
+  "3 Sharing",
+  "4 Sharing",
+];
+
+const PAYMENT_OPTIONS = [
+  "Online",
+  "Offline",
+  "Cash",
+  "UPI",
+  "Netbanking",
+];
+
+/* =======================
+   STYLES
+======================= */
 const Page = styled.div`
   min-height: 100vh;
   background: ${ERP_LIGHT};
-  padding: 2px 2px;
   display: flex;
   justify-content: center;
-  font-family: Inter, system-ui;
-  color: #222;
+`;
+
+const AppContainer = styled.div`
+  width: 100%;
+  padding: 0 15px;
 `;
 
 const HeaderWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   background: linear-gradient(90deg, #002087, #df0043);
-  padding: 1px 20px;
+  padding: 10px 20px;
   border-radius: 10px;
   color: white;
 `;
 
-const Wrapper = styled.div`
-  width: 9%;
-  max-width: 720px;
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
-const Card = styled.div`
-  background: white;
-  border-radius: 8px;
-  padding: 18px;
-  margin-top: 50px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+const Title = styled.h2`
+  font-size: 26px;
+  font-weight: 600;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const Icons = styled.div`
   width: 25px;
-  height: 25px;
-  display: flex;
-  align-items: center;
   cursor: pointer;
 
   img {
-    width: 30px;
-    height: 25px;
-  }
-`;
-
-const Icons2 = styled.div`
-  display: flex;
-  align-items: center;
-
-  img {
-    position: relative;
-    width: 27px;
-    height: 25px;
+    width: 28px;
   }
 `;
 
 const Divider = styled.div`
   width: 2px;
   height: 20px;
-  background-color: white;
+  background: white;
   margin: 0 10px;
 `;
 
-const Header = styled.div`
+const CardWrapper = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1px 20px;
-  color: white;
-  width: 100%;
+  justify-content: center;
+  margin-top: 50px;
 `;
 
-const Title = styled.h2`
-  font-size: 26px;
-  font-weight: 600;
-  font-family: "Poppins";
+const Card = styled.div`
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 10px;
+  padding: 22px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 `;
 
 const H = styled.h2`
-  margin: 0 0 8px 0;
   color: ${ERP_RED};
   font-size: 18px;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
   background: ${ERP_RED};
   color: white;
   border: none;
-  padding: 12px 16px;
+  padding: 12px;
   width: 100%;
   border-radius: 8px;
   font-weight: 700;
-  font-size: 16px;
   cursor: pointer;
+`;
+
+const Field = styled.div`
+  margin-bottom: 14px;
 `;
 
 const Label = styled.label`
   font-weight: 600;
 `;
 
-const Field = styled.div`
-  margin-bottom: 12px;
-`;
-
 const Select = styled.select`
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px;
   border-radius: 8px;
   border: 1.5px solid #dcdcdc;
+  margin-top: 6px;
+`;
+
+const TextArea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #dcdcdc;
+`;
+
+const FeeRow = styled.div`
+  background: #f7f7f7;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
 `;
 
 const Note = styled.p`
@@ -126,44 +152,68 @@ const Note = styled.p`
   color: #555;
 `;
 
-const FeeRow = styled.div`
-  background: #f7f7f7;
-  padding: 10px 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-`;
-
-const AppContainer = styled.div`
-  width: 100%;
-  height: 100vh;
-  padding: 0 15px;
-`;
-
-export default function HostelRegister({ student = { name: "Student Name" } }) {
+/* =======================
+   COMPONENT
+======================= */
+export default function HostelRegister() {
   const navigate = useNavigate();
+
+  // ✅ SAME LOGIC AS ASSIGNMENTS PAGE (WORKING)
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const admission_no = userData?.unique_id;
+
   const [showForm, setShowForm] = useState(false);
+  const [preferred_sharing, setPreferredSharing] = useState("");
+  const [payment_type, setPaymentType] = useState("");
+  const [premium_room, setPremiumRoom] = useState(false);
+  const [is_rejoiner, setIsRejoiner] = useState(false);
+  const [remarks, setRemarks] = useState("");
 
-  // form values
-  const [sharing, setSharing] = useState("");
-  const [payment, setPayment] = useState("");
-  const [premium, setPremium] = useState(false);
-
-  // fee logic
+  /* =======================
+     FEES
+  ======================= */
   const baseFee = {
-    single: 8000,
-    double: 5000,
-    triple: 3500,
+    Single: 8000,
+    Double: 5000,
+    Triple: 3500,
+    "3 Sharing": 3000,
+    "4 Sharing": 2500,
   };
-  const premiumExtra = 1500;
 
-  const totalFee = useMemo(() => {
-    if (!sharing) return 0;
-    let fee = baseFee[sharing];
-    if (premium) fee += premiumExtra;
+  const total_fee = useMemo(() => {
+    let fee = baseFee[preferred_sharing] || 0;
+    if (premium_room) fee += 1500;
     return fee;
-  }, [sharing, premium]);
+  }, [preferred_sharing, premium_room]);
 
-  const cautionFee = totalFee > 0 ? 2000 : 0;
+  const caution_fee = is_rejoiner ? 0 : total_fee ? 2000 : 0;
+
+  /* =======================
+     SUBMIT
+  ======================= */
+  const handleSubmit = async () => {
+    const payload = {
+      admission_no,        // 🔥 FIXED
+      premium_room,
+      preferred_sharing,
+      payment_type,
+      total_fee,
+      caution_fee,
+      is_rejoiner,
+      remarks,
+    };
+
+    console.log("Submitting hostel payload:", payload);
+
+    try {
+      await applyHostel(payload);
+      alert("Hostel application submitted successfully ✅");
+      navigate("/hostel-home");
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.error || "Submission failed");
+    }
+  };
 
   return (
     <Page>
@@ -171,47 +221,62 @@ export default function HostelRegister({ student = { name: "Student Name" } }) {
         <HeaderWrapper>
           <Header>
             <Title>Hostel Register</Title>
-            <Wrapper style={{ display: "flex" }}>
+            <Wrapper>
               <Link to="/dashboard">
                 <Icons>
                   <img src={home} alt="home" />
                 </Icons>
               </Link>
               <Divider />
-              <Icons2 onClick={() => navigate(-1)}>
+              <Icons onClick={() => navigate(-1)}>
                 <img src={back} alt="back" />
-              </Icons2>
+              </Icons>
             </Wrapper>
           </Header>
         </HeaderWrapper>
 
-        {/* ✅ CARD CENTER WRAPPED HERE */}
-        <Wrapper
-          style={{
-            margin: "auto",
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
+        <CardWrapper>
           <Card>
-            <H>Hostel For {student.name}</H>
-            <div style={{ marginBottom: 14, color: ERP_BLUE }}>
-              Course Details : Master of Computer Applications-(2023-2025)
-            </div>
+            <H>Hostel Registration</H>
 
             {!showForm && (
               <Button onClick={() => setShowForm(true)}>REGISTER</Button>
             )}
 
             {showForm && (
-              <div style={{ marginTop: 16 }}>
+              <>
+                <Field>
+                  <Label>Preferred Sharing *</Label>
+                  <Select
+                    value={preferred_sharing}
+                    onChange={(e) => setPreferredSharing(e.target.value)}
+                  >
+                    <option value="">Select</option>
+                    {SHARING_OPTIONS.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </Select>
+                </Field>
+
+                <Field>
+                  <Label>Payment Type *</Label>
+                  <Select
+                    value={payment_type}
+                    onChange={(e) => setPaymentType(e.target.value)}
+                  >
+                    <option value="">Select</option>
+                    {PAYMENT_OPTIONS.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </Select>
+                </Field>
+
                 <Field>
                   <Label>
                     <input
                       type="checkbox"
-                      checked={premium}
-                      onChange={(e) => setPremium(e.target.checked)}
+                      checked={premium_room}
+                      onChange={(e) => setPremiumRoom(e.target.checked)}
                       style={{ marginRight: 6 }}
                     />
                     Premium Room
@@ -219,51 +284,36 @@ export default function HostelRegister({ student = { name: "Student Name" } }) {
                 </Field>
 
                 <Field>
-                  <Label>Preferred Room Sharing *</Label>
-                  <Select
-                    value={sharing}
-                    onChange={(e) => setSharing(e.target.value)}
-                  >
-                    <option value="">Select an Option</option>
-                    <option value="single">Single</option>
-                    <option value="double">Double</option>
-                    <option value="triple">Triple</option>
-                  </Select>
+                  <Label>
+                    <input
+                      type="checkbox"
+                      checked={is_rejoiner}
+                      onChange={(e) => setIsRejoiner(e.target.checked)}
+                      style={{ marginRight: 6 }}
+                    />
+                    Re-joiner
+                  </Label>
                 </Field>
+
+                <FeeRow><strong>Total Fee:</strong> ₹ {total_fee}</FeeRow>
+                <FeeRow><strong>Caution Fee:</strong> ₹ {caution_fee}</FeeRow>
 
                 <Field>
-                  <Label>Payment Type *</Label>
-                  <Select
-                    value={payment}
-                    onChange={(e) => setPayment(e.target.value)}
-                  >
-                    <option value="">Select an Option</option>
-                    <option value="online">Online</option>
-                    <option value="offline">Offline</option>
-                  </Select>
+                  <Label>Remarks</Label>
+                  <TextArea
+                    rows={3}
+                    value={remarks}
+                    onChange={(e) => setRemarks(e.target.value)}
+                  />
                 </Field>
 
-                <FeeRow>
-                  <strong>Total Fee: </strong>₹ {totalFee}/-
-                </FeeRow>
-                <FeeRow>
-                  <strong>Caution Fee: </strong>₹ {cautionFee}/-
-                </FeeRow>
+                <Note>* Caution fee not applicable for re-joiners</Note>
 
-                <Note>* Caution fee not applicable for re-joiners.</Note>
-
-                <Button
-                  onClick={() => {
-                    alert("Submitted ✓");
-                    navigate("/hostel-home");
-                  }}
-                >
-                  Submit Registration
-                </Button>
-              </div>
+                <Button onClick={handleSubmit}>Submit Registration</Button>
+              </>
             )}
           </Card>
-        </Wrapper>
+        </CardWrapper>
       </AppContainer>
     </Page>
   );

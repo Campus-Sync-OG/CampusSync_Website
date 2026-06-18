@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { fetchHostelStudents } from "../api/ClientApi";
 
 const Container = styled.div`
   padding: 22px;
@@ -69,24 +70,35 @@ const ActionButton = styled.button`
   }
 `;
 
-const dummyHostelStudents = [
-  { id: 1, admission: "A001", name: "Gnana Dev", class: "10", section: "A", roomType: "2-sharing", roomNo: "2-101", bedsFilled: "1/2" },
-  { id: 2, admission: "A002", name: "Rohan Kumar", class: "10", section: "B", roomType: "3-sharing", roomNo: "3-203", bedsFilled: "2/3" },
-  { id: 3, admission: "A003", name: "Sneha Raj", class: "9", section: "A", roomType: "4-sharing", roomNo: "4-303", bedsFilled: "1/4" },
-  { id: 4, admission: "A004", name: "Arjun Mehta", class: "8", section: "C", roomType: "2-sharing", roomNo: "2-102", bedsFilled: "2/2" }
-];
+
 
 const HostelStudents = () => {
   const [students, setStudents] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchHostelStudents = async () => {
-      await new Promise((res) => setTimeout(res, 500));
-      setStudents(dummyHostelStudents);
+    const loadStudents = async () => {
+      const data = await fetchHostelStudents();
+
+      const formatted = data.map((item, index) => ({
+        id: index,
+        admission: item.student.admission_no,
+        name: item.student.student_name,
+        class: item.student.class,
+        section: item.student.section,
+        roomType: item.hostel_room.sharing_type,
+        roomNo: `${item.hostel_room.hostel_block.block_name}-${item.hostel_room.room_number}`,
+
+        bedsFilled: `1/${item.hostel_room.capacity}`,
+      }));
+
+
+      setStudents(formatted);
     };
-    fetchHostelStudents();
+
+    loadStudents();
   }, []);
+
 
   return (
     <Container>

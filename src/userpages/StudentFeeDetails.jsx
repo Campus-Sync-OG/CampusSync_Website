@@ -93,10 +93,11 @@ const StudentFeeDetails = () => {
         >
           <option value="">Select Class</option>
           {romanClassMap.map((roman, i) => (
-            <option key={i + 1} value={i + 1}>
+            <option key={i} value={roman}>
               {roman}
             </option>
           ))}
+
         </Select>
         <Select
           value={filters.section_name}

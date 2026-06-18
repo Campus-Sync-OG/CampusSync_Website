@@ -128,6 +128,7 @@ import HostelStudents from "./hostel/HostelStudents";
 import HostelLeave from "./hostel/HostelLeave";
 import HostelFees from "./hostel/HostelFees";
 import DriverDashboard from "./driver/DriverDashboard";
+import HostelApprovalPage from "./principal/HostelApprovalPage";
 
 // 📌 General Layout Component for Students (Uses Sidebar)
 const Layout = ({ children }) => {
@@ -411,6 +412,8 @@ const App = () => {
               </Layout>
             }
           />
+
+          
           <Route
             path="/leave"
             element={
@@ -751,6 +754,15 @@ const App = () => {
               </AdminLayout>
             }
           />
+
+          <Route
+            path="/admin-componentvalue"
+            element={
+              <AdminLayout>
+                <ComponentValue />
+              </AdminLayout>
+            }
+          />
           <Route
             path="/admin-subjects"
             element={
@@ -1061,6 +1073,14 @@ const App = () => {
             element={
               <PrincipalLayout>
                 <ReceiptPage />
+              </PrincipalLayout>
+            }
+          />
+          <Route
+            path="/hostel-approval"
+            element={ 
+              <PrincipalLayout>
+                <HostelApprovalPage />
               </PrincipalLayout>
             }
           />
